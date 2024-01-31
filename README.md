@@ -1,5 +1,7 @@
 # Monopoly
 
+https://docs.google.com/document/d/1gT4sxsQJ5qRlqFvo9c-TGwI0fd4GD03ONNf_X-a7Uwg/edit?usp=sharing
+
 ## Description
 
 ## Configuration nécessaire
