@@ -12,6 +12,5 @@
 
 ### Fichier(s) pouvant avoir un lien avec le bug
 
-/milestone %V1 : Jeu qui marche
-/label ~"bug"
-/todo
+/milestone %"V1 : Jeu qui marche"
+/label ~"bug" ~"To Do"

@@ -12,5 +12,5 @@
 
 ### Considérations à prendre en compte avant de commencer
 
-/milestone %V1 : Jeu qui marche
-/todo
+/milestone %"V1 : Jeu qui marche"
+/label ~"To Do"
