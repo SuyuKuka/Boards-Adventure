@@ -1,7 +1,13 @@
+import controller.MonopolyController;
+import model.MonopolyModel;
+import view.MonopolyView;
+
 /**
- * Classe mère qui s'occupe des updates du jeu.
+ * Classe mère qui s'occupe du jeu. Le jeu fonctionne avec la structure MVC.
+ * Les images du jeu se mettent à jour par rapport à {@link #MAX_FPS}.
+ * La logique derrière le jeu se met à jour par rapport à {@link #MAX_UPS}.
  */
-public class GameEngine implements Runnable {
+public class Monopoly implements Runnable {
 
     private final static int NANO_S = (int) 10E8;
     /** Changez la valeur pour modifier le nombre de FPS voulu/max */
@@ -9,12 +15,21 @@ public class GameEngine implements Runnable {
     /** Changez la valeur pour modifier le nombre de UPS voulu/max */
     private final static int MAX_UPS = 60;
 
-    private boolean running = false;
+    private double runningTime = 0;
 
-    public GameEngine() {
-        running = true;
-        String input = System.console().readLine("Entrez \"oui\" pour avoir les infos sur la console, autre chose sinon : ");
-        if (input.equals("oui") || input.equals("\"oui\"")) {
+    private MonopolyController controller = new MonopolyController();
+    private MonopolyModel model = new MonopolyModel();
+    private MonopolyView view = new MonopolyView();
+
+    public Monopoly() {
+        controller.setModel(model);
+        controller.setView(view);
+        view.setController(controller);
+        startGame(true);
+    }
+
+    public void startGame(final boolean printInfoTerminal) {
+        if (printInfoTerminal) {
             runWithInfo();
         } else {
             run();
@@ -33,26 +48,30 @@ public class GameEngine implements Runnable {
         double frameDeltaT = 0;
         
         long startTime = System.nanoTime();
-        while (running) {
+        while (true) {
             long currentTime = System.nanoTime();
             updateDeltaT += currentTime - startTime;
             frameDeltaT += currentTime - startTime;
+            runningTime += (currentTime - startTime) / (double) NANO_S;
             startTime = currentTime;
 
-            if (updateDeltaT >= frameTime) {
-                update();
-                updateDeltaT -= frameTime;
+            if (updateDeltaT >= updateTime) {
+                model.update(updateDeltaT / NANO_S);
+                updateDeltaT -= updateTime;
             }
-            if (frameDeltaT >= updateTime) {
-                render();
-                frameDeltaT -= updateTime;
+            
+            if (frameDeltaT >= frameTime) {
+                view.render();
+                frameDeltaT -= frameTime;
             }
+
+            System.out.println(runningTime);
         }
     }
 
     /**
      * Méthode qui met à jour la logique du jeu et son affichage indépendamment de chacun en fonction des valeurs données par défaut.
-     * Elle affiche également un message chaque seconde dans le terminal indiquant le nombre de UPS et FPS qui s'est passé la dernière seconde.
+     * Elle affiche également quelques informations sur le jeu dans le terminal.
      */
     public void runWithInfo() {
         final double frameTime = NANO_S / MAX_FPS;
@@ -65,21 +84,24 @@ public class GameEngine implements Runnable {
         
         long startTime = System.nanoTime();
         long timer = System.currentTimeMillis();
-        while (running) {
+        while (true) {
             long currentTime = System.nanoTime();
             updateDeltaT += currentTime - startTime;
             frameDeltaT += currentTime - startTime;
+            runningTime += (currentTime - startTime) / (double) NANO_S;
             startTime = currentTime;
 
-            if (updateDeltaT >= frameTime) {
-                update();
+            if (updateDeltaT >= updateTime) {
+                model.update(updateDeltaT / NANO_S);
+                // System.out.println("LAST GAME UPDATE : " + updateDeltaT / NANO_S + " SEC");
                 updates++;
-                updateDeltaT -= frameTime;
+                updateDeltaT -= updateTime;
             }
-            if (frameDeltaT >= updateTime) {
-                render();
+            if (frameDeltaT >= frameTime) {
+                view.render();
+                // System.out.println("LAST RENDER UPDATE : " + frameDeltaT / NANO_S + " SEC");
                 frames++;
-                frameDeltaT -= updateTime;
+                frameDeltaT -= frameTime;
             }
 
             if (System.currentTimeMillis() - timer >= 1000) {
@@ -91,12 +113,8 @@ public class GameEngine implements Runnable {
         }
     }
 
-    public void update() {
-        // System.out.println("update");
-    }
-
-    public void render() {
-        // System.out.println("render");
+    public static void main(String[] args) {
+        Monopoly monopoly = new Monopoly();
     }
     
 }
