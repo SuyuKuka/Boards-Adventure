@@ -1,14 +1,13 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import game.Resource;
+import game.Resources;
 
 public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
 
@@ -37,7 +36,7 @@ public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
         panel.setOpaque(false);
  
         JLabel logo = new JLabel("SALUT");
-        logo.setIcon(new ImageIcon("src/main/resource/logo.png"));
+        logo.setIcon(new ImageIcon(Resources.getImage("logo")));
         logo.setHorizontalAlignment(JLabel.CENTER);
         logo.setVerticalAlignment(JLabel.CENTER);
 

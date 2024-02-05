@@ -4,15 +4,13 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
 
-public class Resource {
-    private static final String PATH = "src/main/resource/";
-    private static final Random RAND = new Random();
+public class Resources {
+    private static final String PATH = "src/main/resources/";
 
     private static HashMap<String, Image> images = new HashMap<>();
 

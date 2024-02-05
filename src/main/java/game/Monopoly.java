@@ -33,14 +33,14 @@ public class Monopoly implements Runnable {
         controller.setModel(model);
         controller.setView(view);
         view.setController(controller);
-        Resource.loadResources();
+        Resources.loadResources();
         view.init();
         runWithInfo();
     }
 
-
     /**
      * Méthode qui met à jour la logique du jeu et son affichage indépendamment de chacun en fonction des valeurs données par défaut.
+     * Utilisez {@link #runWithInfo()} pour avoir avoir des informations supplémentaires affichées sur le terminal.
      */
     @Override
     public void run() {
@@ -75,6 +75,7 @@ public class Monopoly implements Runnable {
     /**
      * Méthode qui met à jour la logique du jeu et son affichage indépendamment de chacun en fonction des valeurs données par défaut.
      * Elle affiche également quelques informations sur le jeu dans le terminal.
+     * Utilisez {@link #run()} pour NE PAS avoir les informations supplémentaires affichées sur le terminal.
      */
     public void runWithInfo() {
         final double frameTime = NANO_S / MAX_FPS;
