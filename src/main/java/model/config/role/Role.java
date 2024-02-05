@@ -1,6 +1,6 @@
 package model.config.role;
 
-import model.config.Joueur;
+import model.config.Player;
 
 public abstract class Role {
 
@@ -36,7 +36,7 @@ public abstract class Role {
     /**
      * Utilise le pouvoir.
      */
-    abstract void usePower(final Joueur joueur);
+    abstract void usePower(final Player player);
 
     public int getPowerCD() {
         return powerCD;

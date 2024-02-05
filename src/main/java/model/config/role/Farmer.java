@@ -1,12 +1,12 @@
 package model.config.role;
 
-import model.config.Joueur;
+import model.config.Player;
 
-public class Paysan extends Role {
-
+public class Farmer extends Role {
+    
     private static final int POWER_CD = 2;
 
-    public Paysan() {
+    public Farmer() {
         super(POWER_CD);
     }
 
@@ -17,11 +17,12 @@ public class Paysan extends Role {
     public boolean canUsePower() {
         return getCurrentCD() == 0;
     }
+
     /**
      * Pouvoir du {@link Paysan} : Passe son tour mais gagne X argent.
      */
     @Override
-    void usePower(final Joueur joueur) {
+    void usePower(final Player player) {
         throw new UnsupportedOperationException("Unimplemented method 'usePower'");
     }
     

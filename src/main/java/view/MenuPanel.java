@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import game.Resources;
+import game.Resource;
 
 public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
 
@@ -27,6 +27,7 @@ public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
         panel.setVisible(true);
+        
         return panel;
     }
 
@@ -34,13 +35,15 @@ public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
         panel.setOpaque(false);
+ 
         JLabel logo = new JLabel("SALUT");
-        Image logoImg = Resources.getImage("logo");
-        logo.setIcon(new ImageIcon(logoImg));
+        logo.setIcon(new ImageIcon("src/main/resource/logo.png"));
         logo.setHorizontalAlignment(JLabel.CENTER);
         logo.setVerticalAlignment(JLabel.CENTER);
+
         panel.add(logo, BorderLayout.NORTH);
         panel.setVisible(true);
+
         return panel;
     }
 }

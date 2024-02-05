@@ -1,12 +1,12 @@
 package model.config.role;
 
-import model.config.Joueur;
+import model.config.Player;
 
-public class Rien extends Role {
+public class Nothing extends Role {
 
     private static final int POWER_CD = 999;
 
-    public Rien() {
+    public Nothing() {
         super(POWER_CD);
     }
 
@@ -16,7 +16,7 @@ public class Rien extends Role {
     }
 
     @Override
-    void usePower(Joueur joueur) {
+    void usePower(Player player) {
         return;
     }
     

@@ -1,4 +1,5 @@
 package game;
+
 import controller.MonopolyController;
 import model.MonopolyModel;
 import view.MonopolyView;
@@ -32,7 +33,7 @@ public class Monopoly implements Runnable {
         controller.setModel(model);
         controller.setView(view);
         view.setController(controller);
-        Resources.loadResources();
+        Resource.loadResources();
         view.init();
         runWithInfo();
     }

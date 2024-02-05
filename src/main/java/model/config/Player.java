@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import model.config.role.Role;
 
-public class Joueur {
+public class Player {
     private final int id = 0;
-    private int argent = 0;
+    private int money = 0;
     private Role role;
-    private ArrayList<Propriete> proprietes = new ArrayList<>();
+    private ArrayList<Property> proprietes = new ArrayList<>();
 
-    public Joueur() {
+    public Player() {
 
     }
 

@@ -1,5 +1,8 @@
 package game;
+
 import java.io.File;
+import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Random;
 
@@ -7,8 +10,8 @@ import java.awt.Image;
 
 import javax.imageio.ImageIO;
 
-public class Resources {
-    private static final String PATH = "src/main/resources/";
+public class Resource {
+    private static final String PATH = "src/main/resource/";
     private static final Random RAND = new Random();
 
     private static HashMap<String, Image> images = new HashMap<>();
@@ -27,13 +30,15 @@ public class Resources {
                         test = file.getName().length();
                     }
                     String imageName = file.getName().substring(0, test);
-                    images.put(imageName, ImageIO.read(file));
+                    try {
+                        images.put(imageName, ImageIO.read(file));
+                    } catch (IOException e) {
+                        System.out.println("File not found.");
+                    }
                 }
             }
         } catch (NullPointerException e) {
-            System.out.println("dossier resources non trouvé 🔥");
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Resource directory not found.");
         }
     }
 
