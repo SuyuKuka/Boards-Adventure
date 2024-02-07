@@ -1,6 +1,7 @@
 package game;
 
 import controller.MonopolyController;
+import controller.MonopolyController.Mode;
 import model.MonopolyModel;
 import view.MonopolyView;
 
@@ -11,10 +12,6 @@ import view.MonopolyView;
  */
 public class Monopoly implements Runnable {
 
-    public enum Mode {
-        MENU, GAME;
-    }
-
     private final static int NANO_S = (int) 10E8;
     /** Changez la valeur pour modifier le nombre de FPS voulu/max */
     private final static int MAX_FPS = 60;
@@ -23,18 +20,17 @@ public class Monopoly implements Runnable {
 
     private double runningTime = 0;
 
-    private Mode mode;
-
-    private MonopolyController controller = new MonopolyController();
-    private MonopolyModel model = new MonopolyModel();
-    private MonopolyView view = new MonopolyView();
+    private MonopolyController controller;
+    private MonopolyModel model;
+    private MonopolyView view;
 
     public Monopoly() {
+        Resources.loadResources();
+        controller = new MonopolyController();
+        model = new MonopolyModel();
+        view = new MonopolyView(controller);
         controller.setModel(model);
         controller.setView(view);
-        view.setController(controller);
-        Resources.loadResources();
-        view.init();
         runWithInfo();
     }
 
@@ -58,7 +54,7 @@ public class Monopoly implements Runnable {
             runningTime += (currentTime - startTime) / (double) NANO_S;
             startTime = currentTime;
 
-            if (mode == Mode.GAME && updateDeltaT >= updateTime) {
+            if (controller.getMode() == Mode.GAME && updateDeltaT >= updateTime) {
                 model.update(updateDeltaT / NANO_S);
                 updateDeltaT -= updateTime;
             }
@@ -95,7 +91,7 @@ public class Monopoly implements Runnable {
             runningTime += (currentTime - startTime) / (double) NANO_S;
             startTime = currentTime;
 
-            if (mode == Mode.GAME && updateDeltaT >= updateTime) {
+            if (controller.getMode() == Mode.GAME && updateDeltaT >= updateTime) {
                 model.update(updateDeltaT / NANO_S);
                 // System.out.println("LAST GAME UPDATE : " + updateDeltaT / NANO_S + " SEC");
                 updates++;
@@ -115,10 +111,6 @@ public class Monopoly implements Runnable {
                 timer += 1000;
             }
         }
-    }
-
-    public Mode getMode() {
-        return mode;
     }
 
     public static void main(String[] args) {

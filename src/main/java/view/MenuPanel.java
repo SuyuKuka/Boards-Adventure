@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -13,36 +14,39 @@ public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
 
     private MonopolyView frame;
 
+    private JPanel background;
+    private JPanel overlay;
+
     public MenuPanel(final MonopolyView frame) {
         this.frame = frame;
-        setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
-        add(createBackground(), new Integer(0));
-        add(createOverlay(), new Integer(1));
-        repaint();
+        setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        createBackground();
+        createOverlay();
+        add(background, new Integer(0));
+        add(overlay, new Integer(1));
         setVisible(true);
     }
 
-    public JPanel createBackground() {
-        JPanel panel = new JPanel();
-        panel.setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
-        panel.setVisible(true);
-        
-        return panel;
+    public void updateSize() {
+        setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        background.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        overlay.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
     }
 
-    public JPanel createOverlay() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
-        panel.setOpaque(false);
- 
-        JLabel logo = new JLabel("SALUT");
-        logo.setIcon(new ImageIcon(Resources.getImage("logo")));
-        logo.setHorizontalAlignment(JLabel.CENTER);
-        logo.setVerticalAlignment(JLabel.CENTER);
+    public void createBackground() {
+        background = new JPanel(new BorderLayout());
+        background.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        JLabel bgImg = new JLabel();
+        bgImg.setIcon(new ImageIcon(Resources.getImage("logo")));
+        background.add(bgImg, BorderLayout.CENTER);
+        background.setVisible(true);
+    }
 
-        panel.add(logo, BorderLayout.NORTH);
-        panel.setVisible(true);
+    public void createOverlay() {
+        overlay = new JPanel(new BorderLayout());
+        overlay.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        overlay.setOpaque(false);
+        overlay.setVisible(true);
 
-        return panel;
     }
 }

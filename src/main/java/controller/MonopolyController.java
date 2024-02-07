@@ -5,11 +5,21 @@ import view.MonopolyView;
 
 public class MonopolyController {
 
+    public enum Mode {
+        MENU, GAME;
+    }
+
     private MonopolyModel model;
     private MonopolyView view;
 
+    private Mode mode = Mode.MENU;
+
     public MonopolyController() {
 
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 
     public void setModel(final MonopolyModel model) {
