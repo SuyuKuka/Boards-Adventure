@@ -2,6 +2,7 @@ package model.config;
 
 import java.util.ArrayList;
 
+import model.config.cell.Property;
 import model.config.role.Role;
 
 public class Player {

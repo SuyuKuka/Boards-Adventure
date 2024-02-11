@@ -9,9 +9,16 @@ import java.awt.Image;
 
 import javax.imageio.ImageIO;
 
-public class Resources {
+import model.config.GameMap;
+
+/**
+ * La classe {@link Resources} contient toutes les ressources du jeu.
+ */
+public final class Resources {
     private static final String PATH = "src/main/resources/";
 
+    private static HashMap<String, GameMap> gameMaps = new HashMap<>();
+    private static HashMap<String, Image> gameMapsImg = new HashMap<>();
     private static HashMap<String, Image> images = new HashMap<>();
 
     public static void loadResources() {
