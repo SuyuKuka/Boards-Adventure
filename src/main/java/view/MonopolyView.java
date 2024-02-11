@@ -24,6 +24,7 @@ public class MonopolyView extends JFrame {
     public MonopolyView(final MonopolyController controller) {
         this.controller = controller;
         mode = controller.getMode();
+        setTitle("Kingdom Revolution");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
