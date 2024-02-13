@@ -6,42 +6,33 @@ Paramètres générals absoluments nécessaire :
     "yPos" <- position y du centre de la cellule sur le fichier png
 
 Paramètres pour les PROPRIETES :
-    "rgb" <- [x, y, z] couleur pour les propriétés
+    "group" <- groupe de la propriété (même couleur = même groupe).
 
 Autres paramètres :
-    "name" <- nom qui s'affiche sur la case {rien qui s'affiche par défaut}
     "value" <- montant à manipuler (prix d'achat pour une propriété, gain pour le start,...) {0 par défaut si non spécifié}
-    "icon" <- Pour rajouter une image sur la cellule (.png uniquement qu'il faut ajouter dans le dossier de la map associé) {pas d'image par défaut}
 
-Un exemple de fichier : 
+Un exemple de fichier cells.json : 
 
-{
-	"cells" : [
-		{
-			"id" : 0,
-			"type" : "START",
-			"name" : "DEBUT",
-			"value" : 200,
-			"xPos" : 0,
-			"yPos" : 0
-		},
-		{
-			"id" : 1,
-			"type" : "PROPERTY",
-			"name" : "property1",
-			"value" : 100,
-			"rgb" : [0, 0, 0],
-			"xPos" : 0,
-			"yPos" : 0
-		},
-		{
-			"id" : 2,
-			"type" : "SPECIAL",
-			"name" : "tax1",
-			"value" : 200,
-			"icon" : "tax",
-			"xPos" : 0,
-			"yPos" : 0
-		}
-	]
-}
+[
+	{
+		"id" : 0,
+		"type" : "START",
+		"value" : 200,
+		"xPos" : 0,
+		"yPos" : 0
+	},
+	{
+		"id" : 1,
+		"type" : "PROPERTY",
+		"value" : 100,
+		"xPos" : 0,
+		"yPos" : 0
+	},
+	{
+		"id" : 2,
+		"type" : "SPECIAL",
+		"value" : 200,
+		"xPos" : 0,
+		"yPos" : 0
+	}
+]

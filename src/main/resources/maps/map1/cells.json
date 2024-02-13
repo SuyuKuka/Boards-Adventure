@@ -1,0 +1,31 @@
+[
+    {
+        "id" : 0,
+        "type" : "START",
+        "value" : 200,
+        "xPos" : 0,
+        "yPos" : 0
+    },
+    {
+        "id" : 1,
+        "type" : "PROPERTY",
+        "value" : 100,
+        "group" : 1,
+        "xPos" : 0,
+        "yPos" : 0
+    },
+    {
+        "id" : 2,
+        "type" : "TAX",
+        "value" : 200,
+        "xPos" : 0,
+        "yPos" : 0
+    },
+    {
+        "id" : 3,
+        "type" : "KINGDOM",
+        "value" : 0,
+        "xPos" : 0,
+        "yPos" : 0
+    }
+]

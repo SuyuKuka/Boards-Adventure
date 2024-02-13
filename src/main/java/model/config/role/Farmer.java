@@ -1,6 +1,6 @@
 package model.config.role;
 
-import model.config.Player;
+import model.config.players.Player;
 
 public class Farmer extends Role {
     

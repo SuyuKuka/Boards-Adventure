@@ -2,7 +2,10 @@ package model.config.cell;
 
 public class Property extends Cell {
 
-    public Property(final String name, final int price) {
-        super(name, price);
+    private final int group;
+
+    public Property(final int id, final int price, final int group) {
+        super(id, price);
+        this.group = group;
     }
 }

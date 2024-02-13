@@ -1,6 +1,6 @@
 package model.config.role;
 
-import model.config.Player;
+import model.config.players.Player;
 
 /**
  * Classe abstraite qui est étendu par tous les rôles que peut prendre un {@link Player}.

@@ -3,9 +3,9 @@ package view;
 import model.config.cell.Cell;
 
 public class CellGraphics {
-    private final Cell cell;
-    private final int xPos;
-    private final int yPos;
+    private Cell cell;
+    private int xPos;
+    private int yPos;
 
     public CellGraphics(final Cell cell, final int xPos, final int yPos) {
         this.cell = cell;
@@ -13,11 +13,15 @@ public class CellGraphics {
         this.yPos = yPos;
     }
 
-    public int getxPos() {
+    public Cell getCell() {
+        return cell;
+    }
+
+    public int getXPos() {
         return xPos;
     }
 
-    public int getyPos() {
+    public int getYPos() {
         return yPos;
     }
     

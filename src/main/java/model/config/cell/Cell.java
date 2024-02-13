@@ -2,11 +2,11 @@ package model.config.cell;
 
 public abstract class Cell {
 
-    final String name;
+    final int id;
     final int price;
 
-    public Cell(final String name, final int price) {
-        this.name = name;
+    public Cell(final int id, final int price) {
+        this.id = id;
         this.price = price;
     }
 }

@@ -1,7 +1,7 @@
 package model.config.cell;
 
 public class Kingdom extends Cell {
-    public Kingdom() {
-        super("", 0);
+    public Kingdom(final int id) {
+        super(id, 0);
     }
 }

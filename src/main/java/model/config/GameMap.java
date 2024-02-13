@@ -10,4 +10,16 @@ public class GameMap {
         this.mapName = mapName;
         this.cells = cells;
     }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public Cell[] getCells() {
+        return cells;
+    }
+
+    public String toString() {
+        return "mapName : " + mapName + ", Nombre de Cells : " + cells.length;
+    }
 }

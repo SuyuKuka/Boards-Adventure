@@ -2,14 +2,11 @@ package model.config.cell;
 
 public class Event extends Cell {
 
-    private enum EventType {
-        START, CHANCE, CHEST, SPECIAL;
-    }
+    private final EventType eventType;
 
-    private EventType eventType;
-
-    public Event(final String name, final int price) {
-        super(name, price);
+    public Event(final EventType eventType, final int id, final int price) {
+        super(id, price);
+        this.eventType = eventType;
     }
 
     public EventType getEventType() {
