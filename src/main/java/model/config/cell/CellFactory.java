@@ -1,6 +1,6 @@
 package model.config.cell;
 
-public class CellFactory {
+public final class CellFactory {
     public static Cell createCell(final int id, final String type, final Integer value, final Integer group) {
         switch (type) {
             case "PROPERTY":

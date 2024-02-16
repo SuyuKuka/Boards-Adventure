@@ -3,29 +3,113 @@
         "id" : 0,
         "type" : "START",
         "value" : 200,
-        "xPos" : 0,
-        "yPos" : 0
+        "xPos" : 60,
+        "yPos" : 423
     },
     {
         "id" : 1,
-        "type" : "PROPERTY",
-        "value" : 100,
-        "group" : 1,
-        "xPos" : 0,
-        "yPos" : 0
+        "type" : "KINGDOM",
+        "xPos" : 181,
+        "yPos" : 423
     },
     {
         "id" : 2,
-        "type" : "TAX",
-        "value" : 200,
-        "xPos" : 0,
-        "yPos" : 0
+        "type" : "TELEPORTATION",
+        "value" : 12,
+        "xPos" : 302,
+        "yPos" : 423
     },
     {
         "id" : 3,
+        "type" : "PROPERTY",
+        "value" : 200,
+        "group" : 1,
+        "xPos" : 423,
+        "yPos" : 423
+    },
+    {
+        "id" : 4,
         "type" : "KINGDOM",
-        "value" : 0,
-        "xPos" : 0,
-        "yPos" : 0
+        "xPos" : 423,
+        "yPos" : 302
+    },
+    {
+        "id" : 5,
+        "type" : "TAX",
+        "value" : 100,
+        "xPos" : 302,
+        "yPos" : 302
+    },
+    {
+        "id" : 6,
+        "type" : "PROPERTY",
+        "value" : 400,
+        "group" : 1,
+        "xPos" : 181,
+        "yPos" : 302
+    },
+    {
+        "id" : 7,
+        "type" : "PROPERTY",
+        "value" : 150,
+        "group" : 2,
+        "xPos" : 60,
+        "yPos" : 302
+    },
+    {
+        "id" : 8,
+        "type" : "PROPERTY",
+        "value" : 300,
+        "group" : 2,
+        "xPos" : 60,
+        "yPos" : 181
+    },
+    {
+        "id" : 9,
+        "type" : "KINGDOM",
+        "xPos" : 181,
+        "yPos" : 181
+    },
+    {
+        "id" : 10,
+        "type" : "TAX",
+        "value" : 200,
+        "xPos" : 302,
+        "yPos" : 181
+    },
+    {
+        "id" : 11,
+        "type" : "JAIL",
+        "xPos" : 423,
+        "yPos" : 181
+    },
+    {
+        "id" : 12,
+        "type" : "TELEPORTATION",
+        "value" : 2,
+        "xPos" : 423,
+        "yPos" : 60
+    },
+    {
+        "id" : 13,
+        "type" : "KINGDOM",
+        "xPos" : 302,
+        "yPos" : 60
+    },
+    {
+        "id" : 14,
+        "type" : "PROPERTY",
+        "value" : 450,
+        "group" : 2,
+        "xPos" : 181,
+        "yPos" : 60
+    },
+    {
+        "id" : 15,
+        "type" : "PROPERTY",
+        "value" : 500,
+        "group" : 1,
+        "xPos" : 60,
+        "yPos" : 60
     }
 ]

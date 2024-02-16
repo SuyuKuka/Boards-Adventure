@@ -9,8 +9,8 @@ public class Event extends Cell {
         this.eventType = eventType;
     }
 
-    public EventType getEventType() {
+    public final EventType getEventType() {
         return eventType;
     }
-    
+
 }

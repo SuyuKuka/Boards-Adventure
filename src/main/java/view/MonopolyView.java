@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 import controller.MonopolyController;
 
-public class MonopolyView extends JFrame {
+public final class MonopolyView extends JFrame {
 
     private MonopolyController controller;
 

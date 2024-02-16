@@ -2,8 +2,8 @@ package model.config.role;
 
 import model.config.players.Player;
 
-public class Farmer extends Role {
-    
+public final class Farmer extends Role {
+
     private static final int POWER_CD = 2;
 
     public Farmer() {
@@ -11,7 +11,7 @@ public class Farmer extends Role {
     }
 
     /**
-     * Condition du {@link Paysan} : Cooldown < {@link #POWER_CD}. 
+     * Condition du {@link Paysan} : Cooldown < {@link #POWER_CD}.
      */
     @Override
     public boolean canUsePower() {
@@ -25,5 +25,5 @@ public class Farmer extends Role {
     void usePower(final Player player) {
         throw new UnsupportedOperationException("Unimplemented method 'usePower'");
     }
-    
+
 }

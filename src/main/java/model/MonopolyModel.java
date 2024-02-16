@@ -1,19 +1,21 @@
 package model;
 
-import java.util.ArrayList;
+public final class MonopolyModel {
 
-import model.config.GameMap;
-import model.config.players.Players;
+    private GameState gameState;
 
-public class MonopolyModel {
-
-    private GameMap gameMap;
-    private ArrayList<Players> players = new ArrayList<>();
-
-    public MonopolyModel() {
+    public void update() {
+        if (gameState == null) {
+            return;
+        }
+        gameState.update();
     }
-    
-    public void update(final double deltaT) {
-        
+
+    public void setGameState(final GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

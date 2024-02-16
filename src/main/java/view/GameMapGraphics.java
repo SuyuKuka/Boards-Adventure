@@ -6,12 +6,13 @@ import java.awt.Image;
 
 import model.config.GameMap;
 
-public class GameMapGraphics {
+public final class GameMapGraphics {
     private final GameMap gameMap;
     private final HashMap<String, Image> images;
-    private final CellGraphics[] cellsGraphics;
+    private final HashMap<Integer, CellGraphics> cellsGraphics;
 
-    public GameMapGraphics(final GameMap gameMap, final HashMap<String, Image> images, final CellGraphics[] cellsGraphics) {
+    public GameMapGraphics(final GameMap gameMap, final HashMap<String, Image> images,
+        final HashMap<Integer, CellGraphics> cellsGraphics) {
         this.gameMap = gameMap;
         this.images = images;
         this.cellsGraphics = cellsGraphics;
@@ -21,7 +22,11 @@ public class GameMapGraphics {
         return images.get(key);
     }
 
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
     public String toString() {
-        return "GameMap : " + gameMap + ",\nImages : " + images + ",\nNombre de CellsGraphics : " + cellsGraphics.length;
+        return "GameMap : " + gameMap + ",\nImages : " + images + ",\nNombre de CellGraphics : " + cellsGraphics.size();
     }
 }

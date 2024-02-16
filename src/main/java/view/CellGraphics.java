@@ -2,7 +2,7 @@ package view;
 
 import model.config.cell.Cell;
 
-public class CellGraphics {
+public final class CellGraphics {
     private Cell cell;
     private int xPos;
     private int yPos;
@@ -24,5 +24,5 @@ public class CellGraphics {
     public int getYPos() {
         return yPos;
     }
-    
+
 }

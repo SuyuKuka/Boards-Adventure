@@ -28,28 +28,20 @@ public abstract class Role {
             }
         }
     }
-    
-    /**
-     * Renvoie vraie si le pouvoir peut être utilisé.
-     * Les conditions dépendent du rôle.
-     * @return
-     */
+
     abstract boolean canUsePower();
 
-    /**
-     * Utilise le pouvoir.
-     */
-    abstract void usePower(final Player player);
+    abstract void usePower(Player player);
 
-    public int getPowerCD() {
+    public final int getPowerCD() {
         return powerCD;
     }
 
-    public int getCurrentCD() {
+    public final int getCurrentCD() {
         return currentCD;
     }
 
-    public void setCurrentCD(final int currentCD) {
+    public final void setCurrentCD(final int currentCD) {
         this.currentCD = currentCD;
     }
 }

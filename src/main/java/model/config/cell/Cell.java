@@ -2,8 +2,8 @@ package model.config.cell;
 
 public abstract class Cell {
 
-    final int id;
-    final int price;
+    private final int id;
+    private final int price;
 
     public Cell(final int id, final int price) {
         this.id = id;
