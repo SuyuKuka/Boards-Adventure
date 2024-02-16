@@ -17,6 +17,8 @@ public final class CellFactory {
                 return new Event(EventType.TELEPORTATION, id, 0);
             case "TAX":
                 return new Event(EventType.TAX, id, value);
+            case "JAIL":
+                return new Event(EventType.JAIL, id, 0);
             case "VOID":
                 return new Event(EventType.VOID, id, 0);
             default:

@@ -21,6 +21,10 @@ public final class GameMap {
         return cells;
     }
 
+    public Cell getCell(final int pos) {
+        return cells.get(pos);
+    }
+
     public int maxCells() {
         return cells.size();
     }

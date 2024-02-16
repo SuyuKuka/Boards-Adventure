@@ -18,8 +18,7 @@ public final class GameState {
     public GameState(final GameMap gameMap) {
         this.gameMap = gameMap;
         for (int i = 0; i < NB_PLAYERS; i++) {
-            String username = System.console().readLine("Pseudo du joueur " + nextPlayerID + " : ");
-            players.add(new Player(nextPlayerID, username, new Farmer()));
+            players.add(new Player(nextPlayerID, "j" + nextPlayerID, new Farmer()));
             nextPlayerID++;
         }
         System.out.println(players);
@@ -31,6 +30,7 @@ public final class GameState {
             System.out.println(player);
             System.console().readLine("Appuyez sur la touche Entrée pour jouer votre dé : ");
             player.updatePosition(RAND.nextInt(6) + 1, gameMap.maxCells());
+            gameMap.getCell(player.getPosition()).play(player);
             System.out.println(player);
             System.console().readLine("Appuyez sur la touche Entrée pour valider votre tour : ");
         }

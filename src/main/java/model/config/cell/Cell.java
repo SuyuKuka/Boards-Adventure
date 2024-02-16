@@ -1,12 +1,14 @@
 package model.config.cell;
 
+import model.config.players.Players;
+
 public abstract class Cell {
 
     private final int id;
-    private final int price;
 
-    public Cell(final int id, final int price) {
+    public Cell(final int id) {
         this.id = id;
-        this.price = price;
     }
+
+    public abstract void play(final Players players); 
 }
