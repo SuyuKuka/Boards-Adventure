@@ -1,6 +1,7 @@
 package game;
 
 import controller.MonopolyController;
+import controller.Resources;
 import controller.MonopolyController.Mode;
 import model.MonopolyModel;
 import view.MonopolyView;
