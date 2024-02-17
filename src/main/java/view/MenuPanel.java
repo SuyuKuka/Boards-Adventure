@@ -163,7 +163,24 @@ public class MenuPanel extends JLayeredPane {
         manualPanel.setOpaque(false);
 
         JLabel manual = SwingFactory.createImageLabel("manual_close");
-        
+        manual.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        manual.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                add(createHelpManual(), Integer.valueOf(2));
+            }
+        });
+        manualPanel.add(manual);
 
         panel.add(buttonsPanel, BorderLayout.CENTER);
         panel.add(manualPanel, BorderLayout.SOUTH);
@@ -201,7 +218,6 @@ public class MenuPanel extends JLayeredPane {
 
         panel.add(volumePanel, BorderLayout.CENTER);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
-        //panel.add();
         return panel;
     }
 
