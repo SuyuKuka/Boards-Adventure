@@ -1,4 +1,4 @@
-package game;
+package controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.config.GameMap;
-import model.config.cell.Cell;
-import model.config.cell.CellFactory;
+import model.config.cells.Cell;
+import model.config.cells.CellFactory;
 import view.CellGraphics;
 import view.GameMapGraphics;
 
@@ -58,6 +58,11 @@ public final class Resources {
         }
     }
 
+    private static boolean isACorrectMap(final File file) {
+        return file.isDirectory() && new File(file.getPath() + "/cells.json").exists()
+            && new File(file.getPath() + "/board.png").exists();
+    }
+
     private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
         HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
         try {
@@ -66,10 +71,7 @@ public final class Resources {
             for (int i = 0; i < jArrayCells.length(); i++) {
                 final JSONObject jCell = jArrayCells.getJSONObject(i);
                 final int id = jCell.getInt("id");
-                final String type = jCell.getString("type");
-                final Integer value = jCell.has("value") ? jCell.getInt("value") : null;
-                final Integer group = jCell.has("group") ? jCell.getInt("group") : null;
-                final Cell cell = CellFactory.createCell(id, type, value, group);
+                final Cell cell = CellFactory.createCell(jCell);
                 final int xPos = jCell.getInt("xPos");
                 final int yPos = jCell.getInt("yPos");
                 cellsGraphics.put(id, new CellGraphics(cell, xPos, yPos));
@@ -87,11 +89,6 @@ public final class Resources {
             cells.put(id, cellsGraphics.get(id).getCell());
         }
         return cells;
-    }
-
-    private static boolean isACorrectMap(final File file) {
-        return file.isDirectory() && new File(file.getPath() + "/cells.json").exists()
-            && new File(file.getPath() + "/board.png").exists();
     }
 
     // endregion

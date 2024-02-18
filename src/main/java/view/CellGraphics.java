@@ -1,6 +1,6 @@
 package view;
 
-import model.config.cell.Cell;
+import model.config.cells.Cell;
 
 public final class CellGraphics {
     private Cell cell;

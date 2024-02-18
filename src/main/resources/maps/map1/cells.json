@@ -1,28 +1,41 @@
 [
     {
+        "id" : -2,
+        "type" : "VOID",
+        "xPos" : 242,
+        "yPos" : 242
+    },
+    {
+        "id" : -1,
+        "type" : "VOID",
+        "xPos" : 423,
+        "yPos" : 150
+    },
+    {
         "id" : 0,
         "type" : "START",
-        "value" : 200,
+        "lapGain" : 200,
         "xPos" : 60,
         "yPos" : 423
     },
     {
         "id" : 1,
         "type" : "KINGDOM",
+        "throneCell" : -2,
         "xPos" : 181,
         "yPos" : 423
     },
     {
         "id" : 2,
         "type" : "TELEPORTATION",
-        "value" : 12,
+        "targetCell" : 12,
         "xPos" : 302,
         "yPos" : 423
     },
     {
         "id" : 3,
         "type" : "PROPERTY",
-        "value" : 200,
+        "values" : [200],
         "group" : 1,
         "xPos" : 423,
         "yPos" : 423
@@ -30,6 +43,7 @@
     {
         "id" : 4,
         "type" : "KINGDOM",
+        "throneCell" : -2,
         "xPos" : 423,
         "yPos" : 302
     },
@@ -43,7 +57,7 @@
     {
         "id" : 6,
         "type" : "PROPERTY",
-        "value" : 400,
+        "values" : [400],
         "group" : 1,
         "xPos" : 181,
         "yPos" : 302
@@ -51,7 +65,7 @@
     {
         "id" : 7,
         "type" : "PROPERTY",
-        "value" : 150,
+        "values" : [150],
         "group" : 2,
         "xPos" : 60,
         "yPos" : 302
@@ -59,7 +73,7 @@
     {
         "id" : 8,
         "type" : "PROPERTY",
-        "value" : 300,
+        "values" : [300],
         "group" : 2,
         "xPos" : 60,
         "yPos" : 181
@@ -67,6 +81,7 @@
     {
         "id" : 9,
         "type" : "KINGDOM",
+        "throneCell" : -2,
         "xPos" : 181,
         "yPos" : 181
     },
@@ -86,20 +101,21 @@
     {
         "id" : 12,
         "type" : "TELEPORTATION",
-        "value" : 2,
+        "targetCell" : 2,
         "xPos" : 423,
         "yPos" : 60
     },
     {
         "id" : 13,
         "type" : "KINGDOM",
+        "throneCell" : -2,
         "xPos" : 302,
         "yPos" : 60
     },
     {
         "id" : 14,
         "type" : "PROPERTY",
-        "value" : 450,
+        "values" : [450],
         "group" : 2,
         "xPos" : 181,
         "yPos" : 60
@@ -107,7 +123,7 @@
     {
         "id" : 15,
         "type" : "PROPERTY",
-        "value" : 500,
+        "values" : [500],
         "group" : 1,
         "xPos" : 60,
         "yPos" : 60

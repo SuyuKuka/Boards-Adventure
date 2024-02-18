@@ -1,6 +1,7 @@
 package game;
 
 import controller.MonopolyController;
+import controller.Resources;
 import model.MonopolyModel;
 import view.MonopolyView;
 
@@ -9,7 +10,7 @@ import view.MonopolyView;
  * Les images du jeu se mettent à jour par rapport à {@link #MAX_FPS}.
  * La logique derrière le jeu se met à jour par rapport à {@link #MAX_UPS}.
  */
-public final class Monopoly implements Runnable {
+public final class Launcher implements Runnable {
 
     public enum Mode {
         MENU, GAME;
@@ -29,7 +30,7 @@ public final class Monopoly implements Runnable {
     private MonopolyModel model = new MonopolyModel();
     private MonopolyView view = new MonopolyView();
 
-    public Monopoly() {
+    public Launcher() {
         controller.setModel(model);
         controller.setView(view);
         view.setController(controller);
@@ -125,6 +126,6 @@ public final class Monopoly implements Runnable {
 
     public static void main(final String[] args) {
         Resources.loadResources();
-        Monopoly monopoly = new Monopoly();
+        Launcher launcher = new Launcher();
     }
 }

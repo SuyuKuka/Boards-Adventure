@@ -10,9 +10,7 @@ public final class MonopolyController {
     private MonopolyModel model;
     private MonopolyView view;
 
-    public MonopolyController() {
-
-    }
+    public MonopolyController() { }
 
     public void startGame(final GameMap gameMap) {
         model.setGameState(new GameState(gameMap));
