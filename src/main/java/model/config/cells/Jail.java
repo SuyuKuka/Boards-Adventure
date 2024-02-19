@@ -2,19 +2,24 @@ package model.config.cells;
 
 import model.GameState;
 import model.config.players.Player;
+import model.config.players.PlayerState;
 
 public final class Jail extends Cell {
 
-    private boolean isWaitingCell;
+    private final static int JAILTURN = 3;
 
-    public Jail(final int id, final boolean isWaitingCell) {
+    private int targetCell;
+
+    public Jail(final int id, final int targetCell) {
         super(id);
-        this.isWaitingCell = isWaitingCell;
+        this.targetCell = targetCell;
     }
 
     @Override
     public void playEffect(final Player player, final GameState gameState) {
-        player.incrementJailTurn(3);
+        player.setPlayerState(PlayerState.JAILED);
+        player.setJailTurn(JAILTURN);
+        player.setPosition(targetCell);
     }
 
 }

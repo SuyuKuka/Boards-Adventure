@@ -31,7 +31,7 @@ public final class CellFactory {
             case "TAX":
                 return new Tax(id, jObject.getInt("value"));
             case "JAIL":
-                return new Jail(id, id >= 0);
+                return new Jail(id, jObject.getInt("targetCell"));
             case "VOID":
                 return new Void(id);
             default:

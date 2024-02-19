@@ -19,6 +19,8 @@ public abstract class Player {
     private int money = 500;
     private int position = 0;
 
+    private PlayerState playerState = PlayerState.NORMAL;
+
     public Player(final int playerID, final String username) {
         this.playerID = playerID;
         this.username = username;
@@ -54,6 +56,10 @@ public abstract class Player {
         jailTurn += increment;
     }
 
+    public void setJailTurn(final int jailTurn) {
+        this.jailTurn = jailTurn;
+    }
+
     public final int getJailTurn() {
         return jailTurn;
     }
@@ -76,6 +82,14 @@ public abstract class Player {
 
     public final int getMapTurn() {
         return mapTurn;
+    }
+
+    public void setPlayerState(final PlayerState playerState) {
+        this.playerState = playerState;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
     }
 
     public final String toString() {

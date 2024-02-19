@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import model.config.GameMap;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
+import model.config.players.PlayerState;
 
 public final class GameState {
 
@@ -36,12 +37,17 @@ public final class GameState {
     }
 
     public void updatePosition(final Player player) {
-        if (player.getJailTurn() == 0) {
+        final PlayerState playerState = player.getPlayerState();
+        if (playerState == PlayerState.NORMAL) {
             player.playDice();
-            if (player.getPosition() > gameMap.getWalkableCells().size()) {
+            if (player.getPosition() >= gameMap.getWalkableCells().size()) {
                 player.incrementPosition(-gameMap.getWalkableCells().size());
                 player.incrementMoney(gameMap.getLapGain());
             }
+        } else if (playerState == PlayerState.JAILED) {
+            player.incrementJailTurn(-1);
+        } else if (playerState == PlayerState.LEADING) {
+
         }
     }
 
