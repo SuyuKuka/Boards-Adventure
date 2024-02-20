@@ -6,7 +6,7 @@ import model.config.players.PlayerState;
 
 public final class Jail extends Cell {
 
-    private final static int JAILTURN = 3;
+    private static final int JAILTURN = 3;
 
     private int targetCell;
 
@@ -19,6 +19,7 @@ public final class Jail extends Cell {
     public void playEffect(final Player player, final GameState gameState) {
         player.setPlayerState(PlayerState.JAILED);
         player.setJailTurn(JAILTURN);
+        player.setPreviousPosition(player.getPosition());
         player.setPosition(targetCell);
     }
 

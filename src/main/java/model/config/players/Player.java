@@ -15,9 +15,11 @@ public abstract class Player {
     private HashMap<Integer, ArrayList<Property>> properties = new HashMap<>();
     private ArrayList<Dice> dices = new ArrayList<>();
     private int jailTurn = 0;
-    private int mapTurn = 0;
+    private int mapLap = 0;
+    private int leaderTurn = 0;
     private int money = 500;
     private int position = 0;
+    private int previousPosition = 0;
 
     private PlayerState playerState = PlayerState.NORMAL;
 
@@ -56,7 +58,7 @@ public abstract class Player {
         jailTurn += increment;
     }
 
-    public void setJailTurn(final int jailTurn) {
+    public final void setJailTurn(final int jailTurn) {
         this.jailTurn = jailTurn;
     }
 
@@ -68,6 +70,14 @@ public abstract class Player {
         return money;
     }
 
+    public final void incrementLeaderTurn(final int increment) {
+        leaderTurn += increment;
+    }
+
+    public final int getLeaderTurn() {
+        return leaderTurn;
+    }
+
     public final void setPosition(final int position) {
         this.position = position;
     }
@@ -76,19 +86,27 @@ public abstract class Player {
         return position;
     }
 
-    public final void incrementMapTurn(final int increment) {
-        mapTurn += increment;
+    public final void incrementMapLap(final int increment) {
+        mapLap += increment;
     }
 
-    public final int getMapTurn() {
-        return mapTurn;
+    public final int getMapLap() {
+        return mapLap;
     }
 
-    public void setPlayerState(final PlayerState playerState) {
+    public final void setPreviousPosition(final int previousPosition) {
+        this.previousPosition = previousPosition;
+    }
+
+    public final int getPreviousPosition() {
+        return previousPosition;
+    }
+
+    public final void setPlayerState(final PlayerState playerState) {
         this.playerState = playerState;
     }
 
-    public PlayerState getPlayerState() {
+    public final PlayerState getPlayerState() {
         return playerState;
     }
 

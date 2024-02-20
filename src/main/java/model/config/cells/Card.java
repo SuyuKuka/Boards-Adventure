@@ -5,9 +5,9 @@ import model.config.players.Player;
 
 public final class Card extends Cell {
 
-    private CardType cardType;
+    private CellType cardType;
 
-    public Card(final int id, final CardType cardType) {
+    public Card(final int id, final CellType cardType) {
         super(id);
         this.cardType = cardType;
     }

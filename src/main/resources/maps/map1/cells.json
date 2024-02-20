@@ -95,6 +95,7 @@
     {
         "id" : 11,
         "type" : "JAIL",
+        "targetCell" : -1,
         "xPos" : 423,
         "yPos" : 181
     },

@@ -12,7 +12,7 @@ public final class Kingdom extends Cell {
 
     @Override
     public void playEffect(final Player player, final GameState gameState) {
-        if (player.getMapTurn() <= 0) {
+        if (player.getMapLap() <= 0) {
             System.out.println(player.getUsername()
                 + " a essayé de devenir roi mais n'a pas encore fait le tour de la map !");
         } else if (gameState.getCurrentKing() == null) {
