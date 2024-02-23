@@ -31,7 +31,7 @@ public class MenuPanel extends JLayeredPane {
     private MonopolyView frame;
 
     private enum MenuState {
-        MAINMENU, HELPMANUAL, SELECTMAP, WAITINGLOBBY, SETTINGSMENU;
+        MAINMENU, HELPMANUAL, SELECTMOD, LOBBY, WAITINGLOBBY, SETTINGSMENU;
     }
 
     private MenuState state = MenuState.MAINMENU;
@@ -88,15 +88,16 @@ public class MenuPanel extends JLayeredPane {
     } 
 
     public JPanel createPanel() {
-        System.out.println(state);
         switch (state) {
             case MAINMENU:
                 return createMainMenu();
             case HELPMANUAL:
                 return createHelpManual();
-            case SELECTMAP:
-                return createSelectMap();
-            case WAITINGLOBBY:
+            case SELECTMOD:
+                return createSelectMod();
+            case LOBBY:
+                return createLobby();
+            case WAITINGLOBBY: //est-il nécessaire?
                 return createWaitingLobby();
             case SETTINGSMENU:
                 return createSettingsMenu();
@@ -123,7 +124,6 @@ public class MenuPanel extends JLayeredPane {
     }
 
     public JPanel createMainMenu() {
-        add(createBackground("background"), Integer.valueOf(0));
         JPanel panel = SwingFactory.createPanel(frame);
 
         JPanel buttonsPanel = new JPanel();
@@ -135,8 +135,11 @@ public class MenuPanel extends JLayeredPane {
         playButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                state = MenuState.SELECTMAP;
+                state = MenuState.SELECTMOD;
                 updateMenu();
+                //-> LOCAL / ONLINE
+                //LOCAL : SELECTMAP
+                //ONLINE : HOST
             }
         });
         JButton settingsButton = SwingFactory.createImageButton("settings");
@@ -182,15 +185,38 @@ public class MenuPanel extends JLayeredPane {
         });
         manualPanel.add(manual);
 
-        panel.add(buttonsPanel, BorderLayout.CENTER);
-        panel.add(manualPanel, BorderLayout.SOUTH);
+        panel.add(buttonsPanel, BorderLayout.CENTER, 0);
+        panel.add(manualPanel, BorderLayout.SOUTH,1);
         return panel;
     }
 
+    //TODO
     public JPanel createHelpManual() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBounds(frame.getContentPaneWidth()/8, frame.getContentPaneHeight()/8, frame.getContentPaneWidth() - frame.getContentPaneWidth()/4, frame.getContentPaneHeight() - frame.getContentPaneHeight()/4);
         panel.setBackground(Color.CYAN);
+        return panel;
+    }
+
+    //TODO
+    public JPanel createSelectMod() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        return null;
+    }
+
+    //TODO
+    public JPanel createLobby() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        panel.setBackground(Color.CYAN);
+        return panel;
+    }
+
+    public JPanel createWaitingLobby() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        panel.setBackground(Color.GREEN);
         return panel;
     }
 
@@ -205,7 +231,7 @@ public class MenuPanel extends JLayeredPane {
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
         buttonsPanel.setOpaque(false);
 
-        JButton backButton = SwingFactory.createImageButton("back"); //rétrécir le bouton pour back?
+        JButton backButton = SwingFactory.createImageButton("back");
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         backButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -267,21 +293,6 @@ public class MenuPanel extends JLayeredPane {
 
         panel.add(musicPanel, BorderLayout.NORTH);
         panel.add(songPanel, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    public JPanel createSelectMap() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
-        panel.setBackground(Color.CYAN);
-        return panel;
-    }
-
-    public JPanel createWaitingLobby() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
-        panel.setBackground(Color.GREEN);
         return panel;
     }
 
