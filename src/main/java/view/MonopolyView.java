@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 import controller.MonopolyController;
 
-public class MonopolyView extends JFrame {
+public final class MonopolyView extends JFrame {
 
     private MonopolyController controller;
 
@@ -27,7 +27,7 @@ public class MonopolyView extends JFrame {
     }
 
     public void init() {
-        add(new MenuPanel(this));
+        add(new GamePanel(this));
         setVisible(true);
     }
 
