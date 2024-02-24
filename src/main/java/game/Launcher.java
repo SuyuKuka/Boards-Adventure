@@ -35,7 +35,7 @@ public final class Launcher implements Runnable {
         controller.setView(view);
         view.setController(controller);
         view.init();
-        controller.startGame(Resources.getGameMapGraphics("map2").getGameMap());
+        controller.startGame(Resources.getGameMapGraphics("map1").getGameMap());
         runWithInfo();
     }
 

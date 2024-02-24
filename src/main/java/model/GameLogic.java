@@ -23,8 +23,7 @@ public final class GameLogic {
         final ArrayList<Player> players) {
         this.gameMap = gameMap;
         this.nbTurn = nbTurn;
-        players.addAll(players);
-        System.out.println(players);
+        this.players.addAll(players);
     }
 
     public void update() {

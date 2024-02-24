@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import game.Launcher.Mode;
 import model.GameLogic;
 import model.MonopolyModel;
 import model.config.GameMap;
@@ -16,6 +17,8 @@ public final class MonopolyController {
     private MonopolyModel model;
     private MonopolyView view;
 
+    private Mode mode = Mode.MENU;
+
     public MonopolyController() { }
 
     public void startGame(final GameMap gameMap) {
@@ -25,10 +28,10 @@ public final class MonopolyController {
         for (int i = 1; i <= tmpHumanPlayerNB; i++) {
             players.add(new HumanPlayer(tmpHumanPlayerNB, "joueur" + i, new Team(i, "team" + i)));
         }
-        for (int i = 1 + tmpHumanPlayerNB; i <= 1 + tmpHumanPlayerNB + tmpComputerPlayerNB; i++) {
+        for (int i = 1 + tmpHumanPlayerNB; i < 1 + tmpHumanPlayerNB + tmpComputerPlayerNB; i++) {
             players.add(new ComputerPlayer(tmpComputerPlayerNB, "ordi" + i, new Team(i, "team" + i)));
         }
-        model.setGameState(new GameLogic(gameMap, 35, players));
+        model.setGameLogic(new GameLogic(gameMap, 35, players));
     }
 
     public void setModel(final MonopolyModel model) {
@@ -37,6 +40,14 @@ public final class MonopolyController {
 
     public void setView(final MonopolyView view) {
         this.view = view;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(final Mode mode) {
+        this.mode = mode;
     }
 
 }

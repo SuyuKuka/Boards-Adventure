@@ -25,11 +25,11 @@ public abstract class Player {
         this.playerID = playerID;
         this.username = username;
         this.team = team;
-        dices.put("0", new Dice());
+        dices.put("normal", new Dice());
     }
 
     public final void playDice() {
-        ArrayList<Integer> values = dices.get(0).getValues();
+        ArrayList<Integer> values = dices.get("normal").getValues();
         position += values.get(RAND.nextInt(values.size()));
     }
 
