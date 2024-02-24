@@ -3,7 +3,7 @@ package controller;
 import model.MonopolyModel;
 import view.MonopolyView;
 
-public class MonopolyController {
+public final class MonopolyController {
 
     public enum Mode {
         MENU, GAME;

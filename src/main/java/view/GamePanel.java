@@ -1,5 +1,3 @@
 package view;
 
-public class GamePanel {
-    
-}
+public class GamePanel { }

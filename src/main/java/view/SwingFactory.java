@@ -32,11 +32,11 @@ public class SwingFactory {
 
     private static final String PATH = "src/main/resources/";
 
-    public static JPanel createPanel(MonopolyView frame) {
+    public static JPanel createPanel(final MonopolyView frame) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setVisible(true);
-        panel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/14, 0, 0, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / 14, 0, 0, 0));
         panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
         return panel;
     }
@@ -47,31 +47,31 @@ public class SwingFactory {
         return panel;
     }
 
-    public static JLabel createImageLabel(String img) {
+    public static JLabel createImageLabel(final String img) {
         JLabel label = new JLabel(new ImageIcon(Resources.getMapImage(img)));
         label.setOpaque(false);
         return label;
     }
 
-    public static JButton createImageButton(String img, MonopolyView frame) {
+    public static JButton createImageButton(final String img, final MonopolyView frame) {
         JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/18, 0, 0, 0));
+        button.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / 18, 0, 0, 0));
 
         button.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(final MouseEvent e) {
                 Music.playSong("song/button.wav");
-            }   
+            }
         });
         //Pour le resize mais pas trop fonctionnelle actuellement
         frame.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(final ComponentEvent e) {
                 int newSize = Math.min(frame.getWidth(), frame.getHeight());
                 //button.setPreferredSize(new Dimension(newSize, newSize));
                 button.setBorder(BorderFactory.createEmptyBorder(newSize / 18, 0, 0, 0));
@@ -85,7 +85,7 @@ public class SwingFactory {
             @Override
             public void updateUI() {
                 setUI(new BasicSliderUI(this) {
-                    /* 
+                    /*
                      * Créer la taille du rectangle  qui contiendra le curseur.
                     */
                     @Override
@@ -105,7 +105,7 @@ public class SwingFactory {
                      * Paint le fond du rectangle en gris
                      */
                     @Override
-                    public void paintTrack(Graphics g) {
+                    public void paintTrack(final Graphics g) {
                         Graphics2D g2d = (Graphics2D) g.create();
                         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                         Rectangle trackBounds = trackRect;
@@ -118,7 +118,7 @@ public class SwingFactory {
                      * Change la forme du curseur en rectangle et change sa couleur
                      */
                     @Override
-                    public void paintThumb(Graphics g) {
+                    public void paintThumb(final Graphics g) {
                         Graphics2D g2d = (Graphics2D) g.create();
                         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                         Rectangle thumbBounds = thumbRect;
@@ -142,11 +142,12 @@ public class SwingFactory {
         musicSlider.setValue((int) (Music.getMusicSlider()));
         musicSlider.addChangeListener(new ChangeListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(final ChangeEvent e) {
                 Music.setMusicVolume(Music.getMusicSlider() / 100.0f);
                 Music.setMusicSlider(musicSlider.getValue());
                 if (Music.getMusic() != null) {
-                    FloatControl gainControl = (FloatControl) Music.getMusic().getControl(FloatControl.Type.MASTER_GAIN);
+                    FloatControl gainControl =
+                        (FloatControl) Music.getMusic().getControl(FloatControl.Type.MASTER_GAIN);
                     gainControl.setValue(20f * (float) Math.log10(Music.getMusicVolume()));
                 }
             }
@@ -159,7 +160,7 @@ public class SwingFactory {
         songSlider.setValue((int) (Music.getSongSlider()));
         songSlider.addChangeListener(new ChangeListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(final ChangeEvent e) {
                 Music.setSongVolume(Music.getSongSlider() / 100.0f);
                 Music.setSongSlider(songSlider.getValue());
                 if (Music.getSong() != null) {

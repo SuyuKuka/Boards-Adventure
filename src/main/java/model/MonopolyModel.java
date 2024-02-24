@@ -13,8 +13,6 @@ public class MonopolyModel {
     public MonopolyModel() {
 
     }
-    
-    public void update(final double deltaT) {
-        
-    }
+
+    public void update(final double deltaT) { }
 }

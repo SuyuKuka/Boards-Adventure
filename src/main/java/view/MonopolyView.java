@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import controller.MonopolyController;
 import controller.MonopolyController.Mode;
 
-public class MonopolyView extends JFrame {
+public final class MonopolyView extends JFrame {
 
     private MonopolyController controller;
     private Mode mode;
@@ -41,7 +41,7 @@ public class MonopolyView extends JFrame {
         // Listeners/Observers
         addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(final ComponentEvent e) {
                 updateContentPaneVariables();
                 if (mode == Mode.MENU) {
                     menuPanel.updateSize();
