@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import controller.Resources;
 
-public class MenuPanel extends JLayeredPane implements MenuPanelInterface {
+public class MenuPanel extends JLayeredPane {
 
     private MonopolyView frame;
 

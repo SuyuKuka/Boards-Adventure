@@ -7,7 +7,7 @@ public enum CellType {
     KINGDOM,
     PROPERTY,
     START,
-    TAX,
     TELEPORTATION,
+    GAIN,
     VOID;
 }

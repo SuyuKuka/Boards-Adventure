@@ -49,8 +49,8 @@
     },
     {
         "id" : 5,
-        "type" : "TAX",
-        "value" : 100,
+        "type" : "GAIN",
+        "gain" : -100,
         "xPos" : 302,
         "yPos" : 302
     },
@@ -87,8 +87,8 @@
     },
     {
         "id" : 10,
-        "type" : "TAX",
-        "value" : 200,
+        "type" : "GAIN",
+        "gain" : -200,
         "xPos" : 302,
         "yPos" : 181
     },

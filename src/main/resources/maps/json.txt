@@ -62,13 +62,15 @@ Paramètres pour les TELEPORTATION :
         "yPos" : 60
     },
 
-Paramètres pour les TAX :
-	"value" <- montant déduit du joueur quand il arrive sur cette case.
+
+
+Paramètres pour les GAIN :
+    "gain" <- montant (positif ou négatif) qu'il gagne quand il arrive sur cette case.
 
 	{
         "id" : 5,
-        "type" : "TAX",
-        "value" : X,
+        "type" : "GAIN",
+        "gain" : X,
         "xPos" : 302,
         "yPos" : 302
     },

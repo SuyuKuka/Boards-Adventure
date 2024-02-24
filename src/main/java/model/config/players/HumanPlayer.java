@@ -1,9 +1,11 @@
 package model.config.players;
 
+import model.config.Team;
+
 public class HumanPlayer extends Player {
 
-    public HumanPlayer(final int playerID, final String username) {
-        super(playerID, username);
+    public HumanPlayer(final int playerID, final String username, final Team team) {
+        super(playerID, username, team);
     }
 
 }

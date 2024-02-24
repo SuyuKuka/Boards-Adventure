@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameState;
+import model.GameData;
 import model.config.players.Player;
 
 public final class Teleportation extends Cell {
@@ -13,7 +13,7 @@ public final class Teleportation extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameState gameState) {
+    public void playEffect(final Player player, final GameData gameState) {
         player.setPosition(idTargetCell);
         System.out.println("TELEPORTATION A LA CASE " + idTargetCell);
     }

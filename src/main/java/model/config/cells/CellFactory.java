@@ -30,10 +30,10 @@ public final class CellFactory {
                 return new Card(id, CellType.CARD_DEFENSE);
             case TELEPORTATION:
                 return new Teleportation(id, jObject.getInt("targetCell"));
-            case TAX:
-                return new Tax(id, jObject.getInt("value"));
             case JAIL:
                 return new Jail(id, jObject.getInt("targetCell"));
+            case GAIN:
+                return new Gain(id, jObject.getInt("gain"));
             case VOID:
                 return new Void(id);
             default:

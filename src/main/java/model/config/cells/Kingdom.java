@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameState;
+import model.GameData;
 import model.config.players.Player;
 
 public final class Kingdom extends Cell {
@@ -11,7 +11,7 @@ public final class Kingdom extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameState gameState) {
+    public void playEffect(final Player player, final GameData gameState) {
         if (player.getMapLap() <= 0) {
             System.out.println(player.getUsername()
                 + " a essayé de devenir roi mais n'a pas encore fait le tour de la map !");
@@ -20,10 +20,10 @@ public final class Kingdom extends Cell {
             player.setPosition(targetCell);
             System.out.println(player.getUsername() + " est devenu Roi !");
         } else {
-            final int tax = player.getMoney() / 2;
+            final int tax = player.getTeam().getMoney() / 2;
             final Player currentKing = gameState.getCurrentKing();
-            currentKing.incrementMoney(tax);
-            player.incrementMoney(-tax);
+            currentKing.getTeam().incrementMoney(tax);
+            player.getTeam().incrementMoney(-tax);
             System.out.println(player.getUsername() + " a donné " + tax + "$ au roi " + currentKing
                 + " ! Longue vie au Roi !");
         }

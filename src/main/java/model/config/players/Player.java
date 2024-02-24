@@ -5,36 +5,27 @@ import java.util.HashMap;
 import java.util.Random;
 
 import model.config.Dice;
-import model.config.cells.Property;
+import model.config.Team;
 
 public abstract class Player {
     private static final Random RAND = new Random();
 
     private int playerID;
     private String username;
-    private HashMap<Integer, ArrayList<Property>> properties = new HashMap<>();
-    private ArrayList<Dice> dices = new ArrayList<>();
+    private Team team;
+    private HashMap<String, Dice> dices = new HashMap<>();
     private int jailTurn = 0;
     private int mapLap = 0;
-    private int leaderTurn = 0;
-    private int money = 500;
     private int position = 0;
     private int previousPosition = 0;
 
     private PlayerState playerState = PlayerState.NORMAL;
 
-    public Player(final int playerID, final String username) {
+    public Player(final int playerID, final String username, final Team team) {
         this.playerID = playerID;
         this.username = username;
-        dices.add(new Dice());
-    }
-
-    public final void addProperty(final Property property) {
-        final int propertyID = property.getId();
-        if (!properties.containsKey(propertyID)) {
-            properties.put(propertyID, new ArrayList<>());
-        }
-        properties.get(propertyID).add(property);
+        this.team = team;
+        dices.put("0", new Dice());
     }
 
     public final void playDice() {
@@ -46,17 +37,24 @@ public abstract class Player {
         position += increment;
     }
 
-    public final void incrementMoney(final int increment) {
-        money += increment;
+    public final void incrementJailTurn(final int increment) {
+        jailTurn += increment;
+    }
+
+    public final void incrementMapLap(final int increment) {
+        mapLap += increment;
+    }
+
+    // region getters/setters
+
+    public final Team getTeam() {
+        return team;
     }
 
     public final String getUsername() {
         return username;
     }
 
-    public final void incrementJailTurn(final int increment) {
-        jailTurn += increment;
-    }
 
     public final void setJailTurn(final int jailTurn) {
         this.jailTurn = jailTurn;
@@ -66,28 +64,12 @@ public abstract class Player {
         return jailTurn;
     }
 
-    public final int getMoney() {
-        return money;
-    }
-
-    public final void incrementLeaderTurn(final int increment) {
-        leaderTurn += increment;
-    }
-
-    public final int getLeaderTurn() {
-        return leaderTurn;
-    }
-
     public final void setPosition(final int position) {
         this.position = position;
     }
 
     public final int getPosition() {
         return position;
-    }
-
-    public final void incrementMapLap(final int increment) {
-        mapLap += increment;
     }
 
     public final int getMapLap() {
@@ -110,8 +92,6 @@ public abstract class Player {
         return playerState;
     }
 
-    public final String toString() {
-        return username + " : " + money + "$, position : " + position;
-    }
+    // endregion
 
 }

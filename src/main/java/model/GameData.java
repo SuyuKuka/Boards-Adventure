@@ -3,36 +3,27 @@ package model;
 import java.util.ArrayList;
 
 import model.config.GameMap;
-import model.config.players.ComputerPlayer;
-import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import model.config.players.PlayerState;
 
-public final class GameState {
+public final class GameData {
 
     private final GameMap gameMap;
     private final int nbTurn;
     private Player currentKing = null;
-    private int nextPlayerID = 1;
     private ArrayList<Player> players = new ArrayList<>();
 
     /**
      * Constructeur du GameState.
      * @param gameMap
      * @param nbTurn
-     * @param humanPlayers
-     * @param nbComputerPlayer
+     * @param players
      */
-    public GameState(final GameMap gameMap, final int nbTurn,
-        final ArrayList<HumanPlayer> humanPlayers, final int nbComputerPlayer) {
+    public GameData(final GameMap gameMap, final int nbTurn,
+        final ArrayList<Player> players) {
         this.gameMap = gameMap;
         this.nbTurn = nbTurn;
-        players.addAll(humanPlayers);
-        nextPlayerID += players.size();
-        for (int i = 0; i < nbComputerPlayer; i++) {
-            players.add(new ComputerPlayer(nextPlayerID, "computer" + nextPlayerID));
-            nextPlayerID++;
-        }
+        players.addAll(players);
         System.out.println(players);
     }
 
@@ -59,7 +50,7 @@ public final class GameState {
             if (player.getPosition() >= gameMap.getWalkableCells().size()) {
                 player.incrementMapLap(1);
                 player.incrementPosition(-gameMap.getWalkableCells().size());
-                player.incrementMoney(gameMap.getLapGain());
+                player.getTeam().incrementMoney(gameMap.getLapGain());
             }
         } else if (playerState == PlayerState.JAILED) {
             player.incrementJailTurn(-1);
@@ -70,7 +61,7 @@ public final class GameState {
                 return false;
             }
         } else if (playerState == PlayerState.LEADING) {
-            player.incrementLeaderTurn(1);
+            player.getTeam().incrementGamePoint(1);
         }
         return true;
     }

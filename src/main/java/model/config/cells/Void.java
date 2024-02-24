@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameState;
+import model.GameData;
 import model.config.players.Player;
 
 public final class Void extends Cell {
@@ -10,7 +10,7 @@ public final class Void extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameState gameState) {
+    public void playEffect(final Player player, final GameData gameState) {
         return;
     }
 

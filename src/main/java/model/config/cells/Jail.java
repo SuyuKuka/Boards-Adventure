@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameState;
+import model.GameData;
 import model.config.players.Player;
 import model.config.players.PlayerState;
 
@@ -16,7 +16,7 @@ public final class Jail extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameState gameState) {
+    public void playEffect(final Player player, final GameData gameState) {
         player.setPlayerState(PlayerState.JAILED);
         player.setJailTurn(JAILTURN);
         player.setPreviousPosition(player.getPosition());

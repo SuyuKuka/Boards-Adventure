@@ -1,5 +1,14 @@
 package view;
 
-public class GamePanel {
-    
+import javax.swing.JLayeredPane;
+
+public class GamePanel extends JLayeredPane {
+
+    private MonopolyView frame;
+    public GamePanel(final MonopolyView frame) {
+        this.frame = frame;
+        setBounds(0, 0, frame.getFrameWidth(), frame.getFrameHeight());
+        repaint();
+        setVisible(true);
+    }
 }
