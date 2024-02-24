@@ -244,9 +244,15 @@ public class MenuPanel extends JLayeredPane {
         add(createBackground("background_lobby"), Integer.valueOf(0));
         JPanel panel = SwingFactory.createPanel(frame);
 
+        JPanel lobbyNamePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        lobbyNamePanel.setOpaque(false);
+
+        JLabel lobbyNameLabel = new JLabel("Room code : ");
+        lobbyNameLabel.setFont(Resources.loadFont(12f, "RifficFree.ttf"));
+        lobbyNamePanel.add(lobbyNameLabel);
+
         JPanel lobbyPanel = SwingFactory.createSubPanel();
         lobbyPanel.setLayout(new GridLayout(1, 2));
-        
 
         JPanel leftSidePanel = createLeftSide();
 
@@ -256,6 +262,7 @@ public class MenuPanel extends JLayeredPane {
         lobbyPanel.add(rightSidePanel);
 
         //AJOUT DU CODE EN NORTH???
+        panel.add(lobbyNamePanel, BorderLayout.NORTH);
         panel.add(lobbyPanel, BorderLayout.CENTER);
         return panel;
     }
@@ -305,7 +312,6 @@ public class MenuPanel extends JLayeredPane {
 
         JLabel nameLabel = new JLabel("Mario Party");
         nameLabel.setFont(Resources.loadFont(30f, "RifficFree.ttf"));
-        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         namePanel.add(nameLabel);
     
         JPanel botPanel = SwingFactory.createSubPanel();
