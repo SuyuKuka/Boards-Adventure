@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import java.awt.Image;
+import java.awt.Font;
+import java.awt.FontFormatException;
 
 import javax.imageio.ImageIO;
 
@@ -24,12 +26,17 @@ import view.GameMapGraphics;
  */
 public final class Resources {
     private static final String PATH = "src/main/resources/";
+    private static Font cFont;
 
     private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
     private static HashMap<String, Image> images = new HashMap<>();
+    private static HashMap<String, Image> menuImages = new HashMap<>();
+    private static HashMap<String, Image> mapImages = new HashMap<>();
 
     public static void loadResources() {
         loadImages(new File(PATH), images);
+        loadImages(new File(PATH + "menu/"), menuImages);
+        loadImages(new File(PATH + "maps/"), mapImages);
         loadGameMapsGraphics();
     }
 
@@ -47,9 +54,10 @@ public final class Resources {
                     final String mapName = map.getName();
                     HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
                     HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-                    HashMap<String, Image> mapImages = new HashMap<>();
-                    loadImages(map, mapImages);
-                    gameMaps.put(mapName, new GameMapGraphics(new GameMap(mapName, cells), mapImages, cellsGraphics));
+                    HashMap<String, Image> gamemapImages = new HashMap<>();
+                    loadImages(map, gamemapImages);
+                    gameMaps.put(mapName,
+                        new GameMapGraphics(new GameMap(mapName, cells), gamemapImages, cellsGraphics));
                 }
             }
         } catch (NullPointerException e) {
@@ -119,6 +127,22 @@ public final class Resources {
 
     // endregion
 
+    // region font
+
+    public static Font loadFont(final float size, final String font) {
+        try {
+            cFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/police/" + font));
+            cFont = cFont.deriveFont(Font.BOLD, size);
+        } catch (FontFormatException e) {
+            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return cFont;
+    }
+
+    // endregion
+
     // region getter/setters
 
     public static Image getImage(final String key) {
@@ -128,8 +152,26 @@ public final class Resources {
         return images.get("placeholder32_32");
     }
 
+    public static Image getMenuImage(final String key) {
+        if (menuImages.containsKey(key)) {
+            return menuImages.get(key);
+        }
+        return images.get("placeholder32_32");
+    }
+
+    public static Image getMapImage(final String key) {
+        if (mapImages.containsKey(key)) {
+            return mapImages.get(key);
+        }
+        return images.get("placeholder32_32");
+    }
+
     public static GameMapGraphics getGameMapGraphics(final String key) {
         return gameMaps.get(key);
+    }
+
+    public static String getPath() {
+        return PATH;
     }
 
     // endregion

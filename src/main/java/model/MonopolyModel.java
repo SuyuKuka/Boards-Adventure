@@ -2,20 +2,20 @@ package model;
 
 public final class MonopolyModel {
 
-    private GameLogic gameState;
+    private GameLogic gameLogic;
 
     public void update() {
-        if (gameState == null) {
+        if (gameLogic == null) {
             return;
         }
-        gameState.update();
+        gameLogic.update();
     }
 
-    public void setGameState(final GameLogic gameState) {
-        this.gameState = gameState;
+    public void setGameLogic(final GameLogic gameLogic) {
+        this.gameLogic = gameLogic;
     }
 
-    public GameLogic getGameState() {
-        return gameState;
+    public GameLogic getGameLogic() {
+        return gameLogic;
     }
 }
