@@ -17,13 +17,11 @@ public class Resources {
     private static HashMap<String, Image> images = new HashMap<>();
     private static HashMap<String, Image> menuImages = new HashMap<>();
     private static HashMap<String, Image> mapImages = new HashMap<>();
-    private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
-
+    
     public static void loadResources() {
         loadImages(new File(PATH), images);
         loadImages(new File(PATH + "menu/"), menuImages);
         loadImages(new File(PATH + "maps/"), mapImages);
-        loadGameMapsGraphics();
     }
 
     private static void loadImages(final File folder, final HashMap<String, Image> hashMap) {
@@ -84,63 +82,7 @@ public class Resources {
         }
         return cFont;
     }
-
-    // region gamemap/cells
-
-    private static void loadGameMapsGraphics() {
-        try {
-            File maps = new File(PATH + "maps/");
-            for (File map : maps.listFiles()) {
-                if (isACorrectMap(map)) {
-                    final String mapName = map.getName();
-                    HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
-                    HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-                    HashMap<String, Image> mapImages = new HashMap<>();
-                    loadImages(map, mapImages);
-                    gameMaps.put(mapName, new GameMapGraphics(new GameMap(mapName, cells), mapImages, cellsGraphics));
-                }
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("Resource/maps directory not found.");
-        }
-    }
-
-    private static boolean isACorrectMap(final File file) {
-        return file.isDirectory() && new File(file.getPath() + "/cells.json").exists()
-            && new File(file.getPath() + "/board.png").exists();
-    }
-
-    private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
-        HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
-        try {
-            final String cellsString = FileUtils.readFileToString(cellsFile, StandardCharsets.UTF_8);
-            final JSONArray jArrayCells = new JSONArray(cellsString);
-            for (int i = 0; i < jArrayCells.length(); i++) {
-                final JSONObject jCell = jArrayCells.getJSONObject(i);
-                final int id = jCell.getInt("id");
-                final Cell cell = CellFactory.createCell(jCell);
-                final int xPos = jCell.getInt("xPos");
-                final int yPos = jCell.getInt("yPos");
-                cellsGraphics.put(id, new CellGraphics(cell, xPos, yPos));
-            }
-        } catch (IOException e) {
-            System.out.println("Fichier cells.json non trouvé.");
-            e.printStackTrace();
-        }
-        return cellsGraphics;
-    }
-
-    private static HashMap<Integer, Cell> getCells(final HashMap<Integer, CellGraphics> cellsGraphics) {
-        HashMap<Integer, Cell> cells = new HashMap<>();
-        for (int id : cellsGraphics.keySet()) {
-            cells.put(id, cellsGraphics.get(id).getCell());
-        }
-        return cells;
-    }
-
-    // endregion
-
+ 
     public static String getPath() {
         return PATH;
     }
