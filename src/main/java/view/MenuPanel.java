@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.*;
 
 import javax.swing.BorderFactory;
@@ -29,9 +32,12 @@ import controller.Resources;
 public class MenuPanel extends JLayeredPane {
 
     private MonopolyView frame;
+    private boolean host = false;
+    private int select = 1;
+    private int nbMaps = 4; //faire en sorte qu'il compte lui meme??
 
     private enum MenuState {
-        MAINMENU, HELPMANUAL, SELECTMOD, LOBBY, WAITINGLOBBY, SETTINGSMENU;
+        MAINMENU, HELPMANUAL, CREATEJOIN, LOBBY, WAITINGLOBBY, SETTINGSMENU;
     }
 
     private MenuState state = MenuState.MAINMENU;
@@ -39,7 +45,7 @@ public class MenuPanel extends JLayeredPane {
     public MenuPanel(final MonopolyView frame) {
         this.frame = frame;
         setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
-        add(createBackground("background"), Integer.valueOf(0));
+        add(createBackground("background_menu"), Integer.valueOf(0));
         add(createPanel(), Integer.valueOf(1));
         Music.playMusic("music/MenuTheme.wav");
         addComponentListener(new ComponentAdapter() {
@@ -54,7 +60,7 @@ public class MenuPanel extends JLayeredPane {
         setVisible(true);
     }
 
-    public void updateBackground() {
+    private void updateBackground() {
         for (Component comp : getComponents()) {
             if (getLayer(comp) == 0) {
                 remove(comp);
@@ -64,7 +70,7 @@ public class MenuPanel extends JLayeredPane {
         repaint();
     }
 
-    public void updateMenu() {
+    private void updateMenu() {
         for (Component comp : getComponents()) {
             if (getLayer(comp) == 1) {
                 remove(comp);
@@ -77,7 +83,7 @@ public class MenuPanel extends JLayeredPane {
         repaint();
     }
 
-    public void removeMunual() {
+    private void removeMunual() {
         for (Component comp : getComponents()) {
             if (getLayer(comp) == 2) {
                 remove(comp);
@@ -87,14 +93,14 @@ public class MenuPanel extends JLayeredPane {
         repaint();
     } 
 
-    public JPanel createPanel() {
+    private JPanel createPanel() {
         switch (state) {
             case MAINMENU:
                 return createMainMenu();
             case HELPMANUAL:
                 return createHelpManual();
-            case SELECTMOD:
-                return createSelectMod();
+            case CREATEJOIN:
+                return createJoin();
             case LOBBY:
                 return createLobby();
             case WAITINGLOBBY: //est-il nécessaire?
@@ -110,7 +116,7 @@ public class MenuPanel extends JLayeredPane {
         setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
     }
 
-    public JPanel createBackground(String st) {
+    private JPanel createBackground(String st) {
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -123,7 +129,8 @@ public class MenuPanel extends JLayeredPane {
         return panel;
     }
 
-    public JPanel createMainMenu() {
+    private JPanel createMainMenu() {
+        add(createBackground("background_menu"), Integer.valueOf(0));
         JPanel panel = SwingFactory.createPanel(frame);
 
         JPanel buttonsPanel = new JPanel();
@@ -131,18 +138,18 @@ public class MenuPanel extends JLayeredPane {
         buttonsPanel.setOpaque(false);
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/4, 0, 0, 0));
 
-        JButton playButton = SwingFactory.createImageButton("play");
+        JButton playButton = SwingFactory.createImageButton("play", frame);
         playButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                state = MenuState.SELECTMOD;
+                state = MenuState.CREATEJOIN;
                 updateMenu();
                 //-> LOCAL / ONLINE
-                //LOCAL : SELECTMAP
-                //ONLINE : HOST
+                //LOCAL : LOBBY
+                //ONLINE : LOBBY / WAITING LOBBY?
             }
         });
-        JButton settingsButton = SwingFactory.createImageButton("settings");
+        JButton settingsButton = SwingFactory.createImageButton("settings", frame);
         settingsButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -150,7 +157,7 @@ public class MenuPanel extends JLayeredPane {
                 updateMenu();
             }
         });
-        JButton leaveButton = SwingFactory.createImageButton("quit");
+        JButton leaveButton = SwingFactory.createImageButton("quit", frame);
         leaveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -165,74 +172,55 @@ public class MenuPanel extends JLayeredPane {
         JPanel manualPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         manualPanel.setOpaque(false);
 
-        JLabel manual = SwingFactory.createImageLabel("manual_close");
-        manual.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        manual.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                add(createHelpManual(), Integer.valueOf(2));
-            }
-        });
+        JButton manual = createManuelButton();
         manualPanel.add(manual);
 
-        panel.add(buttonsPanel, BorderLayout.CENTER, 0);
-        panel.add(manualPanel, BorderLayout.SOUTH,1);
+        panel.add(buttonsPanel, BorderLayout.CENTER);
+        panel.add(manualPanel, BorderLayout.SOUTH);
         return panel;
     }
 
     //TODO
-    public JPanel createHelpManual() {
+    private JPanel createHelpManual() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBounds(frame.getContentPaneWidth()/8, frame.getContentPaneHeight()/8, frame.getContentPaneWidth() - frame.getContentPaneWidth()/4, frame.getContentPaneHeight() - frame.getContentPaneHeight()/4);
         panel.setBackground(Color.CYAN);
         return panel;
     }
 
-    //TODO
-    public JPanel createSelectMod() {
-        JPanel panel = new JPanel(new BorderLayout());
-
-        return null;
-    }
-
-    //TODO
-    public JPanel createLobby() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
-        panel.setBackground(Color.CYAN);
-        return panel;
-    }
-
-    public JPanel createWaitingLobby() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
-        panel.setBackground(Color.GREEN);
-        return panel;
-    }
-
-    public JPanel createSettingsMenu() {
-        add(createBackground("background_options"), Integer.valueOf(0));
+    private JPanel createJoin(){
+        add(createBackground("background_menu"), Integer.valueOf(0));
         JPanel panel = SwingFactory.createPanel(frame);
+        
+        JPanel buttonPanel = SwingFactory.createSubPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/3, 0, 0, 0));
+    
+        JButton hostButton = SwingFactory.createImageButton("host", frame);
+        hostButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                host = true;
+                state = MenuState.LOBBY;
+                updateMenu();
+            }
+        });
+    
+        JButton joinButton = SwingFactory.createImageButton("join", frame);
+        joinButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                host = false;
+                state = MenuState.WAITINGLOBBY;
+                updateMenu();
+            }
+        });
+        buttonPanel.add(hostButton, BorderLayout.CENTER);
+        buttonPanel.add(joinButton, BorderLayout.SOUTH);
 
-        JPanel volumePanel = createVolumePanel();
-        volumePanel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/4, 0, 0, 0));
+        JPanel botPanel = SwingFactory.createSubPanel();
 
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.setOpaque(false);
-
-        JButton backButton = SwingFactory.createImageButton("back");
-        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JButton backButton = SwingFactory.createImageButton("back", frame);
         backButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -240,14 +228,149 @@ public class MenuPanel extends JLayeredPane {
                 updateMenu();
             }
         });
-        buttonsPanel.add(backButton);
-
-        panel.add(volumePanel, BorderLayout.CENTER);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
+    
+        JButton manual = createManuelButton();
+    
+        botPanel.add(backButton, BorderLayout.WEST);
+        botPanel.add(manual, BorderLayout.EAST);
+    
+        panel.add(buttonPanel, BorderLayout.CENTER);
+        panel.add(botPanel, BorderLayout.SOUTH);
         return panel;
     }
 
-    public JPanel createVolumePanel() {
+    //TODO
+    private JPanel createLobby() {
+        add(createBackground("background_lobby"), Integer.valueOf(0));
+        JPanel panel = SwingFactory.createPanel(frame);
+
+        JPanel lobbyPanel = SwingFactory.createSubPanel();
+        lobbyPanel.setLayout(new GridLayout(1, 2));
+        
+
+        JPanel leftSidePanel = createLeftSide();
+
+        JPanel rightSidePanel = createRightSide();
+
+        lobbyPanel.add(leftSidePanel);
+        lobbyPanel.add(rightSidePanel);
+
+        //AJOUT DU CODE EN NORTH???
+        panel.add(lobbyPanel, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private JPanel createLeftSide() {
+        JPanel leftSidePanel = SwingFactory.createPanel(frame);
+
+        JPanel mapSelectionPanel = SwingFactory.createSubPanel();
+
+        JButton leftSelectButton = SwingFactory.createImageButton("select_left", frame);
+        leftSelectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(select > 1) { //4 map actuellement
+                    select--;
+                    //mapSelect.setIcon(new ImageIcon("map" + select));
+                } else {
+                    select = nbMaps;
+                }
+                System.out.println("Left : " + select);
+            }
+        });
+
+        JLabel mapSelect = SwingFactory.createImageLabel("board");
+        mapSelect.setPreferredSize(new Dimension(200, 250));
+
+        JButton rightSelectButton = SwingFactory.createImageButton("select_right", frame);
+        rightSelectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(select < nbMaps) { //4 map actuellement
+                    select++;
+                    //mapSelect.setIcon(new ImageIcon("map" + select));
+                } else {
+                    select = 1;
+                }
+                System.out.println("Right : " + select);
+            }
+        });
+
+        mapSelectionPanel.add(leftSelectButton, BorderLayout.WEST);
+        mapSelectionPanel.add(mapSelect, BorderLayout.CENTER);
+        mapSelectionPanel.add(rightSelectButton, BorderLayout.EAST);
+
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        namePanel.setOpaque(false);
+
+        JLabel nameLabel = new JLabel("Mario Party");
+        nameLabel.setFont(Resources.loadFont(30f, "RifficFree.ttf"));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        namePanel.add(nameLabel);
+    
+        JPanel botPanel = SwingFactory.createSubPanel();
+        
+        JButton backButton = SwingFactory.createImageButton("back", frame);
+        backButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                state = MenuState.CREATEJOIN;
+                updateMenu();
+            }
+        });
+    
+        botPanel.add(backButton, BorderLayout.WEST);
+    
+        leftSidePanel.add(mapSelectionPanel, BorderLayout.NORTH);
+        leftSidePanel.add(namePanel, BorderLayout.CENTER);
+        leftSidePanel.add(botPanel, BorderLayout.SOUTH);
+        return leftSidePanel;
+    }
+
+    private JPanel createRightSide() {
+        JPanel panel = SwingFactory.createPanel(frame);
+        panel.setOpaque(true);
+        panel.setBackground(Color.BLACK);
+        return panel;
+    }
+
+    //TODO?
+    private JPanel createWaitingLobby() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        panel.setBackground(Color.GREEN);
+        return panel;
+    }
+
+    private JPanel createSettingsMenu() {
+        add(createBackground("background_settings"), Integer.valueOf(0));
+        JPanel panel = SwingFactory.createPanel(frame);
+
+        JPanel volumePanel = createVolumePanel();
+        volumePanel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/4, 0, 0, 0));
+
+        JPanel botPanel = new JPanel(new BorderLayout());
+        botPanel.setOpaque(false);
+        
+        JButton backButton = SwingFactory.createImageButton("back", frame);
+        backButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                state = MenuState.MAINMENU;
+                updateMenu();
+            }
+        });
+    
+        JButton manual = createManuelButton();
+        botPanel.add(backButton, BorderLayout.WEST);
+        botPanel.add(manual, BorderLayout.EAST);
+
+        panel.add(volumePanel, BorderLayout.CENTER);
+        panel.add(botPanel, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JPanel createVolumePanel() {
         JPanel panel = SwingFactory.createPanel(frame);
 
         JPanel musicPanel = new JPanel();
@@ -261,19 +384,18 @@ public class MenuPanel extends JLayeredPane {
 
         JSlider musicSlider = SwingFactory.createMusicJSlider();
         musicPanel.setLayout(new BoxLayout(musicPanel, BoxLayout.X_AXIS));
-        musicPanel.add(musicLabel);
-        musicPanel.add(Box.createHorizontalStrut(10));
-        musicPanel.add(musicSlider);
 
         JLabel plusMusicLabel = new JLabel(" +");
         plusMusicLabel.setFont(Resources.loadFont(30f, "Komigo3D.ttf"));
         plusMusicLabel.setForeground(Color.BLACK);
+        musicPanel.add(musicLabel);
+        musicPanel.add(Box.createHorizontalStrut(10));
+        musicPanel.add(musicSlider);
         musicPanel.add(plusMusicLabel);
 
 
-        JPanel songPanel = new JPanel();
+        JPanel songPanel = SwingFactory.createSubPanel();
         songPanel.setLayout(new BoxLayout(musicPanel, BoxLayout.Y_AXIS));
-        songPanel.setOpaque(false);
 
         JLabel songLabel = new JLabel("Son :  -");
         songLabel.setFont(Resources.loadFont(30f, "Komigo3D.ttf"));
@@ -282,13 +404,13 @@ public class MenuPanel extends JLayeredPane {
 
         JSlider songJSlider = SwingFactory.createSongJSlider();
         songPanel.setLayout(new BoxLayout(songPanel, BoxLayout.X_AXIS));
-        songPanel.add(songLabel);
-        songPanel.add(Box.createHorizontalStrut(10));
-        songPanel.add(songJSlider);
         
         JLabel plusSongLabel = new JLabel(" +");
         plusSongLabel.setFont(Resources.loadFont(30f, "Komigo3D.ttf"));
         plusSongLabel.setForeground(Color.BLACK);
+        songPanel.add(songLabel);
+        songPanel.add(Box.createHorizontalStrut(10));
+        songPanel.add(songJSlider);
         songPanel.add(plusSongLabel);
 
         panel.add(musicPanel, BorderLayout.NORTH);
@@ -296,7 +418,29 @@ public class MenuPanel extends JLayeredPane {
         return panel;
     }
 
-    public JPanel createError(){
+    private JButton createManuelButton() {
+        JButton manual = SwingFactory.createImageButton("manual_close", frame);
+        manual.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        manual.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
+            }
+    
+            @Override
+            public void mouseExited(MouseEvent e) {
+                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
+            }
+    
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                add(createHelpManual(), Integer.valueOf(2));
+            }
+        });
+        return manual;
+    }
+
+    private JPanel createError(){
         JPanel error = new JPanel(new BorderLayout());
         error.setBackground(Color.RED);
         return error;

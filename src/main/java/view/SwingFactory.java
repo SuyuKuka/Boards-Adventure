@@ -9,6 +9,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -39,24 +41,41 @@ public class SwingFactory {
         return panel;
     }
 
+    public static JPanel createSubPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        return panel;
+    }
+
     public static JLabel createImageLabel(String img) {
-        JLabel label = new JLabel(new ImageIcon(Resources.getMenuImage(img)));
+        JLabel label = new JLabel(new ImageIcon(Resources.getMapImage(img)));
         label.setOpaque(false);
         return label;
     }
 
-    public static JButton createImageButton(String img) {
+    public static JButton createImageButton(String img, MonopolyView frame) {
         JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));;
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight()/18, 0, 0, 0));
+
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Music.playSong("song/button.wav");
             }   
+        });
+        //Pour le resize mais pas trop fonctionnelle actuellement
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int newSize = Math.min(frame.getWidth(), frame.getHeight());
+                //button.setPreferredSize(new Dimension(newSize, newSize));
+                button.setBorder(BorderFactory.createEmptyBorder(newSize / 18, 0, 0, 0));
+            }
         });
         return button;
     }
