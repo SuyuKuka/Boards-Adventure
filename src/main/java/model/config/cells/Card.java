@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameData;
+import model.GameLogic;
 import model.config.players.Player;
 
 public final class Card extends Cell {
@@ -13,7 +13,7 @@ public final class Card extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameData gameState) {
+    public void playEffect(final Player player, final GameLogic gameState) {
         System.out.println(cardType);
     }
 }

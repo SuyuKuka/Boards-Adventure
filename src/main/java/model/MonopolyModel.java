@@ -2,7 +2,7 @@ package model;
 
 public final class MonopolyModel {
 
-    private GameData gameState;
+    private GameLogic gameState;
 
     public void update() {
         if (gameState == null) {
@@ -11,11 +11,11 @@ public final class MonopolyModel {
         gameState.update();
     }
 
-    public void setGameState(final GameData gameState) {
+    public void setGameState(final GameLogic gameState) {
         this.gameState = gameState;
     }
 
-    public GameData getGameState() {
+    public GameLogic getGameState() {
         return gameState;
     }
 }

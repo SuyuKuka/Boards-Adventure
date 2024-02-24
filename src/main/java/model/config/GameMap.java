@@ -10,7 +10,7 @@ public final class GameMap {
     private final String mapName;
     /** Liste qui contient toutes les cellules accessibles à pied par les joueurs (la case 0 est toujours le START). */
     private final ArrayList<Cell> walkableCells = new ArrayList<>();
-    /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (téléportation, trône, prison, ..). */
+    /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (trône, prison, ...). */
     private final HashMap<Integer, Cell> specialCells = new HashMap<>();
 
     public GameMap(final String mapName, final HashMap<Integer, Cell> cells) {

@@ -2,7 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.GameData;
+import model.GameLogic;
 import model.MonopolyModel;
 import model.config.GameMap;
 import model.config.Team;
@@ -28,7 +28,7 @@ public final class MonopolyController {
         for (int i = 1 + tmpHumanPlayerNB; i <= 1 + tmpHumanPlayerNB + tmpComputerPlayerNB; i++) {
             players.add(new ComputerPlayer(tmpComputerPlayerNB, "ordi" + i, new Team(i, "team" + i)));
         }
-        model.setGameState(new GameData(gameMap, 35, players));
+        model.setGameState(new GameLogic(gameMap, 35, players));
     }
 
     public void setModel(final MonopolyModel model) {

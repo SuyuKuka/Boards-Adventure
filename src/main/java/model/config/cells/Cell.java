@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameData;
+import model.GameLogic;
 import model.config.players.Player;
 
 public abstract class Cell {
@@ -11,7 +11,7 @@ public abstract class Cell {
         this.id = id;
     }
 
-    public abstract void playEffect(Player player, GameData gameState);
+    public abstract void playEffect(Player player, GameLogic gameState);
 
     public final int getId() {
         return id;

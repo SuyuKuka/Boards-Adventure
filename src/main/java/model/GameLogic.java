@@ -6,7 +6,7 @@ import model.config.GameMap;
 import model.config.players.Player;
 import model.config.players.PlayerState;
 
-public final class GameData {
+public final class GameLogic {
 
     private final GameMap gameMap;
     private final int nbTurn;
@@ -19,7 +19,7 @@ public final class GameData {
      * @param nbTurn
      * @param players
      */
-    public GameData(final GameMap gameMap, final int nbTurn,
+    public GameLogic(final GameMap gameMap, final int nbTurn,
         final ArrayList<Player> players) {
         this.gameMap = gameMap;
         this.nbTurn = nbTurn;

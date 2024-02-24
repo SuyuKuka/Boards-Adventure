@@ -2,7 +2,7 @@ package model.config.cells;
 
 import java.util.ArrayList;
 
-import model.GameData;
+import model.GameLogic;
 import model.config.players.Player;
 
 public final class Property extends Cell {
@@ -19,7 +19,7 @@ public final class Property extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameData gameState) {
+    public void playEffect(final Player player, final GameLogic gameState) {
         if (owner == null) {
             if (player.getTeam().getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("

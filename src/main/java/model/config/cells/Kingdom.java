@@ -1,6 +1,6 @@
 package model.config.cells;
 
-import model.GameData;
+import model.GameLogic;
 import model.config.players.Player;
 
 public final class Kingdom extends Cell {
@@ -11,7 +11,7 @@ public final class Kingdom extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final GameData gameState) {
+    public void playEffect(final Player player, final GameLogic gameState) {
         if (player.getMapLap() <= 0) {
             System.out.println(player.getUsername()
                 + " a essayé de devenir roi mais n'a pas encore fait le tour de la map !");
