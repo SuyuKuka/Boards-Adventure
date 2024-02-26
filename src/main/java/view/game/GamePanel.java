@@ -1,5 +1,6 @@
 package view.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.awt.event.ComponentAdapter;
@@ -21,6 +22,7 @@ public final class GamePanel extends JLayeredPane {
 
     private MonopolyView frame;
     private GameMapGraphics gameMapGraphics;
+    private ArrayList<CellGraphics> cellsGraphics = new ArrayList<>();
 
     public GamePanel(final MonopolyView frame, final GameMapGraphics gameMapGraphics) {
         this.frame = frame;

@@ -20,6 +20,7 @@ import model.config.cells.Cell;
 import model.config.cells.CellFactory;
 import view.GameMapGraphics;
 import view.game.cellsgraphics.CellGraphics;
+import view.game.cellsgraphics.CellGraphicsFactory;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.
@@ -82,7 +83,7 @@ public final class Resources {
                 final Cell cell = CellFactory.createCell(jCell);
                 final int xPos = jCell.getInt("xPos");
                 final int yPos = jCell.getInt("yPos");
-                cellsGraphics.put(id, new CellGraphics(cell, xPos, yPos));
+                cellsGraphics.put(id, CellGraphicsFactory.createCellGraphics(cell, yPos, xPos));
             }
         } catch (IOException e) {
             System.out.println("Fichier cells.json non trouvé.");
