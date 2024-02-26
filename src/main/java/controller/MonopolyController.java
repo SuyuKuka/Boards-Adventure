@@ -17,7 +17,7 @@ public final class MonopolyController {
     private MonopolyModel model;
     private MonopolyView view;
 
-    private Mode mode = Mode.MENU;
+    private Mode mode = Mode.GAME;
 
     public MonopolyController() { }
 

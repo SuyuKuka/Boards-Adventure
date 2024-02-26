@@ -1,4 +1,4 @@
-package view;
+package view.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,6 +25,8 @@ import javax.swing.JSlider;
 
 import controller.Music;
 import controller.Resources;
+import view.MonopolyView;
+import view.SwingFactory;
 
 /**
  * Classe MenuPanel qui s'occupe de toute la vue des menus du jeu.

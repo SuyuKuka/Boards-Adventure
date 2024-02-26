@@ -18,8 +18,8 @@ import org.json.JSONObject;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
-import view.CellGraphics;
 import view.GameMapGraphics;
+import view.game.cellsgraphics.CellGraphics;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.

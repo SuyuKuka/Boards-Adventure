@@ -8,7 +8,10 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
 
 import controller.MonopolyController;
+import controller.Resources;
 import game.Launcher.Mode;
+import view.game.GamePanel;
+import view.menu.MenuPanel;
 
 public final class MonopolyView extends JFrame {
 
@@ -33,12 +36,16 @@ public final class MonopolyView extends JFrame {
         setLocation(screenWidth / 4, screenHeight / 4);
         pack();
     }
-
     public void init() {
         mode = controller.getMode();
         updateContentPaneVariables();
-        menuPanel = new MenuPanel(this);
-        add(menuPanel);
+        if (mode == Mode.MENU) {
+            menuPanel = new MenuPanel(this);
+            add(menuPanel);
+        } else {
+            gamePanel = new GamePanel(this, Resources.getGameMapGraphics("map1"));
+            add(gamePanel);
+        }
         // Listeners/Observers
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -47,7 +54,7 @@ public final class MonopolyView extends JFrame {
                 if (mode == Mode.MENU) {
                     menuPanel.updateSize();
                 } else if (mode == Mode.GAME) {
-                    System.out.println("game");
+                    gamePanel.updateSize();
                 }
                 revalidate();
             }

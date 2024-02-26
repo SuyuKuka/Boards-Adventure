@@ -11,7 +11,7 @@ public final class GameLogic {
     private final GameMap gameMap;
     private final int nbTurn;
     private Player currentKing = null;
-    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> players;
 
     /**
      * Constructeur du GameState.
@@ -19,11 +19,10 @@ public final class GameLogic {
      * @param nbTurn
      * @param players
      */
-    public GameLogic(final GameMap gameMap, final int nbTurn,
-        final ArrayList<Player> players) {
+    public GameLogic(final GameMap gameMap, final int nbTurn, final ArrayList<Player> players) {
         this.gameMap = gameMap;
         this.nbTurn = nbTurn;
-        this.players.addAll(players);
+        this.players = players;
     }
 
     public void update() {

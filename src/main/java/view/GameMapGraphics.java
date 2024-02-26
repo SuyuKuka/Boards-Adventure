@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.awt.Image;
 
 import model.config.GameMap;
+import view.game.cellsgraphics.CellGraphics;
 
 public final class GameMapGraphics {
     private final GameMap gameMap;
@@ -24,6 +25,10 @@ public final class GameMapGraphics {
 
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    public HashMap<Integer, CellGraphics> getCellsGraphics() {
+        return cellsGraphics;
     }
 
     public String toString() {
