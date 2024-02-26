@@ -22,7 +22,7 @@ public final class GamePanel extends JLayeredPane {
 
     private MonopolyView frame;
     private GameMapGraphics gameMapGraphics;
-    private ArrayList<CellGraphics> cellsGraphics = new ArrayList<>();
+    private ArrayList<CellGraphics> cellsGraphicsList = new ArrayList<>();
 
     public GamePanel(final MonopolyView frame, final GameMapGraphics gameMapGraphics) {
         this.frame = frame;

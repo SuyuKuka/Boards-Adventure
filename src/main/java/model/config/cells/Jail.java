@@ -10,13 +10,13 @@ public final class Jail extends Cell {
 
     private int targetCell;
 
-    public Jail(final int id, final int targetCell) {
-        super(id);
+    public Jail(final int id, final CellType cellType, final int targetCell) {
+        super(id, cellType);
         this.targetCell = targetCell;
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
+    public void playEffect(final Player player, final GameLogic gameLogic) {
         player.setPlayerState(PlayerState.JAILED);
         player.setJailTurn(JAILTURN);
         player.setPreviousPosition(player.getPosition());

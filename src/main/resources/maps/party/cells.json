@@ -1,0 +1,59 @@
+[
+    {
+        "id" : -1,
+        "type" : "VOID",
+        "xPos" : 860,
+        "yPos" : 910
+    },
+    {
+        "id" : 0,
+        "type" : "START",
+        "lapGain" : 200,
+        "xPos" : 1463,
+        "yPos" : 962
+    },
+    {
+        "id" : 1,
+        "type" : "PROPERTY",
+        "prices" : [100, 150, 200, 250],
+        "group" : 1,
+        "xPos" : 1400,
+        "yPos" : 875
+    },
+    {
+        "id" : 2,
+        "type" : "PROPERTY",
+        "prices" : [125, 175, 225, 275],
+        "group" : 1,
+        "xPos" : 1365,
+        "yPos" : 800
+    },
+    {
+        "id" : 3,
+        "type" : "INTERSECTION",
+        "intersectIDs" : [4, 5],
+        "xPos" : 1325,
+        "yPos" : 730
+    },
+    {
+        "id" : 4,
+        "type" : "VOID",
+        "xPos" : 1185,
+        "yPos" : 730
+    },
+    {
+        "id" : 5,
+        "type" : "SHOP",
+        "xPos" : 1040,
+        "yPos" : 665
+    },
+    {
+        "id" : 6,
+        "type" : "KINGDOM",
+        "throneCell" : -1,
+        "xPos" : 860,
+        "yPos" : 805
+    }
+    
+    
+]

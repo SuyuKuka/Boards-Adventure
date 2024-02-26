@@ -43,7 +43,7 @@ public final class MonopolyView extends JFrame {
             menuPanel = new MenuPanel(this);
             add(menuPanel);
         } else {
-            gamePanel = new GamePanel(this, Resources.getGameMapGraphics("map1"));
+            gamePanel = new GamePanel(this, Resources.getGameMapGraphics("party"));
             add(gamePanel);
         }
         // Listeners/Observers

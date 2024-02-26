@@ -1,10 +1,10 @@
 package view.game.cellsgraphics;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import controller.Resources;
 import model.config.cells.Cell;
 
-public class OvalCell extends CellGraphics {
+public final class OvalCell extends CellGraphics {
 
     private JLabel iconLabel;
     private Image icon = Resources.getImage("placeholder");
@@ -24,8 +24,7 @@ public class OvalCell extends CellGraphics {
 
     @Override
     public void addContent() {
-        initIconPanel();
-        super.add(iconLabel, BorderLayout.CENTER);
+        // initIconPanel();
     }
 
     public void initIconPanel() {
@@ -36,11 +35,14 @@ public class OvalCell extends CellGraphics {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(final Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(getBorderThickness()));
-        g2d.drawOval(1, 1, getCellWidth() - 2, getCellHeight() - 2);
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.fillOval(0, 0, getCellWidth(), getCellHeight());
+        final int inside = 3;
+        g2d.setColor(Color.WHITE);
+        g2d.fillOval(inside, inside, getCellWidth() - inside * 2, getCellHeight() - inside * 2);
     }
 
 }

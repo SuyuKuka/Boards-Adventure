@@ -1,68 +1,44 @@
 package view.game.cellsgraphics;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.RenderingHints;
 
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
+import javax.swing.JPanel;
 
 import model.config.cells.Cell;
 
-public class RoundedRectCell extends CellGraphics {
+public final class RoundedRectCell extends CellGraphics {
     private static final int ARC_WIDTH = 20;
     private static final int ARC_HEIGHT = 20;
 
-    private JLabel propertyLevelLabel;
-    private Image propertyLevelImg;
-    private int propertyLevel;
-
-    private JTextArea propertyTextArea;
-    private String propertyName;
-
-    private JLabel propertyRentLabel;
-    private int propertyRent;
-
     public RoundedRectCell(final Cell cell, final int xPos, final int yPos) {
         super(cell, xPos, yPos);
-        setVisible(true);
     }
 
     @Override
     public void addContent() {
-        initPropertyLevelLabel();
-        super.add(propertyLevelLabel, BorderLayout.NORTH);
-        initPropertyTextArea();
-        super.add(propertyTextArea, BorderLayout.CENTER);
-        initPropertyRentLabel();
-        super.add(propertyRentLabel, BorderLayout.SOUTH);
-    }
-
-    public void initPropertyLevelLabel() {
-        propertyLevelLabel = new JLabel();
-        propertyLevelLabel.setVerticalAlignment(JLabel.CENTER);
-        propertyLevelLabel.setHorizontalAlignment(JLabel.CENTER);
-    }
-
-    private void initPropertyTextArea() {
-        propertyTextArea = new JTextArea();
-        propertyTextArea.setLineWrap(true);
-    }
-
-    private void initPropertyRentLabel() {
-        propertyRentLabel = new JLabel();
-        propertyRentLabel.setVerticalAlignment(JLabel.CENTER);
-        propertyRentLabel.setHorizontalAlignment(JLabel.CENTER);
+        JPanel test = new JPanel();
+        test.setBackground(Color.GREEN);
+        test.setBounds(0, 0, 50, 50);
+        test.setPreferredSize(new Dimension(50, 50));
+        test.setVisible(true);
+        super.add(test, BorderLayout.CENTER);
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(final Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(getBorderThickness()));
-        g2d.drawRoundRect(1, 1, getCellWidth() - 2, getCellHeight() - 2, ARC_WIDTH, ARC_HEIGHT);
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.fillRoundRect(0, 0, getCellWidth(), getCellHeight(), ARC_WIDTH, ARC_HEIGHT);
+        final int inside = 3;
+        g2d.setColor(Color.WHITE);
+        g2d.fillRoundRect(inside, inside, getCellWidth() - inside * 2,
+            getCellHeight() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
     }
 
 }

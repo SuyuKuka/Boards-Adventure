@@ -5,15 +5,12 @@ import model.config.players.Player;
 
 public final class Card extends Cell {
 
-    private CellType cardType;
-
-    public Card(final int id, final CellType cardType) {
-        super(id);
-        this.cardType = cardType;
+    public Card(final int id, final CellType cellType) {
+        super(id, cellType);
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
-        System.out.println(cardType);
+    public void playEffect(final Player player, final GameLogic gameLogic) {
+        System.out.println(getCellType());
     }
 }

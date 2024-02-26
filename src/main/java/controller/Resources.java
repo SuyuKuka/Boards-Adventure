@@ -32,17 +32,23 @@ public final class Resources {
     private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
     private static HashMap<String, Image> images = new HashMap<>();
     private static HashMap<String, Image> menuImages = new HashMap<>();
+    private static HashMap<String, Image> gameImages = new HashMap<>();
     private static HashMap<String, Image> mapImages = new HashMap<>();
 
     public static void loadResources() {
         loadImages(new File(PATH), images);
         loadImages(new File(PATH + "menu/"), menuImages);
         loadImages(new File(PATH + "maps/"), mapImages);
+        loadImages(new File(PATH + "game/"), gameImages);
         loadGameMapsGraphics();
     }
 
     private static String getExtension(final File file) {
-        return file.getName().substring(file.getName().lastIndexOf("."));
+        final String fileName = file.getName();
+        if (!fileName.contains(".")) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf("."));
     }
 
     // region gamemap/cells
@@ -69,7 +75,7 @@ public final class Resources {
 
     private static boolean isACorrectMap(final File file) {
         return file.isDirectory() && new File(file.getPath() + "/cells.json").exists()
-            && new File(file.getPath() + "/board.png").exists();
+            && (new File(file.getPath() + "/board.png").exists() || new File(file.getPath() + "/board.jpg").exists());
     }
 
     private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
@@ -107,7 +113,11 @@ public final class Resources {
     private static void loadImages(final File folder, final HashMap<String, Image> hashMap) {
         try {
             for (File file : folder.listFiles()) {
-                if (file.getName().contains(".") && getExtension(file).equals(".png")) {
+                if (file.isDirectory()) {
+                    loadImages(file, hashMap);
+                }
+                if (file.getName().contains(".") && (getExtension(file).equals(".png")
+                    || getExtension(file).equals(".jpg"))) {
                     addImage(file, hashMap);
                 }
             }
@@ -117,7 +127,8 @@ public final class Resources {
     }
 
     private static void addImage(final File file, final HashMap<String, Image> hashMap) {
-        int nameLength = file.getName().indexOf(".png");
+        final int nameLength = file.getName().indexOf(".png") == -1
+            ? file.getName().indexOf(".jpg") : file.getName().indexOf(".png");
         String imageName = file.getName().substring(0, nameLength);
         try {
             hashMap.put(imageName, ImageIO.read(file));
@@ -176,8 +187,4 @@ public final class Resources {
     }
 
     // endregion
-
-    public static void main(final String[] args) {
-        loadResources();
-    }
 }

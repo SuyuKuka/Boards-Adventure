@@ -35,7 +35,7 @@
     {
         "id" : 3,
         "type" : "PROPERTY",
-        "values" : [200],
+        "prices" : [200],
         "group" : 1,
         "xPos" : 423,
         "yPos" : 423
@@ -57,7 +57,7 @@
     {
         "id" : 6,
         "type" : "PROPERTY",
-        "values" : [400],
+        "prices" : [400],
         "group" : 1,
         "xPos" : 181,
         "yPos" : 302
@@ -65,7 +65,7 @@
     {
         "id" : 7,
         "type" : "PROPERTY",
-        "values" : [150],
+        "prices" : [150],
         "group" : 2,
         "xPos" : 60,
         "yPos" : 302
@@ -73,7 +73,7 @@
     {
         "id" : 8,
         "type" : "PROPERTY",
-        "values" : [300],
+        "prices" : [300],
         "group" : 2,
         "xPos" : 60,
         "yPos" : 181
@@ -116,7 +116,7 @@
     {
         "id" : 14,
         "type" : "PROPERTY",
-        "values" : [450],
+        "prices" : [450],
         "group" : 2,
         "xPos" : 181,
         "yPos" : 60
@@ -124,7 +124,7 @@
     {
         "id" : 15,
         "type" : "PROPERTY",
-        "values" : [500],
+        "prices" : [500],
         "group" : 1,
         "xPos" : 60,
         "yPos" : 60
