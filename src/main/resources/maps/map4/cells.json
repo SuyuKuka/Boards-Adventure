@@ -2,31 +2,31 @@
     {
         "id" : -1,
         "type" : "VOID",
-        "xPos" : 860,
-        "yPos" : 910
+        "xPos" : 500,
+        "yPos" : 500
     },
     {
         "id" : 0,
         "type" : "START",
         "lapGain" : 200,
-        "xPos" : 1463,
-        "yPos" : 962
+        "xPos" : 728,
+        "yPos" : 480
     },
     {
         "id" : 1,
         "type" : "PROPERTY",
         "prices" : [100, 150, 200, 250],
         "group" : 1,
-        "xPos" : 1400,
-        "yPos" : 875
+        "xPos" : 700,
+        "yPos" : 448
     },
     {
         "id" : 2,
         "type" : "PROPERTY",
         "prices" : [125, 175, 225, 275],
         "group" : 1,
-        "xPos" : 1365,
-        "yPos" : 800
+        "xPos" : 685,
+        "yPos" : 410
     },
     {
         "id" : 3,

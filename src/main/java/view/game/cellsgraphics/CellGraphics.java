@@ -11,8 +11,8 @@ public abstract class CellGraphics extends JPanel {
     private int xPos;
     private int yPos;
 
-    private static final int CELL_HEIGHT = 50;
-    private static final int CELL_WIDTH = 50;
+    private static final int CELL_HEIGHT = 25;
+    private static final int CELL_WIDTH = 25;
 
     public CellGraphics(final Cell cell, final int xPos, final int yPos) {
         this.cell = cell;

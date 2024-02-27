@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import model.config.cells.Cell;
 
 public final class RoundedRectCell extends CellGraphics {
-    private static final int ARC_WIDTH = 20;
-    private static final int ARC_HEIGHT = 20;
+    private static final int ARC_WIDTH = 5;
+    private static final int ARC_HEIGHT = 5;
 
     public RoundedRectCell(final Cell cell, final int xPos, final int yPos) {
         super(cell, xPos, yPos);
