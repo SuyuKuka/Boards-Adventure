@@ -4,22 +4,22 @@ import java.util.ArrayList;
 
 import game.Launcher.Mode;
 import model.GameLogic;
-import model.MonopolyModel;
+import model.GameModel;
 import model.config.GameMap;
 import model.config.Team;
 import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
-import view.MonopolyView;
+import view.GameView;
 
-public final class MonopolyController {
+public final class GameController {
 
-    private MonopolyModel model;
-    private MonopolyView view;
+    private GameModel model;
+    private GameView view;
 
     private Mode mode = Mode.GAME;
 
-    public MonopolyController() { }
+    public GameController() { }
 
     public void startGame(final GameMap gameMap) {
         final ArrayList<Player> players = new ArrayList<>();
@@ -34,11 +34,11 @@ public final class MonopolyController {
         model.setGameLogic(new GameLogic(gameMap, 35, players));
     }
 
-    public void setModel(final MonopolyModel model) {
+    public void setModel(final GameModel model) {
         this.model = model;
     }
 
-    public void setView(final MonopolyView view) {
+    public void setView(final GameView view) {
         this.view = view;
     }
 

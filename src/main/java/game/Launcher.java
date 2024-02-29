@@ -1,9 +1,9 @@
 package game;
 
-import controller.MonopolyController;
+import controller.GameController;
 import controller.Resources;
-import model.MonopolyModel;
-import view.MonopolyView;
+import model.GameModel;
+import view.GameView;
 
 /**
  * Classe mère qui s'occupe du jeu. Le jeu fonctionne avec la structure MVC.
@@ -26,9 +26,9 @@ public final class Launcher implements Runnable {
 
     private Mode mode;
 
-    private MonopolyController controller = new MonopolyController();
-    private MonopolyModel model = new MonopolyModel();
-    private MonopolyView view = new MonopolyView();
+    private GameController controller = new GameController();
+    private GameModel model = new GameModel();
+    private GameView view = new GameView();
 
     public Launcher() {
         controller.setModel(model);

@@ -15,16 +15,16 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import view.GameMapGraphics;
-import view.MonopolyView;
+import view.GameView;
 import view.game.cellsgraphics.CellGraphics;
 
 public final class GamePanel extends JLayeredPane {
 
-    private MonopolyView frame;
+    private GameView frame;
     private GameMapGraphics gameMapGraphics;
     private ArrayList<CellGraphics> cellsGraphicsList = new ArrayList<>();
 
-    public GamePanel(final MonopolyView frame, final GameMapGraphics gameMapGraphics) {
+    public GamePanel(final GameView frame, final GameMapGraphics gameMapGraphics) {
         this.frame = frame;
         this.gameMapGraphics = gameMapGraphics;
         add(createBackground(), Integer.valueOf(0));

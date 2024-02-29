@@ -32,7 +32,7 @@ public class SwingFactory {
 
     private static final String PATH = "src/main/resources/";
 
-    public static JPanel createPanel(final MonopolyView frame) {
+    public static JPanel createPanel(final GameView frame) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setVisible(true);
@@ -53,7 +53,7 @@ public class SwingFactory {
         return label;
     }
 
-    public static JButton createImageButton(final String img, final MonopolyView frame) {
+    public static JButton createImageButton(final String img, final GameView frame) {
         JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);

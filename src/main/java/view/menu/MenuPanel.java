@@ -25,7 +25,7 @@ import javax.swing.JSlider;
 
 import controller.Music;
 import controller.Resources;
-import view.MonopolyView;
+import view.GameView;
 import view.SwingFactory;
 
 /**
@@ -35,7 +35,7 @@ import view.SwingFactory;
  */
 public final class MenuPanel extends JLayeredPane {
 
-    private MonopolyView frame;
+    private GameView frame;
     private boolean host = false;
     private int select = 1;
     private int nbMaps = 4; //faire en sorte qu'il compte lui meme??
@@ -46,7 +46,7 @@ public final class MenuPanel extends JLayeredPane {
 
     private MenuState state = MenuState.MAINMENU;
 
-    public MenuPanel(final MonopolyView frame) {
+    public MenuPanel(final GameView frame) {
         this.frame = frame;
         setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
         add(createBackground("background_menu"), Integer.valueOf(0));

@@ -1,6 +1,6 @@
 package model;
 
-public final class MonopolyModel {
+public final class GameModel {
 
     private GameLogic gameLogic;
 

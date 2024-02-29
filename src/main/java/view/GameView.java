@@ -7,15 +7,15 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 
-import controller.MonopolyController;
+import controller.GameController;
 import controller.Resources;
 import game.Launcher.Mode;
 import view.game.GamePanel;
 import view.menu.MenuPanel;
 
-public final class MonopolyView extends JFrame {
+public final class GameView extends JFrame {
 
-    private MonopolyController controller;
+    private GameController controller;
     private Mode mode;
 
     private MenuPanel menuPanel;
@@ -24,7 +24,7 @@ public final class MonopolyView extends JFrame {
     private int contentPaneWidth;
     private int contentPaneHeight;
 
-    public MonopolyView() {
+    public GameView() {
         setTitle("Kingdom Revolution");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
@@ -83,7 +83,7 @@ public final class MonopolyView extends JFrame {
         return contentPaneWidth;
     }
 
-    public void setController(final MonopolyController controller) {
+    public void setController(final GameController controller) {
         this.controller = controller;
     }
 }
