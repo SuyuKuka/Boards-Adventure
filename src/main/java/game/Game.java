@@ -64,7 +64,7 @@ public final class Game {
         players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
         players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
-        players.add(new ComputerPlayer(3, "comp2", new Team(4, "team4")));
+        players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
         return new Model(gameMap, gameSettings, players);
     }
 

@@ -58,30 +58,36 @@ public final class GamePanel extends CorePanel {
                 if (!hasUpdated) {
                     playButton.setText("Début du jeu !");
                     hasUpdated = true;
-                    viewTime = 1.0;
+                    viewTime = 0.3;
                 } else {
                     viewDuration += lastUpdate;
-                    updateGameState(true);
+                    if (viewDuration > viewTime) {
+                        updateGameState();
+                    }
                 }
             case NEW_TURN:
                 if (!hasUpdated) {
                     playButton.setText("Tour " + controller.getCurrentTurn()
                         + " de " + player.getUsername());
                     hasUpdated = true;
-                    viewTime = 1.0;
+                    viewTime = 0.1;
                 } else {
                     viewDuration += lastUpdate;
-                    updateGameState(true);
+                    if (viewDuration > viewTime) {
+                        updateGameState();
+                    }
                 }
                 break;
             case IN_JAIL:
                 if (!hasUpdated) {
                     playButton.setText(player.getJailTurn() + " tour(s) en prison restant.");
                     hasUpdated = true;
-                    viewTime = 1.0;
+                    viewTime = 0.1;
                 } else {
                     viewDuration += lastUpdate;
-                    updateGameState(true);
+                    if (viewDuration > viewTime) {
+                        updateGameState();
+                    }
                 }
                 break;
             case PLAY_DICE:
@@ -92,9 +98,49 @@ public final class GamePanel extends CorePanel {
                         @Override
                         public void mousePressed(final MouseEvent e) {
                             controller.playDice();
-                            updateGameState(false);
+                            updateGameState();
+                            playButton.removeMouseListener(playButton.getMouseListeners()[1]);
                         }
                     });
+                }
+                break;
+            case NORMAL_CELL:
+                if (!hasUpdated) {
+                    playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
+                    hasUpdated = true;
+                    viewTime = 0.5;
+                } else {
+                    viewDuration += lastUpdate;
+                    if (viewDuration > viewTime) {
+                        updateGameState();
+                    }
+                }
+                break;
+            case ASK_INTERSECTION:
+            case ASK_PROPERTY:
+            case ASK_SHOP:
+                if (!hasUpdated) {
+                    playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
+                    hasUpdated = true;
+                    playButton.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(final MouseEvent e) {
+                            updateGameState();
+                            playButton.removeMouseListener(playButton.getMouseListeners()[1]);
+                        }
+                    });
+                }
+                break;
+            case END_TURN:
+                if (!hasUpdated) {
+                    playButton.setText("Fin du tour de " + player.getUsername() + ".");
+                    hasUpdated = true;
+                    viewTime = 0.1;
+                } else {
+                    viewDuration += lastUpdate;
+                    if (viewDuration > viewTime) {
+                        updateGameState();
+                    }
                 }
                 break;
             default:
@@ -106,13 +152,11 @@ public final class GamePanel extends CorePanel {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
     }
 
-    private void updateGameState(final boolean hasTimer) {
-        if (!hasTimer || viewDuration > viewTime) {
-            controller.updateGameState();
-            viewTime = 0;
-            viewDuration = 0;
-            hasUpdated = false;
-        }
+    private void updateGameState() {
+        controller.updateGameState();
+        viewTime = 0;
+        viewDuration = 0;
+        hasUpdated = false;
     }
 
     private void removeLayer(final int layerIndex) {

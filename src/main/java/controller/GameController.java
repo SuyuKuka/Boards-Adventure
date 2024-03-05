@@ -7,6 +7,7 @@ import view.game.GamePanel;
 
 import game.Game;
 import model.Model;
+import model.config.cells.Cell;
 import model.config.cells.CellType;
 import model.config.players.Player;
 
@@ -55,8 +56,18 @@ public final class GameController extends Controller {
                 } else if (cellType == CellType.SHOP) {
                     gameState = GameState.ASK_SHOP;
                 } else {
-                    gameState = GameState.END_TURN;
+                    gameState = GameState.NORMAL_CELL;
                 }
+                break;
+            case NORMAL_CELL:
+            case ASK_INTERSECTION:
+            case ASK_PROPERTY:
+            case ASK_SHOP:
+                gameState = GameState.END_TURN;
+                break;
+            case END_TURN:
+                gameState = GameState.NEW_TURN;
+                model.nextPlayerTurn();
                 break;
             default:
                 break;
@@ -66,6 +77,10 @@ public final class GameController extends Controller {
     public void playDice() {
         model.playDice();
         gamePanel.playDice();
+    }
+
+    public Cell getCurrentPlayerCell() {
+        return model.getGameMap().getCell(getCurrentPlayer().getPosition());
     }
 
     // region model getters/setters

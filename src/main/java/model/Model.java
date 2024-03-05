@@ -37,10 +37,8 @@ public final class Model {
     public int playDice() {
         final Player currentPlayer = players.get(playerListIterator);
         int diceValue = currentPlayer.rollDice();
-        System.out.println("pos : " + currentPlayer.getPosition() + " | dice : " + diceValue);
         Cell nextCell;
         for (int i = diceValue; i > 0; i--) {
-            System.out.println("for pos :" + currentPlayer.getPosition());
             nextCell = gameMap.getCell(gameMap.getCell(currentPlayer.getPosition()).getNextCellID());
             if (nextCell instanceof Intersection) {
                 // TODO INTERSECTION CHOIX
@@ -51,6 +49,10 @@ public final class Model {
             }
         }
         return 0;
+    }
+
+    public void nextPlayerTurn() {
+        playerListIterator = (playerListIterator + 1) % players.size();
     }
 
     public void changeLeader(final Player player) {
