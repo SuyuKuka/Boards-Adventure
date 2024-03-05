@@ -1,6 +1,5 @@
 package model.config.players;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -19,8 +18,6 @@ public abstract class Player {
     private int position = 0;
     private int previousPosition = 0;
 
-    private PlayerState playerState = PlayerState.NORMAL;
-
     public Player(final int playerID, final String username, final Team team) {
         this.playerID = playerID;
         this.username = username;
@@ -28,9 +25,8 @@ public abstract class Player {
         dices.put("normal", new Dice());
     }
 
-    public final void playDice() {
-        ArrayList<Integer> values = dices.get("normal").getValues();
-        position += values.get(RAND.nextInt(values.size()));
+    public final int rollDice() {
+        return dices.get("normal").rollDice();
     }
 
     public final void incrementPosition(final int increment) {
@@ -56,10 +52,6 @@ public abstract class Player {
     }
 
 
-    public final void setJailTurn(final int jailTurn) {
-        this.jailTurn = jailTurn;
-    }
-
     public final int getJailTurn() {
         return jailTurn;
     }
@@ -84,12 +76,12 @@ public abstract class Player {
         return previousPosition;
     }
 
-    public final void setPlayerState(final PlayerState playerState) {
-        this.playerState = playerState;
+    public final boolean isJailed() {
+        return jailTurn > 0;
     }
 
-    public final PlayerState getPlayerState() {
-        return playerState;
+    public final int getPlayerID() {
+        return playerID;
     }
 
     // endregion

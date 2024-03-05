@@ -2,8 +2,11 @@ package model.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
-public class Dice {
+public final class Dice {
+    private static final Random RAND = new Random();
+
     private ArrayList<Integer> values = new ArrayList<>();
 
     /**
@@ -28,7 +31,12 @@ public class Dice {
         this.values = values;
     }
 
-    public final ArrayList<Integer> getValues() {
+    public int rollDice() {
+        return values.get(RAND.nextInt(values.size()));
+    }
+
+
+    public ArrayList<Integer> getValues() {
         return values;
     }
 }

@@ -26,6 +26,7 @@ public abstract class CellGraphics extends JPanel {
         setVisible(true);
     }
 
+    public abstract void render();
     public abstract void addContent();
 
     public final Cell getCell() {

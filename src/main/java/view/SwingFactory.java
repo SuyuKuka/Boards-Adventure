@@ -32,12 +32,12 @@ public class SwingFactory {
 
     private static final String PATH = "src/main/resources/";
 
-    public static JPanel createPanel(final GameView frame) {
+    public static JPanel createPanel(final View frame) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setVisible(true);
-        panel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / 14, 0, 0, 0));
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        panel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 14, 0, 0, 0));
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         return panel;
     }
 
@@ -53,14 +53,14 @@ public class SwingFactory {
         return label;
     }
 
-    public static JButton createImageButton(final String img, final GameView frame) {
+    public static JButton createImageButton(final String img, final View frame) {
         JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / 18, 0, 0, 0));
+        button.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 18, 0, 0, 0));
 
         button.addMouseListener(new MouseAdapter() {
             @Override

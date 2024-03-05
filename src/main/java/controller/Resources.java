@@ -61,10 +61,10 @@ public final class Resources {
                     final String mapName = map.getName();
                     HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
                     HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-                    HashMap<String, Image> gamemapImages = new HashMap<>();
-                    loadImages(map, gamemapImages);
+                    HashMap<String, Image> gameMapImages = new HashMap<>();
+                    loadImages(map, gameMapImages);
                     gameMaps.put(mapName,
-                        new GameMapGraphics(new GameMap(mapName, cells), gamemapImages, cellsGraphics));
+                        new GameMapGraphics(new GameMap(mapName, cells), gameMapImages, cellsGraphics));
                 }
             }
         } catch (NullPointerException e) {
@@ -161,25 +161,36 @@ public final class Resources {
         if (images.containsKey(key)) {
             return images.get(key);
         }
-        return images.get("placeholder32_32");
+        return getPlaceHolderImg();
     }
 
     public static Image getMenuImage(final String key) {
         if (menuImages.containsKey(key)) {
             return menuImages.get(key);
         }
-        return images.get("placeholder32_32");
+        return getPlaceHolderImg();
     }
 
     public static Image getMapImage(final String key) {
         if (mapImages.containsKey(key)) {
             return mapImages.get(key);
         }
-        return images.get("placeholder32_32");
+        return getPlaceHolderImg();
+    }
+
+    public static Image getGameImage(final String key) {
+        if (gameImages.containsKey(key)) {
+            return gameImages.get(key);
+        }
+        return getPlaceHolderImg();
     }
 
     public static GameMapGraphics getGameMapGraphics(final String key) {
         return gameMaps.get(key);
+    }
+
+    public static Image getPlaceHolderImg() {
+        return images.get("placeholder32_32");
     }
 
     public static String getPath() {

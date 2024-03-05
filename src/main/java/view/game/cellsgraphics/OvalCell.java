@@ -45,4 +45,9 @@ public final class OvalCell extends CellGraphics {
         g2d.fillOval(inside, inside, getCellWidth() - inside * 2, getCellHeight() - inside * 2);
     }
 
+    @Override
+    public void render() {
+        System.out.println("render");
+    }
+
 }

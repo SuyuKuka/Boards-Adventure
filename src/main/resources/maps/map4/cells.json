@@ -1,59 +1,215 @@
 [
-    {
-        "id" : -1,
-        "type" : "VOID",
-        "xPos" : 500,
-        "yPos" : 500
-    },
-    {
-        "id" : 0,
-        "type" : "START",
-        "lapGain" : 200,
-        "xPos" : 728,
-        "yPos" : 480
-    },
-    {
-        "id" : 1,
-        "type" : "PROPERTY",
-        "prices" : [100, 150, 200, 250],
-        "group" : 1,
-        "xPos" : 700,
-        "yPos" : 448
-    },
-    {
-        "id" : 2,
-        "type" : "PROPERTY",
-        "prices" : [125, 175, 225, 275],
-        "group" : 1,
-        "xPos" : 685,
-        "yPos" : 410
-    },
-    {
-        "id" : 3,
-        "type" : "INTERSECTION",
-        "intersectIDs" : [4, 5],
-        "xPos" : 1325,
-        "yPos" : 730
-    },
-    {
-        "id" : 4,
-        "type" : "VOID",
-        "xPos" : 1185,
-        "yPos" : 730
-    },
-    {
-        "id" : 5,
-        "type" : "SHOP",
-        "xPos" : 1040,
-        "yPos" : 665
-    },
-    {
-        "id" : 6,
-        "type" : "KINGDOM",
-        "throneCell" : -1,
-        "xPos" : 860,
-        "yPos" : 805
-    }
-    
-    
+	{
+		"id" : 0,
+		"type" : "START",
+		"lapGain" : 200,
+		"xPos" : 734,
+		"yPos" : 483
+	},
+	{
+		"id" : 1,
+		"type" : "PROPERTY",
+		"prices" : [100, 150, 200, 250],
+		"group" : 1,
+		"xPos" : 708,
+		"yPos" : 453
+	},
+	{
+		"id" : 2,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 689,
+		"yPos" : 422
+	},
+	{
+		"id" : 3,
+		"type" : "PROPERTY",
+		"prices" : [125, 175, 225, 275],
+		"group" : 1,
+		"xPos" : 678,
+		"yPos" : 389
+	},
+	{
+		"id" : 4,
+		"type" : "INTERSECTION",
+		"nextCellID" : [5, 14],
+		"xPos" : 653,
+		"yPos" : 359
+	},
+	{
+		"id" : 5,
+		"type" : "GAIN",
+		"gain" : -150,
+		"xPos" : 646,
+		"yPos" : 325
+	},
+	{
+		"id" : 6,
+		"type" : "KINGDOM",
+		"xPos" : 637,
+		"yPos" : 287
+	},
+	{
+		"id" : 7,
+		"type" : "TELEPORTATION",
+		"targetCell": 27,
+		"xPos" : 613,
+		"yPos" : 254
+	},
+	{
+		"id" : 8,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 350],
+		"group" : 2,
+		"xPos" : 587,
+		"yPos" : 224
+	},
+	{
+		"id" : 9,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 560,
+		"yPos" : 202
+	},
+	{
+		"id" : 10,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 553,
+		"yPos" : 171
+	},
+	{
+		"id" : 11,
+		"type" : "PROPERTY",
+		"prices" : [225, 275, 325, 375],
+		"group" : 2,
+		"xPos" : 554,
+		"yPos" : 135
+	},
+	{
+		"id" : 12,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 400],
+		"group" : 2,
+		"xPos" : 535,
+		"yPos" : 103
+	},
+	{
+		"id" : 13,
+		"type" : "GAIN",
+		"nextCellID" : 0,
+		"gain" : -150,
+		"xPos" : 504,
+		"yPos" : 86
+	},
+	{
+		"id" : 14,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 592,
+		"yPos" : 366
+	},
+	{
+		"id" : 15,
+		"type" : "PROPERTY",
+		"prices" : [175, 225, 275, 325],
+		"group" : 3,
+		"xPos" : 550,
+		"yPos" : 358
+	},
+	{
+		"id" : 16,
+		"type" : "SHOP",
+		"xPos" : 517,
+		"yPos" : 333
+	},
+	{
+		"id" : 17,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 350],
+		"group" : 3,
+		"xPos" : 487,
+		"yPos" : 333
+	},
+	{
+		"id" : 18,
+		"type" : "PROPERTY",
+		"prices" : [225, 275, 325, 375],
+		"group" : 3,
+		"xPos" : 432,
+		"yPos" : 333
+	},
+	{
+		"id" : 19,
+		"type" : "KINGDOM",
+		"xPos" : 395,
+		"yPos" : 329
+	},
+	{
+		"id" : 20,
+		"type" : "GAIN",
+		"gain" : -150,
+		"xPos" : 351,
+		"yPos" : 310
+	},
+	{
+		"id" : 21,
+		"type" : "GAIN",
+		"gain" : -150,
+		"xPos" : 347,
+		"yPos" : 272
+	},
+	{
+		"id" : 22,
+		"type" : "PROPERTY",
+		"prices" : [225, 275, 325, 375],
+		"group" : 4,
+		"xPos" : 365,
+		"yPos" : 240
+	},
+	{
+		"id" : 23,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 400],
+		"group" : 4,
+		"xPos" : 405,
+		"yPos" : 235
+	},
+	{
+		"id" : 24,
+		"type" : "KINGDOM",
+		"xPos" : 443,
+		"yPos" : 232
+	},
+	{
+		"id" : 25,
+		"type" : "PROPERTY",
+		"prices" : [275, 325, 375, 425],
+		"group" : 4,
+		"xPos" : 481,
+		"yPos" : 218
+	},
+	{
+		"id" : 26,
+		"type" : "GAIN",
+		"nextCellID" : 10,
+		"gain" : -150,
+		"xPos" : 515,
+		"yPos" : 183
+	},
+	{
+		"id" : 27,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 639,
+		"yPos" : 443
+	},
+	{
+		"id" : 28,
+		"type" : "GAIN",
+		"nextCellID" : 3,
+		"gain" : -150,
+		"xPos" : 646,
+		"yPos" : 405
+	}
 ]

@@ -41,4 +41,9 @@ public final class RoundedRectCell extends CellGraphics {
             getCellHeight() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
     }
 
+    @Override
+    public void render() {
+        System.out.println("render");
+    }
+
 }
