@@ -1,37 +1,50 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import game.Launcher.Mode;
 import model.GameLogic;
 import model.MonopolyModel;
 import model.config.GameMap;
+import model.config.Item;
 import model.config.Team;
 import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
+
 import view.MonopolyView;
 
 public final class MonopolyController {
 
     private MonopolyModel model;
     private MonopolyView view;
+    private HashMap<String, Integer> gameConfig;
 
-    private Mode mode = Mode.MENU;
+    private Team team;
+    private Player player;
+    private Item item;
+
+    private final int maxPlayers = 4;
+    private int nbPlayers = 0;
 
     public MonopolyController() { }
 
-    public void startGame(final GameMap gameMap) {
+    public void startGame(final HashMap<String, Integer> config) {
         final ArrayList<Player> players = new ArrayList<>();
-        final int tmpHumanPlayerNB = 4;
-        final int tmpComputerPlayerNB = 0;
-        for (int i = 1; i <= tmpHumanPlayerNB; i++) {
-            players.add(new HumanPlayer(tmpHumanPlayerNB, "joueur" + i, new Team(i, "team" + i)));
+        gameConfig = config;
+        // System.out.println(gameConfig.get("map"));
+        // GameMap gameMap = Resources.getGameMapGraphics("map" +
+        // gameConfig.get("map")).getGameMap();
+        GameMap gameMap = Resources.getGameMapGraphics("map1").getGameMap();
+        int nbBot = maxPlayers - nbPlayers;
+        for (int i = 1; i <= nbPlayers; i++) {
+            players.add(new HumanPlayer(nbPlayers, "joueur" + i, new Team(i, "team" + i)));
         }
-        for (int i = 1 + tmpHumanPlayerNB; i < 1 + tmpHumanPlayerNB + tmpComputerPlayerNB; i++) {
-            players.add(new ComputerPlayer(tmpComputerPlayerNB, "ordi" + i, new Team(i, "team" + i)));
+        for (int i = 1 + nbPlayers; i < 1 + nbPlayers + nbBot; i++) {
+            players.add(new ComputerPlayer(nbBot, "ordi" + i, new Team(i, "team" + i)));
         }
-        model.setGameLogic(new GameLogic(gameMap, 35, players));
+        // model.setGameLogic(new GameLogic(gameMap, gameConfig.get("round"), players));
+        model.setGameLogic(new GameLogic(gameMap, 30, players));
     }
 
     public void setModel(final MonopolyModel model) {
@@ -42,12 +55,7 @@ public final class MonopolyController {
         this.view = view;
     }
 
-    public Mode getMode() {
-        return mode;
+    public HashMap<String, Integer> getGameConfig() {
+        return gameConfig;
     }
-
-    public void setMode(final Mode mode) {
-        this.mode = mode;
-    }
-
 }
