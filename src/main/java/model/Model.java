@@ -1,7 +1,8 @@
 package model;
 
+import static game.Game.RAND;
+
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.HashMap;
 
 import model.config.GameMap;
@@ -11,8 +12,10 @@ import model.config.cells.Property;
 import model.config.cells.Shop;
 import model.config.players.Player;
 
+/**
+ * Classe qui s'occupe de la logique du jeu.
+ */
 public final class Model {
-    private static final Random RAND = new Random();
 
     private final GameMap gameMap;
 
@@ -49,6 +52,10 @@ public final class Model {
         playerListIterator = 0;
     }
 
+    /**
+     * Méthode principale du model qui met à jour l'état du jeu et
+     * met en les joueurs {@link Player} avec la map {@link GameMap}.
+     */
     public void update() {
         switch (gameState) {
             case GAME_START:

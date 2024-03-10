@@ -1,11 +1,11 @@
 package model.config;
 
+import static game.Game.RAND;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public final class Dice {
-    private static final Random RAND = new Random();
 
     private ArrayList<Integer> values = new ArrayList<>();
 

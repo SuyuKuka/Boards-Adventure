@@ -2,11 +2,12 @@ package game;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Random;
 
 import controller.Controller;
 import controller.GameController;
 import controller.MenuController;
-import controller.Resources;
+import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
 import model.config.Team;
@@ -15,9 +16,16 @@ import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
 
+/**
+ * Classe mère du jeu qui contient un controlleur {@link GameController} ou {@link MenuController}
+ * et appelle la méthode {@link Controller#run()}.
+ * Le jeu est scindé en 2 parties : le menu et le jeu en lui-même.
+ * C'est le controlleur associé qui s'occupe de sa partie.
+ */
 public final class Game {
 
     public static final int NANO_S = (int) 10E8;
+    public static final Random RAND = new Random();
 
     public enum Mode {
         MENU, GAME;

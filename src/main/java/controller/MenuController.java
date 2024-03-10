@@ -4,6 +4,10 @@ import game.Game;
 import view.View;
 import view.menu.MenuPanel;
 
+/**
+ * Classe qui fait office de controlleur pour le Menu et appelle {@link #run()}. <p>
+ * Elle contient seulement un {@link MenuPanel} qui s'occupe de la vue.
+ */
 public final class MenuController extends Controller {
 
     private final MenuPanel menuPanel;

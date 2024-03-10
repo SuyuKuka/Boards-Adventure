@@ -9,7 +9,7 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import controller.Resources;
+import controller.resources.Resources;
 import model.config.cells.Cell;
 
 public final class OvalCell extends CellGraphics {

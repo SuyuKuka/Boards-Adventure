@@ -20,7 +20,6 @@ import controller.GameController;
 import model.GameState;
 import model.config.players.Player;
 import view.CorePanel;
-import view.GameMapGraphics;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 

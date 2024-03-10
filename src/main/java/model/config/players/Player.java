@@ -1,7 +1,6 @@
 package model.config.players;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import model.config.Dice;
 import model.config.GameMap;
@@ -9,7 +8,6 @@ import model.config.Team;
 import model.config.cells.Cell;
 
 public abstract class Player {
-    private static final Random RAND = new Random();
 
     private int playerID;
     private String username;

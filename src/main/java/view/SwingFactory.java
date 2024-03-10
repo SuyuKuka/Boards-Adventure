@@ -25,8 +25,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import controller.Music;
-import controller.Resources;
+import controller.resources.Music;
+import controller.resources.Resources;
 
 public class SwingFactory {
 

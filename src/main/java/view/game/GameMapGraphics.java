@@ -1,8 +1,8 @@
-package view;
+package view.game;
 
 import java.util.HashMap;
 
-import controller.Resources;
+import controller.resources.Resources;
 
 import java.awt.Image;
 

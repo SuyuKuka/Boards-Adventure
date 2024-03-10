@@ -1,13 +1,12 @@
 package model.config.cells;
 
+import static game.Game.RAND;
 import java.util.ArrayList;
-import java.util.Random;
 
 import model.Model;
 import model.config.players.Player;
 
 public final class Intersection extends Cell {
-    private static final Random RAND = new Random();
 
     private final ArrayList<Integer> nextCellIDs;
 

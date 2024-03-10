@@ -2,6 +2,9 @@ package controller;
 
 import game.Game;
 
+/**
+ * Classe abstraite étendue par {@link MenuController} et {@link GameController} qui contient la méthode {@link #run()}.
+ */
 public abstract sealed class Controller permits MenuController, GameController {
 
     private final Game game;

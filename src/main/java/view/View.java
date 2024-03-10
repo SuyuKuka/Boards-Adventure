@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import controller.GameController;
 import controller.MenuController;
+import view.game.GameMapGraphics;
 import view.game.GamePanel;
 import view.menu.MenuPanel;
 

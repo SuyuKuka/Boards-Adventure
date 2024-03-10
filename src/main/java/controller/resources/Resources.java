@@ -1,4 +1,4 @@
-package controller;
+package controller.resources;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
-import view.GameMapGraphics;
+import view.game.GameMapGraphics;
 import view.game.cellsgraphics.CellGraphics;
 import view.game.cellsgraphics.CellGraphicsFactory;
 

@@ -5,9 +5,8 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import controller.Resources;
+import controller.resources.Resources;
 import model.config.players.Player;
-import view.GameMapGraphics;
 import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {

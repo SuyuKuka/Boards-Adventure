@@ -2,9 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
-import view.GameMapGraphics;
 import view.View;
-
+import view.game.GameMapGraphics;
 import view.game.GamePanel;
 
 import game.Game;
@@ -12,11 +11,16 @@ import model.Model;
 import model.config.cells.Cell;
 import model.config.players.Player;
 
+/**
+ * Classe qui fait office de Controlleur pour le jeu qui appelle {@link #run()}. <p>
+ * Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
+ * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
+ */
 public final class GameController extends Controller {
 
     private final Model model;
     private final GamePanel gamePanel;
-
+    /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldGameUpdate;
 
     public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics) {
@@ -32,6 +36,10 @@ public final class GameController extends Controller {
 
     // region controller methods
 
+    /**
+     * Méthode mère qui fait fonctionner le jeu en mettant à jour constament la vue
+     * et en mettant à jour le model seulement si necéssaire.
+     */
     public void run() {
         while (true) {
             if (shouldGameUpdate) {

@@ -23,8 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import controller.MenuController;
-import controller.Music;
-import controller.Resources;
+import controller.resources.Music;
+import controller.resources.Resources;
 import view.CorePanel;
 import view.View;
 import view.SwingFactory;

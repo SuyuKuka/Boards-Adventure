@@ -1,8 +1,12 @@
 package model;
 
+/**
+ * Classe qui contient toutes les "étapes" du jeu ainsi que son temps d'animation associé.
+ */
 public enum GameState {
     // -1 : attente d'une décision du joueur
     // > 0 temps que met le jeu pour faire l'animation
+
     // Couche 0 : La partie commence (Vue) {Affiche le titre du plateau/jeu}.
     GAME_START(2),
     // Couche 1 : Le tour du joueur commence (Vue) {Affiche le nom du joueur et son nombre de tour actuel + restants}.
