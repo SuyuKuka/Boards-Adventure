@@ -22,7 +22,7 @@ public final class MonopolyView extends JFrame {
     private int contentPaneHeight;
 
     public MonopolyView() {
-        setTitle("Kingdom Revolution");
+        setTitle("Board's Adventure");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -35,7 +35,7 @@ public final class MonopolyView extends JFrame {
     }
 
     public void init() {
-        mode = controller.getMode();
+        mode = Mode.MENU;
         updateContentPaneVariables();
         menuPanel = new MenuPanel(this);
         add(menuPanel);
@@ -78,5 +78,9 @@ public final class MonopolyView extends JFrame {
 
     public void setController(final MonopolyController controller) {
         this.controller = controller;
+    }
+
+    public MonopolyController getController() {
+        return controller;
     }
 }

@@ -35,8 +35,8 @@ public final class Launcher implements Runnable {
         controller.setView(view);
         view.setController(controller);
         view.init();
-        controller.startGame(Resources.getGameMapGraphics("map1").getGameMap());
-        runWithInfo();
+        // controller.startGame(Resources.getGameMapGraphics("map1").getGameMap());
+        // runWithInfo();
     }
 
     /**
@@ -124,8 +124,14 @@ public final class Launcher implements Runnable {
         return mode;
     }
 
+    public MonopolyController getController() {
+        return controller;
+    }
+
     public static void main(final String[] args) {
         Resources.loadResources();
+        System.setProperty("awt.useSystemAAFontSettings", "on");
+        System.setProperty("swing.aatext", "true");
         Launcher launcher = new Launcher();
     }
 }

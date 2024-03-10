@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import model.config.Dice;
+import model.config.Item;
 import model.config.Team;
 
 public abstract class Player {
@@ -14,6 +15,7 @@ public abstract class Player {
     private String username;
     private Team team;
     private HashMap<String, Dice> dices = new HashMap<>();
+    private Item item;
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position = 0;
@@ -21,7 +23,7 @@ public abstract class Player {
 
     private PlayerState playerState = PlayerState.NORMAL;
 
-    public Player(final int playerID, final String username, final Team team) {
+    public Player(final int playerID, final String username, final Team team, final Item item) {
         this.playerID = playerID;
         this.username = username;
         this.team = team;

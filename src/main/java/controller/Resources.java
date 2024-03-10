@@ -26,7 +26,6 @@ import view.GameMapGraphics;
  */
 public final class Resources {
     private static final String PATH = "src/main/resources/";
-    private static Font cFont;
 
     private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
     private static HashMap<String, Image> images = new HashMap<>();
@@ -131,14 +130,15 @@ public final class Resources {
 
     public static Font loadFont(final float size, final String font) {
         try {
-            cFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/police/" + font));
+            Font cFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/police/" + font));
             cFont = cFont.deriveFont(Font.BOLD, size);
+            return cFont;
         } catch (FontFormatException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-        return cFont;
+        return null;
     }
 
     // endregion

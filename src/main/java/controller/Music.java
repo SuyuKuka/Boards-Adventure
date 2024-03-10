@@ -1,13 +1,13 @@
 package controller;
 
-import java.io.File; 
-import java.io.IOException; 
+import java.io.File;
+import java.io.IOException;
 
-import javax.sound.sampled.AudioInputStream; 
-import javax.sound.sampled.AudioSystem; 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException; 
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import view.SwingFactory;
@@ -16,14 +16,14 @@ public class Music {
 
     private static Clip music;
     private static Clip song;
-    private static AudioInputStream audioMusic; 
+    private static AudioInputStream audioMusic;
     private static AudioInputStream audioSong;
     private static float musicVolume = 1.0f;
     private static float songVolume = 1.0f;
     private static int musicSlider = 50;
     private static int songSlider = 50;
 
-    public static void playMusic(String musicPath) {
+    public static void playMusic(final String musicPath) {
         try {
             audioMusic = AudioSystem.getAudioInputStream(new File(SwingFactory.getPath() + musicPath));
             music = AudioSystem.getClip();
@@ -38,7 +38,7 @@ public class Music {
         }
     }
 
-    public static void playSong(String songPath) {
+    public static void playSong(final String songPath) {
         try {
             audioSong = AudioSystem.getAudioInputStream(new File(SwingFactory.getPath() + songPath));
             song = AudioSystem.getClip();
@@ -73,11 +73,11 @@ public class Music {
         return songVolume;
     }
 
-    public static void setMusicVolume(float musicVolume) {
+    public static void setMusicVolume(final float musicVolume) {
         Music.musicVolume = musicVolume;
     }
 
-    public static void setSongVolume(float songVolume) {
+    public static void setSongVolume(final float songVolume) {
         Music.songVolume = songVolume;
     }
 
@@ -89,11 +89,11 @@ public class Music {
         return songSlider;
     }
 
-    public static void setMusicSlider(int musicSlider) {
+    public static void setMusicSlider(final int musicSlider) {
         Music.musicSlider = musicSlider;
     }
 
-    public static void setSongSlider(int songSlider) {
+    public static void setSongSlider(final int songSlider) {
         Music.songSlider = songSlider;
     }
 }
