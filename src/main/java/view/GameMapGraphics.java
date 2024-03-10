@@ -33,6 +33,10 @@ public final class GameMapGraphics {
         return images;
     }
 
+    public Image getBoardImage() {
+        return getImage("board");
+    }
+
     public Image getImage(final String key) {
         if (images.containsKey(key)) {
             return images.get(key);

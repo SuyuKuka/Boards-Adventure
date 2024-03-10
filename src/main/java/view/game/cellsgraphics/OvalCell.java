@@ -22,11 +22,6 @@ public final class OvalCell extends CellGraphics {
         setVisible(true);
     }
 
-    @Override
-    public void addContent() {
-        // initIconPanel();
-    }
-
     public void initIconPanel() {
         iconLabel = new JLabel(new ImageIcon(icon));
         iconLabel.setVerticalAlignment(JLabel.CENTER);
@@ -43,11 +38,6 @@ public final class OvalCell extends CellGraphics {
         final int inside = 3;
         g2d.setColor(Color.WHITE);
         g2d.fillOval(inside, inside, getCellWidth() - inside * 2, getCellHeight() - inside * 2);
-    }
-
-    @Override
-    public void render() {
-        System.out.println("render");
     }
 
 }

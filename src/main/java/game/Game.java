@@ -13,14 +13,11 @@ import model.config.Team;
 import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
-import view.GameMapGraphics;
 import view.View;
-import view.game.GamePanel;
-import view.menu.MenuPanel;
 
 public final class Game {
 
-    public static final int NANO_S = (int) 10E9;
+    public static final int NANO_S = (int) 10E8;
 
     public enum Mode {
         MENU, GAME;
@@ -29,10 +26,11 @@ public final class Game {
     private long nanoStartTime = System.nanoTime();
     private long nanoUpTime = 0;
 
+    private View view;
     private Controller controller;
 
     private Mode mode = Mode.GAME;
-    private static String testMapName = "map4";
+    private static String testModelMapName = "map4";
 
     private Game() {
         init();
@@ -40,24 +38,20 @@ public final class Game {
     }
 
     private void init() {
-        View view = new View();
+        view = new View();
         switch (mode) {
             case MENU:
-                controller = new MenuController(this);
-                view.init(new MenuPanel(view, (MenuController) controller));
+                controller = new MenuController(this, view);
                 break;
             case GAME:
-                GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics(testMapName);
-                controller = new GameController(this, createTestModel(gameMapGraphics.getGameMap()));
-                view.init(new GamePanel(view, (GameController) controller, gameMapGraphics));
+                controller = new GameController(this, view, Resources.getGameMapGraphics(testModelMapName));
                 break;
             default:
                 break;
-            }
-        controller.setCorePanel(view.getCorePanel());
+        }
     }
 
-    private Model createTestModel(final GameMap gameMap) {
+    public Model createTestModel(final GameMap gameMap) {
         final HashMap<String, Integer> gameSettings = new HashMap<>();
         gameSettings.put("turns", 35);
         final ArrayList<Player> players = new ArrayList<>();
@@ -66,6 +60,14 @@ public final class Game {
         players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
         players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
         return new Model(gameMap, gameSettings, players);
+    }
+
+    public void startGame() {
+        // start game
+    }
+
+    public void goToMenu() {
+        // MENU
     }
 
     public long getNanoStartTime() {

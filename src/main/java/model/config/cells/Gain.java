@@ -13,7 +13,7 @@ public final class Gain extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
+    public void playCellEffect(final Player player, final Model model) {
         player.getTeam().incrementMoney(gain);
         return;
     }

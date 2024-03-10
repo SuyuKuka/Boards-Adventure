@@ -10,7 +10,7 @@ public final class Void extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
+    public void playCellEffect(final Player player, final Model model) {
         return;
     }
 

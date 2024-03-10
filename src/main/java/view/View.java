@@ -8,6 +8,11 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 
+import controller.GameController;
+import controller.MenuController;
+import view.game.GamePanel;
+import view.menu.MenuPanel;
+
 public final class View extends JFrame {
 
     private CorePanel corePanel;
@@ -26,10 +31,9 @@ public final class View extends JFrame {
         pack();
     }
 
-    public void init(final CorePanel panel) {
-        this.corePanel = panel;
+    public MenuPanel initNewMenuPanel(final MenuController controller) {
+        corePanel = new MenuPanel(this, controller);
         add(corePanel);
-        // Listeners/Observers
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
@@ -39,6 +43,26 @@ public final class View extends JFrame {
             }
         });
         setVisible(true);
+        return (MenuPanel) corePanel;
+    }
+
+    public GamePanel initNewGamePanel(final GameController controller, final GameMapGraphics gameMapGraphics) {
+        corePanel = new GamePanel(this, controller, gameMapGraphics);
+        add(corePanel);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                corePanel.resized();
+                corePanel.setPreferredSize(getPreferredSize());
+                revalidate();
+            }
+        });
+        setVisible(true);
+        return (GamePanel) corePanel;
+    }
+
+    public void setCorePanel(final CorePanel corePanel) {
+        this.corePanel = corePanel;
     }
 
     public CorePanel getCorePanel() {

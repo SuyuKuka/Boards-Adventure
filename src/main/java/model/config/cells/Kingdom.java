@@ -13,17 +13,17 @@ public final class Kingdom extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
+    public void playCellEffect(final Player player, final Model model) {
         if (player.getMapLap() <= 0) {
             System.out.println(player.getUsername()
                 + " a essayé de devenir roi mais n'a pas encore fait le tour de la map !");
-        } else if (gameLogic.getCurrentLeader() == null) {
-            gameLogic.changeLeader(player);
+        } else if (model.getCurrentLeader() == null) {
+            model.changeLeader(player);
             player.setPosition(targetCell);
             System.out.println(player.getUsername() + " est devenu Roi !");
         } else {
             final int tax = player.getTeam().getMoney() / 2;
-            final Player currentKing = gameLogic.getCurrentLeader();
+            final Player currentKing = model.getCurrentLeader();
             currentKing.getTeam().incrementMoney(tax);
             player.getTeam().incrementMoney(-tax);
             System.out.println(player.getUsername() + " a donné " + tax + "$ au roi " + currentKing

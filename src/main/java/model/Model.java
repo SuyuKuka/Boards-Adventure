@@ -7,6 +7,8 @@ import java.util.HashMap;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
+import model.config.cells.Property;
+import model.config.cells.Shop;
 import model.config.players.Player;
 
 public final class Model {
@@ -15,10 +17,14 @@ public final class Model {
     private final GameMap gameMap;
 
     private final int totalTurns;
-    private int currentTurn = 1;
+    private int currentTurn;
 
-    private Player currentLeader = null;
-    private int playerListIterator = 0;
+    private GameState gameState;
+
+
+    private Player currentLeader;
+    private Player currentPlayer;
+    private int playerListIterator;
     private ArrayList<Player> players;
 
     /**
@@ -32,27 +38,92 @@ public final class Model {
         this.gameMap = gameMap;
         this.totalTurns = gameSettings.get("turns");
         this.players = players;
+        initValues();
     }
 
-    public int playDice() {
-        final Player currentPlayer = players.get(playerListIterator);
-        int diceValue = currentPlayer.rollDice();
-        Cell nextCell;
-        for (int i = diceValue; i > 0; i--) {
-            nextCell = gameMap.getCell(gameMap.getCell(currentPlayer.getPosition()).getNextCellID());
-            if (nextCell instanceof Intersection) {
-                // TODO INTERSECTION CHOIX
-                final ArrayList<Integer> nextCellIDs = ((Intersection) nextCell).getNextCellIDs();
+    private void initValues() {
+        currentTurn = 1;
+        gameState = GameState.GAME_START;
+        currentLeader = null;
+        currentPlayer = null;
+        playerListIterator = 0;
+    }
+
+    public void update() {
+        switch (gameState) {
+            case GAME_START:
+                currentPlayer = players.get(playerListIterator);
+                gameState = GameState.NEW_TURN;
+                break;
+            case NEW_TURN:
+                if (currentPlayer.isJailed()) {
+                    gameState = GameState.IN_JAIL;
+                } else {
+                    gameState = GameState.ROLL_DICE;
+                }
+                break;
+            case IN_JAIL:
+                gameState = GameState.ROLL_DICE;
+                break;
+            case ROLL_DICE:
+                currentPlayer.rollDice();
+                if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
+                    currentPlayer.setJailTurn(0);
+                    gameState = GameState.END_TURN;
+                    return;
+                }
+                gameState = GameState.PLAYER_MOVE;
+                break;
+            case PLAYER_MOVE:
+                Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+                while (currentPlayer.getDiceRollValue() > 0) {
+                    currentPlayer.setPosition(playerCell.getNextCellID());
+                    playerCell = currentPlayer.getPlayerCell(gameMap);
+                    if (playerCell instanceof Intersection) {
+                        gameState = GameState.ASK_INTERSECTION;
+                        return;
+                    } else {
+                        currentPlayer.incrementDiceRollValue(-1);
+                    }
+                }
+                if (playerCell instanceof Shop) {
+                    gameState = GameState.ASK_SHOP;
+                } else if (playerCell instanceof Property) {
+                    gameState = GameState.ASK_PROPERTY;
+                } else {
+                    playerCell.playCellEffect(currentPlayer, this);
+                    gameState = GameState.NORMAL_CELL;
+                }
+                break;
+            case ASK_INTERSECTION:
+                ArrayList<Integer> nextCellIDs = ((Intersection) currentPlayer.getPlayerCell(gameMap)).getNextCellIDs();
                 currentPlayer.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
-            } else {
-                currentPlayer.setPosition(nextCell.getId());
-            }
+                currentPlayer.incrementDiceRollValue(-1);
+                gameState = GameState.PLAYER_MOVE;
+                break;
+            case ASK_PROPERTY:
+            case ASK_SHOP:
+            case NORMAL_CELL:
+                gameState = GameState.END_TURN;
+                break;
+            case END_TURN:
+                if (currentTurn > totalTurns && playerListIterator == players.size() - 1) {
+                    gameState = GameState.GAME_END;
+                } else {
+                    gameState = GameState.NEW_TURN;
+                    playerListIterator = (playerListIterator + 1) % players.size();
+                    if (playerListIterator == 0) {
+                        currentTurn++;
+                        if (currentLeader != null) {
+                            currentLeader.getTeam().incrementGamePoint(1);
+                        }
+                    }
+                    currentPlayer = players.get(playerListIterator);
+                }
+                break;
+            default:
+                break;
         }
-        return 0;
-    }
-
-    public void nextPlayerTurn() {
-        playerListIterator = (playerListIterator + 1) % players.size();
     }
 
     public void changeLeader(final Player player) {
@@ -60,7 +131,7 @@ public final class Model {
     }
 
     public void playCellEffect(final Player player) {
-        gameMap.getCell(player.getPosition()).playEffect(player, this);
+        gameMap.getCell(player.getPosition()).playCellEffect(player, this);
     }
 
     public Player getCurrentLeader() {
@@ -73,6 +144,14 @@ public final class Model {
 
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    public void setGameState(final GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     public int getTotalTurns() {

@@ -1,13 +1,9 @@
 package view.game.cellsgraphics;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-
-import javax.swing.JPanel;
 
 import model.config.cells.Cell;
 
@@ -20,16 +16,6 @@ public final class RoundedRectCell extends CellGraphics {
     }
 
     @Override
-    public void addContent() {
-        JPanel test = new JPanel();
-        test.setBackground(Color.GREEN);
-        test.setBounds(0, 0, 50, 50);
-        test.setPreferredSize(new Dimension(50, 50));
-        test.setVisible(true);
-        super.add(test, BorderLayout.CENTER);
-    }
-
-    @Override
     public void paint(final Graphics g) {
         super.paint(g);
         final Graphics2D g2d = (Graphics2D) g;
@@ -39,11 +25,6 @@ public final class RoundedRectCell extends CellGraphics {
         g2d.setColor(Color.WHITE);
         g2d.fillRoundRect(inside, inside, getCellWidth() - inside * 2,
             getCellHeight() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
-    }
-
-    @Override
-    public void render() {
-        System.out.println("render");
     }
 
 }

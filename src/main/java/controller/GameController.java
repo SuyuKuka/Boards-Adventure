@@ -2,81 +2,45 @@ package controller;
 
 import java.util.ArrayList;
 
-import view.CorePanel;
+import view.GameMapGraphics;
+import view.View;
+
 import view.game.GamePanel;
 
 import game.Game;
 import model.Model;
 import model.config.cells.Cell;
-import model.config.cells.CellType;
 import model.config.players.Player;
 
 public final class GameController extends Controller {
 
     private final Model model;
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
 
-    private GameState gameState;
+    private boolean shouldGameUpdate;
 
-    public GameController(final Game game, final Model model) {
+    public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics) {
         super(game);
-        this.model = model;
-        gameState = GameState.GAME_START;
+        this.model = game.createTestModel(gameMapGraphics.getGameMap());
+        gamePanel = view.initNewGamePanel(this, gameMapGraphics);
+        initValues();
+    }
+
+    private void initValues() {
+        shouldGameUpdate = false;
     }
 
     // region controller methods
 
     public void run() {
         while (true) {
-            final double lastUpdate = (System.nanoTime() - getNanoUpTime() - getNanoStartTime()) / getNanoS();
+            if (shouldGameUpdate) {
+                model.update();
+                shouldGameUpdate = false;
+            }
+            gamePanel.render(model.getGameState());
             updateNanoUpTime(System.nanoTime());
-            gamePanel.render(lastUpdate);
         }
-    }
-
-    public void updateGameState() {
-        Player player = getCurrentPlayer();
-        switch (gameState) {
-            case GAME_START:
-                gameState = GameState.NEW_TURN;
-                break;
-            case NEW_TURN:
-                if (player.isJailed()) {
-                    gameState = GameState.IN_JAIL;
-                } else {
-                    gameState = GameState.PLAY_DICE;
-                }
-                break;
-            case PLAY_DICE:
-                CellType cellType = model.getGameMap().getCell(player.getPosition()).getCellType();
-                if (cellType == CellType.INTERSECTION) {
-                    gameState = GameState.ASK_INTERSECTION;
-                } else if (cellType == CellType.PROPERTY) {
-                    gameState = GameState.ASK_PROPERTY;
-                } else if (cellType == CellType.SHOP) {
-                    gameState = GameState.ASK_SHOP;
-                } else {
-                    gameState = GameState.NORMAL_CELL;
-                }
-                break;
-            case NORMAL_CELL:
-            case ASK_INTERSECTION:
-            case ASK_PROPERTY:
-            case ASK_SHOP:
-                gameState = GameState.END_TURN;
-                break;
-            case END_TURN:
-                gameState = GameState.NEW_TURN;
-                model.nextPlayerTurn();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void playDice() {
-        model.playDice();
-        gamePanel.playDice();
     }
 
     public Cell getCurrentPlayerCell() {
@@ -84,6 +48,10 @@ public final class GameController extends Controller {
     }
 
     // region model getters/setters
+
+    public void setShouldGameUpdate(final boolean shouldGameUpdate) {
+        this.shouldGameUpdate = shouldGameUpdate;
+    }
 
     public ArrayList<Player> getPlayers() {
         return model.getPlayers();
@@ -104,22 +72,6 @@ public final class GameController extends Controller {
     // endregion
 
     // region getters/setters
-
-    public void setGamePanel(final GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(final GameState gameState) {
-        this.gameState = gameState;
-    }
-
-    public void setCorePanel(final CorePanel corePanel) {
-        gamePanel = (GamePanel) corePanel;
-    }
 
     // endregion
 }

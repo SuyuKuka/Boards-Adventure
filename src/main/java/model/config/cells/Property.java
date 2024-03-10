@@ -20,7 +20,7 @@ public final class Property extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
+    public void playCellEffect(final Player player, final Model model) {
         if (owner == null) {
             if (player.getTeam().getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
@@ -53,7 +53,7 @@ public final class Property extends Cell {
         } else {
             final int price = buyPrices.get(propertyState - 1);
             if (player.getTeam().getMoney() < price) {
-                //gameLogic.removePlayer(player);
+                //model.removePlayer(player);
                 System.out.println(player + " a pas assez d'argents.");
             } else {
                 player.getTeam().incrementMoney(-price);

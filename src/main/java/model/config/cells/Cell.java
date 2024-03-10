@@ -15,7 +15,7 @@ public abstract class Cell {
         this.nextCellID = nextCellID;
     }
 
-    public abstract void playEffect(Player player, Model gameLogic);
+    public abstract void playCellEffect(Player player, Model model);
 
     public final int getId() {
         return id;

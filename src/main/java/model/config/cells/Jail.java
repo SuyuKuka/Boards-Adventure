@@ -15,8 +15,8 @@ public final class Jail extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
-        player.incrementJailTurn(3);
+    public void playCellEffect(final Player player, final Model model) {
+        player.setJailTurn(2);
         player.setPreviousPosition(player.getPosition());
         player.setPosition(targetCell);
     }

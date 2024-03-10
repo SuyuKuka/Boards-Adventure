@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 import model.config.Dice;
+import model.config.GameMap;
 import model.config.Team;
+import model.config.cells.Cell;
 
 public abstract class Player {
     private static final Random RAND = new Random();
@@ -18,6 +20,8 @@ public abstract class Player {
     private int position = 0;
     private int previousPosition = 0;
 
+    private int diceRollValue = 0;
+
     public Player(final int playerID, final String username, final Team team) {
         this.playerID = playerID;
         this.username = username;
@@ -25,23 +29,31 @@ public abstract class Player {
         dices.put("normal", new Dice());
     }
 
-    public final int rollDice() {
-        return dices.get("normal").rollDice();
+    public final void rollDice() {
+        diceRollValue = dices.get("normal").rollDice();
+    }
+
+    public final void incrementDiceRollValue(final int increment) {
+        diceRollValue += increment;
     }
 
     public final void incrementPosition(final int increment) {
         position += increment;
     }
 
-    public final void incrementJailTurn(final int increment) {
-        jailTurn += increment;
-    }
-
     public final void incrementMapLap(final int increment) {
         mapLap += increment;
     }
 
+    public final Cell getPlayerCell(final GameMap gameMap) {
+        return gameMap.getCell(position);
+    }
+
     // region getters/setters
+
+    public final int getDiceRollValue() {
+        return diceRollValue;
+    }
 
     public final Team getTeam() {
         return team;
@@ -51,6 +63,9 @@ public abstract class Player {
         return username;
     }
 
+    public final void setJailTurn(final int jailTurn) {
+        this.jailTurn = jailTurn;
+    }
 
     public final int getJailTurn() {
         return jailTurn;

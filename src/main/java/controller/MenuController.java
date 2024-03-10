@@ -1,15 +1,16 @@
 package controller;
 
 import game.Game;
-import view.CorePanel;
+import view.View;
 import view.menu.MenuPanel;
 
 public final class MenuController extends Controller {
 
-    private MenuPanel menuPanel;
+    private final MenuPanel menuPanel;
 
-    public MenuController(final Game game) {
+    public MenuController(final Game game, final View view) {
         super(game);
+        menuPanel = view.initNewMenuPanel(this);
     }
 
     @Override
@@ -17,11 +18,6 @@ public final class MenuController extends Controller {
         while (true) {
             updateNanoUpTime(System.nanoTime());
         }
-    }
-
-    @Override
-    public void setCorePanel(final CorePanel corePanel) {
-        this.menuPanel = (MenuPanel) corePanel;
     }
 
 }

@@ -21,7 +21,7 @@ public final class Intersection extends Cell {
     }
 
     @Override
-    public void playEffect(final Player player, final Model gameLogic) {
+    public void playCellEffect(final Player player, final Model model) {
         player.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
     }
 

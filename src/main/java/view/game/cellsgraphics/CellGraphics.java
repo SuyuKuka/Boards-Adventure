@@ -22,12 +22,8 @@ public abstract class CellGraphics extends JPanel {
         setOpaque(false);
         setSize(CELL_WIDTH, CELL_HEIGHT);
         setBounds(xPos - CELL_WIDTH / 2, yPos - CELL_HEIGHT / 2, CELL_WIDTH, CELL_HEIGHT);
-        addContent();
         setVisible(true);
     }
-
-    public abstract void render();
-    public abstract void addContent();
 
     public final Cell getCell() {
         return cell;
