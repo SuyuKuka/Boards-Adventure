@@ -24,7 +24,6 @@ public final class GameController extends Controller {
     private final GamePanel gamePanel;
     /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldGameUpdate;
-    private boolean shouldStateUpdate;
 
     public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics) {
         super(game);
@@ -35,7 +34,6 @@ public final class GameController extends Controller {
 
     private void initValues() {
         shouldGameUpdate = false;
-        shouldStateUpdate = false;
     }
 
     // region controller methods

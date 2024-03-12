@@ -1,7 +1,5 @@
 package model;
 
-import static game.Game.RAND;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -98,8 +96,8 @@ public final class Model {
                 }
                 break;
             case ASK_INTERSECTION:
-                ArrayList<Integer> nextCellIDs = ((Intersection) currentPlayer.getPlayerCell(gameMap)).getNextCellIDs();
-                currentPlayer.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
+                currentPlayer.setPosition(currentPlayer.getIntersectionCellID());
+                currentPlayer.setIntersectionCellID(0);
                 currentPlayer.incrementDiceRollValue(-1);
                 gameState = GameState.PLAYER_MOVE;
                 break;

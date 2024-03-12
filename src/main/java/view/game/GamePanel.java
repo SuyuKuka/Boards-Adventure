@@ -4,6 +4,9 @@ import static game.Game.NANO_S;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
@@ -31,11 +34,9 @@ public final class GamePanel extends CorePanel {
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
     private static final int PLAYERS = 2;
-    private static final int BOARDBARRIER = 3;
-    private static final int INTERACTION = 4;
-    private static final int GUI = 5;
-    private static final int GAMEBARRIER = 6;
-    private static final int PAUSE = 7;
+    private static final int INTERACTION = 3;
+    private static final int GUI = 4;
+    private static final int PAUSE = 5;
 
     private final HashMap<Integer, JPanel> panels;
 
@@ -62,9 +63,7 @@ public final class GamePanel extends CorePanel {
         add(createBackground(), Integer.valueOf(BACKGROUND));
         add(createCellsGraphics(), Integer.valueOf(CELLS));
         add(createPlayersGraphics(), Integer.valueOf(PLAYERS));
-        add(createBarrier(BOARDBARRIER), Integer.valueOf(BOARDBARRIER));
         add(createGUI(), Integer.valueOf(GUI));
-        add(createBarrier(GAMEBARRIER), Integer.valueOf(GAMEBARRIER));
         add(createPause(), Integer.valueOf(PAUSE));
         setVisible(true);
     }
@@ -94,7 +93,9 @@ public final class GamePanel extends CorePanel {
                 return;
             }
         } else {
-            System.out.println(gameState + " " + animationTime);
+            if (animationTime == -1) {
+                removeLayer(INTERACTION);
+            }
             final Player player = controller.getCurrentPlayer();
             switch (gameState) {
                 case GAME_START:
@@ -108,16 +109,18 @@ public final class GamePanel extends CorePanel {
                     break;
                 case ROLL_DICE:
                     playButton.setText("Cliquez pour lancer votre dé.");
-                    System.out.println("here");
                     playButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(final MouseEvent e) {
                             controller.setShouldStateUpdate(true);
                             controller.playerRollDice("normal");
-                            System.out.println("pressed");
                             playButton.removeMouseListener(playButton.getMouseListeners()[1]);
                         }
                     });
+                    break;
+                case PLAYER_MOVE:
+                    playerGraphicsMap.get(player).updatePosition();
+                    revalidate();
                     break;
                 case NORMAL_CELL:
                     playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
@@ -130,24 +133,13 @@ public final class GamePanel extends CorePanel {
                             e.consume();
                         }
                     });
-                    removeLayer(INTERACTION);
                     add(createIntersectionPanel(), Integer.valueOf(INTERACTION));
                     break;
                 case ASK_PROPERTY:
-                    removeLayer(INTERACTION);
-                    add(createPropertyPanel(), Integer.valueOf(4));
+                    add(createPropertyPanel(), Integer.valueOf(INTERACTION));
                     break;
                 case ASK_SHOP:
-                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-                    playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
-                    playButton.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(final MouseEvent e) {
-                            resetState();
-                            playButton.removeMouseListener(playButton.getMouseListeners()[1]);
-                        }
-                    });
-                    removeLayer(INTERACTION);
+                    add(createShopPanel(), Integer.valueOf(INTERACTION));
                     break;
                 case END_TURN:
                     playButton.setText("Fin du tour de " + player.getUsername() + ".");
@@ -220,33 +212,7 @@ public final class GamePanel extends CorePanel {
 
     // #endregion
 
-    // #region Barrière 3 et 6
-
-    private JPanel createBarrier(final int index) {
-        final JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(0, 0, 0, 80));
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-
-        };
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                e.consume();
-            }
-        });
-        panel.setOpaque(false);
-        panel.setVisible(false);
-        panels.put(index, panel);
-        return panel;
-    }
-
-    // #endregion
-
-    // #region Interaction Player/Game 4
+    // #region Interaction Player/Game 3
 
     // #region Cellule Intersection
     private JPanel createIntersectionPanel() {
@@ -271,9 +237,8 @@ public final class GamePanel extends CorePanel {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
-                resetState();
                 controller.playerChooseIntersection(targetCellID);
-                panels.get(INTERACTION).setVisible(false);
+                controller.setShouldStateUpdate(true);
                 removeLayer(INTERACTION);
             }
         });
@@ -288,8 +253,40 @@ public final class GamePanel extends CorePanel {
     private JPanel createPropertyPanel() {
         final JPanel panel = new JPanel();
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100));
+        // panel.setOpaque(false);
+        panel.setBackground(Color.RED);
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final int width = (int) (getFrame().getWidth() * 0.2);
+                final int height = (int) (getFrame().getHeight() * 0.25);
+                // panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
+            }
+        });
+        panel.setVisible(true);
+        panels.put(INTERACTION, panel);
+        return panel;
+    }
+
+    // #endregion
+
+    // #region Shop
+
+    private JPanel createShopPanel() {
+        final JPanel panel = new JPanel();
+        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        // panel.setOpaque(false);
+        panel.setBackground(Color.RED);
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final int width = (int) (getFrame().getWidth() * 0.2);
+                final int height = (int) (getFrame().getHeight() * 0.25);
+                panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
+            }
+        });
+        panel.setVisible(true);
+        panels.put(INTERACTION, panel);
         return panel;
     }
 
@@ -297,7 +294,7 @@ public final class GamePanel extends CorePanel {
 
     // #endregion
 
-    // #region GUI 5
+    // #region GUI 4
 
     private JPanel createGUI() {
         final JPanel panel = new JPanel(null);
@@ -315,7 +312,7 @@ public final class GamePanel extends CorePanel {
 
     // #endregion
 
-    // #region Pause 7
+    // #region Pause 5
 
     private JPanel createPause() {
         final JPanel panel = new JPanel(null);
@@ -327,6 +324,27 @@ public final class GamePanel extends CorePanel {
     }
 
     // #endregion
+
+    private JPanel createBarrier() {
+        final JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(0, 0, 0, 80));
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                e.consume();
+            }
+        });
+        panel.setOpaque(false);
+        panel.setVisible(false);
+        return panel;
+    }
 
     private void removeLayer(final int layer) {
         SwingUtilities.invokeLater(() -> {
