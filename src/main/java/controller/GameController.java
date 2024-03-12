@@ -48,6 +48,7 @@ public final class GameController extends Controller {
         while (true) {
             if (shouldGameUpdate) {
                 model.update();
+                gamePanel.resetState();
                 shouldGameUpdate = false;
             }
             gamePanel.render(model.getGameState());

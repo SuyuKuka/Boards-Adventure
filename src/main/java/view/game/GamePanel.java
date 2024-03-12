@@ -90,7 +90,7 @@ public final class GamePanel extends CorePanel {
             if (animationTime == -1) { // <- Actions où on attend l'input du joueur
                 return;
             } else if (elaspedTime >= animationTime) { // Si l'action a dépassé le temps voulue, update le jeu.
-                resetState();
+                controller.setShouldStateUpdate(true);
                 return;
             }
         } else {
@@ -112,7 +112,7 @@ public final class GamePanel extends CorePanel {
                     playButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(final MouseEvent e) {
-                            resetState();
+                            controller.setShouldStateUpdate(true);
                             controller.playerRollDice("normal");
                             System.out.println("pressed");
                             playButton.removeMouseListener(playButton.getMouseListeners()[1]);
@@ -164,10 +164,10 @@ public final class GamePanel extends CorePanel {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
     }
 
-    private void resetState() {
+
+    public void resetState() {
         hasRendered = false;
         elaspedTime = 0;
-        controller.setShouldStateUpdate(true);
         lastGameUpdateTime = System.nanoTime();
     }
 
