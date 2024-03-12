@@ -22,11 +22,12 @@ public final class Model {
     private final int totalTurns;
     private int currentTurn;
 
+    /** Variable qui indique l'état actuel du jeu. {@link GameState}. */
     private GameState gameState;
-
 
     private Player currentLeader;
     private Player currentPlayer;
+
     private int playerListIterator;
     private ArrayList<Player> players;
 
@@ -73,12 +74,6 @@ public final class Model {
                 gameState = GameState.ROLL_DICE;
                 break;
             case ROLL_DICE:
-                currentPlayer.rollDice();
-                if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
-                    currentPlayer.setJailTurn(0);
-                    gameState = GameState.END_TURN;
-                    return;
-                }
                 gameState = GameState.PLAYER_MOVE;
                 break;
             case PLAYER_MOVE:

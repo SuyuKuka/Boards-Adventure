@@ -9,27 +9,47 @@ import model.config.cells.Cell;
 
 public abstract class Player {
 
-    private int playerID;
-    private String username;
-    private Team team;
-    private HashMap<String, Dice> dices = new HashMap<>();
-    private int jailTurn = 0;
-    private int mapLap = 0;
-    private int position = 0;
-    private int previousPosition = 0;
+    private final int playerID;
+    private final String username;
+    private final Team team;
+    private HashMap<String, Dice> dices;
+    private int jailTurn;
+    private int mapLap;
+    private int position;
+    private int previousPosition;
+    private int intersectionCellID;
 
-    private int diceRollValue = 0;
+    private int diceRollValue;
 
     public Player(final int playerID, final String username, final Team team) {
         this.playerID = playerID;
         this.username = username;
         this.team = team;
-        dices.put("normal", new Dice());
+        initValues();
     }
 
-    public final void rollDice() {
-        diceRollValue = dices.get("normal").rollDice();
+    private void initValues() {
+        dices = new HashMap<>();
+        dices.put("normal", new Dice());
+        intersectionCellID = 0;
+        position = 0;
+        mapLap = 0;
+        jailTurn = 0;
+        previousPosition = 0;
+        diceRollValue = 0;
     }
+
+    // region model methods
+
+    public final void rollDice(final String diceName) {
+        // dices.get(diceName).rollDice();
+        diceRollValue = 4;
+        System.out.println(diceRollValue);
+    }
+
+    // endregion
+
+    // region increment
 
     public final void incrementDiceRollValue(final int increment) {
         diceRollValue += increment;
@@ -47,7 +67,17 @@ public abstract class Player {
         return gameMap.getCell(position);
     }
 
+    // endregion
+
     // region getters/setters
+
+    public final void setIntersectionCellID(final int intersectionCellID) {
+        this.intersectionCellID = intersectionCellID;
+    }
+
+    public final int getIntersectionCellID() {
+        return intersectionCellID;
+    }
 
     public final int getDiceRollValue() {
         return diceRollValue;

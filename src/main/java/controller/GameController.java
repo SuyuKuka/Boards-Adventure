@@ -22,6 +22,7 @@ public final class GameController extends Controller {
     private final GamePanel gamePanel;
     /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldGameUpdate;
+    private boolean shouldStateUpdate;
 
     public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics) {
         super(game);
@@ -32,6 +33,7 @@ public final class GameController extends Controller {
 
     private void initValues() {
         shouldGameUpdate = false;
+        shouldStateUpdate = false;
     }
 
     // region controller methods
@@ -42,13 +44,30 @@ public final class GameController extends Controller {
      */
     public void run() {
         while (true) {
+            // System.out.println(model.getGameState());
             if (shouldGameUpdate) {
                 model.update();
                 shouldGameUpdate = false;
             }
             gamePanel.render(model.getGameState());
+            if (shouldStateUpdate) {
+                shouldGameUpdate = true;
+                shouldStateUpdate = false;
+            }
             updateNanoUpTime(System.nanoTime());
         }
+    }
+
+    public void playerRollDice(final String diceName) {
+        final Player currentPlayer = getCurrentPlayer();
+        currentPlayer.rollDice(diceName);
+        if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
+            currentPlayer.setJailTurn(0);
+        }
+    }
+
+    public void playerChooseIntersection(final int cellID) {
+        getCurrentPlayer().setIntersectionCellID(cellID);
     }
 
     public Cell getCurrentPlayerCell() {
@@ -57,8 +76,8 @@ public final class GameController extends Controller {
 
     // region model getters/setters
 
-    public void setShouldGameUpdate(final boolean shouldGameUpdate) {
-        this.shouldGameUpdate = shouldGameUpdate;
+    public void setShouldStateUpdate(final boolean shouldStateUpdate) {
+        this.shouldStateUpdate = shouldStateUpdate;
     }
 
     public ArrayList<Player> getPlayers() {
