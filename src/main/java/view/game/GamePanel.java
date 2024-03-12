@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
 
+import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -93,11 +94,10 @@ public final class GamePanel extends CorePanel {
                 return;
             }
         } else {
-            System.out.println(gameState);
+            System.out.println(gameState + " " + animationTime);
             final Player player = controller.getCurrentPlayer();
             switch (gameState) {
                 case GAME_START:
-                    // add(createGameStartPanel(), Integer.valueOf(5));
                     playButton.setText("Début du jeu !");
                     break;
                 case NEW_TURN:
@@ -108,11 +108,13 @@ public final class GamePanel extends CorePanel {
                     break;
                 case ROLL_DICE:
                     playButton.setText("Cliquez pour lancer votre dé.");
+                    System.out.println("here");
                     playButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(final MouseEvent e) {
                             resetState();
                             controller.playerRollDice("normal");
+                            System.out.println("pressed");
                             playButton.removeMouseListener(playButton.getMouseListeners()[1]);
                         }
                     });
@@ -128,16 +130,12 @@ public final class GamePanel extends CorePanel {
                             e.consume();
                         }
                     });
-                    JPanel test = createIntersectionPanel();
-                    add(test, Integer.valueOf(4));
-                    System.out.println(getIndexOf(test) + " " + "INDEXXXX");
-                    revalidate();
-                    repaint();
+                    removeLayer(INTERACTION);
+                    add(createIntersectionPanel(), Integer.valueOf(INTERACTION));
                     break;
                 case ASK_PROPERTY:
-                    JPanel propertyPanel = createPropertyPanel();
-                    add(propertyPanel, Integer.valueOf(4));
-                    System.out.println(getIndexOf(propertyPanel) + " " + "INDEXXXX");
+                    removeLayer(INTERACTION);
+                    add(createPropertyPanel(), Integer.valueOf(4));
                     break;
                 case ASK_SHOP:
                     playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
@@ -149,6 +147,7 @@ public final class GamePanel extends CorePanel {
                             playButton.removeMouseListener(playButton.getMouseListeners()[1]);
                         }
                     });
+                    removeLayer(INTERACTION);
                     break;
                 case END_TURN:
                     playButton.setText("Fin du tour de " + player.getUsername() + ".");
@@ -259,6 +258,7 @@ public final class GamePanel extends CorePanel {
         panel.setOpaque(false);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setVisible(true);
+        panels.put(INTERACTION, panel);
         return panel;
     }
     private JButton createIntersectChoiceButton(final int targetCellID) {
@@ -267,14 +267,14 @@ public final class GamePanel extends CorePanel {
         button.setLocation(cellGraphics.getLocation());
         button.setBounds(cellGraphics.getLocation().x, cellGraphics.getLocation().y,
             CellGraphics.getCellWidth(), CellGraphics.getCellHeight());
+        button.setBackground(Color.GREEN);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
                 resetState();
                 controller.playerChooseIntersection(targetCellID);
-                remove(4);
-                revalidate();
-                repaint();
+                panels.get(INTERACTION).setVisible(false);
+                removeLayer(INTERACTION);
             }
         });
         button.setVisible(true);
@@ -327,6 +327,20 @@ public final class GamePanel extends CorePanel {
     }
 
     // #endregion
+
+    private void removeLayer(final int layer) {
+        SwingUtilities.invokeLater(() -> {
+            if (panels.containsKey(layer)) {
+                final JPanel panel = panels.get(layer);
+                if (getObjectForLayer(layer) == layer) {
+                    remove(panel);
+                    panels.remove(layer);
+                }
+            }
+            revalidate();
+            repaint();
+        });
+    }
 
     @Override
     public void resized() {

@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import javax.swing.JComponent;
+
 import view.View;
 import view.game.GameMapGraphics;
 import view.game.GamePanel;
@@ -44,16 +46,11 @@ public final class GameController extends Controller {
      */
     public void run() {
         while (true) {
-            // System.out.println(model.getGameState());
             if (shouldGameUpdate) {
                 model.update();
                 shouldGameUpdate = false;
             }
             gamePanel.render(model.getGameState());
-            if (shouldStateUpdate) {
-                shouldGameUpdate = true;
-                shouldStateUpdate = false;
-            }
             updateNanoUpTime(System.nanoTime());
         }
     }
@@ -77,7 +74,7 @@ public final class GameController extends Controller {
     // region model getters/setters
 
     public void setShouldStateUpdate(final boolean shouldStateUpdate) {
-        this.shouldStateUpdate = shouldStateUpdate;
+        this.shouldGameUpdate = shouldStateUpdate;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -94,6 +91,10 @@ public final class GameController extends Controller {
 
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
+    }
+
+    public void delete(final JComponent component) {
+        gamePanel.remove(component);
     }
 
     // endregion
