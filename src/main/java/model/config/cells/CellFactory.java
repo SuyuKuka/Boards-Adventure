@@ -44,6 +44,8 @@ public final class CellFactory {
                 return new Jail(id, type, jObject.optInt("nextCellID", id + 1), jObject.optInt("targetCell", id));
             case GAIN:
                 return new Gain(id, type, jObject.optInt("nextCellID", id + 1), jObject.getInt("gain"));
+            case DANGER:
+                return new Danger(id, type, jObject.optInt("nextCellID", id + 1));
             case VOID:
                 return new Void(id, type, jObject.optInt("nextCellID", id + 1));
             default:

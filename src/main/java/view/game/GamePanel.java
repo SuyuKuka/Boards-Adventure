@@ -9,16 +9,14 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.GameController;
@@ -54,6 +52,7 @@ public final class GamePanel extends CorePanel {
 
     public GamePanel(final View frame, final GameController controller, final GameMapGraphics gameMapGraphics) {
         super(frame);
+        setMinimumSize(new Dimension(720, 480));
         this.panels = new HashMap<>();
         this.controller = controller;
         this.gameMapGraphics = gameMapGraphics;
@@ -166,14 +165,14 @@ public final class GamePanel extends CorePanel {
     // #region Background 0
 
     private JPanel createBackground() {
-        final JPanel panel = new JPanel(null);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.setBackground(Color.MAGENTA);
-        Image boardImg = gameMapGraphics.getImage("board");
-        JLabel backgroundLabel = new JLabel(new ImageIcon(boardImg));
-        backgroundLabel.setSize(new Dimension(boardImg.getWidth(null), boardImg.getHeight(null)));
-        panel.add(backgroundLabel);
-        panel.setVisible(true);
+        final JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                Image image = gameMapGraphics.getImage("boardaaaaa");
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         panels.put(BACKGROUND, panel);
         return panel;
     }
@@ -189,7 +188,7 @@ public final class GamePanel extends CorePanel {
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
         }
-        panel.setVisible(true);
+        // panel.setVisible(true);
         panels.put(CELLS, panel);
         return panel;
     }
@@ -205,7 +204,7 @@ public final class GamePanel extends CorePanel {
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }
-        panel.setVisible(true);
+        // panel.setVisible(true);
         panels.put(PLAYERS, panel);
         return panel;
     }
@@ -223,7 +222,7 @@ public final class GamePanel extends CorePanel {
         }
         panel.setOpaque(false);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.setVisible(true);
+        // panel.setVisible(true);
         panels.put(INTERACTION, panel);
         return panel;
     }
@@ -242,7 +241,7 @@ public final class GamePanel extends CorePanel {
                 removeLayer(INTERACTION);
             }
         });
-        button.setVisible(true);
+        // button.setVisible(true);
         return button;
     }
 
@@ -263,7 +262,7 @@ public final class GamePanel extends CorePanel {
                 // panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
             }
         });
-        panel.setVisible(true);
+        // panel.setVisible(true);
         panels.put(INTERACTION, panel);
         return panel;
     }
@@ -285,7 +284,7 @@ public final class GamePanel extends CorePanel {
                 panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
             }
         });
-        panel.setVisible(true);
+        // panel.setVisible(true);
         panels.put(INTERACTION, panel);
         return panel;
     }
@@ -301,7 +300,7 @@ public final class GamePanel extends CorePanel {
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
         playButton = new JButton();
-        playButton.setBounds(0, 0, 400, 100);
+        playButton.setBounds(0, 0, 200, 50);
         playButton.setVerticalAlignment(JButton.CENTER);
         playButton.setHorizontalAlignment(JButton.CENTER);
         panel.add(playButton);
