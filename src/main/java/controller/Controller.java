@@ -23,6 +23,10 @@ public abstract sealed class Controller permits MenuController, GameController {
         return game.getNanoStartTime();
     }
 
+    public final Game getGame() {
+        return game;
+    }
+
     public final double getUpTime() {
         return game.getUpTime();
     }

@@ -25,9 +25,9 @@ public final class GameController extends Controller {
     /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldGameUpdate;
 
-    public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics) {
+    public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics, final Model model) {
         super(game);
-        this.model = game.createTestModel(gameMapGraphics.getGameMap());
+        this.model = model;
         gamePanel = view.initNewGamePanel(this, gameMapGraphics);
         initValues();
     }

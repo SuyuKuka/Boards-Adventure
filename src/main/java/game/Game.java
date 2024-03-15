@@ -14,6 +14,7 @@ import model.config.Team;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
+import view.game.GameMapGraphics;
 
 /**
  * Classe mère du jeu qui contient un controlleur {@link GameController} ou {@link MenuController}
@@ -36,29 +37,31 @@ public final class Game {
     private View view;
     private Controller controller;
 
-    private Mode mode = Mode.GAME;
-    private static String testModelMapName = "map4";
+    private Mode mode = Mode.MENU;
+    private static final String TEST_MODEL_MAP_NAME = "map4";
 
     private Game() {
+        view = new View();
         init();
         controller.run();
     }
 
     private void init() {
-        view = new View();
         switch (mode) {
             case MENU:
                 controller = new MenuController(this, view);
                 break;
             case GAME:
-                controller = new GameController(this, view, Resources.getGameMapGraphics(testModelMapName));
+                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics(TEST_MODEL_MAP_NAME);
+                controller = new GameController(this, view, gameMapGraphics,
+                    createTestModel(gameMapGraphics.getGameMap()));
                 break;
             default:
                 break;
         }
     }
 
-    public Model createTestModel(final GameMap gameMap) {
+    private Model createTestModel(final GameMap gameMap) {
         final HashMap<String, Integer> gameSettings = new HashMap<>();
         gameSettings.put("turns", 35);
         final ArrayList<Player> players = new ArrayList<>();
@@ -69,8 +72,16 @@ public final class Game {
         return new Model(gameMap, gameSettings, players);
     }
 
-    public void startGame() {
-        // start game
+    public void startGame(final GameMapGraphics gameMapGraphics, final HashMap<String, Integer> gameConfig,
+        final ArrayList<HashMap<String, String>> playersConfig) {
+            final ArrayList<Player> players = createPlayers(playersConfig);
+        controller = new GameController(this, view, gameMapGraphics, createTestModel(gameMapGraphics.getGameMap()));
+    }
+
+    private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
+        final ArrayList<Player> players = new ArrayList<>();
+        // TODO créer players à partir des playersConfig.
+        return players;
     }
 
     public void goToMenu() {

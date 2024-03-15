@@ -31,9 +31,10 @@ import javax.swing.plaf.basic.BasicSliderUI;
 
 import java.util.HashMap;
 
-import controller.Music;
-import controller.Resources;
-import view.MenuPanel.MenuState;
+import controller.resources.Music;
+import controller.resources.Resources;
+import view.menu.MenuPanel.MenuState;
+import view.menu.MenuPanel;
 
 public class SwingFactory {
 
@@ -45,14 +46,14 @@ public class SwingFactory {
         return panel;
     }
 
-    public static JPanel createPanel(final MonopolyView frame, final int borderSize) { //14 Normal
+    public static JPanel createPanel(final View frame, final int borderSize) { //14 Normal
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setVisible(true);
         if (borderSize != 0) {
-            panel.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / borderSize, 0, 0, 0));
+            panel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / borderSize, 0, 0, 0));
         }
-        panel.setBounds(0, 0, frame.getContentPaneWidth(), frame.getContentPaneHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         return panel;
     }
 
@@ -104,14 +105,14 @@ public class SwingFactory {
     }
 
     public static JButton createImageButton(
-        final String img, final MonopolyView frame, final MenuState state, final MenuPanel panel) {
+        final String img, final View frame, final MenuState state, final MenuPanel panel) {
         JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setBorder(BorderFactory.createEmptyBorder(frame.getContentPaneHeight() / 18, 0, 0, 0));
+        button.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 18, 0, 0, 0));
         if (state != null) {
             button.addMouseListener(new MouseAdapter() {
                 @Override

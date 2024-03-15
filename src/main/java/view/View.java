@@ -19,6 +19,7 @@ public final class View extends JFrame {
     private CorePanel corePanel;
 
     public View() {
+        corePanel = null;
         setTitle("Kingdom Revolution");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLACK);
@@ -33,6 +34,11 @@ public final class View extends JFrame {
     }
 
     public MenuPanel initNewMenuPanel(final MenuController controller) {
+        if (corePanel != null) {
+            remove(corePanel);
+            revalidate();
+            repaint();
+        }
         corePanel = new MenuPanel(this, controller);
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
@@ -48,6 +54,11 @@ public final class View extends JFrame {
     }
 
     public GamePanel initNewGamePanel(final GameController controller, final GameMapGraphics gameMapGraphics) {
+        if (corePanel != null) {
+            remove(corePanel);
+            revalidate();
+            repaint();
+        }
         corePanel = new GamePanel(this, controller, gameMapGraphics);
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
@@ -61,6 +72,8 @@ public final class View extends JFrame {
         setVisible(true);
         return (GamePanel) corePanel;
     }
+
+
 
     public void setCorePanel(final CorePanel corePanel) {
         this.corePanel = corePanel;

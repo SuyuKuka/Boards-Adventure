@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import model.config.Dice;
 import model.config.GameMap;
+import model.config.Item;
 import model.config.Team;
 import model.config.cells.Cell;
 
@@ -12,7 +13,9 @@ public abstract class Player {
     private final int playerID;
     private final String username;
     private final Team team;
-    private HashMap<String, Dice> dices;
+    private final Item startItem;
+    private final HashMap<String, Dice> dices;
+
     private int jailTurn;
     private int mapLap;
     private int position;
@@ -21,15 +24,16 @@ public abstract class Player {
 
     private int diceRollValue;
 
-    public Player(final int playerID, final String username, final Team team, final Item item) {
+    public Player(final int playerID, final String username, final Team team, final Item startItem) {
         this.playerID = playerID;
         this.username = username;
         this.team = team;
+        this.startItem = startItem;
+        dices = new HashMap<>();
         initValues();
     }
 
     private void initValues() {
-        dices = new HashMap<>();
         dices.put("normal", new Dice());
         intersectionCellID = 0;
         position = 0;
