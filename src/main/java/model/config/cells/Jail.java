@@ -1,8 +1,7 @@
 package model.config.cells;
 
-import model.GameLogic;
+import model.Model;
 import model.config.players.Player;
-import model.config.players.PlayerState;
 
 public final class Jail extends Cell {
 
@@ -10,15 +9,14 @@ public final class Jail extends Cell {
 
     private int targetCell;
 
-    public Jail(final int id, final int targetCell) {
-        super(id);
+    public Jail(final int id, final CellType cellType, final int nextCellID, final int targetCell) {
+        super(id, cellType, nextCellID);
         this.targetCell = targetCell;
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
-        player.setPlayerState(PlayerState.JAILED);
-        player.setJailTurn(JAILTURN);
+    public void playCellEffect(final Player player, final Model model) {
+        player.setJailTurn(2);
         player.setPreviousPosition(player.getPosition());
         player.setPosition(targetCell);
     }

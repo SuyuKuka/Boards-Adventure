@@ -7,7 +7,10 @@ public enum CellType {
     KINGDOM,
     PROPERTY,
     START,
+    INTERSECTION,
+    SHOP,
     TELEPORTATION,
     GAIN,
+    DANGER,
     VOID;
 }

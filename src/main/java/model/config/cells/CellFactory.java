@@ -11,31 +11,43 @@ public final class CellFactory {
         final CellType type = CellType.valueOf(jObject.getString("type").toUpperCase());
         final Integer id = jObject.getInt("id");
         switch (type) {
-            case PROPERTY : {
-                final JSONArray buyPricesJArray = jObject.getJSONArray("values");
+            case PROPERTY: {
+                final JSONArray buyPricesJArray = jObject.getJSONArray("prices");
                 final ArrayList<Integer> buyPrices = new ArrayList<>();
                 for (int i = 0; i < buyPricesJArray.length(); i++) {
                     buyPrices.add(buyPricesJArray.getInt(i));
                 }
                 final int group = jObject.getInt("group");
-                return new Property(id, buyPrices, group);
+                return new Property(id, type, jObject.optInt("nextCellID", id + 1), buyPrices, group);
             }
             case KINGDOM:
-                return new Kingdom(id, jObject.getInt("throneCell"));
+                return new Kingdom(id, type, jObject.optInt("nextCellID", id + 1), jObject.optInt("throneCell", id));
             case START:
-                return new Start(id, jObject.getInt("lapGain"));
+                return new Start(id, type, jObject.optInt("nextCellID", id + 1),  jObject.getInt("lapGain"));
             case CARD_ATTACK:
-                return new Card(id, CellType.CARD_ATTACK);
+                return new Card(id, type, jObject.optInt("nextCellID", id + 1));
             case CARD_DEFENSE:
-                return new Card(id, CellType.CARD_DEFENSE);
+                return new Card(id, type, jObject.optInt("nextCellID", id + 1));
+            case INTERSECTION: {
+                final JSONArray nextCellIDsJArray = jObject.getJSONArray("nextCellID");
+                final ArrayList<Integer> nextCellIDs = new ArrayList<>();
+                for (int i = 0; i < nextCellIDsJArray.length(); i++) {
+                    nextCellIDs.add(nextCellIDsJArray.getInt(i));
+                }
+                return new Intersection(id, type, nextCellIDs);
+            }
+            case SHOP:
+                return new Shop(id, type, jObject.optInt("nextCellID", id + 1));
             case TELEPORTATION:
-                return new Teleportation(id, jObject.getInt("targetCell"));
+                return new Teleportation(id, type, jObject.optInt("nextCellID", id + 1), jObject.getInt("targetCell"));
             case JAIL:
-                return new Jail(id, jObject.getInt("targetCell"));
+                return new Jail(id, type, jObject.optInt("nextCellID", id + 1), jObject.optInt("targetCell", id));
             case GAIN:
-                return new Gain(id, jObject.getInt("gain"));
+                return new Gain(id, type, jObject.optInt("nextCellID", id + 1), jObject.getInt("gain"));
+            case DANGER:
+                return new Danger(id, type, jObject.optInt("nextCellID", id + 1));
             case VOID:
-                return new Void(id);
+                return new Void(id, type, jObject.optInt("nextCellID", id + 1));
             default:
                 break;
         }

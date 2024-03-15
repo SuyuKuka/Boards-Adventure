@@ -2,7 +2,7 @@ package model.config.cells;
 
 import java.util.ArrayList;
 
-import model.GameLogic;
+import model.Model;
 import model.config.players.Player;
 
 public final class Property extends Cell {
@@ -12,14 +12,15 @@ public final class Property extends Cell {
     private int propertyState = 0;
     private Player owner = null;
 
-    public Property(final int id, final ArrayList<Integer> buyPrices, final int group) {
-        super(id);
+    public Property(final int id, final CellType cellType, final int nextCellID,
+        final ArrayList<Integer> buyPrices, final int group) {
+        super(id, cellType, nextCellID);
         this.buyPrices = buyPrices;
         this.group = group;
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
+    public void playCellEffect(final Player player, final Model model) {
         if (owner == null) {
             if (player.getTeam().getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
@@ -52,7 +53,7 @@ public final class Property extends Cell {
         } else {
             final int price = buyPrices.get(propertyState - 1);
             if (player.getTeam().getMoney() < price) {
-                //gameState.removePlayer(player);
+                //model.removePlayer(player);
                 System.out.println(player + " a pas assez d'argents.");
             } else {
                 player.getTeam().incrementMoney(-price);

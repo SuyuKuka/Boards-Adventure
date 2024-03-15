@@ -1,19 +1,19 @@
 package model.config.cells;
 
-import model.GameLogic;
+import model.Model;
 import model.config.players.Player;
 
 public final class Gain extends Cell {
 
     private int gain = 0;
 
-    public Gain(final int id, final int gain) {
-        super(id);
+    public Gain(final int id, final CellType cellType, final int nextCellID, final int gain) {
+        super(id, cellType, nextCellID);
         this.gain = gain;
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
+    public void playCellEffect(final Player player, final Model model) {
         player.getTeam().incrementMoney(gain);
         return;
     }

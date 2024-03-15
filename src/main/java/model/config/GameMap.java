@@ -1,6 +1,5 @@
 package model.config;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.config.cells.Cell;
@@ -9,7 +8,7 @@ import model.config.cells.Start;
 public final class GameMap {
     private final String mapName;
     /** Liste qui contient toutes les cellules accessibles à pied par les joueurs (la case 0 est toujours le START). */
-    private final ArrayList<Cell> walkableCells = new ArrayList<>();
+    private final HashMap<Integer, Cell> walkableCells = new HashMap<>();
     /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (trône, prison, ...). */
     private final HashMap<Integer, Cell> specialCells = new HashMap<>();
 
@@ -19,7 +18,7 @@ public final class GameMap {
             if (cellId < 0) {
                 specialCells.put(cellId, cells.get(cellId));
             } else {
-                walkableCells.add(cells.get(cellId));
+                walkableCells.put(cellId, cells.get(cellId));
             }
         }
     }
@@ -39,7 +38,7 @@ public final class GameMap {
         return walkableCells.get(pos);
     }
 
-    public ArrayList<Cell> getWalkableCells() {
+    public HashMap<Integer, Cell> getWalkableCells() {
         return walkableCells;
     }
     public String toString() {

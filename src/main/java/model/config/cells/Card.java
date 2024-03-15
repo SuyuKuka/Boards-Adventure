@@ -1,19 +1,16 @@
 package model.config.cells;
 
-import model.GameLogic;
+import model.Model;
 import model.config.players.Player;
 
 public final class Card extends Cell {
 
-    private CellType cardType;
-
-    public Card(final int id, final CellType cardType) {
-        super(id);
-        this.cardType = cardType;
+    public Card(final int id, final CellType cellType, final int nextCellID) {
+        super(id, cellType, nextCellID);
     }
 
     @Override
-    public void playEffect(final Player player, final GameLogic gameState) {
-        System.out.println(cardType);
+    public void playCellEffect(final Player player, final Model model) {
+        System.out.println(getCellType());
     }
 }
