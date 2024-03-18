@@ -37,10 +37,11 @@ public final class Game {
     private View view;
     private Controller controller;
 
-    private Mode mode = Mode.MENU;
-    private static final String TEST_MODEL_MAP_NAME = "map4";
+    private Mode mode;
+    private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
-    private Game() {
+    private Game(final Mode mode) {
+        this.mode = mode;
         view = new View();
         init();
         controller.run();
@@ -52,7 +53,7 @@ public final class Game {
                 controller = new MenuController(this, view);
                 break;
             case GAME:
-                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics(TEST_MODEL_MAP_NAME);
+                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics(DEFAULT_GAME_MAP_NAME);
                 controller = new GameController(this, view, gameMapGraphics,
                     createTestModel(gameMapGraphics.getGameMap()));
                 break;
@@ -105,7 +106,18 @@ public final class Game {
     }
 
     public static void main(final String[] args) {
-        Resources.loadResources();
-        Game launcher = new Game();
+        final Mode mode = Mode.MENU;
+        switch (mode) {
+            case MENU:
+                Resources.loadResources(mode);
+                Game launcherMenu = new Game(mode);
+                break;
+            case GAME:
+                Resources.loadResources(mode, DEFAULT_GAME_MAP_NAME);
+                Game launcherGame = new Game(mode);
+                break;
+            default:
+                break;
+        }
     }
 }

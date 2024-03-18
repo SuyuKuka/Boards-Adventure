@@ -11,22 +11,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.InetAddress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.sound.sampled.FloatControl;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import controller.MenuController;
-import controller.resources.Music;
-import controller.resources.Resources;
+import controller.resources.Audio;
 import view.CorePanel;
 import view.SwingFactory;
 import view.View;
@@ -45,9 +40,11 @@ public final class MenuPanel extends CorePanel {
     private MenuState menuState;
 
     private final MenuController controller;
-    private final HashMap<String, Integer> configGame;
-    private final HashMap<String, String> configPlayer;
-    private final ArrayList<HashMap<String, String>> players;
+    private final HashMap<String, Integer> gameConfig;
+    private final HashMap<String, String> playersConfig;
+
+    private int soundSliderVolume;
+    private int songSliderVolume;
 
     private JPanel rightSidePanel;
 
@@ -65,10 +62,9 @@ public final class MenuPanel extends CorePanel {
     public MenuPanel(final View frame, final MenuController controller) {
         super(frame);
         this.controller = controller;
-        configGame = new HashMap<>();
-        configPlayer = new HashMap<>();
-        players = new ArrayList<>();
-        Music.playMusic("music/MenuTheme.wav");
+        gameConfig = new HashMap<>();
+        playersConfig = new HashMap<>();
+        Audio.playMusic("MenuTheme.wav");
         initDefaultValues();
         createPanels();
         changeState(MenuState.MAINMENU);
@@ -77,6 +73,8 @@ public final class MenuPanel extends CorePanel {
 
     private void initDefaultValues() {
         menuState = null;
+        songSliderVolume = 50;
+        soundSliderVolume = 50;
     }
 
     private void createPanels() {
@@ -106,7 +104,7 @@ public final class MenuPanel extends CorePanel {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                Music.playSong("song/button.wav");
+                Audio.playSound("button.wav");
                 changeState(newMenuState);
             }
         });
@@ -169,14 +167,14 @@ public final class MenuPanel extends CorePanel {
         final JPanel musicPanel = SwingFactory.createBoxLayoutPanel();
         musicPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
         final JLabel musique = SwingFactory.createTextLabel("Musique : -", "Komigo3D.ttf", Color.BLACK, 20);
-        final JSlider musicSlider = createMusicSlider();
+        final JSlider musicSlider = SwingFactory.createMusicSlider();
         musicPanel.add(musique);
         musicPanel.add(musicSlider);
         // Son
         final JPanel soundPanel = SwingFactory.createBoxLayoutPanel();
         soundPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
         final JLabel sound = SwingFactory.createTextLabel("Son : -", "Komigo3D.ttf", Color.BLACK, 20);
-        final JSlider soundSlider = createSoundSlider();
+        final JSlider soundSlider = SwingFactory.createSoundSlider();
         soundPanel.add(sound);
         soundPanel.add(soundSlider);
 
@@ -190,41 +188,6 @@ public final class MenuPanel extends CorePanel {
         });
         panel.setVisible(true);
         return panel;
-    }
-
-    private JSlider createMusicSlider() {
-        final JSlider musicSlider = SwingFactory.createJSlider();
-        musicSlider.setValue((int) (Music.getMusicSlider()));
-        musicSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                Music.setMusicVolume(Music.getMusicSlider() / 100.0f);
-                Music.setMusicSlider(musicSlider.getValue());
-                if (Music.getMusic() != null) {
-                    FloatControl gainControl =
-                        (FloatControl) Music.getMusic().getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(Music.getMusicVolume()));
-                }
-            }
-        });
-        return musicSlider;
-    }
-
-    private JSlider createSoundSlider() {
-        final JSlider soundSlider = SwingFactory.createJSlider();
-        soundSlider.setValue((int) (Music.getMusicSlider()));
-        soundSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                Music.setSongVolume(Music.getSongSlider() / 100.0f);
-                Music.setSongSlider(soundSlider.getValue());
-                if (Music.getSong() != null) {
-                    FloatControl gainControl = (FloatControl) Music.getSong().getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(Music.getSongVolume()));
-                }
-            }
-        });
-        return soundSlider;
     }
 
     // #endregion
@@ -292,7 +255,7 @@ public final class MenuPanel extends CorePanel {
         });
 
         buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-        buttonsPanel.add(SwingFactory.createImageButton(panel, "play", 40, 10, false));
+        buttonsPanel.add(SwingFactory.createImageButton(this, "play", 40, 10, false));
 
         panel.add(createGameLobby(panel));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
@@ -347,7 +310,7 @@ public final class MenuPanel extends CorePanel {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                Music.playSong("song/button.wav");
+                Audio.playSound("button.wav");
                 getPanels().get(MANUALBOOK_INDEX).setVisible(true);
             }
         });
@@ -1017,17 +980,5 @@ public final class MenuPanel extends CorePanel {
     //             return 1;
     //     }
     // }
-
-    public HashMap<String, Integer> getHashMap() {
-        return configGame;
-    }
-
-    public void setHost(final boolean host) {
-        this.host = host;
-    }
-
-    public String getCode() {
-        return code;
-    }
 
 }

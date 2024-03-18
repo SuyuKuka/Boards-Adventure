@@ -46,10 +46,6 @@ public final class PlayerGraphics extends JLabel {
 
     private void initPlayerImage(final int id) {
         final String playerID = "j" + id;
-        if (gameMapGraphics.getImages().containsKey(playerID)) {
-            playerImage = gameMapGraphics.getImage(playerID);
-        } else {
-            playerImage = Resources.getGameImage(playerID);
-        }
+        playerImage = Resources.getImage(playerID);
     }
 }

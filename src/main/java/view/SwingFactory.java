@@ -26,7 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import controller.resources.Music;
+import controller.resources.Audio;
 import controller.resources.Resources;
 
 public class SwingFactory {
@@ -126,7 +126,7 @@ public class SwingFactory {
                 super.paintComponent(g);
                 final int width = parent.getWidth() * widthPer / 100;
                 final int height = parent.getHeight() * heightPer / 100;
-                g.drawImage(Resources.getMenuImage(img)
+                g.drawImage(Resources.getImage(img)
                     .getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, this);
             }
         };
@@ -149,7 +149,7 @@ public class SwingFactory {
 
     public static JLabel createImageLabel(final Component parent, final String img,
         final int widthPer, final int heightPer, final boolean resize) {
-        final Image image = Resources.getMenuImage(img);
+        final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
         final JLabel label = new JLabel(new ImageIcon(image.getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
@@ -190,7 +190,7 @@ public class SwingFactory {
 
     public static JButton createImageButton(final Component parent, final String img,
         final int widthPer, final int heightPer, final boolean resize) {
-        final Image image = Resources.getMenuImage(img);
+        final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
         final JButton button = new JButton(new ImageIcon(image.getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
@@ -278,7 +278,7 @@ public class SwingFactory {
         final int size) {
         final JLabel label = new JLabel(text);
         label.setForeground(foregroundColor);
-        label.setFont(Resources.loadFont(size, fontName));
+        label.setFont(Resources.setFont(fontName, size));
         return label;
     }
 
@@ -411,41 +411,40 @@ public class SwingFactory {
         return slider;
     }
 
-    public static JSlider createMusicJSlider() {
+    public static JSlider createMusicSlider() {
         JSlider musicSlider = createJSlider();
         musicSlider.setLayout(new BoxLayout(musicSlider, BoxLayout.X_AXIS));
-        musicSlider.setValue((int) (Music.getMusicSlider()));
+        musicSlider.setValue(Audio.getMusicSliderValue());
         musicSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(final ChangeEvent e) {
-                Music.setMusicVolume(Music.getMusicSlider() / 100.0f);
-                Music.setMusicSlider(musicSlider.getValue());
-                if (Music.getMusic() != null) {
+                Audio.setMusicVolume(musicSlider.getValue() / 100.0f);
+                if (Audio.getMusic() != null) {
                     FloatControl gainControl =
-                        (FloatControl) Music.getMusic().getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(Music.getMusicVolume()));
+                        (FloatControl) Audio.getMusic().getControl(FloatControl.Type.MASTER_GAIN);
+                    gainControl.setValue(20f * (float) Math.log10(Audio.getMusicVolume()));
                 }
             }
         });
         return musicSlider;
     }
 
-    public static JSlider createSongJSlider() {
-        JSlider songSlider = createJSlider();
-        songSlider.setLayout(new BoxLayout(songSlider, BoxLayout.X_AXIS));
-        songSlider.setValue((int) (Music.getSongSlider()));
-        songSlider.addChangeListener(new ChangeListener() {
+    public static JSlider createSoundSlider() {
+        JSlider soundSlider = createJSlider();
+        soundSlider.setLayout(new BoxLayout(soundSlider, BoxLayout.X_AXIS));
+        soundSlider.setValue(Audio.getSoundSliderValue());
+        soundSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(final ChangeEvent e) {
-                Music.setSongVolume(Music.getSongSlider() / 100.0f);
-                Music.setSongSlider(songSlider.getValue());
-                if (Music.getSong() != null) {
-                    FloatControl gainControl = (FloatControl) Music.getSong().getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(Music.getSongVolume()));
+                Audio.setSoundVolume(soundSlider.getValue() / 100.0f);
+                if (Audio.getSound() != null) {
+                    FloatControl gainControl =
+                        (FloatControl) Audio.getSound().getControl(FloatControl.Type.MASTER_GAIN);
+                    gainControl.setValue(20f * (float) Math.log10(Audio.getSoundVolume()));
                 }
             }
         });
-        return songSlider;
+        return soundSlider;
     }
 
     public static String getPath() {

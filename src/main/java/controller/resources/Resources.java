@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import game.Game.Mode;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
@@ -29,25 +30,34 @@ public final class Resources {
     private static final String PATH = "src/main/resources/";
 
     private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
-    private static HashMap<String, Image> images = new HashMap<>();
-    private static HashMap<String, Image> menuImages = new HashMap<>();
-    private static HashMap<String, Image> gameImages = new HashMap<>();
-    private static HashMap<String, Image> mapImages = new HashMap<>();
+    private static HashMap<String, Image> commonImages = new HashMap<>();
+    private static HashMap<String, Image> modeImages = new HashMap<>();
 
-    public static void loadResources() {
-        loadImages(new File(PATH), images);
-        loadImages(new File(PATH + "menu/"), menuImages);
-        loadImages(new File(PATH + "maps/"), mapImages);
-        loadImages(new File(PATH + "game/"), gameImages);
-        loadGameMapsGraphics();
+    public static void loadResources(final Mode mode) {
+        loadImages(new File(PATH + "images/"), commonImages, false);
+        loadModeImages(mode);
     }
 
-    private static String getExtension(final File file) {
-        final String fileName = file.getName();
-        if (!fileName.contains(".")) {
-            return "";
+    private static void loadModeImages(final Mode mode) {
+        switch (mode) {
+            case MENU:
+                loadImages(new File(PATH + "images/menu/"), modeImages, true);
+                break;
+            case GAME:
+                loadImages(new File(PATH + "images/game/"), modeImages, true);
+            default:
+                break;
         }
-        return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    public static void loadResources(final Mode mode, final String mapName) {
+        loadResources(mode);
+        loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
+    }
+
+    public static void changeMode(final Mode mode) {
+        modeImages.clear();
+        loadModeImages(mode);
     }
 
     // region gamemap/cells
@@ -60,10 +70,8 @@ public final class Resources {
                     final String mapName = map.getName();
                     HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
                     HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-                    HashMap<String, Image> gameMapImages = new HashMap<>();
-                    loadImages(map, gameMapImages);
                     gameMaps.put(mapName,
-                        new GameMapGraphics(new GameMap(mapName, cells), gameMapImages, cellsGraphics));
+                        new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics));
                 }
             }
         } catch (NullPointerException e) {
@@ -105,19 +113,28 @@ public final class Resources {
         return cells;
     }
 
+    private static String removeExtension(String str) {
+        if (str == null || str.isEmpty()) {
+          return str;
+        }
+        final int index = str.indexOf('.');
+        return (index == -1) ? str : str.substring(0, index);
+    }
+
     // endregion
 
     // region images
 
-    private static void loadImages(final File folder, final HashMap<String, Image> hashMap) {
+    private static void loadImages(final File folder, final HashMap<String, Image> hashMap, final boolean recursive) {
         try {
             for (File file : folder.listFiles()) {
-                if (file.isDirectory()) {
-                    loadImages(file, hashMap);
-                }
-                if (file.getName().contains(".") && (getExtension(file).equals(".png")
-                    || getExtension(file).equals(".jpg"))) {
-                    addImage(file, hashMap);
+                if (recursive && file.isDirectory()) {
+                    loadImages(file, hashMap, recursive);
+                } else {
+                    final String fileName = file.getName();
+                    if (fileName.endsWith(".png") || fileName.endsWith(".jpg")) {
+                        addImage(file, hashMap);
+                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -126,11 +143,8 @@ public final class Resources {
     }
 
     private static void addImage(final File file, final HashMap<String, Image> hashMap) {
-        final int nameLength = file.getName().indexOf(".png") == -1
-            ? file.getName().indexOf(".jpg") : file.getName().indexOf(".png");
-        String imageName = file.getName().substring(0, nameLength);
         try {
-            hashMap.put(imageName, ImageIO.read(file));
+            hashMap.put(removeExtension(file.getName()), ImageIO.read(file));
         } catch (IOException e) {
             System.out.println("File not found.");
         }
@@ -140,9 +154,9 @@ public final class Resources {
 
     // region font
 
-    public static Font loadFont(final float size, final String font) {
+    public static Font setFont(final String font, final float size) {
         try {
-            return Font.createFont(Font.TRUETYPE_FONT, new File(PATH + "police/" + font)).deriveFont(Font.BOLD, size);
+            return Font.createFont(Font.TRUETYPE_FONT, new File(PATH + "fonts/" + font)).deriveFont(Font.BOLD, size);
         } catch (FontFormatException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {
@@ -156,39 +170,16 @@ public final class Resources {
     // region getter/setters
 
     public static Image getImage(final String key) {
-        if (images.containsKey(key)) {
-            return images.get(key);
+        if (modeImages.containsKey(key)) {
+            return modeImages.get(key);
+        } else if (commonImages.containsKey(key)) {
+            return commonImages.get(key);
         }
-        return getPlaceHolderImg();
-    }
-
-    public static Image getMenuImage(final String key) {
-        if (menuImages.containsKey(key)) {
-            return menuImages.get(key);
-        }
-        return getPlaceHolderImg();
-    }
-
-    public static Image getMapImage(final String key) {
-        if (mapImages.containsKey(key)) {
-            return mapImages.get(key);
-        }
-        return getPlaceHolderImg();
-    }
-
-    public static Image getGameImage(final String key) {
-        if (gameImages.containsKey(key)) {
-            return gameImages.get(key);
-        }
-        return getPlaceHolderImg();
+        return commonImages.get("placeholder32_32");
     }
 
     public static GameMapGraphics getGameMapGraphics(final String key) {
         return gameMaps.get(key);
-    }
-
-    public static Image getPlaceHolderImg() {
-        return images.get("placeholder32_32");
     }
 
     public static String getPath() {

@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import controller.GameController;
+import controller.resources.Resources;
 import model.GameState;
 import model.config.cells.Intersection;
 import model.config.players.Player;
@@ -169,7 +170,7 @@ public final class GamePanel extends CorePanel {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
-                Image image = gameMapGraphics.getImage("boardaaaaa");
+                Image image = Resources.getImage("boardaaaaa");
                 g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
             }
         };
