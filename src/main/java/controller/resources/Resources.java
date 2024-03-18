@@ -142,9 +142,7 @@ public final class Resources {
 
     public static Font loadFont(final float size, final String font) {
         try {
-            Font cFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/police/" + font));
-            cFont = cFont.deriveFont(Font.BOLD, size);
-            return cFont;
+            return Font.createFont(Font.TRUETYPE_FONT, new File(PATH + "police/" + font)).deriveFont(Font.BOLD, size);
         } catch (FontFormatException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {

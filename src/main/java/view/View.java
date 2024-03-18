@@ -73,8 +73,6 @@ public final class View extends JFrame {
         return (GamePanel) corePanel;
     }
 
-
-
     public void setCorePanel(final CorePanel corePanel) {
         this.corePanel = corePanel;
     }

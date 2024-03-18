@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
@@ -33,12 +34,192 @@ import java.util.HashMap;
 
 import controller.resources.Music;
 import controller.resources.Resources;
-import view.menu.MenuPanel.MenuState;
 import view.menu.MenuPanel;
+import view.menu.MenuState;
 
 public class SwingFactory {
 
     private static final String PATH = "src/main/resources/";
+
+    /**
+     * Crée un {@link JPanel} transparent invisible avec pour layout {@link BoxLayout}
+     * et ayant une bordure invisible qui prend X% d'espace associé.
+     * @param parent {@link Component} parent.
+     * @param topB (0 à 100) en %.
+     * @param rightB (0 à 100) en %.
+     * @param botB (0 à 100) en %.
+     * @param leftB (0 à 100) en %.
+     * @return {@link JPanel}.
+     */
+    public static JPanel createContainerPanel(final Component parent, final int topB,
+            final int rightB, final int botB, final int leftB) {
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        final int height = parent.getHeight();
+        final int width = parent.getWidth();
+        panel.setBounds(0, 0, width, height);
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
+             height * botB / 100, width * leftB / 100));
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final int height = parent.getHeight();
+                final int width = parent.getWidth();
+                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
+                    height * botB / 100, width * leftB / 100));
+                parent.revalidate();
+            }
+        });
+        panel.setVisible(false);
+        return panel;
+    }
+
+    public static JPanel createPanel(final Component parent, final int topB,
+        final int rightB, final int botB, final int leftB) {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        final int height = parent.getHeight();
+        final int width = parent.getWidth();
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
+             height * botB / 100, width * leftB / 100));
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final int height = parent.getHeight();
+                final int width = parent.getWidth();
+                panel.setPreferredSize(new Dimension(width, height));
+                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
+                    height * botB / 100, width * leftB / 100));
+                parent.revalidate();
+            }
+        });
+        panel.setVisible(true);
+        return panel;
+    }
+
+    /**
+     * Crée un {@link JPanel} transparent dynamique sans layout ayant X% de la largeur
+     * de son parent et X% de la hauteur de son parent.
+     * Utile aussi pour créer de l'espace entre composants.
+     * @param parent
+     * @param widthPer (0 à 100) %
+     * @param heightPer (0 à 100) en %.
+     * @return {@link JPanel}.
+     */
+    public static JPanel createTransparentPanel(final Component parent, final int widthPer, final int heightPer) {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        final Dimension panelSize = new Dimension(parent.getWidth(), parent.getHeight() * heightPer / 100);
+        panel.setMaximumSize(panelSize);
+        panel.setPreferredSize(panelSize);
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension panelSize = new Dimension(parent.getWidth(), parent.getHeight() * heightPer / 100);
+                panel.setMaximumSize(panelSize);
+                panel.setPreferredSize(panelSize);
+            }
+        });
+        return panel;
+    }
+
+    public static JPanel createImagePanel(final Component parent, final String img,
+        final int widthPer, final int heightPer) {
+        final JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                final int width = parent.getWidth() * widthPer / 100;
+                final int height = parent.getHeight() * heightPer / 100;
+                g.drawImage(Resources.getMenuImage(img)
+                    .getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, this);
+            }
+        };
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        final Dimension size = new Dimension(parent.getWidth() * widthPer / 100, parent.getHeight() * heightPer / 100);
+        panel.setMaximumSize(size);
+        panel.setPreferredSize(size);
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension size = new Dimension(parent.getWidth(), parent.getHeight() * heightPer / 100);
+                panel.setMaximumSize(size);
+                panel.setPreferredSize(size);
+            }
+        });
+        panel.setVisible(true);
+        return panel;
+    }
+
+    public static JLabel createImageLabel(final Component parent, final String img,
+        final int widthPer, final int heightPer, final boolean resize) {
+        final Image image = Resources.getMenuImage(img);
+        final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
+        final JLabel label = new JLabel(new ImageIcon(image.getScaledInstance(
+            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+        label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+            (int) (size.getWidth() * heightPer / 100)));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.CENTER);
+        label.setOpaque(false);
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
+                label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                    (int) (size.getWidth() * heightPer / 100)));
+                label.setIcon(new ImageIcon(image.getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
+        return label;
+    }
+
+    private static Dimension calcDimension(final Image image, final Dimension containerSize,
+        final int widthPer, final int heightPer, final boolean resize) {
+        if (resize) {
+            return new Dimension((int) (containerSize.getWidth() * widthPer / 100),
+                (int) (containerSize.getHeight() * heightPer / 100));
+        } else {
+            final Dimension imageSize = new Dimension(image.getWidth(null), image.getHeight(null));
+            final double widthRatio = containerSize.getWidth() * widthPer / 100 / imageSize.getWidth();
+            final double heightRatio = containerSize.getHeight() * heightPer / 100 / imageSize.getHeight();
+            final double ratio = Math.min(widthRatio, heightRatio);
+
+            return new Dimension((int) (imageSize.width  * ratio),
+                (int) (imageSize.height * ratio));
+        }
+    }
+
+    public static JButton createImageButton(final Component parent, final String img,
+        final int widthPer, final int heightPer, final boolean resize) {
+        final Image image = Resources.getMenuImage(img);
+        final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
+        final JButton button = new JButton(new ImageIcon(image.getScaledInstance(
+            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = calcDimension(image, parent.getSize(), widthPer, heightPer, resize);
+                button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+                button.setIcon(new ImageIcon(image.getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
+        return button;
+    }
 
     public static JPanel createNormalPanel() {
         JPanel panel = new JPanel();
@@ -90,10 +271,11 @@ public class SwingFactory {
         return panel;
     }
 
-    public static JLabel createImageLabel(final String img) {
-        JLabel label = new JLabel(new ImageIcon(Resources.getMenuImage(img)));
-        label.setOpaque(false);
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
+        final int size) {
+        final JLabel label = new JLabel(text);
+        label.setForeground(foregroundColor);
+        label.setFont(Resources.loadFont(size, fontName));
         return label;
     }
 
@@ -118,13 +300,12 @@ public class SwingFactory {
                 @Override
                 public void mouseClicked(final MouseEvent e) {
                     Music.playSong("song/button.wav");
-                    panel.setState(state);
+                    panel.changeState(state);
                     if (img.equals("back") || img.equals("join")) {
                         panel.setHost(false);
                     } else if (img.equals("host")) {
                         panel.setHost(true);
                     }
-                    panel.updateMenu();
                 }
             });
         }

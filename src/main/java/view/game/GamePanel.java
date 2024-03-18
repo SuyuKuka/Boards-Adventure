@@ -359,18 +359,6 @@ public final class GamePanel extends CorePanel {
         });
     }
 
-    @Override
-    public void resized() {
-        setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        for (int i : panels.keySet()) {
-            final JPanel panel = panels.get(i);
-            if (panel.isVisible()) {
-                panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-            }
-        }
-        revalidate();
-    }
-
     public boolean hasRendered() {
         return hasRendered;
     }
