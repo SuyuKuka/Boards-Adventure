@@ -1,11 +1,9 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,19 +21,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JCheckBox;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import java.util.HashMap;
-
 import controller.resources.Music;
 import controller.resources.Resources;
-import view.menu.MenuPanel;
-import view.menu.MenuState;
 
 public class SwingFactory {
 
@@ -59,15 +51,15 @@ public class SwingFactory {
         final int width = parent.getWidth();
         panel.setBounds(0, 0, width, height);
         panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
-             height * botB / 100, width * leftB / 100));
+        panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
+             height * botB / 100, width * rightB / 100));
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 final int height = parent.getHeight();
                 final int width = parent.getWidth();
-                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * rightB / 100,
-                    height * botB / 100, width * leftB / 100));
+                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
+                    height * botB / 100, width * rightB / 100));
                 parent.revalidate();
             }
         });
@@ -207,8 +199,19 @@ public class SwingFactory {
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                parent.revalidate();
+            }
+        });
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -221,42 +224,42 @@ public class SwingFactory {
         return button;
     }
 
-    public static JPanel createNormalPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
-    }
+    // public static JPanel createNormalPanel() {
+    //     JPanel panel = new JPanel();
+    //     panel.setOpaque(false);
+    //     return panel;
+    // }
 
-    public static JPanel createPanel(final View frame, final int borderSize) { //14 Normal
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.setVisible(true);
-        if (borderSize != 0) {
-            panel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / borderSize, 0, 0, 0));
-        }
-        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        return panel;
-    }
+    // public static JPanel createPanel(final View frame, final int borderSize) { //14 Normal
+    //     JPanel panel = new JPanel(new BorderLayout());
+    //     panel.setOpaque(false);
+    //     panel.setVisible(true);
+    //     if (borderSize != 0) {
+    //         panel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / borderSize, 0, 0, 0));
+    //     }
+    //     panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+    //     return panel;
+    // }
 
-    public static JPanel createImagePanel(final String key, final int x, final int y,
-        final int width, final int height) {
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(new ImageIcon(
-                    Resources.getMenuImage(key)).getImage(), x, y, width, height, this);
-            }
-        };
-        panel.setOpaque(false);
-        return panel;
-    }
+    // public static JPanel createImagePanel(final String key, final int x, final int y,
+    //     final int width, final int height) {
+    //     JPanel panel = new JPanel() {
+    //         @Override
+    //         protected void paintComponent(final Graphics g) {
+    //             super.paintComponent(g);
+    //             g.drawImage(new ImageIcon(
+    //                 Resources.getMenuImage(key)).getImage(), x, y, width, height, this);
+    //         }
+    //     };
+    //     panel.setOpaque(false);
+    //     return panel;
+    // }
 
-    public static JPanel createBorderLayoutPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        return panel;
-    }
+    // public static JPanel createBorderLayoutPanel() {
+    //     JPanel panel = new JPanel(new BorderLayout());
+    //     panel.setOpaque(false);
+    //     return panel;
+    // }
 
     public static JPanel createBoxLayoutPanel() {
         JPanel panel = new JPanel();
@@ -265,11 +268,11 @@ public class SwingFactory {
         return panel;
     }
 
-    public static JPanel createFlowLayoutPanel(final int pos) {
-        JPanel panel = new JPanel(new FlowLayout(pos));
-        panel.setOpaque(false);
-        return panel;
-    }
+    // public static JPanel createFlowLayoutPanel(final int pos) {
+    //     JPanel panel = new JPanel(new FlowLayout(pos));
+    //     panel.setOpaque(false);
+    //     return panel;
+    // }
 
     public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
         final int size) {
@@ -279,77 +282,77 @@ public class SwingFactory {
         return label;
     }
 
-    public static JLabel createLabel(final String st, final int size, final String font) {
-        JLabel label = new JLabel(st);
-        label.setForeground(Color.BLACK);
-        label.setFont(Resources.loadFont(size, font));
-        return label;
-    }
+    // public static JLabel createLabel(final String st, final int size, final String font) {
+    //     JLabel label = new JLabel(st);
+    //     label.setForeground(Color.BLACK);
+    //     label.setFont(Resources.loadFont(size, font));
+    //     return label;
+    // }
 
-    public static JButton createImageButton(
-        final String img, final View frame, final MenuState state, final MenuPanel panel) {
-        JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 18, 0, 0, 0));
-        if (state != null) {
-            button.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    Music.playSong("song/button.wav");
-                    panel.changeState(state);
-                    if (img.equals("back") || img.equals("join")) {
-                        panel.setHost(false);
-                    } else if (img.equals("host")) {
-                        panel.setHost(true);
-                    }
-                }
-            });
-        }
-        // TODO : Que les boutons a rendre resize puis c'est bon
-        frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                int newSize = Math.min(frame.getWidth(), frame.getHeight());
-                // button.setPreferredSize(new Dimension(newSize, newSize));
-                button.setBorder(BorderFactory.createEmptyBorder(newSize / 18, 0, 0, 0));
-            }
-        });
-        return button;
-    }
+    // public static JButton createImageButton(
+    //     final String img, final View frame, final MenuState state, final MenuPanel panel) {
+    //     JButton button = new JButton(new ImageIcon(Resources.getMenuImage(img)));
+    //     button.setBorderPainted(false);
+    //     button.setContentAreaFilled(false);
+    //     button.setFocusPainted(false);
+    //     button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    //     button.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 18, 0, 0, 0));
+    //     if (state != null) {
+    //         button.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 Music.playSong("song/button.wav");
+    //                 panel.changeState(state);
+    //                 if (img.equals("back") || img.equals("join")) {
+    //                     panel.setHost(false);
+    //                 } else if (img.equals("host")) {
+    //                     panel.setHost(true);
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     // TODO : Que les boutons a rendre resize puis c'est bon
+    //     frame.addComponentListener(new ComponentAdapter() {
+    //         @Override
+    //         public void componentResized(final ComponentEvent e) {
+    //             int newSize = Math.min(frame.getWidth(), frame.getHeight());
+    //             // button.setPreferredSize(new Dimension(newSize, newSize));
+    //             button.setBorder(BorderFactory.createEmptyBorder(newSize / 18, 0, 0, 0));
+    //         }
+    //     });
+    //     return button;
+    // }
 
-    public static JRadioButton createRadioButton(final String content, final int size,
-            final HashMap<String, Integer> configGame, final String key) {
-        JRadioButton rButton = new JRadioButton(content);
-        rButton.setOpaque(false);
-        rButton.setFocusPainted(false);
-        rButton.setFont(Resources.loadFont(size, "RifficFree.ttf"));
-        rButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                configGame.replace(key, Integer.valueOf(content));
-            }
-        });
-        return rButton;
-    }
+    // public static JRadioButton createRadioButton(final String content, final int size,
+    //         final HashMap<String, Integer> configGame, final String key) {
+    //     JRadioButton rButton = new JRadioButton(content);
+    //     rButton.setOpaque(false);
+    //     rButton.setFocusPainted(false);
+    //     rButton.setFont(Resources.loadFont(size, "RifficFree.ttf"));
+    //     rButton.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             configGame.replace(key, Integer.valueOf(content));
+    //         }
+    //     });
+    //     return rButton;
+    // }
 
-    public static JCheckBox createJCheckBox(final String content, final int size,
-            final HashMap<String, Integer> configGame, final String key) {
-        JCheckBox itemBox = new JCheckBox(content);
-        itemBox.setOpaque(false);
-        itemBox.setFont(Resources.loadFont(size, "RifficFree.ttf"));
-        itemBox.setFocusPainted(false);
-        itemBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                configGame.replace(key, content.equals("Activé") ? 1 : 0);
-            }
-        });
-        return itemBox;
-    }
+    // public static JCheckBox createJCheckBox(final String content, final int size,
+    //         final HashMap<String, Integer> configGame, final String key) {
+    //     JCheckBox itemBox = new JCheckBox(content);
+    //     itemBox.setOpaque(false);
+    //     itemBox.setFont(Resources.loadFont(size, "RifficFree.ttf"));
+    //     itemBox.setFocusPainted(false);
+    //     itemBox.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             configGame.replace(key, content.equals("Activé") ? 1 : 0);
+    //         }
+    //     });
+    //     return itemBox;
+    // }
 
     public static JSlider createJSlider() {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0) {

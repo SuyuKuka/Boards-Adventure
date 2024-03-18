@@ -1,38 +1,26 @@
 package view.menu;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.awt.GridBagLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.sound.sampled.FloatControl;
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -51,6 +39,7 @@ import view.View;
 public final class MenuPanel extends CorePanel {
 
     private static final int BACKGROUND_INDEX = 0;
+    private static final int MANUALICON_INDEX = 6;
     private static final int MANUALBOOK_INDEX = 7;
 
     private MenuState menuState;
@@ -91,38 +80,24 @@ public final class MenuPanel extends CorePanel {
     }
 
     private void createPanels() {
-        add(createBackground("background_menu"), BACKGROUND_INDEX);
+        add(createBackground(), BACKGROUND_INDEX);
         add(createMainMenu(), MenuState.MAINMENU.getLayerIndex());
         add(createSettingsMenu(), MenuState.SETTINGSMENU.getLayerIndex());
         add(createCreateJoinMenu(), MenuState.CREATEJOIN.getLayerIndex());
         add(createJoinCodeMenu(), MenuState.JOINCODE.getLayerIndex());
         add(createGameLobbyMenu(), MenuState.GAMELOBBY.getLayerIndex());
-        add(createManualMenu(), MenuState.MANUALMENU.getLayerIndex());
+        add(createManualIcon(), MANUALICON_INDEX);
         add(createManualBook(), MANUALBOOK_INDEX);
     }
 
     public void changeState(final MenuState newMenuState) {
-        if (menuState != null && newMenuState != MenuState.MANUALMENU) {
+        if (menuState != null) {
             getPanels().get(menuState.getLayerIndex()).setVisible(false);
         }
         this.menuState = newMenuState;
         final JPanel newStatePanel = getPanels().get(menuState.getLayerIndex());
         newStatePanel.setBounds(0, 0, getWidth(), getHeight());
         newStatePanel.setVisible(true);
-    }
-
-    public static JButton createBackButton(final Component parent,
-        final MenuPanel menuPanel, final MenuState menuState) {
-        final JButton button = SwingFactory.createImageButton(parent, "back", 40, 10, false);
-        button.setOpaque(false);
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                Music.playSong("song/button.wav");
-                menuPanel.changeState(menuState);
-            }
-        });
-        return button;
     }
 
     private JButton createSwitchStateButton(final String img, final MenuState newMenuState,
@@ -140,7 +115,7 @@ public final class MenuPanel extends CorePanel {
 
     // #region background 0
 
-    private JPanel createBackground(final String st) {
+    private JPanel createBackground() {
         final JPanel panel = SwingFactory.createImagePanel(this, "background_lobby", 100, 100);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setVisible(true);
@@ -160,7 +135,15 @@ public final class MenuPanel extends CorePanel {
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
         panel.add(createSwitchStateButton("settings", MenuState.SETTINGSMENU, 60, 10));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        panel.add(SwingFactory.createImageButton(panel, "back", 60, 10, false));
+        final JButton leaveGame = SwingFactory.createImageButton(this, "back", 60, 10, false);
+        leaveGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getFrame().dispose();
+                System.exit(0);
+            }
+        });
+        panel.add(leaveGame);
 
         return panel;
     }
@@ -173,7 +156,7 @@ public final class MenuPanel extends CorePanel {
         final JPanel panel = SwingFactory.createContainerPanel(this, 10, 15, 0, 15);
         panel.add(createSettings(panel));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        panel.add(createBackButton(panel, this, MenuState.MAINMENU));
+        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
         return panel;
     }
 
@@ -251,7 +234,7 @@ public final class MenuPanel extends CorePanel {
     private JPanel createCreateJoinMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
         panel.add(createCreateJoin(panel));
-        panel.add(panel.add(createBackButton(panel, this, MenuState.MAINMENU)));
+        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
         return panel;
     }
 
@@ -283,7 +266,7 @@ public final class MenuPanel extends CorePanel {
         final JPanel panel = SwingFactory.createContainerPanel(this, 30, 20, 10, 20);
         panel.add(createJoinCode(panel));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 20));
-        panel.add(createBackButton(panel, this, MenuState.CREATEJOIN));
+        panel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
         return panel;
     }
 
@@ -308,7 +291,7 @@ public final class MenuPanel extends CorePanel {
             }
         });
 
-        buttonsPanel.add(createBackButton(panel, this, MenuState.CREATEJOIN));
+        buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
         buttonsPanel.add(SwingFactory.createImageButton(panel, "play", 40, 10, false));
 
         panel.add(createGameLobby(panel));
@@ -351,671 +334,689 @@ public final class MenuPanel extends CorePanel {
 
     // #endregion
 
-    // #region manual 6
-
-    private JPanel createManualMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 10, 0);
+    // #region manualicon 6
+    private JPanel createManualIcon() {
+        final JPanel panel = SwingFactory.createContainerPanel(this, 85, 0, 5, 90);
+        panel.add(createBook());
+        panel.setVisible(true);
         return panel;
     }
 
-    private JPanel createHelpManual() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(getFrame().getWidth() / 8, getFrame().getHeight() / 8,
-            getFrame().getWidth() - getFrame().getWidth() / 4,
-            getFrame().getHeight() - getFrame().getHeight() / 4);
-        panel.setBackground(Color.CYAN);
+    private JButton createBook() {
+        final JButton button = SwingFactory.createImageButton(this, "manual_close", 5, 5,  false);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                Music.playSong("song/button.wav");
+                getPanels().get(MANUALBOOK_INDEX).setVisible(true);
+            }
+        });
+        return button;
+    }
+
+    // #endregion
+
+    // #region manualBook 7
+
+    private JPanel createManualBook() {
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                e.consume();
+            }
+        });
         return panel;
     }
 
     // #endregion
 
-    // #region manualbook 7
-        private JPanel createManualBook() {
-            final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 10, 0);
-            return panel;
-        }
-
-    // #endregion
-
-    private JPanel createJoin() {
-        add(createBackground("background_menu"), Integer.valueOf(0));
-        JPanel panel = SwingFactory.createPanel(getFrame(), 14);
-        JPanel buttonPanel = SwingFactory.createBoxLayoutPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(getFrame().getHeight() / 3, 0, 0, 0));
-        JButton hostButton = SwingFactory.createImageButton("host", getFrame(), MenuState.CREATEJOIN, this);
-
-        JButton joinButton = SwingFactory.createImageButton("join", getFrame(), MenuState.GAMELOBBY, this);
-        buttonPanel.add(hostButton, BorderLayout.CENTER);
-        buttonPanel.add(joinButton, BorderLayout.SOUTH);
-
-        JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-        JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.MAINMENU, this);
-
-        JButton manual = createManuelButton();
-        botPanel.add(backButton, BorderLayout.WEST);
-        botPanel.add(manual, BorderLayout.EAST);
-
-        panel.add(buttonPanel, BorderLayout.CENTER);
-        panel.add(botPanel, BorderLayout.SOUTH);
-        return panel;
-    }
-
-    private JPanel createLobby() {
-        add(createBackground("background_lobby"), Integer.valueOf(0));
-        try {
-            ip = InetAddress.getLocalHost();
-        } catch (UnknownHostException e1) {
-            e1.printStackTrace();
-        }
-        JPanel panel = SwingFactory.createPanel(getFrame(), 0);
-
-        JPanel lobbyNamePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.LEFT);
-
-        JLabel invitationLabel = SwingFactory.createLabel("Code d'invitation : ", 12, "RifficFree.ttf");
-        lobbyNamePanel.add(invitationLabel);
-
-        JLabel codeLabel = SwingFactory.createLabel(ip.getHostAddress() + ":" + port, 12, "RifficFree.ttf");
-        codeLabel.setForeground(new Color(175, 0, 0));
-        lobbyNamePanel.add(codeLabel);
-
-        JPanel lobbyPanel = SwingFactory.createImagePanel("frame", 20, 0, getWidth() - 40, getHeight());
-        lobbyPanel.setLayout(new GridLayout(1, 2));
-        lobbyPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
-
-        JPanel leftPanel = createLeftSide();
-
-        rightSidePanel = createRightSide();
-
-        JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-        JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.CREATEJOIN, this);
-        backButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                nbPlayers = 0;
-                players.clear();
-                configGame.clear();
-                configPlayer.clear();
-            }
-        });
-
-        JButton startButton = SwingFactory.createImageButton("play", getFrame(), null, this);
-        startButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                System.out.println(select);
-                configGame.replace("map", select);
-                controller.startGame(Resources.getGameMapGraphics("map4"), configGame, players);
-                System.out.println(configGame);
-                System.out.println(players);
-                System.out.println("START GAME");
-                System.out.println("NOMBRE DE JOUEUR " + players.size());
-            }
-        });
-
-        JButton manual = createManuelButton();
-        botPanel.add(backButton, BorderLayout.WEST);
-        botPanel.add(startButton, BorderLayout.CENTER);
-        botPanel.add(manual, BorderLayout.EAST);
-
-        lobbyPanel.add(leftPanel, BorderLayout.WEST);
-        lobbyPanel.add(rightSidePanel, BorderLayout.EAST);
-
-        panel.add(lobbyNamePanel, BorderLayout.NORTH);
-        panel.add(lobbyPanel, BorderLayout.CENTER);
-        panel.add(botPanel, BorderLayout.SOUTH);
-        return panel;
-    }
-
-    private JPanel createLeftSide() {
-        JPanel leftSidePanel = SwingFactory.createPanel(getFrame(), 0);
-
-        JPanel namePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-
-        JLabel nameLabel = new JLabel("Royaume de Teranor");
-        nameLabel.setFont(Resources.loadFont(30f, "RifficFree.ttf"));
-        namePanel.add(nameLabel, BorderLayout.CENTER);
-
-        JPanel mapSelectionPanel = SwingFactory.createBorderLayoutPanel();
-
-        JLabel mapSelect = SwingFactory.createImageLabel("preview" + String.valueOf(select));
-        mapSelect.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        mapSelect.setPreferredSize(new Dimension(200, 250));
-
-        JTextArea descMap = new JTextArea();
-        descMap.setOpaque(false);
-
-        JButton leftSelectButton = SwingFactory.createImageButton("select_left", getFrame(), null, this);
-        if (host) {
-            leftSelectButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    if (select > 1) {
-                        select--;
-                    } else {
-                        select = nbMaps;
-                    }
-                    mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
-                    changeContent(nameLabel, descMap);
-                }
-            });
-        } else {
-            leftSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        leftSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-
-        JButton rightSelectButton = SwingFactory.createImageButton("select_right", getFrame(), null, this);
-        rightSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        if (host) {
-            rightSelectButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    if (select < nbMaps) {
-                        select++;
-                    } else {
-                        select = 1;
-                    }
-                    mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
-                    changeContent(nameLabel, descMap);
-                }
-            });
-        } else {
-            rightSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        mapSelectionPanel.add(leftSelectButton, BorderLayout.WEST);
-        mapSelectionPanel.add(mapSelect, BorderLayout.CENTER);
-        mapSelectionPanel.add(rightSelectButton, BorderLayout.EAST);
-
-        JPanel descPanel = SwingFactory.createBorderLayoutPanel();
-        descMap.setEditable(false);
-        descMap.setLineWrap(true);
-        descMap.setWrapStyleWord(true);
-        descMap.setPreferredSize(new Dimension(200, 100));
-        descMap.setFont(Resources.loadFont(12f, "RifficFree.ttf"));
-        descMap.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 35));
-        descPanel.add(descMap);
-
-        leftSidePanel.add(namePanel, BorderLayout.NORTH);
-        leftSidePanel.add(mapSelectionPanel, BorderLayout.CENTER);
-        leftSidePanel.add(descPanel, BorderLayout.SOUTH);
-        changeContent(nameLabel, descMap);
-        return leftSidePanel;
-    }
-
-    private JPanel createRightSide() {
-        rightSidePanel = SwingFactory.createPanel(getFrame(), 0);
-
-        JPanel configPanel = createConfig();
-
-        JPanel midPanel = SwingFactory.createBorderLayoutPanel();
-
-        //TODO
-        JLabel gameMode = new JLabel("Mode de jeu : 1v1");
-        gameMode.setFont(Resources.loadFont(16, "RifficFree.ttf"));
-        gameMode.setForeground(Color.BLACK);
-
-        JPanel buttonPanel = SwingFactory.createBorderLayoutPanel();
-
-        JPanel playerList = SwingFactory.createBoxLayoutPanel();
-        playerList.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-        for (int i = 0; i < nbPlayers; i++) {
-            JPanel reloadPlayer;
-            if (players.size() == 0) {
-                nbPlayers++;
-                reloadPlayer = createPlayerList(nbPlayers, configPlayer);
-            } else {
-                rightSidePanel.removeAll();
-                reloadPlayer = createPlayerList(i, players.get(i));
-            }
-            playerList.add(reloadPlayer);
-            playerList.setName("playerList");
-            repaint();
-            revalidate();
-        }
-        resizing = false;
-        if (players.size() == 0) {
-            nbPlayers++;
-            playerList.add(createPlayerList(nbPlayers, configPlayer));
-            playerList.setName("playerList");
-        }
-        JLabel playerButton = SwingFactory.createImageLabel("player");
-        if (host) {
-            playerButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    if (nbPlayers < 4) {
-                        nbPlayers++;
-                        JPanel newPlayer = createPlayerList(nbPlayers, configPlayer);
-                        playerList.add(newPlayer);
-                        playerList.setName("playerList");
-                        repaint();
-                        revalidate();
-                    }
-                }
-            });
-        } else {
-            playerButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-
-        JLabel botButton = SwingFactory.createImageLabel("bot");
-        if (host) {
-            botButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    System.out.println("Adding new bot...");
-                }
-            });
-        } else {
-            botButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        botButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-
-        JLabel randButton = SwingFactory.createImageLabel("random");
-        if (host) {
-            randButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    System.out.println("Randomizing team...");
-                }
-            });
-        } else {
-            randButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        buttonPanel.add(playerButton, BorderLayout.WEST);
-        buttonPanel.add(botButton, BorderLayout.CENTER);
-        buttonPanel.add(randButton, BorderLayout.EAST);
-        midPanel.add(gameMode, BorderLayout.WEST);
-        midPanel.add(buttonPanel, BorderLayout.EAST);
-
-        rightSidePanel.add(configPanel, BorderLayout.NORTH);
-        rightSidePanel.add(midPanel, BorderLayout.CENTER);
-        rightSidePanel.add(playerList, BorderLayout.SOUTH);
-        return rightSidePanel;
-    }
-
-    private JPanel createConfig() {
-        if (!resizing) {
-            initConfig();
-        }
-        JPanel panel = SwingFactory.createBorderLayoutPanel();
-
-        JPanel titlePanel = createTitlePanel();
-        panel.add(titlePanel, BorderLayout.NORTH);
-
-        JPanel optionsPanel = SwingFactory.createBoxLayoutPanel();
-        optionsPanel.add(createOptionPanel("Nombre de tour :", new String[]{"30", "40", "50"}, "round"));
-        optionsPanel.add(createOptionPanel("Double dé :", new String[]{"Activé", "Désactivé"}, "dice"));
-        optionsPanel.add(createOptionPanel("Objet de départ :", new String[]{"Activé", "Désactivé"}, "item"));
-        optionsPanel.add(createOptionPanel("Plusieurs gagnants :", new String[]{"Activé", "Désactivé"}, "multiWin"));
-        panel.add(optionsPanel, BorderLayout.WEST);
-        return panel;
-    }
-
-    private JPanel createTitlePanel() {
-        JPanel titlePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-        JLabel title = SwingFactory.createLabel("Paramètre de la partie", 22, "RifficFree.ttf");
-        titlePanel.add(title);
-        return titlePanel;
-    }
-
-    private JPanel createOptionPanel(final String labelName, final String[] buttonLabels, final String groupName) {
-        int size = 16;
-        int tmp = 0;
-        JPanel optionPanel = SwingFactory.createNormalPanel();
-
-        JLabel optionLabel = SwingFactory.createLabel(labelName, size, "RifficFree.ttf");
-        optionPanel.add(optionLabel);
-
-        ButtonGroup optionGroup = new ButtonGroup();
-        for (String buttonLabel : buttonLabels) {
-            AbstractButton button;
-            if (buttonLabels.length > 2) {
-                button = SwingFactory.createRadioButton(buttonLabel, size, configGame, groupName);
-                if (tmp == 1) {
-                    tmp = 0;
-                }
-            } else {
-                button = SwingFactory.createJCheckBox(buttonLabel, size, configGame, groupName);
-                if (tmp == 2) {
-                    tmp = 0;
-                }
-            }
-            button.setForeground(Color.black);
-            if (!host) {
-                button.setEnabled(false);
-            }
-            if (tmp == 0) {
-                button.setSelected(true);
-            }
-            tmp++;
-            optionGroup.add(button);
-            optionPanel.add(button);
-        }
-        return optionPanel;
-    }
-
-    private void initConfig() {
-        configGame.put("map", 1);
-        configGame.put("round", 30);
-        configGame.put("dice", 1);
-        configGame.put("item", 1);
-        configGame.put("multiWin", 1);
-    }
-
-    private JPanel createPlayerList(final int y, final HashMap<String, String> config) {
-        if (!resizing) {
-            initPlayers();
-        }
-        int playerId = Integer.valueOf(config.get("id"));
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
-        panel.setName("panel_" + playerId);
-        if (playerId == 1) {
-            panel.setBorder(BorderFactory.createMatteBorder(2, 2, 1, 2, Color.black));
-        } else if (playerId == 2 || playerId == 3) {
-            panel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, Color.black));
-        } else if (playerId == 4) {
-            panel.setBorder(BorderFactory.createMatteBorder(1, 2, 2, 2, Color.black));
-        }
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 5, 0, 5);
-        gbc.gridy = y;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-
-        JLabel manageLabel = new JLabel();
-        if (host && playerId == 1) {
-            manageLabel = SwingFactory.createImageLabel("crown");
-            manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            gbc.gridx = 0;
-            panel.add(manageLabel, gbc);
-        } else if (host && playerId != 1) {
-            manageLabel = SwingFactory.createImageLabel("remove");
-            manageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
-            manageLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    if (playerId > 1) {
-                        int playerId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-                        players.remove(playerId - 1);
-                        nbPlayers--;
-                        updatePlayerIds(playerId, ((JLabel) e.getSource()));
-
-                        rightSidePanel.revalidate();
-                        rightSidePanel.repaint();
-                    }
-                }
-            });
-        } else {
-            manageLabel = SwingFactory.createImageLabel("nothing");
-            manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        manageLabel.setName("manageLabel_" + playerId);
-        gbc.gridx = 0;
-        panel.add(manageLabel, gbc);
-
-        JLabel pseudoLabel = SwingFactory.createLabel(config.get("pseudo"), 12, "RifficFree.ttf");
-        gbc.gridx = 1;
-        panel.add(pseudoLabel, gbc);
-
-        JPanel objectPanel = SwingFactory.createBorderLayoutPanel();
-
-        JLabel leftSelection = SwingFactory.createImageLabel("object_left");
-        leftSelection.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                if (object > 1) {
-                    object--;
-                } else {
-                    object = 4;
-                }
-                int newItem = changeItem();
-                int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-                players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
-            }
-        });
-        leftSelection.setName("leftSeletion_" + playerId);
-
-        JPanel objectContent = SwingFactory.createBorderLayoutPanel();
-        objectContent.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, -20));
-
-        JLabel objectImageLabel = SwingFactory.createImageLabel("sword");
-        objectImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-        objectImageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-        JLabel objectNameLabel = SwingFactory.createLabel(config.get("item"), 12, "RifficFree.ttf");
-        objectContent.add(objectImageLabel, BorderLayout.WEST);
-        objectContent.add(objectNameLabel, BorderLayout.CENTER);
-
-        JLabel rightSelection = SwingFactory.createImageLabel("object_right");
-        rightSelection.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                if (object < 4) {
-                    object++;
-                } else {
-                    object = 1;
-                }
-                int newItem = changeItem();
-                int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-                players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
-            }
-        });
-        rightSelection.setName("leftSeletion_" + playerId);
-        objectPanel.add(leftSelection, BorderLayout.WEST);
-        objectPanel.add(objectContent, BorderLayout.CENTER);
-        objectPanel.add(rightSelection, BorderLayout.EAST);
-        gbc.gridx = 2;
-        panel.add(objectPanel, gbc);
-
-        JLabel status;
-        if (host) {
-            status = SwingFactory.createImageLabel("ready");
-        } else {
-            status = SwingFactory.createImageLabel("notready");
-        }
-        status.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        gbc.gridx = 3;
-        panel.add(status, gbc);
-
-        JLabel changeTeam;
-        if (host) {
-            changeTeam = SwingFactory.createImageLabel("switch");
-        } else {
-            changeTeam = SwingFactory.createImageLabel("nothing");
-            changeTeam.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-        gbc.gridx = 4;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        panel.add(changeTeam, gbc);
-        if (!resizing) {
-            players.add(configPlayer);
-        }
-        return panel;
-    }
-
-    private void initPlayers() {
-        configPlayer.put("id", String.valueOf(nbPlayers));
-        int playerId = Integer.valueOf(configPlayer.get("id"));
-        if (host && playerId == 1) {
-            configPlayer.put("manage", "crown");
-        } else if (host && playerId != 1) {
-            configPlayer.put("manage", "remove");
-        } else {
-            configPlayer.put("manage", "nothing");
-        }
-        configPlayer.put("pseudo", "Joueur" + playerId);
-        configPlayer.put("item", "EPEE DE TEST");
-        if (host) {
-            configPlayer.put("status", "ready");
-        } else {
-            configPlayer.put("status", "notready");
-        }
-        configPlayer.put("team", "1");
-    }
-
-    private void updatePlayerIds(final int removedPlayerId, final JLabel removePlayerLabel) {
-        //Change les données des joueurs en hauts
-        for (Map<String, String> player : players) {
-            int playerId = Integer.parseInt(player.get("id"));
-            if (playerId > removedPlayerId) {
-                player.put("id", String.valueOf(playerId - 1));
-            }
-        }
-        //Change le nom des panels et labels
-        for (Component comp : rightSidePanel.getComponents()) {
-            if (comp.getName() != null) {
-                for (Component comp2 : ((JPanel) comp).getComponents()) {
-                    if (comp2.getName().equals("panel_" + removedPlayerId)) {
-                        ((JPanel) comp).remove(comp2);
-                    }
-                    if (removedPlayerId < Integer.parseInt(comp2.getName().split("_")[1])) {
-                        comp2.setName("panel_" + (Integer.parseInt(comp2.getName().split("_")[1]) - 1));
-                        for (Component comp3 : ((JPanel) comp2).getComponents()) {
-                            if (comp3.getName() != null) {
-                                comp3.setName("manageLabel_" + (Integer.parseInt(comp3.getName().split("_")[1]) - 1));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private JPanel createWaitingLobby() {
-        add(createBackground("background_lobby"), Integer.valueOf(0));
-        JPanel panel = SwingFactory.createImagePanel("frame2", 100, 100, getWidth() - 200, getHeight() - 200);
-        panel.setLayout(new BorderLayout());
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-
-        JPanel codePanel = SwingFactory.createBoxLayoutPanel();
-        codePanel.setBorder(BorderFactory.createEmptyBorder(getFrame().getHeight() / 4, 0, 0, 0));
-
-        JLabel codeLabel = SwingFactory.createLabel("Veuillez saisir votre code d'invitation :", 24, "RifficFree.ttf");
-        codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel textFieldPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-        textFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-
-        JTextField codeField = new JTextField();
-        codeField.setHorizontalAlignment(JTextField.CENTER);
-        codeField.setPreferredSize(new Dimension(400, 30));
-        codeField.setFont(Resources.loadFont(16, "RifficFree.ttf"));
-        codeField.setText("Saisir ici");
-        codeField.setForeground(Color.lightGray);
-        codeField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                if (codeField.getText().contains("")) {
-                    codeField.setText("");
-                    codeField.setForeground(Color.BLACK);
-                }
-            }
-        });
-        textFieldPanel.add(codeField);
-
-        JPanel buttonPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-
-        JButton joinButton = SwingFactory.createImageButton("join", getFrame(), MenuState.GAMELOBBY, this);
-        joinButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                //Verification de l'ip + port via une fonction ou autre
-                code = codeField.getText();
-            }
-        });
-        buttonPanel.add(joinButton);
-        codePanel.add(codeLabel);
-        codePanel.add(textFieldPanel);
-        codePanel.add(buttonPanel);
-
-        JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-        JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.CREATEJOIN, this);
-
-        JButton manual = createManuelButton();
-        botPanel.add(backButton, BorderLayout.WEST);
-        botPanel.add(manual, BorderLayout.EAST);
-
-        panel.add(codePanel, BorderLayout.CENTER);
-        panel.add(botPanel, BorderLayout.SOUTH);
-        return panel;
-    }
-
-    private JButton createManuelButton() {
-        JButton manual = SwingFactory.createImageButton("manual_close", getFrame(), null, this);
-        manual.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(final MouseEvent e) {
-                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
-            }
-
-            @Override
-            public void mouseExited(final MouseEvent e) {
-                manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
-            }
-
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                add(createHelpManual(), Integer.valueOf(2));
-            }
-        });
-        return manual;
-    }
-
-    private void changeContent(final JLabel nameMap, final JTextArea textArea) {
-        switch (select) {
-            case 1:
-                nameMap.setText("Royaume de Teranor");
-                nameMap.setForeground(new Color(120, 60, 0));
-                textArea.setText("Royaume mediaval incroyable");
-                textArea.setForeground(new Color(120, 60, 0));
-                break;
-            case 2:
-                nameMap.setText("Stellaria");
-                nameMap.setForeground(new Color(0, 0, 100));
-                textArea.setText("Map escape avec un alien qui fait peur :c");
-                textArea.setForeground(new Color(0, 0, 100));
-                break;
-            case 3:
-                nameMap.setText("Frostoria");
-                nameMap.setForeground(new Color(136, 248, 248));
-                textArea.setText("Brrrr il fait giga froid ici");
-                textArea.setForeground(new Color(136, 248, 248));
-                break;
-            case 4:
-                nameMap.setText("Terre du Crepuscule");
-                nameMap.setForeground(new Color(180, 0, 0));
-                textArea.setText("C'est l'heure du du duel !");
-                textArea.setForeground(new Color(180, 0, 0));
-                break;
-            default:
-                break;
-        }
-    }
-
-    private int changeItem() {
-        //replacer les chiffres des return par leurs objets
-        switch (object) {
-            case 1:
-                return 1;
-            case 2:
-                return 2;
-            case 3:
-                return 3;
-            case 4:
-                return 4;
-            case 5:
-                return 5;
-            default:
-                return 1;
-        }
-    }
+    // private JPanel createJoin() {
+    //     add(createBackground("background_menu"), Integer.valueOf(0));
+    //     JPanel panel = SwingFactory.createPanel(getFrame(), 14);
+    //     JPanel buttonPanel = SwingFactory.createBoxLayoutPanel();
+    //     buttonPanel.setBorder(BorderFactory.createEmptyBorder(getFrame().getHeight() / 3, 0, 0, 0));
+    //     JButton hostButton = SwingFactory.createImageButton("host", getFrame(), MenuState.CREATEJOIN, this);
+
+    //     JButton joinButton = SwingFactory.createImageButton("join", getFrame(), MenuState.GAMELOBBY, this);
+    //     buttonPanel.add(hostButton, BorderLayout.CENTER);
+    //     buttonPanel.add(joinButton, BorderLayout.SOUTH);
+
+    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.MAINMENU, this);
+
+    //     JButton manual = createManuelButton();
+    //     botPanel.add(backButton, BorderLayout.WEST);
+    //     botPanel.add(manual, BorderLayout.EAST);
+
+    //     panel.add(buttonPanel, BorderLayout.CENTER);
+    //     panel.add(botPanel, BorderLayout.SOUTH);
+    //     return panel;
+    // }
+
+    // private JPanel createLobby() {
+    //     add(createBackground("background_lobby"), Integer.valueOf(0));
+    //     try {
+    //         ip = InetAddress.getLocalHost();
+    //     } catch (UnknownHostException e1) {
+    //         e1.printStackTrace();
+    //     }
+    //     JPanel panel = SwingFactory.createPanel(getFrame(), 0);
+
+    //     JPanel lobbyNamePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.LEFT);
+
+    //     JLabel invitationLabel = SwingFactory.createLabel("Code d'invitation : ", 12, "RifficFree.ttf");
+    //     lobbyNamePanel.add(invitationLabel);
+
+    //     JLabel codeLabel = SwingFactory.createLabel(ip.getHostAddress() + ":" + port, 12, "RifficFree.ttf");
+    //     codeLabel.setForeground(new Color(175, 0, 0));
+    //     lobbyNamePanel.add(codeLabel);
+
+    //     JPanel lobbyPanel = SwingFactory.createImagePanel("frame", 20, 0, getWidth() - 40, getHeight());
+    //     lobbyPanel.setLayout(new GridLayout(1, 2));
+    //     lobbyPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
+
+    //     JPanel leftPanel = createLeftSide();
+
+    //     rightSidePanel = createRightSide();
+
+    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.CREATEJOIN, this);
+    //     backButton.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             nbPlayers = 0;
+    //             players.clear();
+    //             configGame.clear();
+    //             configPlayer.clear();
+    //         }
+    //     });
+
+    //     JButton startButton = SwingFactory.createImageButton("play", getFrame(), null, this);
+    //     startButton.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             System.out.println(select);
+    //             configGame.replace("map", select);
+    //             controller.startGame(Resources.getGameMapGraphics("map4"), configGame, players);
+    //             System.out.println(configGame);
+    //             System.out.println(players);
+    //             System.out.println("START GAME");
+    //             System.out.println("NOMBRE DE JOUEUR " + players.size());
+    //         }
+    //     });
+
+    //     JButton manual = createManuelButton();
+    //     botPanel.add(backButton, BorderLayout.WEST);
+    //     botPanel.add(startButton, BorderLayout.CENTER);
+    //     botPanel.add(manual, BorderLayout.EAST);
+
+    //     lobbyPanel.add(leftPanel, BorderLayout.WEST);
+    //     lobbyPanel.add(rightSidePanel, BorderLayout.EAST);
+
+    //     panel.add(lobbyNamePanel, BorderLayout.NORTH);
+    //     panel.add(lobbyPanel, BorderLayout.CENTER);
+    //     panel.add(botPanel, BorderLayout.SOUTH);
+    //     return panel;
+    // }
+
+    // private JPanel createLeftSide() {
+    //     JPanel leftSidePanel = SwingFactory.createPanel(getFrame(), 0);
+
+    //     JPanel namePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
+
+    //     JLabel nameLabel = new JLabel("Royaume de Teranor");
+    //     nameLabel.setFont(Resources.loadFont(30f, "RifficFree.ttf"));
+    //     namePanel.add(nameLabel, BorderLayout.CENTER);
+
+    //     JPanel mapSelectionPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JLabel mapSelect = SwingFactory.createImageLabel("preview" + String.valueOf(select));
+    //     mapSelect.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     mapSelect.setPreferredSize(new Dimension(200, 250));
+
+    //     JTextArea descMap = new JTextArea();
+    //     descMap.setOpaque(false);
+
+    //     JButton leftSelectButton = SwingFactory.createImageButton("select_left", getFrame(), null, this);
+    //     if (host) {
+    //         leftSelectButton.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 if (select > 1) {
+    //                     select--;
+    //                 } else {
+    //                     select = nbMaps;
+    //                 }
+    //                 mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
+    //                 changeContent(nameLabel, descMap);
+    //             }
+    //         });
+    //     } else {
+    //         leftSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     leftSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+
+    //     JButton rightSelectButton = SwingFactory.createImageButton("select_right", getFrame(), null, this);
+    //     rightSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+    //     if (host) {
+    //         rightSelectButton.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 if (select < nbMaps) {
+    //                     select++;
+    //                 } else {
+    //                     select = 1;
+    //                 }
+    //                 mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
+    //                 changeContent(nameLabel, descMap);
+    //             }
+    //         });
+    //     } else {
+    //         rightSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     mapSelectionPanel.add(leftSelectButton, BorderLayout.WEST);
+    //     mapSelectionPanel.add(mapSelect, BorderLayout.CENTER);
+    //     mapSelectionPanel.add(rightSelectButton, BorderLayout.EAST);
+
+    //     JPanel descPanel = SwingFactory.createBorderLayoutPanel();
+    //     descMap.setEditable(false);
+    //     descMap.setLineWrap(true);
+    //     descMap.setWrapStyleWord(true);
+    //     descMap.setPreferredSize(new Dimension(200, 100));
+    //     descMap.setFont(Resources.loadFont(12f, "RifficFree.ttf"));
+    //     descMap.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 35));
+    //     descPanel.add(descMap);
+
+    //     leftSidePanel.add(namePanel, BorderLayout.NORTH);
+    //     leftSidePanel.add(mapSelectionPanel, BorderLayout.CENTER);
+    //     leftSidePanel.add(descPanel, BorderLayout.SOUTH);
+    //     changeContent(nameLabel, descMap);
+    //     return leftSidePanel;
+    // }
+
+    // private JPanel createRightSide() {
+    //     rightSidePanel = SwingFactory.createPanel(getFrame(), 0);
+
+    //     JPanel configPanel = createConfig();
+
+    //     JPanel midPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     //TODO
+    //     JLabel gameMode = new JLabel("Mode de jeu : 1v1");
+    //     gameMode.setFont(Resources.loadFont(16, "RifficFree.ttf"));
+    //     gameMode.setForeground(Color.BLACK);
+
+    //     JPanel buttonPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JPanel playerList = SwingFactory.createBoxLayoutPanel();
+    //     playerList.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+    //     for (int i = 0; i < nbPlayers; i++) {
+    //         JPanel reloadPlayer;
+    //         if (players.size() == 0) {
+    //             nbPlayers++;
+    //             reloadPlayer = createPlayerList(nbPlayers, configPlayer);
+    //         } else {
+    //             rightSidePanel.removeAll();
+    //             reloadPlayer = createPlayerList(i, players.get(i));
+    //         }
+    //         playerList.add(reloadPlayer);
+    //         playerList.setName("playerList");
+    //         repaint();
+    //         revalidate();
+    //     }
+    //     resizing = false;
+    //     if (players.size() == 0) {
+    //         nbPlayers++;
+    //         playerList.add(createPlayerList(nbPlayers, configPlayer));
+    //         playerList.setName("playerList");
+    //     }
+    //     JLabel playerButton = SwingFactory.createImageLabel("player");
+    //     if (host) {
+    //         playerButton.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 if (nbPlayers < 4) {
+    //                     nbPlayers++;
+    //                     JPanel newPlayer = createPlayerList(nbPlayers, configPlayer);
+    //                     playerList.add(newPlayer);
+    //                     playerList.setName("playerList");
+    //                     repaint();
+    //                     revalidate();
+    //                 }
+    //             }
+    //         });
+    //     } else {
+    //         playerButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+
+    //     JLabel botButton = SwingFactory.createImageLabel("bot");
+    //     if (host) {
+    //         botButton.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 System.out.println("Adding new bot...");
+    //             }
+    //         });
+    //     } else {
+    //         botButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     botButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+
+    //     JLabel randButton = SwingFactory.createImageLabel("random");
+    //     if (host) {
+    //         randButton.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 System.out.println("Randomizing team...");
+    //             }
+    //         });
+    //     } else {
+    //         randButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     buttonPanel.add(playerButton, BorderLayout.WEST);
+    //     buttonPanel.add(botButton, BorderLayout.CENTER);
+    //     buttonPanel.add(randButton, BorderLayout.EAST);
+    //     midPanel.add(gameMode, BorderLayout.WEST);
+    //     midPanel.add(buttonPanel, BorderLayout.EAST);
+
+    //     rightSidePanel.add(configPanel, BorderLayout.NORTH);
+    //     rightSidePanel.add(midPanel, BorderLayout.CENTER);
+    //     rightSidePanel.add(playerList, BorderLayout.SOUTH);
+    //     return rightSidePanel;
+    // }
+
+    // private JPanel createConfig() {
+    //     if (!resizing) {
+    //         initConfig();
+    //     }
+    //     JPanel panel = SwingFactory.createBorderLayoutPanel();
+
+    //     JPanel titlePanel = createTitlePanel();
+    //     panel.add(titlePanel, BorderLayout.NORTH);
+
+    //     JPanel optionsPanel = SwingFactory.createBoxLayoutPanel();
+    //     optionsPanel.add(createOptionPanel("Nombre de tour :", new String[]{"30", "40", "50"}, "round"));
+    //     optionsPanel.add(createOptionPanel("Double dé :", new String[]{"Activé", "Désactivé"}, "dice"));
+    //     optionsPanel.add(createOptionPanel("Objet de départ :", new String[]{"Activé", "Désactivé"}, "item"));
+    //     optionsPanel.add(createOptionPanel("Plusieurs gagnants :", new String[]{"Activé", "Désactivé"}, "multiWin"));
+    //     panel.add(optionsPanel, BorderLayout.WEST);
+    //     return panel;
+    // }
+
+    // private JPanel createTitlePanel() {
+    //     JPanel titlePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
+    //     JLabel title = SwingFactory.createLabel("Paramètre de la partie", 22, "RifficFree.ttf");
+    //     titlePanel.add(title);
+    //     return titlePanel;
+    // }
+
+    // private JPanel createOptionPanel(final String labelName, final String[] buttonLabels, final String groupName) {
+    //     int size = 16;
+    //     int tmp = 0;
+    //     JPanel optionPanel = SwingFactory.createNormalPanel();
+
+    //     JLabel optionLabel = SwingFactory.createLabel(labelName, size, "RifficFree.ttf");
+    //     optionPanel.add(optionLabel);
+
+    //     ButtonGroup optionGroup = new ButtonGroup();
+    //     for (String buttonLabel : buttonLabels) {
+    //         AbstractButton button;
+    //         if (buttonLabels.length > 2) {
+    //             button = SwingFactory.createRadioButton(buttonLabel, size, configGame, groupName);
+    //             if (tmp == 1) {
+    //                 tmp = 0;
+    //             }
+    //         } else {
+    //             button = SwingFactory.createJCheckBox(buttonLabel, size, configGame, groupName);
+    //             if (tmp == 2) {
+    //                 tmp = 0;
+    //             }
+    //         }
+    //         button.setForeground(Color.black);
+    //         if (!host) {
+    //             button.setEnabled(false);
+    //         }
+    //         if (tmp == 0) {
+    //             button.setSelected(true);
+    //         }
+    //         tmp++;
+    //         optionGroup.add(button);
+    //         optionPanel.add(button);
+    //     }
+    //     return optionPanel;
+    // }
+
+    // private void initConfig() {
+    //     configGame.put("map", 1);
+    //     configGame.put("round", 30);
+    //     configGame.put("dice", 1);
+    //     configGame.put("item", 1);
+    //     configGame.put("multiWin", 1);
+    // }
+
+    // private JPanel createPlayerList(final int y, final HashMap<String, String> config) {
+    //     if (!resizing) {
+    //         initPlayers();
+    //     }
+    //     int playerId = Integer.valueOf(config.get("id"));
+
+    //     JPanel panel = new JPanel(new GridBagLayout());
+    //     panel.setOpaque(false);
+    //     panel.setName("panel_" + playerId);
+    //     if (playerId == 1) {
+    //         panel.setBorder(BorderFactory.createMatteBorder(2, 2, 1, 2, Color.black));
+    //     } else if (playerId == 2 || playerId == 3) {
+    //         panel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, Color.black));
+    //     } else if (playerId == 4) {
+    //         panel.setBorder(BorderFactory.createMatteBorder(1, 2, 2, 2, Color.black));
+    //     }
+
+    //     GridBagConstraints gbc = new GridBagConstraints();
+    //     gbc.anchor = GridBagConstraints.WEST;
+    //     gbc.fill = GridBagConstraints.HORIZONTAL;
+    //     gbc.insets = new Insets(0, 5, 0, 5);
+    //     gbc.gridy = y;
+    //     gbc.weightx = 1;
+    //     gbc.weighty = 1;
+
+    //     JLabel manageLabel = new JLabel();
+    //     if (host && playerId == 1) {
+    //         manageLabel = SwingFactory.createImageLabel("crown");
+    //         manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //         gbc.gridx = 0;
+    //         panel.add(manageLabel, gbc);
+    //     } else if (host && playerId != 1) {
+    //         manageLabel = SwingFactory.createImageLabel("remove");
+    //         manageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
+    //         manageLabel.addMouseListener(new MouseAdapter() {
+    //             @Override
+    //             public void mouseClicked(final MouseEvent e) {
+    //                 if (playerId > 1) {
+    //                     int playerId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
+    //                     players.remove(playerId - 1);
+    //                     nbPlayers--;
+    //                     updatePlayerIds(playerId, ((JLabel) e.getSource()));
+
+    //                     rightSidePanel.revalidate();
+    //                     rightSidePanel.repaint();
+    //                 }
+    //             }
+    //         });
+    //     } else {
+    //         manageLabel = SwingFactory.createImageLabel("nothing");
+    //         manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     manageLabel.setName("manageLabel_" + playerId);
+    //     gbc.gridx = 0;
+    //     panel.add(manageLabel, gbc);
+
+    //     JLabel pseudoLabel = SwingFactory.createLabel(config.get("pseudo"), 12, "RifficFree.ttf");
+    //     gbc.gridx = 1;
+    //     panel.add(pseudoLabel, gbc);
+
+    //     JPanel objectPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JLabel leftSelection = SwingFactory.createImageLabel("object_left");
+    //     leftSelection.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             if (object > 1) {
+    //                 object--;
+    //             } else {
+    //                 object = 4;
+    //             }
+    //             int newItem = changeItem();
+    //             int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
+    //             players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
+    //         }
+    //     });
+    //     leftSelection.setName("leftSeletion_" + playerId);
+
+    //     JPanel objectContent = SwingFactory.createBorderLayoutPanel();
+    //     objectContent.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, -20));
+
+    //     JLabel objectImageLabel = SwingFactory.createImageLabel("sword");
+    //     objectImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+    //     objectImageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+    //     JLabel objectNameLabel = SwingFactory.createLabel(config.get("item"), 12, "RifficFree.ttf");
+    //     objectContent.add(objectImageLabel, BorderLayout.WEST);
+    //     objectContent.add(objectNameLabel, BorderLayout.CENTER);
+
+    //     JLabel rightSelection = SwingFactory.createImageLabel("object_right");
+    //     rightSelection.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             if (object < 4) {
+    //                 object++;
+    //             } else {
+    //                 object = 1;
+    //             }
+    //             int newItem = changeItem();
+    //             int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
+    //             players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
+    //         }
+    //     });
+    //     rightSelection.setName("leftSeletion_" + playerId);
+    //     objectPanel.add(leftSelection, BorderLayout.WEST);
+    //     objectPanel.add(objectContent, BorderLayout.CENTER);
+    //     objectPanel.add(rightSelection, BorderLayout.EAST);
+    //     gbc.gridx = 2;
+    //     panel.add(objectPanel, gbc);
+
+    //     JLabel status;
+    //     if (host) {
+    //         status = SwingFactory.createImageLabel("ready");
+    //     } else {
+    //         status = SwingFactory.createImageLabel("notready");
+    //     }
+    //     status.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     gbc.gridx = 3;
+    //     panel.add(status, gbc);
+
+    //     JLabel changeTeam;
+    //     if (host) {
+    //         changeTeam = SwingFactory.createImageLabel("switch");
+    //     } else {
+    //         changeTeam = SwingFactory.createImageLabel("nothing");
+    //         changeTeam.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    //     }
+    //     gbc.gridx = 4;
+    //     gbc.gridwidth = GridBagConstraints.REMAINDER;
+    //     panel.add(changeTeam, gbc);
+    //     if (!resizing) {
+    //         players.add(configPlayer);
+    //     }
+    //     return panel;
+    // }
+
+    // private void initPlayers() {
+    //     configPlayer.put("id", String.valueOf(nbPlayers));
+    //     int playerId = Integer.valueOf(configPlayer.get("id"));
+    //     if (host && playerId == 1) {
+    //         configPlayer.put("manage", "crown");
+    //     } else if (host && playerId != 1) {
+    //         configPlayer.put("manage", "remove");
+    //     } else {
+    //         configPlayer.put("manage", "nothing");
+    //     }
+    //     configPlayer.put("pseudo", "Joueur" + playerId);
+    //     configPlayer.put("item", "EPEE DE TEST");
+    //     if (host) {
+    //         configPlayer.put("status", "ready");
+    //     } else {
+    //         configPlayer.put("status", "notready");
+    //     }
+    //     configPlayer.put("team", "1");
+    // }
+
+    // private void updatePlayerIds(final int removedPlayerId, final JLabel removePlayerLabel) {
+    //     //Change les données des joueurs en hauts
+    //     for (Map<String, String> player : players) {
+    //         int playerId = Integer.parseInt(player.get("id"));
+    //         if (playerId > removedPlayerId) {
+    //             player.put("id", String.valueOf(playerId - 1));
+    //         }
+    //     }
+    //     //Change le nom des panels et labels
+    //     for (Component comp : rightSidePanel.getComponents()) {
+    //         if (comp.getName() != null) {
+    //             for (Component comp2 : ((JPanel) comp).getComponents()) {
+    //                 if (comp2.getName().equals("panel_" + removedPlayerId)) {
+    //                     ((JPanel) comp).remove(comp2);
+    //                 }
+    //                 if (removedPlayerId < Integer.parseInt(comp2.getName().split("_")[1])) {
+    //                     comp2.setName("panel_" + (Integer.parseInt(comp2.getName().split("_")[1]) - 1));
+    //                     for (Component comp3 : ((JPanel) comp2).getComponents()) {
+    //                         if (comp3.getName() != null) {
+    //                             comp3.setName("manageLabel_" + (Integer.parseInt(comp3.getName()
+    //                                  .split("_")[1]) - 1));
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    // private JPanel createWaitingLobby() {
+    //     add(createBackground("background_lobby"), Integer.valueOf(0));
+    //     JPanel panel = SwingFactory.createImagePanel("frame2", 100, 100, getWidth() - 200, getHeight() - 200);
+    //     panel.setLayout(new BorderLayout());
+    //     panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+
+    //     JPanel codePanel = SwingFactory.createBoxLayoutPanel();
+    //     codePanel.setBorder(BorderFactory.createEmptyBorder(getFrame().getHeight() / 4, 0, 0, 0));
+
+    //     JLabel codeLabel = SwingFactory.createLabel(
+    //          "Veuillez saisir votre code d'invitation :", 24, "RifficFree.ttf");
+    //     codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    //     JPanel textFieldPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
+    //     textFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+    //     JTextField codeField = new JTextField();
+    //     codeField.setHorizontalAlignment(JTextField.CENTER);
+    //     codeField.setPreferredSize(new Dimension(400, 30));
+    //     codeField.setFont(Resources.loadFont(16, "RifficFree.ttf"));
+    //     codeField.setText("Saisir ici");
+    //     codeField.setForeground(Color.lightGray);
+    //     codeField.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mousePressed(final MouseEvent e) {
+    //             if (codeField.getText().contains("")) {
+    //                 codeField.setText("");
+    //                 codeField.setForeground(Color.BLACK);
+    //             }
+    //         }
+    //     });
+    //     textFieldPanel.add(codeField);
+
+    //     JPanel buttonPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
+
+    //     JButton joinButton = SwingFactory.createImageButton("join", getFrame(), MenuState.GAMELOBBY, this);
+    //     joinButton.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             //Verification de l'ip + port via une fonction ou autre
+    //             code = codeField.getText();
+    //         }
+    //     });
+    //     buttonPanel.add(joinButton);
+    //     codePanel.add(codeLabel);
+    //     codePanel.add(textFieldPanel);
+    //     codePanel.add(buttonPanel);
+
+    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
+
+    //     JButton backButton = SwingFactory.createImageButton("back", getFrame(), MenuState.CREATEJOIN, this);
+
+    //     JButton manual = createManuelButton();
+    //     botPanel.add(backButton, BorderLayout.WEST);
+    //     botPanel.add(manual, BorderLayout.EAST);
+
+    //     panel.add(codePanel, BorderLayout.CENTER);
+    //     panel.add(botPanel, BorderLayout.SOUTH);
+    //     return panel;
+    // }
+
+    // private JButton createManuelButton() {
+    //     JButton manual = SwingFactory.createImageButton("manual_close", getFrame(), null, this);
+    //     manual.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseEntered(final MouseEvent e) {
+    //             manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
+    //         }
+
+    //         @Override
+    //         public void mouseExited(final MouseEvent e) {
+    //             manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
+    //         }
+
+    //         @Override
+    //         public void mouseClicked(final MouseEvent e) {
+    //             add(createHelpManual(), Integer.valueOf(2));
+    //         }
+    //     });
+    //     return manual;
+    // }
+
+    // private void changeContent(final JLabel nameMap, final JTextArea textArea) {
+    //     switch (select) {
+    //         case 1:
+    //             nameMap.setText("Royaume de Teranor");
+    //             nameMap.setForeground(new Color(120, 60, 0));
+    //             textArea.setText("Royaume mediaval incroyable");
+    //             textArea.setForeground(new Color(120, 60, 0));
+    //             break;
+    //         case 2:
+    //             nameMap.setText("Stellaria");
+    //             nameMap.setForeground(new Color(0, 0, 100));
+    //             textArea.setText("Map escape avec un alien qui fait peur :c");
+    //             textArea.setForeground(new Color(0, 0, 100));
+    //             break;
+    //         case 3:
+    //             nameMap.setText("Frostoria");
+    //             nameMap.setForeground(new Color(136, 248, 248));
+    //             textArea.setText("Brrrr il fait giga froid ici");
+    //             textArea.setForeground(new Color(136, 248, 248));
+    //             break;
+    //         case 4:
+    //             nameMap.setText("Terre du Crepuscule");
+    //             nameMap.setForeground(new Color(180, 0, 0));
+    //             textArea.setText("C'est l'heure du du duel !");
+    //             textArea.setForeground(new Color(180, 0, 0));
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
+
+    // private int changeItem() {
+    //     //replacer les chiffres des return par leurs objets
+    //     switch (object) {
+    //         case 1:
+    //             return 1;
+    //         case 2:
+    //             return 2;
+    //         case 3:
+    //             return 3;
+    //         case 4:
+    //             return 4;
+    //         case 5:
+    //             return 5;
+    //         default:
+    //             return 1;
+    //     }
+    // }
 
     public HashMap<String, Integer> getHashMap() {
         return configGame;
