@@ -76,9 +76,7 @@ public abstract class CorePanel extends JLayeredPane {
     public final void resized() {
         setBounds(0, 0, frame.getWidth(), frame.getHeight());
         for (JPanel panel : panels.values()) {
-            if (panel.isVisible()) {
-                panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-            }
+            panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         }
         revalidate();
     }

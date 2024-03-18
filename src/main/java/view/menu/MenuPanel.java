@@ -8,11 +8,13 @@ import java.awt.FlowLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.net.InetAddress;
 
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +24,7 @@ import javax.swing.JSlider;
 
 import controller.MenuController;
 import controller.resources.Audio;
+import controller.resources.Resources;
 import view.CorePanel;
 import view.SwingFactory;
 import view.View;
@@ -133,7 +136,7 @@ public final class MenuPanel extends CorePanel {
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
         panel.add(createSwitchStateButton("settings", MenuState.SETTINGSMENU, 60, 10));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        final JButton leaveGame = SwingFactory.createImageButton(this, "back", 60, 10, false);
+        final JButton leaveGame = SwingFactory.createImageButton(this, "quit", 60, 10, false);
         leaveGame.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -153,13 +156,13 @@ public final class MenuPanel extends CorePanel {
     private JPanel createSettingsMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 10, 15, 0, 15);
         panel.add(createSettings(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 10));
         panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
         return panel;
     }
 
     private JPanel createSettings(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 70, 50);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 70, 60);
 
         final int widthMargin = getFrame().getWidth() / 20;
         final int heightMargin = getFrame().getHeight() / 20;
@@ -297,21 +300,35 @@ public final class MenuPanel extends CorePanel {
 
     // #endregion
 
-    // #region manualicon 6
+    // #region manualIcon 6
     private JPanel createManualIcon() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 85, 0, 5, 90);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 82, 0, 0, 90);
         panel.add(createBook());
         panel.setVisible(true);
         return panel;
     }
 
     private JButton createBook() {
-        final JButton button = SwingFactory.createImageButton(this, "manual_close", 5, 5,  false);
+        final JButton button = SwingFactory.createImageButton(this, "manual_close", 3, 5, true);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 Audio.playSound("button.wav");
                 getPanels().get(MANUALBOOK_INDEX).setVisible(true);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                final Dimension size = button.getPreferredSize();
+                button.setIcon(new ImageIcon(Resources.getImage("manual_bright")
+                    .getScaledInstance((int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                final Dimension size = button.getPreferredSize();
+                button.setIcon(new ImageIcon(Resources.getImage("manual_close")
+                    .getScaledInstance((int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
             }
         });
         return button;
@@ -323,6 +340,7 @@ public final class MenuPanel extends CorePanel {
 
     private JPanel createManualBook() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        panel.setOpaque(true);
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
