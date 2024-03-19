@@ -4,11 +4,11 @@ import model.Model;
 import model.config.players.Player;
 
 public final class Loss extends Cell {
-    private int loss = 0;
+    private final int loss;
 
-    public Loss(final int id, final CellType cellType, final int nextCellID, final int gain) {
+    public Loss(final int id, final CellType cellType, final int nextCellID, final int loss) {
         super(id, cellType, nextCellID);
-        this.loss = gain;
+        this.loss = loss;
     }
 
     @Override

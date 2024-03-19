@@ -110,18 +110,17 @@ public final class Game {
     }
 
     public static void main(final String[] args) {
-        final Mode mode = Mode.GAME;
+        final Mode mode = Mode.MENU;
         switch (mode) {
             case MENU:
                 Resources.loadResources(mode);
-                Game launcherMenu = new Game(mode);
                 break;
             case GAME:
                 Resources.loadResources(mode, DEFAULT_GAME_MAP_NAME);
-                Game launcherGame = new Game(mode);
                 break;
             default:
                 break;
         }
+        Game launcher = new Game(mode);
     }
 }
