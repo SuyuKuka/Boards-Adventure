@@ -14,7 +14,6 @@ import java.awt.Image;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -37,14 +36,14 @@ public final class GamePanel extends CorePanel {
     private static final int GUI = 4;
     private static final int PAUSE = 5;
 
-    private final HashMap<Integer, JPanel> panels;
-
     private final GameController controller;
     private final GameMapGraphics gameMapGraphics;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
-    private double zoomScale;
+    private double zoomX;
+    private double zoomY;
+
     private boolean hasRendered;
     private long lastGameUpdateTime;
     private double elaspedTime;
@@ -54,22 +53,29 @@ public final class GamePanel extends CorePanel {
     public GamePanel(final View frame, final GameController controller, final GameMapGraphics gameMapGraphics) {
         super(frame);
         setMinimumSize(new Dimension(720, 480));
-        this.panels = new HashMap<>();
         this.controller = controller;
         this.gameMapGraphics = gameMapGraphics;
         this.cellsGraphics = gameMapGraphics.getCellsGraphics();
         this.playerGraphicsMap = new HashMap<>();
         initValues();
-        add(createBackground(), Integer.valueOf(BACKGROUND));
-        add(createCellsGraphics(), Integer.valueOf(CELLS));
-        add(createPlayersGraphics(), Integer.valueOf(PLAYERS));
-        add(createGUI(), Integer.valueOf(GUI));
-        add(createPause(), Integer.valueOf(PAUSE));
+        add(createBackground(), BACKGROUND);
+        add(createCellsGraphics(), CELLS);
+        add(createPlayersGraphics(), PLAYERS);
+        add(createGUI(), GUI);
+        add(createPause(), PAUSE);
         setVisible(true);
     }
 
     private void initValues() {
-        zoomScale = 1;
+        zoomX = (double) getWidth() / getMinimumSize().width;
+        zoomY = (double) getHeight() / getMinimumSize().height;
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                zoomX = (double) getWidth() / getMinimumSize().width;
+                zoomY = (double) getHeight() / getMinimumSize().height;
+            }
+        });
         elaspedTime = 0;
         hasRendered = false;
         lastGameUpdateTime = System.nanoTime();
@@ -93,9 +99,6 @@ public final class GamePanel extends CorePanel {
                 return;
             }
         } else {
-            if (animationTime == -1) {
-                removeLayer(INTERACTION);
-            }
             final Player player = controller.getCurrentPlayer();
             switch (gameState) {
                 case GAME_START:
@@ -133,13 +136,13 @@ public final class GamePanel extends CorePanel {
                             e.consume();
                         }
                     });
-                    add(createIntersectionPanel(), Integer.valueOf(INTERACTION));
+                    add(createIntersectionPanel(), INTERACTION);
                     break;
                 case ASK_PROPERTY:
-                    add(createPropertyPanel(), Integer.valueOf(INTERACTION));
+                    add(createPropertyPanel(), INTERACTION);
                     break;
                 case ASK_SHOP:
-                    add(createShopPanel(), Integer.valueOf(INTERACTION));
+                    add(createShopPanel(), INTERACTION);
                     break;
                 case END_TURN:
                     playButton.setText("Fin du tour de " + player.getUsername() + ".");
@@ -170,11 +173,10 @@ public final class GamePanel extends CorePanel {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
-                Image image = Resources.getImage("boardaaaaa");
+                Image image = Resources.getImage("board");
                 g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        panels.put(BACKGROUND, panel);
         return panel;
     }
 
@@ -186,11 +188,17 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                for (Integer key : cellsGraphics.keySet()) {
+                    cellsGraphics.get(key).update(zoomX, zoomY);
+                }
+            }
+        });
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
         }
-        // panel.setVisible(true);
-        panels.put(CELLS, panel);
         return panel;
     }
 
@@ -202,11 +210,18 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
+                    playerGraphics.update(zoomX, zoomY);
+                }
+            }
+        });
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }
-        // panel.setVisible(true);
-        panels.put(PLAYERS, panel);
+        panel.setVisible(true);
         return panel;
     }
 
@@ -224,7 +239,6 @@ public final class GamePanel extends CorePanel {
         panel.setOpaque(false);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
         return panel;
     }
     private JButton createIntersectChoiceButton(final int targetCellID) {
@@ -232,17 +246,17 @@ public final class GamePanel extends CorePanel {
         JButton button = new JButton();
         button.setLocation(cellGraphics.getLocation());
         button.setBounds(cellGraphics.getLocation().x, cellGraphics.getLocation().y,
-            CellGraphics.getCellWidth(), CellGraphics.getCellHeight());
+            cellGraphics.getCellWidth(), cellGraphics.getCellHeight());
         button.setBackground(Color.GREEN);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
+                removePanel(INTERACTION);
                 controller.playerChooseIntersection(targetCellID);
                 controller.setShouldStateUpdate(true);
-                removeLayer(INTERACTION);
             }
         });
-        // button.setVisible(true);
+        button.setVisible(true);
         return button;
     }
 
@@ -264,7 +278,6 @@ public final class GamePanel extends CorePanel {
             }
         });
         // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
         return panel;
     }
 
@@ -286,7 +299,6 @@ public final class GamePanel extends CorePanel {
             }
         });
         // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
         return panel;
     }
 
@@ -306,7 +318,6 @@ public final class GamePanel extends CorePanel {
         playButton.setHorizontalAlignment(JButton.CENTER);
         panel.add(playButton);
         panel.setVisible(true);
-        panels.put(GUI, panel);
         return panel;
     }
 
@@ -319,7 +330,6 @@ public final class GamePanel extends CorePanel {
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
         panel.setVisible(false);
-        panels.put(PAUSE, panel);
         return panel;
     }
 
@@ -344,20 +354,6 @@ public final class GamePanel extends CorePanel {
         panel.setOpaque(false);
         panel.setVisible(false);
         return panel;
-    }
-
-    private void removeLayer(final int layer) {
-        SwingUtilities.invokeLater(() -> {
-            if (panels.containsKey(layer)) {
-                final JPanel panel = panels.get(layer);
-                if (getObjectForLayer(layer) == layer) {
-                    remove(panel);
-                    panels.remove(layer);
-                }
-            }
-            revalidate();
-            repaint();
-        });
     }
 
     public boolean hasRendered() {

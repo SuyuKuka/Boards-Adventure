@@ -3,19 +3,16 @@ package view.game.cellsgraphics;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import controller.resources.Resources;
 import model.config.cells.Cell;
 
 public final class OvalCell extends CellGraphics {
 
     private JLabel iconLabel;
-    private Image icon = Resources.getImage("placeholder");
 
     public OvalCell(final Cell cell, final int xPos, final int yPos) {
         super(cell, xPos, yPos);
@@ -23,7 +20,7 @@ public final class OvalCell extends CellGraphics {
     }
 
     public void initIconPanel() {
-        iconLabel = new JLabel(new ImageIcon(icon));
+        iconLabel = new JLabel(new ImageIcon(getImage()));
         iconLabel.setVerticalAlignment(JLabel.CENTER);
         iconLabel.setHorizontalAlignment(JLabel.CENTER);
         iconLabel.setVisible(true);
@@ -38,6 +35,8 @@ public final class OvalCell extends CellGraphics {
         final int inside = 3;
         g2d.setColor(Color.WHITE);
         g2d.fillOval(inside, inside, getCellWidth() - inside * 2, getCellHeight() - inside * 2);
+        final int icon = 8;
+        g2d.drawImage(getImage(), icon, icon, getCellWidth() - icon * 2, getCellHeight() - icon * 2, null);
     }
 
 }

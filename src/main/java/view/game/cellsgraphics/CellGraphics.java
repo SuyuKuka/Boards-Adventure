@@ -2,31 +2,55 @@ package view.game.cellsgraphics;
 
 import model.config.cells.Cell;
 
+import java.awt.Image;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import controller.resources.Resources;
+
 public abstract class CellGraphics extends JPanel {
+    private static final int CELL_DEFAULT_HEIGHT = 24;
+    private static final int CELL_DEFAULT_WIDTH = 24;
+
+    private final int defaultXPos;
+    private final int defaultYPos;
+
     private Cell cell;
+
+    private int cellWidth;
+    private int cellHeight;
     private int xPos;
     private int yPos;
 
-    private static final int CELL_HEIGHT = 24;
-    private static final int CELL_WIDTH = 24;
+    private Image image;
 
-    public CellGraphics(final Cell cell, final int xPos, final int yPos) {
+    public CellGraphics(final Cell cell, final int defaultXPos, final int defaultYPos) {
         this.cell = cell;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.defaultXPos = defaultXPos;
+        this.defaultYPos = defaultYPos;
+        image = Resources.getImage(cell.getCellType().name().toLowerCase());
+        update(1, 1);
         setLayout(new BorderLayout());
         setOpaque(false);
-        setSize(CELL_WIDTH, CELL_HEIGHT);
-        setBounds(xPos - CELL_WIDTH / 2, yPos - CELL_HEIGHT / 2, CELL_WIDTH, CELL_HEIGHT);
         setVisible(true);
+    }
+
+    public final void update(final double zoomScaleX, final double zoomScaleY) {
+        cellWidth = (int) (CELL_DEFAULT_WIDTH * zoomScaleX);
+        cellHeight = (int) (CELL_DEFAULT_HEIGHT * zoomScaleY);
+        xPos = (int) (defaultXPos * zoomScaleX);
+        yPos = (int) (defaultYPos * zoomScaleY);
+        setSize(cellWidth, cellHeight);
+        setBounds(xPos - cellWidth / 2, yPos - cellHeight / 2, cellWidth, cellHeight);
     }
 
     public final Cell getCell() {
         return cell;
+    }
+
+    public final Image getImage() {
+        return image;
     }
 
     public final int getXPos() {
@@ -37,12 +61,11 @@ public abstract class CellGraphics extends JPanel {
         return yPos;
     }
 
-    public static int getCellWidth() {
-        return CELL_WIDTH;
+    public final int getCellWidth() {
+        return cellWidth;
     }
 
-    public static int getCellHeight() {
-        return CELL_HEIGHT;
+    public final int getCellHeight() {
+        return cellHeight;
     }
-
 }

@@ -11,6 +11,7 @@ public enum CellType {
     SHOP,
     TELEPORTATION,
     GAIN,
+    LOSS,
     DANGER,
     VOID;
 }

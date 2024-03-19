@@ -29,7 +29,6 @@ import view.game.cellsgraphics.CellGraphicsFactory;
 public final class Resources {
     private static final String PATH = "src/main/resources/";
 
-    private static HashMap<String, GameMapGraphics> gameMaps = new HashMap<>();
     private static HashMap<String, Image> commonImages = new HashMap<>();
     private static HashMap<String, Image> modeImages = new HashMap<>();
 
@@ -62,27 +61,17 @@ public final class Resources {
 
     // region gamemap/cells
 
-    private static void loadGameMapsGraphics() {
+    public static GameMapGraphics loadGameMapsGraphics(final String mapName) {
         try {
-            File maps = new File(PATH + "maps/");
-            for (File map : maps.listFiles()) {
-                if (isACorrectMap(map)) {
-                    final String mapName = map.getName();
-                    HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
-                    HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-                    gameMaps.put(mapName,
-                        new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics));
-                }
-            }
+            File map = new File(PATH + "maps/" + mapName);
+            HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
+            HashMap<Integer, Cell> cells = getCells(cellsGraphics);
+            return new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("Resource/maps directory not found.");
         }
-    }
-
-    private static boolean isACorrectMap(final File file) {
-        return file.isDirectory() && new File(file.getPath() + "/cells.json").exists()
-            && (new File(file.getPath() + "/board.png").exists() || new File(file.getPath() + "/board.jpg").exists());
+        return null;
     }
 
     private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
@@ -113,14 +102,6 @@ public final class Resources {
         return cells;
     }
 
-    private static String removeExtension(String str) {
-        if (str == null || str.isEmpty()) {
-          return str;
-        }
-        final int index = str.indexOf('.');
-        return (index == -1) ? str : str.substring(0, index);
-    }
-
     // endregion
 
     // region images
@@ -140,6 +121,14 @@ public final class Resources {
         } catch (NullPointerException e) {
             System.out.println("Resource directory not found.");
         }
+    }
+
+    private static String removeExtension(String str) {
+        if (str == null || str.isEmpty()) {
+          return str;
+        }
+        final int index = str.indexOf('.');
+        return (index == -1) ? str : str.substring(0, index);
     }
 
     private static void addImage(final File file, final HashMap<String, Image> hashMap) {
@@ -176,14 +165,6 @@ public final class Resources {
             return commonImages.get(key);
         }
         return commonImages.get("placeholder32_32");
-    }
-
-    public static GameMapGraphics getGameMapGraphics(final String key) {
-        return gameMaps.get(key);
-    }
-
-    public static String getPath() {
-        return PATH;
     }
 
     // endregion

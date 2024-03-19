@@ -48,7 +48,7 @@ public abstract class CorePanel extends JLayeredPane {
     /**
      * Retire le panel à la dernière couche occupée.
      */
-    public final void remove() {
+    public final void removePanel() {
         for (int i = MAX_PANELS - 1; i >= 0; i++) {
             if (panels.containsKey(i)) {
                 remove(i);
@@ -61,11 +61,13 @@ public abstract class CorePanel extends JLayeredPane {
      * Retire le panel à la couche layerIndex si elle existe.
      * @param layerIndex
      */
-    public final void remove(final int layerIndex) {
+    public final void removePanel(final int layerIndex) {
         if (panels.containsKey(layerIndex)) {
-            super.remove(panels.get(layerIndex));
+            final JPanel panel = panels.get(layerIndex);
+            panel.removeAll();
             panels.remove(layerIndex);
-            revalidate();
+            remove(panel);
+            repaint();
         }
     }
 

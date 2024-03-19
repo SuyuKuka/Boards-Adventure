@@ -103,8 +103,8 @@
 	},
 	{
 		"id" : 300,
-		"type" : "GAIN",
-		"gain" : -50,
+		"type" : "LOSS",
+		"loss" : 50,
 		"xPos" : 540,
 		"yPos" : 108
 	},
@@ -226,8 +226,8 @@
 	},
 	{
 		"id" : 27,
-		"type" : "GAIN",
-		"gain" : -100,
+		"type" : "LOSS",
+		"loss" : 100,
 		"xPos" : 136,
 		"yPos" : 265
 	},
@@ -282,8 +282,8 @@
 	},
 	{
 		"id" : 35,
-		"type" : "GAIN",
-		"gain" : -150,
+		"type" : "LOSS",
+		"loss" : 150,
 		"xPos" : 338,
 		"yPos" : 337
 	},
@@ -316,8 +316,8 @@
 	},
 	{
 		"id" : 500,
-		"type" : "GAIN",
-		"gain" : -150,
+		"type" : "LOSS",
+		"loss" : 150,
 		"xPos" : 433,
 		"yPos" : 373
 	},
