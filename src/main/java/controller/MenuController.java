@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import game.Game;
 import view.View;
-import view.game.GameMapGraphics;
 import view.menu.MenuPanel;
 
 /**
@@ -21,9 +20,9 @@ public final class MenuController extends Controller {
         menuPanel = view.initNewMenuPanel(this);
     }
 
-    public void startGame(final GameMapGraphics gameMapGraphics, final HashMap<String, Integer> gameConfig,
+    public void startGame(final HashMap<String, Integer> gameConfig,
         final ArrayList<HashMap<String, String>> playersConfig) {
-            getGame().startGame(gameMapGraphics, gameConfig, playersConfig);
+            getGame().startGame(gameConfig, playersConfig);
     }
 
     @Override

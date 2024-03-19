@@ -15,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import game.Game.Mode;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
@@ -31,47 +30,38 @@ public final class Resources {
 
     private static HashMap<String, Image> commonImages = new HashMap<>();
     private static HashMap<String, Image> modeImages = new HashMap<>();
+    private static GameMapGraphics gameMapGraphics = null;
 
-    public static void loadResources(final Mode mode) {
+    static {
         loadImages(new File(PATH + "images/"), commonImages, false);
-        loadModeImages(mode);
     }
 
-    private static void loadModeImages(final Mode mode) {
-        switch (mode) {
-            case MENU:
-                loadImages(new File(PATH + "images/menu/"), modeImages, true);
-                break;
-            case GAME:
-                loadImages(new File(PATH + "images/game/"), modeImages, true);
-            default:
-                break;
-        }
-    }
-
-    public static void loadResources(final Mode mode, final String mapName) {
-        loadResources(mode);
-        loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
-    }
-
-    public static void changeMode(final Mode mode) {
+    public static void loadMenuResources() {
         modeImages.clear();
-        loadModeImages(mode);
+        loadImages(new File(PATH + "images/menu/"), modeImages, true);
+    }
+
+    public static void loadGameResources(final String map) {
+        modeImages.clear();
+        System.out.println(modeImages.keySet());
+        loadImages(new File(PATH + "images/game/"), modeImages, true);
+        loadImages(new File(PATH + "maps/" + map), modeImages, true);
+        loadGameMapGraphics(map);
+        System.out.println(modeImages.keySet());
     }
 
     // region gamemap/cells
 
-    public static GameMapGraphics loadGameMapsGraphics(final String mapName) {
+    private static void loadGameMapGraphics(final String mapName) {
         try {
             File map = new File(PATH + "maps/" + mapName);
             HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
             HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-            return new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
+            gameMapGraphics = new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("Resource/maps directory not found.");
         }
-        return null;
     }
 
     private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
@@ -165,6 +155,14 @@ public final class Resources {
             return commonImages.get(key);
         }
         return commonImages.get("placeholder32_32");
+    }
+
+    public static void setGameMapGraphics(GameMapGraphics gameMapGraphics) {
+        Resources.gameMapGraphics = gameMapGraphics;
+    }
+
+    public static GameMapGraphics getGameMapGraphics() {
+        return gameMapGraphics;
     }
 
     // endregion

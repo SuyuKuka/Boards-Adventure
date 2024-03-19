@@ -11,7 +11,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.net.InetAddress;
-
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -44,11 +45,12 @@ public final class MenuPanel extends CorePanel {
 
     private final MenuController controller;
     private final HashMap<String, Integer> gameConfig;
-    private final HashMap<String, String> playersConfig;
+    private final ArrayList<HashMap<String, String>> playersConfig;
 
     private int soundSliderVolume;
     private int songSliderVolume;
 
+    private String map;
     private JPanel rightSidePanel;
 
     private boolean host = false;
@@ -66,7 +68,7 @@ public final class MenuPanel extends CorePanel {
         super(frame);
         this.controller = controller;
         gameConfig = new HashMap<>();
-        playersConfig = new HashMap<>();
+        playersConfig = new ArrayList<>();
         Audio.playMusic("MenuTheme.wav");
         initDefaultValues();
         createPanels();
@@ -78,6 +80,12 @@ public final class MenuPanel extends CorePanel {
         menuState = null;
         songSliderVolume = 50;
         soundSliderVolume = 50;
+        map = "map4";
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e1) {
+            e1.printStackTrace();
+        }
     }
 
     private void createPanels() {
@@ -258,16 +266,36 @@ public final class MenuPanel extends CorePanel {
         });
 
         buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-        buttonsPanel.add(SwingFactory.createImageButton(this, "play", 40, 10, false));
+        final JButton startGame = SwingFactory.createImageButton(this, "play", 40, 10, false);
+        startGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Audio.stopMusic();
+                controller.startGame(gameConfig, playersConfig);
+            }
+        });
+        buttonsPanel.add(startGame);
 
+        panel.add(createLobbyCode(panel));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 1));
         panel.add(createGameLobby(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
         panel.add(buttonsPanel);
         return panel;
     }
 
+    private JPanel createLobbyCode(final Component parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress()
+            + ":" + port, "RifficFree.ttf", new Color(175, 0, 0), 24);
+        lobbyCode.setVerticalAlignment(JLabel.CENTER);
+        panel.add(lobbyCode);
+        return panel;
+    }
+
     private JPanel createGameLobby(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 90, 70);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 90, 65);
         panel.setSize(panel.getPreferredSize());
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
@@ -278,7 +306,7 @@ public final class MenuPanel extends CorePanel {
     }
 
     private JPanel createMapSection(final JPanel parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 45, 100);
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 100);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(createMapSelection(parent));
         panel.add(createMapDescription(parent));
@@ -286,15 +314,23 @@ public final class MenuPanel extends CorePanel {
     }
 
     private JPanel createMapSelection(final JPanel parent) {
-        return new JPanel();
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 50);
+        panel.setOpaque(false);
+        panel.setBackground(Color.BLACK);
+        return panel;
     }
 
     private JPanel createMapDescription(final JPanel parent) {
-        return new JPanel();
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 50);
+        panel.setOpaque(false);
+        panel.setBackground(Color.ORANGE);
+        return panel;
     }
 
-    private JPanel createGameSettings(final JPanel parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 45, 100);
+    private JPanel createGameSettings(final Component parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 10);
+        panel.setOpaque(false);
+        panel.setBackground(Color.ORANGE);
         return panel;
     }
 
@@ -314,7 +350,7 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 Audio.playSound("button.wav");
-                getPanels().get(MANUALBOOK_INDEX).setVisible(true);
+                // getPanels().get(MANUALBOOK_INDEX).setVisible(true);
             }
 
             @Override
@@ -382,7 +418,6 @@ public final class MenuPanel extends CorePanel {
     // }
 
     // private JPanel createLobby() {
-    //     add(createBackground("background_lobby"), Integer.valueOf(0));
     //     try {
     //         ip = InetAddress.getLocalHost();
     //     } catch (UnknownHostException e1) {
@@ -425,19 +460,16 @@ public final class MenuPanel extends CorePanel {
     //         @Override
     //         public void mouseClicked(final MouseEvent e) {
     //             System.out.println(select);
-    //             configGame.replace("map", select);
-    //             controller.startGame(Resources.getGameMapGraphics("map4"), configGame, players);
-    //             System.out.println(configGame);
-    //             System.out.println(players);
+    //             controller.startGame(Resources.loadGameMapsGraphics("map4"), gameConfig, playersConfig);
+    //             System.out.println(gameConfig);
+    //             System.out.println(playersConfig);
     //             System.out.println("START GAME");
     //             System.out.println("NOMBRE DE JOUEUR " + players.size());
     //         }
     //     });
 
-    //     JButton manual = createManuelButton();
     //     botPanel.add(backButton, BorderLayout.WEST);
     //     botPanel.add(startButton, BorderLayout.CENTER);
-    //     botPanel.add(manual, BorderLayout.EAST);
 
     //     lobbyPanel.add(leftPanel, BorderLayout.WEST);
     //     lobbyPanel.add(rightSidePanel, BorderLayout.EAST);

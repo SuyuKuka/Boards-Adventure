@@ -37,6 +37,10 @@ public final class Audio {
         }
     }
 
+    public static void stopMusic() {
+        music.close();
+    }
+
     public static void playSound(final String soundName) {
         try {
             audioSound = AudioSystem.getAudioInputStream(new File(SOUND_PATH + soundName));

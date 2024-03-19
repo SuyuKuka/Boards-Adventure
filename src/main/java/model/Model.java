@@ -81,6 +81,7 @@ public final class Model {
                     playerCell = currentPlayer.getPlayerCell(gameMap);
                     if (playerCell instanceof Intersection) {
                         gameState = GameState.ASK_INTERSECTION;
+                        System.out.println(currentPlayer.getPosition() + " updatemodel");
                         return;
                     } else {
                         currentPlayer.incrementDiceRollValue(-1);

@@ -53,7 +53,7 @@ public final class Game {
                 controller = new MenuController(this, view);
                 break;
             case GAME:
-                final GameMapGraphics gameMapGraphics = Resources.loadGameMapsGraphics(DEFAULT_GAME_MAP_NAME);
+                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics();
                 if (gameMapGraphics == null) {
                     System.out.println("map non reconnu");
                     System.exit(0);
@@ -77,9 +77,12 @@ public final class Game {
         return new Model(gameMap, gameSettings, players);
     }
 
-    public void startGame(final GameMapGraphics gameMapGraphics, final HashMap<String, Integer> gameConfig,
+    public void startGame(final HashMap<String, Integer> gameConfig,
         final ArrayList<HashMap<String, String>> playersConfig) {
             final ArrayList<Player> players = createPlayers(playersConfig);
+        mode = Mode.GAME;
+        Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
+        final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics();
         controller = new GameController(this, view, gameMapGraphics, createTestModel(gameMapGraphics.getGameMap()));
     }
 
@@ -110,13 +113,13 @@ public final class Game {
     }
 
     public static void main(final String[] args) {
-        final Mode mode = Mode.MENU;
+        final Mode mode = Mode.GAME;
         switch (mode) {
             case MENU:
-                Resources.loadResources(mode);
+                Resources.loadMenuResources();
                 break;
             case GAME:
-                Resources.loadResources(mode, DEFAULT_GAME_MAP_NAME);
+                Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
                 break;
             default:
                 break;
