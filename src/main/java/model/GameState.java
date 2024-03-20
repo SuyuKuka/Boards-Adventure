@@ -16,6 +16,7 @@ public enum GameState {
     // Couche 3 : Le joueur joue son dé (Vue + Contrôleur) {Affiche un dé (ou des dés) que le joueur peut cliquer}.
     ROLL_DICE(-1),
     PLAYER_MOVE(0),
+    PLAYER_ARRIVED(0),
     // Couche 4 : Le joueur tombe sur une case normale (Vue) ou propriété ou shop ou intersection (Vue + Contrôleur)
     // {Affiche une fenêtre correspondant à la case et auquel le joueur peut intéragir avec}.
     ASK_INTERSECTION(-1),

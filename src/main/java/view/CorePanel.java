@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Container;
+import java.awt.Dimension;
 import java.util.HashMap;
 
 import javax.swing.JLayeredPane;
@@ -16,7 +18,9 @@ public abstract class CorePanel extends JLayeredPane {
     public CorePanel(final View frame) {
         this.frame = frame;
         this.panels = new HashMap<>();
-        setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        final Container container = frame.getContentPane();
+        setBounds(0, 0, container.getWidth(), container.getHeight());
+        setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
     }
 
     /**
@@ -71,18 +75,6 @@ public abstract class CorePanel extends JLayeredPane {
         }
     }
 
-    /**
-     * Méthode appelée à chaque fois que la fenêtre principale a été redimensionnée
-     * et redimensionne tous les panels compris dans {@link #panels}.
-     */
-    public final void resized() {
-        setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        for (JPanel panel : panels.values()) {
-            panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        }
-        revalidate();
-    }
-
     public final HashMap<Integer, JPanel> getPanels() {
         return panels;
     }
@@ -93,11 +85,11 @@ public abstract class CorePanel extends JLayeredPane {
 
     @Override
     public final int getWidth() {
-        return frame.getWidth();
+        return (int) getPreferredSize().getWidth();
     }
 
     @Override
     public final int getHeight() {
-        return frame.getHeight();
+        return (int) getPreferredSize().getHeight();
     }
 }

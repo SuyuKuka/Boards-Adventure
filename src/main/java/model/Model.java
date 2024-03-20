@@ -74,19 +74,23 @@ public final class Model {
             case ROLL_DICE:
                 gameState = GameState.PLAYER_MOVE;
                 break;
-            case PLAYER_MOVE:
+            case PLAYER_MOVE: {
                 Cell playerCell = currentPlayer.getPlayerCell(gameMap);
                 while (currentPlayer.getDiceRollValue() > 0) {
                     currentPlayer.setPosition(playerCell.getNextCellID());
                     playerCell = currentPlayer.getPlayerCell(gameMap);
                     if (playerCell instanceof Intersection) {
                         gameState = GameState.ASK_INTERSECTION;
-                        System.out.println(currentPlayer.getPosition() + " updatemodel");
                         return;
                     } else {
                         currentPlayer.incrementDiceRollValue(-1);
                     }
                 }
+                gameState = GameState.PLAYER_ARRIVED;
+            }
+                break;
+            case PLAYER_ARRIVED : {
+                final Cell playerCell = currentPlayer.getPlayerCell(gameMap);
                 if (playerCell instanceof Shop) {
                     gameState = GameState.ASK_SHOP;
                 } else if (playerCell instanceof Property) {
@@ -95,6 +99,7 @@ public final class Model {
                     playerCell.playCellEffect(currentPlayer, this);
                     gameState = GameState.NORMAL_CELL;
                 }
+            }
                 break;
             case ASK_INTERSECTION:
                 currentPlayer.setPosition(currentPlayer.getIntersectionCellID());

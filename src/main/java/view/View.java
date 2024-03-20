@@ -1,12 +1,14 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import controller.GameController;
 import controller.MenuController;
@@ -44,8 +46,13 @@ public final class View extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                corePanel.resized();
-                corePanel.setPreferredSize(getPreferredSize());
+                final Container container = getContentPane();
+                corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
+                corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                for (JPanel panel : corePanel.getPanels().values()) {
+                    panel.setBounds(0, 0, container.getWidth(), container.getHeight());
+                    panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                }
                 revalidate();
             }
         });
@@ -64,8 +71,13 @@ public final class View extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                corePanel.resized();
-                corePanel.setPreferredSize(getPreferredSize());
+                final Container container = getContentPane();
+                corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
+                corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                for (JPanel panel : corePanel.getPanels().values()) {
+                    panel.setBounds(0, 0, container.getWidth(), container.getHeight());
+                    panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                }
                 revalidate();
             }
         });

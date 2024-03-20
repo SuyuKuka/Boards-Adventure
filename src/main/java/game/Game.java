@@ -24,12 +24,15 @@ import view.game.GameMapGraphics;
  */
 public final class Game {
 
-    public static final int NANO_S = (int) 10E8;
-    public static final Random RAND = new Random();
-
     public enum Mode {
         MENU, GAME;
     }
+
+    private static final Mode DEFAULT_MODE = Mode.MENU;
+    private static final String DEFAULT_GAME_MAP_NAME = "map4";
+
+    public static final int NANO_S = (int) 10E8;
+    public static final Random RAND = new Random();
 
     private long nanoStartTime = System.nanoTime();
     private long nanoUpTime = 0;
@@ -38,7 +41,6 @@ public final class Game {
     private Controller controller;
 
     private Mode mode;
-    private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
     private Game(final Mode mode) {
         this.mode = mode;
@@ -50,9 +52,11 @@ public final class Game {
     private void init() {
         switch (mode) {
             case MENU:
+                Resources.loadMenuResources();
                 controller = new MenuController(this, view);
                 break;
             case GAME:
+                Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
                 final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics();
                 if (gameMapGraphics == null) {
                     System.out.println("map non reconnu");
@@ -113,17 +117,6 @@ public final class Game {
     }
 
     public static void main(final String[] args) {
-        final Mode mode = Mode.GAME;
-        switch (mode) {
-            case MENU:
-                Resources.loadMenuResources();
-                break;
-            case GAME:
-                Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
-                break;
-            default:
-                break;
-        }
-        Game launcher = new Game(mode);
+        Game launcher = new Game(DEFAULT_MODE);
     }
 }

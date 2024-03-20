@@ -209,6 +209,7 @@ public final class MenuPanel extends CorePanel {
         final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
         panel.add(createCreateJoin(panel));
         panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
+        panel.setVisible(false);
         return panel;
     }
 
@@ -216,17 +217,9 @@ public final class MenuPanel extends CorePanel {
         final JPanel panel = SwingFactory.createContainerPanel(parent, 40, 0, 30, 0);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setVisible(true);
-        panel.setPreferredSize(new Dimension(getWidth(), getHeight() / 2));
         panel.setOpaque(false);
-        final JButton createButton = createSwitchStateButton("host", MenuState.GAMELOBBY, 20, 20);
-        final JButton joinButton = createSwitchStateButton("join", MenuState.JOINCODE, 20, 20);
-
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                panel.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight() / 2));
-            }
-        });
+        final JButton createButton = createSwitchStateButton("host", MenuState.GAMELOBBY, 40, 10);
+        final JButton joinButton = createSwitchStateButton("join", MenuState.JOINCODE, 40, 10);
         panel.add(createButton);
         panel.add(joinButton);
         return panel;
@@ -338,14 +331,14 @@ public final class MenuPanel extends CorePanel {
 
     // #region manualIcon 6
     private JPanel createManualIcon() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 82, 0, 0, 90);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 93, 0, 0, 95);
         panel.add(createBook());
         panel.setVisible(true);
         return panel;
     }
 
     private JButton createBook() {
-        final JButton button = SwingFactory.createImageButton(this, "manual_close", 3, 5, true);
+        final JButton button = SwingFactory.createImageButton(this, "manual_close", 3, 5, false);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {

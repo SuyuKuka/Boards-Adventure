@@ -100,7 +100,6 @@ public final class GamePanel extends CorePanel {
             }
         } else {
             final Player player = controller.getCurrentPlayer();
-            System.out.println(gameState);
             switch (gameState) {
                 case GAME_START:
                     playButton.setText("Début du jeu !");
@@ -123,10 +122,10 @@ public final class GamePanel extends CorePanel {
                     });
                     break;
                 case PLAYER_MOVE:
-                    System.out.println(player.getDiceRollValue() + " gamepanel");
-                    playButton.setText("case restantes : " + (player.getDiceRollValue() + 1));
-                    playerGraphicsMap.get(player).updatePosition();
-                    System.out.println(player.getPosition() + "updatepanel");
+                    System.out.println("hello");
+                    break;
+                case PLAYER_ARRIVED:
+                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
                     revalidate();
                     break;
                 case NORMAL_CELL:
@@ -134,6 +133,7 @@ public final class GamePanel extends CorePanel {
                     playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
                     break;
                 case ASK_INTERSECTION:
+                    playerGraphicsMap.get(player).updatePosition();
                     playButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(final MouseEvent e) {

@@ -24,6 +24,7 @@ public final class GameController extends Controller {
     private final GamePanel gamePanel;
     /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldGameUpdate;
+    private boolean changeState;
 
     public GameController(final Game game, final View view, final GameMapGraphics gameMapGraphics, final Model model) {
         super(game);
@@ -34,6 +35,7 @@ public final class GameController extends Controller {
 
     private void initValues() {
         shouldGameUpdate = false;
+        changeState = false;
     }
 
     // region controller methods
@@ -44,6 +46,14 @@ public final class GameController extends Controller {
      */
     public void run() {
         while (true) {
+            // if (changeState) {
+            //     model.update();
+            //     gamePanel.update(model.getGameState());
+            //     model.updateState();
+            //     changeState = false;
+            // } else {
+            //     gamePanel.render(model.getGameState());
+            // }
             if (shouldGameUpdate) {
                 model.update();
                 gamePanel.resetState();
