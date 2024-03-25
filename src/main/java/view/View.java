@@ -40,8 +40,13 @@ public final class View extends JFrame {
         pack();
     }
 
-    public MenuPanel initNewMenuPanel() {
+    public void initNewMenuPanel() {
         corePanel = new MenuPanel(this);
+        final Container container = getContentPane();
+        for (JPanel panel : corePanel.getPanels().values()) {
+            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
+            panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+        }
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -53,17 +58,18 @@ public final class View extends JFrame {
                     panel.setBounds(0, 0, container.getWidth(), container.getHeight());
                     panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 }
-                revalidate();
             }
         });
         setVisible(true);
-        revalidate();
-        repaint();
-        return (MenuPanel) corePanel;
     }
 
     public GamePanel initNewGamePanel(final Controller controller, final GameMapGraphics gameMapGraphics) {
         corePanel = new GamePanel(this, controller, gameMapGraphics);
+        final Container container = getContentPane();
+        for (JPanel panel : corePanel.getPanels().values()) {
+            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
+            panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+        }
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -75,7 +81,6 @@ public final class View extends JFrame {
                     panel.setBounds(0, 0, container.getWidth(), container.getHeight());
                     panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 }
-                revalidate();
             }
         });
         setVisible(true);

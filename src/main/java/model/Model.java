@@ -26,8 +26,8 @@ public final class Model {
     private Player currentLeader;
     private Player currentPlayer;
 
+    private final ArrayList<Player> players;
     private int playerListIterator;
-    private ArrayList<Player> players;
 
     /**
      * Constructeur du GameState.
@@ -35,8 +35,7 @@ public final class Model {
      * @param gameSettings
      * @param players
      */
-    public Model(final GameMap gameMap, final HashMap<String, Integer> gameSettings,
-        final ArrayList<Player> players) {
+    public Model(final GameMap gameMap, final HashMap<String, Integer> gameSettings, final ArrayList<Player> players) {
         this.gameMap = gameMap;
         this.totalTurns = gameSettings.get("turns");
         this.players = players;
@@ -44,8 +43,8 @@ public final class Model {
     }
 
     private void initValues() {
-        currentTurn = 1;
         gameState = GameState.GAME_START;
+        currentTurn = 1;
         currentLeader = null;
         currentPlayer = null;
         playerListIterator = 0;

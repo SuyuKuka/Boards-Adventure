@@ -97,6 +97,7 @@ public final class Game {
 
     private Model createTestModel() {
         final HashMap<String, Integer> gameSettings = new HashMap<>();
+        gameSettings.put("turns", 45);
         final ArrayList<Player> players = new ArrayList<>();
         players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
