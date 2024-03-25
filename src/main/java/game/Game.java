@@ -61,7 +61,8 @@ public final class Game {
                 Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
                 if (Resources.getGameMapGraphics() == null) {
                     System.out.println("Map non reconnu.");
-                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et les maps disponibles dans resources/maps");
+                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et"
+                        + "les maps disponibles dans le dossier resources/maps");
                     System.exit(0);
                 }
                 if (model == null) {

@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,7 +51,6 @@ public final class GamePanel extends CorePanel {
 
     public GamePanel(final View frame, final Controller controller, final GameMapGraphics gameMapGraphics) {
         super(frame);
-        setMinimumSize(new Dimension(720, 480));
         this.controller = controller;
         this.gameMapGraphics = gameMapGraphics;
         this.cellsGraphics = gameMapGraphics.getCellsGraphics();
@@ -67,13 +65,13 @@ public final class GamePanel extends CorePanel {
     }
 
     private void initValues() {
-        zoomX = (double) getWidth() / getMinimumSize().width;
-        zoomY = (double) getHeight() / getMinimumSize().height;
+        zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
+        zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                zoomX = (double) getWidth() / getMinimumSize().width;
-                zoomY = (double) getHeight() / getMinimumSize().height;
+                zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
+                zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
             }
         });
         elaspedTime = 0;

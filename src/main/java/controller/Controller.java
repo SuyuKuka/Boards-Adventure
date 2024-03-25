@@ -30,12 +30,9 @@ public final class Controller {
         this.game = game;
         this.model = model;
         gamePanel = view.initNewGamePanel(this, Resources.getGameMapGraphics());
-        initValues();
-        run();
-    }
-
-    private void initValues() {
         shouldGameUpdate = false;
+        gamePanel.revalidate();
+        run();
     }
 
     // region controller methods

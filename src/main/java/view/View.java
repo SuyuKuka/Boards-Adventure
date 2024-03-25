@@ -18,6 +18,9 @@ import view.menu.MenuPanel;
 
 public final class View extends JFrame {
 
+    private static final int MIN_WIDTH = 1366; // 720
+    private static final int MIN_HEIGHT = 768; // 440
+
     private final Game game;
     private CorePanel corePanel;
 
@@ -31,9 +34,9 @@ public final class View extends JFrame {
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int screenWidth = (int) screenSize.getWidth();
         final int screenHeight = (int) screenSize.getHeight();
-        setPreferredSize(new Dimension(screenWidth / 2, screenHeight / 2));
-        setMinimumSize(new Dimension(720, 480));
-        setLocation(screenWidth / 4, screenHeight / 4);
+        setPreferredSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+        setLocation(screenWidth / 8, screenHeight / 8);
         pack();
     }
 

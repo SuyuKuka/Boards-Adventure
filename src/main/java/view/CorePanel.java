@@ -20,6 +20,7 @@ public abstract class CorePanel extends JLayeredPane {
         this.panels = new HashMap<>();
         final Container container = frame.getContentPane();
         setBounds(0, 0, container.getWidth(), container.getHeight());
+        setMinimumSize(frame.getMinimumSize());
         setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
     }
 
