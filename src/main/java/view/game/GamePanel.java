@@ -18,7 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import controller.GameController;
+import controller.Controller;
 import controller.resources.Resources;
 import model.GameState;
 import model.config.cells.Intersection;
@@ -36,7 +36,7 @@ public final class GamePanel extends CorePanel {
     private static final int GUI = 4;
     private static final int PAUSE = 5;
 
-    private final GameController controller;
+    private final Controller controller;
     private final GameMapGraphics gameMapGraphics;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
@@ -50,7 +50,7 @@ public final class GamePanel extends CorePanel {
 
     private JButton playButton;
 
-    public GamePanel(final View frame, final GameController controller, final GameMapGraphics gameMapGraphics) {
+    public GamePanel(final View frame, final Controller controller, final GameMapGraphics gameMapGraphics) {
         super(frame);
         setMinimumSize(new Dimension(720, 480));
         this.controller = controller;
@@ -122,7 +122,6 @@ public final class GamePanel extends CorePanel {
                     });
                     break;
                 case PLAYER_MOVE:
-                    System.out.println("hello");
                     break;
                 case PLAYER_ARRIVED:
                     playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();

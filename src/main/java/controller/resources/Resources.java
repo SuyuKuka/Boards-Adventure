@@ -43,16 +43,18 @@ public final class Resources {
 
     public static void loadGameResources(final String map) {
         modeImages.clear();
-        System.out.println(modeImages.keySet());
         loadImages(new File(PATH + "images/game/"), modeImages, true);
         loadImages(new File(PATH + "maps/" + map), modeImages, true);
         loadGameMapGraphics(map);
-        System.out.println(modeImages.keySet());
+    }
+
+    public static void clearModeResources() {
+        modeImages.clear();
     }
 
     // region gamemap/cells
 
-    private static void loadGameMapGraphics(final String mapName) {
+    public static void loadGameMapGraphics(final String mapName) {
         try {
             File map = new File(PATH + "maps/" + mapName);
             HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));

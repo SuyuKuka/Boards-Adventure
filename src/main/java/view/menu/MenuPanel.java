@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -23,9 +24,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import controller.MenuController;
 import controller.resources.Audio;
 import controller.resources.Resources;
+import game.Game;
 import view.CorePanel;
 import view.SwingFactory;
 import view.View;
@@ -43,7 +44,6 @@ public final class MenuPanel extends CorePanel {
 
     private MenuState menuState;
 
-    private final MenuController controller;
     private final HashMap<String, Integer> gameConfig;
     private final ArrayList<HashMap<String, String>> playersConfig;
 
@@ -64,10 +64,10 @@ public final class MenuPanel extends CorePanel {
     private InetAddress ip;
     private int port = 55000;
 
-    public MenuPanel(final View frame, final MenuController controller) {
+    public MenuPanel(final View frame) {
         super(frame);
-        this.controller = controller;
         gameConfig = new HashMap<>();
+        gameConfig.put("turns", 45);
         playersConfig = new ArrayList<>();
         Audio.playMusic("MenuTheme.wav");
         initDefaultValues();
@@ -107,6 +107,7 @@ public final class MenuPanel extends CorePanel {
         final JPanel newStatePanel = getPanels().get(menuState.getLayerIndex());
         newStatePanel.setBounds(0, 0, getWidth(), getHeight());
         newStatePanel.setVisible(true);
+        revalidate();
     }
 
     private JButton createSwitchStateButton(final String img, final MenuState newMenuState,
@@ -264,13 +265,15 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 Audio.stopMusic();
-                controller.startGame(gameConfig, playersConfig);
+                final Game game = getFrame().getGame();
+                game.createModel("map4", gameConfig, playersConfig);
+                game.setSwitchMode(true);
             }
         });
         buttonsPanel.add(startGame);
 
         panel.add(createLobbyCode(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 1));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
         panel.add(createGameLobby(panel));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
         panel.add(buttonsPanel);
@@ -280,15 +283,23 @@ public final class MenuPanel extends CorePanel {
     private JPanel createLobbyCode(final Component parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress()
-            + ":" + port, "RifficFree.ttf", new Color(175, 0, 0), 24);
+        final int defaultSize = 20;
+        final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress() + ":" + port,
+            "RifficFree.ttf", new Color(175, 0, 0), defaultSize);
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                lobbyCode.setFont(getFont().deriveFont(Font.BOLD, defaultSize + getFrame().getHeight() / 50));
+                lobbyCode.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+            }
+        });
         lobbyCode.setVerticalAlignment(JLabel.CENTER);
         panel.add(lobbyCode);
         return panel;
     }
 
     private JPanel createGameLobby(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 90, 65);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 90, 75);
         panel.setSize(panel.getPreferredSize());
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 

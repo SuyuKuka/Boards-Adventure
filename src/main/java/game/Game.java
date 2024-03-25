@@ -5,118 +5,130 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import controller.Controller;
-import controller.GameController;
-import controller.MenuController;
 import controller.resources.Resources;
 import model.Model;
-import model.config.GameMap;
 import model.config.Team;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
-import view.game.GameMapGraphics;
 
 /**
- * Classe mère du jeu qui contient un controlleur {@link GameController} ou {@link MenuController}
+ * Classe mère du jeu qui contient un controlleur {@link Controller} ou {@link MenuController}
  * et appelle la méthode {@link Controller#run()}.
  * Le jeu est scindé en 2 parties : le menu et le jeu en lui-même.
  * C'est le controlleur associé qui s'occupe de sa partie.
  */
 public final class Game {
 
-    public enum Mode {
-        MENU, GAME;
-    }
+    public static final int NANO_S = (int) 10E8;
+    public static final Random RAND = new Random();
 
     private static final Mode DEFAULT_MODE = Mode.MENU;
     private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
-    public static final int NANO_S = (int) 10E8;
-    public static final Random RAND = new Random();
-
-    private long nanoStartTime = System.nanoTime();
+    private final long nanoStartTime = System.nanoTime();
     private long nanoUpTime = 0;
 
+    private Model model;
     private View view;
     private Controller controller;
 
     private Mode mode;
+    /** Si vraie, alors change de mode.*/
+    private volatile boolean switchMode;
 
-    private Game(final Mode mode) {
-        this.mode = mode;
-        view = new View();
+    private Game() {
+        this.mode = DEFAULT_MODE;
+        controller = null;
+        model = null;
+        switchMode = false;
+        view = new View(this);
         init();
-        controller.run();
+        run();
     }
 
     private void init() {
+        if (view.hasPanel()) {
+            view.removePanel();
+            Resources.clearModeResources();
+        }
         switch (mode) {
             case MENU:
                 Resources.loadMenuResources();
-                controller = new MenuController(this, view);
+                view.initNewMenuPanel();
                 break;
             case GAME:
                 Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
-                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics();
-                if (gameMapGraphics == null) {
-                    System.out.println("map non reconnu");
+                if (Resources.getGameMapGraphics() == null) {
+                    System.out.println("Map non reconnu.");
+                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et les maps disponibles dans resources/maps");
                     System.exit(0);
                 }
-                controller = new GameController(this, view, gameMapGraphics,
-                    createTestModel(gameMapGraphics.getGameMap()));
+                if (model == null) {
+                    model = createTestModel();
+                    System.out.println("MAP PAR DEFAUT GENEREE");
+                }
+                controller = new Controller(this, model, view);
                 break;
             default:
                 break;
         }
     }
 
-    private Model createTestModel(final GameMap gameMap) {
+    private void run() {
+        while (true) {
+            if (switchMode) {
+                switch (mode) {
+                    case MENU:
+                        mode = Mode.GAME;
+                        break;
+                    default:
+                        mode = Mode.MENU;
+                        break;
+                }
+                init();
+                switchMode = false;
+            } else if (controller != null) {
+                controller.run();
+            }
+        }
+    }
+
+    private Model createTestModel() {
         final HashMap<String, Integer> gameSettings = new HashMap<>();
-        gameSettings.put("turns", 35);
         final ArrayList<Player> players = new ArrayList<>();
         players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
         // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
         // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
-        return new Model(gameMap, gameSettings, players);
-    }
-
-    public void startGame(final HashMap<String, Integer> gameConfig,
-        final ArrayList<HashMap<String, String>> playersConfig) {
-            final ArrayList<Player> players = createPlayers(playersConfig);
-        mode = Mode.GAME;
-        Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
-        final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics();
-        controller = new GameController(this, view, gameMapGraphics, createTestModel(gameMapGraphics.getGameMap()));
+        return new Model(Resources.getGameMapGraphics().getGameMap(), gameSettings, players);
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
         final ArrayList<Player> players = new ArrayList<>();
-        // TODO créer players à partir des playersConfig.
+        players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         return players;
     }
 
-    public void goToMenu() {
-        // MENU
+    public void createModel(final String mapName, final HashMap<String, Integer> gameConfig,
+        final ArrayList<HashMap<String, String>> playersConfig) {
+        Resources.loadGameMapGraphics(mapName);
+        model = new Model(Resources.getGameMapGraphics().getGameMap(), gameConfig, createPlayers(playersConfig));
     }
 
-    public long getNanoStartTime() {
-        return nanoStartTime;
+    public void setSwitchMode(final boolean switchMode) {
+        this.switchMode = switchMode;
     }
 
-    public double getUpTime() {
-        return nanoUpTime / NANO_S;
+    public boolean getSwitchMode() {
+        return switchMode;
     }
 
-    public long getNanoUpTime() {
-        return nanoUpTime;
-    }
-
-    public void setNanoUpTime(final long nanoUpTime) {
-        this.nanoUpTime = nanoUpTime;
+    public Mode getMode() {
+        return mode;
     }
 
     public static void main(final String[] args) {
-        Game launcher = new Game(DEFAULT_MODE);
+        Game launcher = new Game();
     }
 }

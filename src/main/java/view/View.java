@@ -10,17 +10,19 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import controller.GameController;
-import controller.MenuController;
+import controller.Controller;
+import game.Game;
 import view.game.GameMapGraphics;
 import view.game.GamePanel;
 import view.menu.MenuPanel;
 
 public final class View extends JFrame {
 
+    private final Game game;
     private CorePanel corePanel;
 
-    public View() {
+    public View(final Game game) {
+        this.game = game;
         corePanel = null;
         setTitle("Kingdom Revolution");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,13 +37,8 @@ public final class View extends JFrame {
         pack();
     }
 
-    public MenuPanel initNewMenuPanel(final MenuController controller) {
-        if (corePanel != null) {
-            remove(corePanel);
-            revalidate();
-            repaint();
-        }
-        corePanel = new MenuPanel(this, controller);
+    public MenuPanel initNewMenuPanel() {
+        corePanel = new MenuPanel(this);
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -57,15 +54,12 @@ public final class View extends JFrame {
             }
         });
         setVisible(true);
+        revalidate();
+        repaint();
         return (MenuPanel) corePanel;
     }
 
-    public GamePanel initNewGamePanel(final GameController controller, final GameMapGraphics gameMapGraphics) {
-        if (corePanel != null) {
-            remove(corePanel);
-            revalidate();
-            repaint();
-        }
+    public GamePanel initNewGamePanel(final Controller controller, final GameMapGraphics gameMapGraphics) {
         corePanel = new GamePanel(this, controller, gameMapGraphics);
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
@@ -82,15 +76,29 @@ public final class View extends JFrame {
             }
         });
         setVisible(true);
+        revalidate();
+        repaint();
         return (GamePanel) corePanel;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void removePanel() {
+        if (corePanel != null) {
+            remove(corePanel);
+            revalidate();
+            repaint();
+        }
     }
 
     public void setCorePanel(final CorePanel corePanel) {
         this.corePanel = corePanel;
     }
 
-    public CorePanel getCorePanel() {
-        return corePanel;
+    public boolean hasPanel() {
+        return corePanel != null;
     }
 
     @Override

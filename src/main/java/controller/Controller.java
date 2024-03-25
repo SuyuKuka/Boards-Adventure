@@ -1,38 +1,111 @@
 package controller;
 
+import java.util.ArrayList;
+
+import javax.swing.JComponent;
+
+import controller.resources.Resources;
+import view.View;
+import view.game.GamePanel;
+
 import game.Game;
+import model.Model;
+import model.config.cells.Cell;
+import model.config.players.Player;
 
 /**
- * Classe abstraite étendue par {@link MenuController} et {@link GameController} qui contient la méthode {@link #run()}.
+ * Classe qui fait office de Controlleur pour le jeu qui appelle {@link #run()}. <p>
+ * Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
+ * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
  */
-public abstract sealed class Controller permits MenuController, GameController {
-
+public final class Controller {
     private final Game game;
 
-    public Controller(final Game game) {
+    private final Model model;
+    private final GamePanel gamePanel;
+    /** Vrai si le model devrait se mettre à jour. */
+    private boolean shouldGameUpdate;
+
+    public Controller(final Game game, final Model model, final View view) {
         this.game = game;
+        this.model = model;
+        gamePanel = view.initNewGamePanel(this, Resources.getGameMapGraphics());
+        initValues();
+        run();
     }
 
-    public abstract void run();
-
-    public final void updateNanoUpTime(final long nanoTime) {
-        game.setNanoUpTime(nanoTime - game.getNanoStartTime());
+    private void initValues() {
+        shouldGameUpdate = false;
     }
 
-    public final long getNanoStartTime() {
-        return game.getNanoStartTime();
+    // region controller methods
+
+    /**
+     * Méthode mère qui fait fonctionner le jeu en mettant à jour constament la vue
+     * et en mettant à jour le model seulement si necéssaire.
+     */
+    public void run() {
+            // if (changeState) {
+            //     model.update();
+            //     gamePanel.update(model.getGameState());
+            //     model.updateState();
+            //     changeState = false;
+            // } else {
+            //     gamePanel.render(model.getGameState());
+            // }
+        if (shouldGameUpdate) {
+            model.update();
+            gamePanel.resetState();
+            shouldGameUpdate = false;
+        }
+        gamePanel.render(model.getGameState());
     }
 
-    public final Game getGame() {
-        return game;
+    public void playerRollDice(final String diceName) {
+        final Player currentPlayer = getCurrentPlayer();
+        currentPlayer.rollDice(diceName);
+        if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
+            currentPlayer.setJailTurn(0);
+        }
     }
 
-    public final double getUpTime() {
-        return game.getUpTime();
+    public void playerChooseIntersection(final int cellID) {
+        getCurrentPlayer().setIntersectionCellID(cellID);
     }
 
-    public final long getNanoUpTime() {
-        return game.getNanoUpTime();
+    public Cell getCurrentPlayerCell() {
+        return model.getGameMap().getCell(getCurrentPlayer().getPosition());
     }
 
+    // region model getters/setters
+
+    public void setShouldStateUpdate(final boolean shouldStateUpdate) {
+        this.shouldGameUpdate = shouldStateUpdate;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return model.getPlayers();
+    }
+
+    public int getTotalTurns() {
+        return model.getTotalTurns();
+    }
+
+    public int getCurrentTurn() {
+        return model.getCurrentTurn();
+    }
+
+    public Player getCurrentPlayer() {
+        return model.getCurrentPlayer();
+    }
+
+    public void delete(final JComponent component) {
+        gamePanel.remove(component);
+    }
+
+    // endregion
+
+    // region getters/setters
+
+    // endregion
 }

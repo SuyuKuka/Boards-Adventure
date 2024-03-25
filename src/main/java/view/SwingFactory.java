@@ -285,6 +285,7 @@ public class SwingFactory {
     public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
         final int size) {
         final JLabel label = new JLabel(text);
+        label.setVerticalAlignment(JLabel.CENTER);
         label.setForeground(foregroundColor);
         label.setFont(Resources.setFont(fontName, size));
         return label;
