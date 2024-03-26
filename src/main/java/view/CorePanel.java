@@ -8,8 +8,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public abstract class CorePanel extends JLayeredPane {
-    private static final int MAX_PANELS = 10;
-
 
     private final View frame;
     /** Panels qui compose le {@link JLayeredPane}. Lorsqu'il est resized, les panels aussi le sont. */
@@ -25,40 +23,16 @@ public abstract class CorePanel extends JLayeredPane {
     }
 
     /**
-     * Ajoute le panel à la première couche disponible.
-     * @param panel
-     */
-    public final void add(final JPanel panel) {
-        for (int i = 0; i < MAX_PANELS; i++) {
-            if (!panels.containsKey(i)) {
-                add(panel, i);
-                break;
-            }
-        }
-    }
-
-    /**
      * Ajoute le panel à la couche layerIndex si possible.
      * @param panel
      * @param layerIndex
      */
-    public final void add(final JPanel panel, final int layerIndex) {
+    public final void addPanel(final JPanel panel, final int layerIndex) {
         if (!panels.containsKey(layerIndex)) {
             super.add(panel, Integer.valueOf(layerIndex));
             panels.put(layerIndex, panel);
+            System.out.println(panels.keySet());
             revalidate();
-        }
-    }
-
-    /**
-     * Retire le panel à la dernière couche occupée.
-     */
-    public final void removePanel() {
-        for (int i = MAX_PANELS - 1; i >= 0; i++) {
-            if (panels.containsKey(i)) {
-                remove(i);
-                break;
-            }
         }
     }
 
@@ -73,6 +47,7 @@ public abstract class CorePanel extends JLayeredPane {
             panels.remove(layerIndex);
             remove(panel);
             repaint();
+            System.out.println(panels.keySet());
         }
     }
 

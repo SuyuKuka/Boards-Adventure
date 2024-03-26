@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import controller.resources.Resources;
 import model.config.cells.Cell;
 
 public final class OvalCell extends CellGraphics {
@@ -37,6 +38,9 @@ public final class OvalCell extends CellGraphics {
         g2d.fillOval(inside, inside, getCellWidth() - inside * 2, getCellHeight() - inside * 2);
         final int icon = 8;
         g2d.drawImage(getImage(), icon, icon, getCellWidth() - icon * 2, getCellHeight() - icon * 2, null);
+        g2d.setColor(new Color(663399));
+        g2d.setFont(Resources.getFont("RifficFree", 12));
+        g2d.drawString(String.valueOf(getCell().getId()), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
     }
 
 }

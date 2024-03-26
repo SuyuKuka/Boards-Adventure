@@ -26,14 +26,17 @@ import view.game.cellsgraphics.CellGraphicsFactory;
  * La classe {@link Resources} contient toutes les ressources du jeu.
  */
 public final class Resources {
+    private static final float DEFAULT_FONT_SIZE = 12;
     private static final String PATH = "src/main/resources/";
 
+    private static HashMap<String, Font> fonts = new HashMap<>();
     private static HashMap<String, Image> commonImages = new HashMap<>();
     private static HashMap<String, Image> modeImages = new HashMap<>();
     private static GameMapGraphics gameMapGraphics = null;
 
     static {
         loadImages(new File(PATH + "images/"), commonImages, false);
+        loadFonts(new File(PATH + "fonts/"), fonts);
     }
 
     public static void loadMenuResources() {
@@ -135,15 +138,21 @@ public final class Resources {
 
     // region font
 
-    public static Font setFont(final String font, final float size) {
+    public static void loadFonts(final File folder, final HashMap<String, Font> hashMap) {
         try {
-            return Font.createFont(Font.TRUETYPE_FONT, new File(PATH + "fonts/" + font)).deriveFont(Font.BOLD, size);
+            for (File file : folder.listFiles()) {
+                hashMap.put(removeExtension(file.getName()),
+                    Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(Font.BOLD, DEFAULT_FONT_SIZE));
+            }
         } catch (FontFormatException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-        return null;
+    }
+
+    public static Font getFont(final String font, final float size) {
+        return fonts.get(font).deriveFont(Font.BOLD, size);
     }
 
     // endregion

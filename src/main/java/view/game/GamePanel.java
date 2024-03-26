@@ -23,6 +23,7 @@ import model.GameState;
 import model.config.cells.Intersection;
 import model.config.players.Player;
 import view.CorePanel;
+import view.SwingFactory;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
@@ -56,11 +57,11 @@ public final class GamePanel extends CorePanel {
         this.cellsGraphics = gameMapGraphics.getCellsGraphics();
         this.playerGraphicsMap = new HashMap<>();
         initValues();
-        add(createBackground(), BACKGROUND);
-        add(createCellsGraphics(), CELLS);
-        add(createPlayersGraphics(), PLAYERS);
-        add(createGUI(), GUI);
-        add(createPause(), PAUSE);
+        addPanel(createBackground(), BACKGROUND);
+        addPanel(createCellsGraphics(), CELLS);
+        addPanel(createPlayersGraphics(), PLAYERS);
+        addPanel(createGUI(), GUI);
+        addPanel(createPause(), PAUSE);
         setVisible(true);
     }
 
@@ -98,6 +99,7 @@ public final class GamePanel extends CorePanel {
             }
         } else {
             final Player player = controller.getCurrentPlayer();
+            System.out.println(gameState);
             switch (gameState) {
                 case GAME_START:
                     playButton.setText("Début du jeu !");
@@ -137,13 +139,13 @@ public final class GamePanel extends CorePanel {
                             e.consume();
                         }
                     });
-                    add(createIntersectionPanel(), INTERACTION);
+                    addPanel(createIntersectionPanel(), INTERACTION);
                     break;
                 case ASK_PROPERTY:
-                    add(createPropertyPanel(), INTERACTION);
+                    // addPanel(createPropertyPanel(), INTERACTION);
                     break;
                 case ASK_SHOP:
-                    add(createShopPanel(), INTERACTION);
+                    // addPanel(createShopPanel(), INTERACTION);
                     break;
                 case END_TURN:
                     playButton.setText("Fin du tour de " + player.getUsername() + ".");
@@ -233,13 +235,13 @@ public final class GamePanel extends CorePanel {
     // #region Cellule Intersection
     private JPanel createIntersectionPanel() {
         final JPanel panel = new JPanel(null);
+        panel.setOpaque(false);
+        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         for (int i = 0; i < intersectIDs.size(); i++) {
             panel.add(createIntersectChoiceButton(intersectIDs.get(i)));
         }
-        panel.setOpaque(false);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setVisible(true);
+        panel.setVisible(true);
         return panel;
     }
     private JButton createIntersectChoiceButton(final int targetCellID) {
@@ -266,20 +268,12 @@ public final class GamePanel extends CorePanel {
     // #region Propriété
 
     private JPanel createPropertyPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setOpaque(false);
-        panel.setBackground(Color.RED);
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                final int width = (int) (getFrame().getWidth() * 0.2);
-                final int height = (int) (getFrame().getHeight() * 0.25);
-                // panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
-            }
-        });
-        panel.setVisible(false);
-        return panel;
+        final JPanel container = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        container.add(SwingFactory.createTransparentPanel(container, 100, 25));
+        final JPanel panel = SwingFactory.createImagePanel(container, "button", 50, 50);
+        container.add(panel);
+        container.setVisible(true);
+        return container;
     }
 
     // #endregion
@@ -313,13 +307,29 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
+        createPlayButton();
+        panel.add(playButton);
+        int height = 150;
+        for (Player player : controller.getPlayers()) {
+            add(createPlayerInfo(player, height));
+            height += 100;
+        }
+        panel.setVisible(true);
+        return panel;
+    }
+
+    private void createPlayButton() {
         playButton = new JButton();
         playButton.setBounds(0, 0, 200, 50);
         playButton.setVerticalAlignment(JButton.CENTER);
         playButton.setHorizontalAlignment(JButton.CENTER);
-        panel.add(playButton);
-        panel.setVisible(true);
-        return panel;
+    }
+
+    private JPanel createPlayerInfo(final Player player, final int startHeight) {
+        final JPanel container = SwingFactory.createContainerPanel(this, 70, 70, 70, 70);
+        final JPanel panel = SwingFactory.createImagePanel(container, "button", 100, 100);
+        container.add(panel);
+        return container;
     }
 
     // #endregion

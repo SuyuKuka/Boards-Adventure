@@ -2,6 +2,8 @@ package view.game.cellsgraphics;
 
 import java.util.ArrayList;
 
+import controller.resources.Resources;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -48,6 +50,9 @@ public final class RoundedRectCell extends CellGraphics {
             getCellHeight() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
         final int icon = 8;
         g2d.drawImage(getImage(), icon, icon, getCellWidth() - icon * 2, getCellHeight() - icon * 2, null);
+        g2d.setColor(new Color(663399));
+        g2d.setFont(Resources.getFont("RifficFree", 12));
+        g2d.drawString(String.valueOf(getCell().getId()), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
     }
 
 }

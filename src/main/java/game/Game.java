@@ -13,17 +13,18 @@ import model.config.players.Player;
 import view.View;
 
 /**
- * Classe mère du jeu qui contient un controlleur {@link Controller} ou {@link MenuController}
- * et appelle la méthode {@link Controller#run()}.
+ * Classe mère du jeu.
  * Le jeu est scindé en 2 parties : le menu et le jeu en lui-même.
- * C'est le controlleur associé qui s'occupe de sa partie.
+ * Le menu ne contient qu'un fichier {@link MenuPanel} qui s'occupe de la vue dans le menu.
+ * Lorsqu'une partie est lancée, un {@link Model} et un {@link Controller} est crée.
+ * La vue est modifiée pour remplacer le {@link MenuPanel} par un {@link GamePanel}.
  */
 public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final Mode DEFAULT_MODE = Mode.MENU;
+    private static final Mode DEFAULT_MODE = Mode.GAME;
     private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
     private final long nanoStartTime = System.nanoTime();

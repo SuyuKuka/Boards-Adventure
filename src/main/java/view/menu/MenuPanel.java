@@ -89,14 +89,14 @@ public final class MenuPanel extends CorePanel {
     }
 
     private void createPanels() {
-        add(createBackground(), BACKGROUND_INDEX);
-        add(createMainMenu(), MenuState.MAINMENU.getLayerIndex());
-        add(createSettingsMenu(), MenuState.SETTINGSMENU.getLayerIndex());
-        add(createCreateJoinMenu(), MenuState.CREATEJOIN.getLayerIndex());
-        add(createJoinCodeMenu(), MenuState.JOINCODE.getLayerIndex());
-        add(createGameLobbyMenu(), MenuState.GAMELOBBY.getLayerIndex());
-        add(createManualIcon(), MANUALICON_INDEX);
-        add(createManualBook(), MANUALBOOK_INDEX);
+        addPanel(createBackground(), BACKGROUND_INDEX);
+        addPanel(createMainMenu(), MenuState.MAINMENU.getLayerIndex());
+        addPanel(createSettingsMenu(), MenuState.SETTINGSMENU.getLayerIndex());
+        addPanel(createCreateJoinMenu(), MenuState.CREATEJOIN.getLayerIndex());
+        addPanel(createJoinCodeMenu(), MenuState.JOINCODE.getLayerIndex());
+        addPanel(createGameLobbyMenu(), MenuState.GAMELOBBY.getLayerIndex());
+        addPanel(createManualIcon(), MANUALICON_INDEX);
+        addPanel(createManualBook(), MANUALBOOK_INDEX);
     }
 
     public void changeState(final MenuState newMenuState) {
@@ -126,7 +126,7 @@ public final class MenuPanel extends CorePanel {
     // #region background 0
 
     private JPanel createBackground() {
-        final JPanel panel = SwingFactory.createImagePanel(this, "background_lobby", 100, 100);
+        final JPanel panel = SwingFactory.createImagePanel(this, "background", 100, 100);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setVisible(true);
         return panel;
@@ -178,14 +178,14 @@ public final class MenuPanel extends CorePanel {
         // Musique
         final JPanel musicPanel = SwingFactory.createBoxLayoutPanel();
         musicPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel musique = SwingFactory.createTextLabel("Musique : -", "Komigo3D.ttf", Color.BLACK, 20);
+        final JLabel musique = SwingFactory.createTextLabel("Musique : -", "Komigo3D", Color.BLACK, 20);
         final JSlider musicSlider = SwingFactory.createMusicSlider();
         musicPanel.add(musique);
         musicPanel.add(musicSlider);
         // Son
         final JPanel soundPanel = SwingFactory.createBoxLayoutPanel();
         soundPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel sound = SwingFactory.createTextLabel("Son : -", "Komigo3D.ttf", Color.BLACK, 20);
+        final JLabel sound = SwingFactory.createTextLabel("Son : -", "Komigo3D", Color.BLACK, 20);
         final JSlider soundSlider = SwingFactory.createSoundSlider();
         soundPanel.add(sound);
         soundPanel.add(soundSlider);
@@ -285,7 +285,7 @@ public final class MenuPanel extends CorePanel {
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
         final int defaultSize = 20;
         final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress() + ":" + port,
-            "RifficFree.ttf", new Color(175, 0, 0), defaultSize);
+            "RifficFree", new Color(175, 0, 0), defaultSize);
         panel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -431,10 +431,10 @@ public final class MenuPanel extends CorePanel {
 
     //     JPanel lobbyNamePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.LEFT);
 
-    //     JLabel invitationLabel = SwingFactory.createLabel("Code d'invitation : ", 12, "RifficFree.ttf");
+    //     JLabel invitationLabel = SwingFactory.createLabel("Code d'invitation : ", 12, "RifficFree");
     //     lobbyNamePanel.add(invitationLabel);
 
-    //     JLabel codeLabel = SwingFactory.createLabel(ip.getHostAddress() + ":" + port, 12, "RifficFree.ttf");
+    //     JLabel codeLabel = SwingFactory.createLabel(ip.getHostAddress() + ":" + port, 12, "RifficFree");
     //     codeLabel.setForeground(new Color(175, 0, 0));
     //     lobbyNamePanel.add(codeLabel);
 
@@ -490,7 +490,7 @@ public final class MenuPanel extends CorePanel {
     //     JPanel namePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
 
     //     JLabel nameLabel = new JLabel("Royaume de Teranor");
-    //     nameLabel.setFont(Resources.loadFont(30f, "RifficFree.ttf"));
+    //     nameLabel.setFont(Resources.loadFont(30f, "RifficFree"));
     //     namePanel.add(nameLabel, BorderLayout.CENTER);
 
     //     JPanel mapSelectionPanel = SwingFactory.createBorderLayoutPanel();
@@ -548,7 +548,7 @@ public final class MenuPanel extends CorePanel {
     //     descMap.setLineWrap(true);
     //     descMap.setWrapStyleWord(true);
     //     descMap.setPreferredSize(new Dimension(200, 100));
-    //     descMap.setFont(Resources.loadFont(12f, "RifficFree.ttf"));
+    //     descMap.setFont(Resources.loadFont(12f, "RifficFree"));
     //     descMap.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 35));
     //     descPanel.add(descMap);
 
@@ -568,7 +568,7 @@ public final class MenuPanel extends CorePanel {
 
     //     //TODO
     //     JLabel gameMode = new JLabel("Mode de jeu : 1v1");
-    //     gameMode.setFont(Resources.loadFont(16, "RifficFree.ttf"));
+    //     gameMode.setFont(Resources.loadFont(16, "RifficFree"));
     //     gameMode.setForeground(Color.BLACK);
 
     //     JPanel buttonPanel = SwingFactory.createBorderLayoutPanel();
@@ -670,7 +670,7 @@ public final class MenuPanel extends CorePanel {
 
     // private JPanel createTitlePanel() {
     //     JPanel titlePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-    //     JLabel title = SwingFactory.createLabel("Paramètre de la partie", 22, "RifficFree.ttf");
+    //     JLabel title = SwingFactory.createLabel("Paramètre de la partie", 22, "RifficFree");
     //     titlePanel.add(title);
     //     return titlePanel;
     // }
@@ -680,7 +680,7 @@ public final class MenuPanel extends CorePanel {
     //     int tmp = 0;
     //     JPanel optionPanel = SwingFactory.createNormalPanel();
 
-    //     JLabel optionLabel = SwingFactory.createLabel(labelName, size, "RifficFree.ttf");
+    //     JLabel optionLabel = SwingFactory.createLabel(labelName, size, "RifficFree");
     //     optionPanel.add(optionLabel);
 
     //     ButtonGroup optionGroup = new ButtonGroup();
@@ -775,7 +775,7 @@ public final class MenuPanel extends CorePanel {
     //     gbc.gridx = 0;
     //     panel.add(manageLabel, gbc);
 
-    //     JLabel pseudoLabel = SwingFactory.createLabel(config.get("pseudo"), 12, "RifficFree.ttf");
+    //     JLabel pseudoLabel = SwingFactory.createLabel(config.get("pseudo"), 12, "RifficFree");
     //     gbc.gridx = 1;
     //     panel.add(pseudoLabel, gbc);
 
@@ -804,7 +804,7 @@ public final class MenuPanel extends CorePanel {
     //     objectImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
     //     objectImageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-    //     JLabel objectNameLabel = SwingFactory.createLabel(config.get("item"), 12, "RifficFree.ttf");
+    //     JLabel objectNameLabel = SwingFactory.createLabel(config.get("item"), 12, "RifficFree");
     //     objectContent.add(objectImageLabel, BorderLayout.WEST);
     //     objectContent.add(objectNameLabel, BorderLayout.CENTER);
 
@@ -914,7 +914,7 @@ public final class MenuPanel extends CorePanel {
     //     codePanel.setBorder(BorderFactory.createEmptyBorder(getFrame().getHeight() / 4, 0, 0, 0));
 
     //     JLabel codeLabel = SwingFactory.createLabel(
-    //          "Veuillez saisir votre code d'invitation :", 24, "RifficFree.ttf");
+    //          "Veuillez saisir votre code d'invitation :", 24, "RifficFree");
     //     codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     //     JPanel textFieldPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
@@ -923,7 +923,7 @@ public final class MenuPanel extends CorePanel {
     //     JTextField codeField = new JTextField();
     //     codeField.setHorizontalAlignment(JTextField.CENTER);
     //     codeField.setPreferredSize(new Dimension(400, 30));
-    //     codeField.setFont(Resources.loadFont(16, "RifficFree.ttf"));
+    //     codeField.setFont(Resources.loadFont(16, "RifficFree"));
     //     codeField.setText("Saisir ici");
     //     codeField.setForeground(Color.lightGray);
     //     codeField.addMouseListener(new MouseAdapter() {

@@ -287,7 +287,7 @@ public class SwingFactory {
         final JLabel label = new JLabel(text);
         label.setVerticalAlignment(JLabel.CENTER);
         label.setForeground(foregroundColor);
-        label.setFont(Resources.setFont(fontName, size));
+        label.setFont(Resources.getFont(fontName, size));
         return label;
     }
 
@@ -338,7 +338,7 @@ public class SwingFactory {
     //     JRadioButton rButton = new JRadioButton(content);
     //     rButton.setOpaque(false);
     //     rButton.setFocusPainted(false);
-    //     rButton.setFont(Resources.loadFont(size, "RifficFree.ttf"));
+    //     rButton.setFont(Resources.loadFont(size, "RifficFree"));
     //     rButton.addMouseListener(new MouseAdapter() {
     //         @Override
     //         public void mouseClicked(final MouseEvent e) {
@@ -352,7 +352,7 @@ public class SwingFactory {
     //         final HashMap<String, Integer> configGame, final String key) {
     //     JCheckBox itemBox = new JCheckBox(content);
     //     itemBox.setOpaque(false);
-    //     itemBox.setFont(Resources.loadFont(size, "RifficFree.ttf"));
+    //     itemBox.setFont(Resources.loadFont(size, "RifficFree"));
     //     itemBox.setFocusPainted(false);
     //     itemBox.addMouseListener(new MouseAdapter() {
     //         @Override

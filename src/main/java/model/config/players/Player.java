@@ -46,7 +46,9 @@ public abstract class Player {
     // region model methods
 
     public final void rollDice(final String diceName) {
-        diceRollValue = dices.get("normal").rollDice();
+        // dices.get("normal").rollDice()
+        diceRollValue = 4;
+        System.out.println(diceRollValue);
     }
 
     // endregion
