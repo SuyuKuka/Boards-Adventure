@@ -24,7 +24,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final Mode DEFAULT_MODE = Mode.GAME;
+    private static final Mode DEFAULT_MODE = Mode.MENU;
     private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
     private final long nanoStartTime = System.nanoTime();
@@ -62,7 +62,7 @@ public final class Game {
                 Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
                 if (Resources.getGameMapGraphics() == null) {
                     System.out.println("Map non reconnu.");
-                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et"
+                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et "
                         + "les maps disponibles dans le dossier resources/maps");
                     System.exit(0);
                 }

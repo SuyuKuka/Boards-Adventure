@@ -283,7 +283,7 @@ public final class MenuPanel extends CorePanel {
     private JPanel createLobbyCode(final Component parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        final int defaultSize = 20;
+        final int defaultSize = 16;
         final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress() + ":" + port,
             "RifficFree", new Color(175, 0, 0), defaultSize);
         panel.addComponentListener(new ComponentAdapter() {
@@ -304,16 +304,15 @@ public final class MenuPanel extends CorePanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         panel.add(createMapSection(panel));
-        panel.add(SwingFactory.createImageLabel(panel, "border", 5, 80, true));
         panel.add(createGameSettings(panel));
         return panel;
     }
 
     private JPanel createMapSection(final JPanel parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 100);
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 50, 100);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(createMapSelection(parent));
-        panel.add(createMapDescription(parent));
+        panel.add(createMapSelection(panel));
+        panel.add(createMapDescription(panel));
         return panel;
     }
 

@@ -61,18 +61,17 @@ public final class GamePanel extends CorePanel {
         addPanel(createCellsGraphics(), CELLS);
         addPanel(createPlayersGraphics(), PLAYERS);
         addPanel(createGUI(), GUI);
-        addPanel(createPause(), PAUSE);
         setVisible(true);
     }
 
     private void initValues() {
-        zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
-        zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
+        zoomX = ((double) getWidth() / getMinimumSize().width);
+        zoomY = ((double) getHeight() / getMinimumSize().height) * 0.9;
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
-                zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
+                zoomX = ((double) getWidth() / getMinimumSize().width);
+                zoomY = ((double) getHeight() / getMinimumSize().height) * 0.9;
             }
         });
         elaspedTime = 0;
@@ -142,10 +141,10 @@ public final class GamePanel extends CorePanel {
                     addPanel(createIntersectionPanel(), INTERACTION);
                     break;
                 case ASK_PROPERTY:
-                    // addPanel(createPropertyPanel(), INTERACTION);
+                    addPanel(createPropertyPanel(), INTERACTION);
                     break;
                 case ASK_SHOP:
-                    // addPanel(createShopPanel(), INTERACTION);
+                    addPanel(createShopPanel(), INTERACTION);
                     break;
                 case END_TURN:
                     playButton.setText("Fin du tour de " + player.getUsername() + ".");

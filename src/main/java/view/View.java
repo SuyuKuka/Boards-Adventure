@@ -17,26 +17,27 @@ import view.game.GamePanel;
 import view.menu.MenuPanel;
 
 public final class View extends JFrame {
-
-    private static final int MIN_WIDTH = 1366; // 720
-    private static final int MIN_HEIGHT = 768; // 440
-
+    // 720 * 1 ou 1366 * 1.897.
+    private static final int MIN_WIDTH = 720;
+    // 440 * 0.9 ou 768 * 1.6.
+    private static final int MIN_HEIGHT = 440;
     private final Game game;
+
     private CorePanel corePanel;
 
     public View(final Game game) {
         this.game = game;
         corePanel = null;
-        setTitle("Kingdom Revolution");
+        setTitle("Board's Adventure.");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLACK);
         setLayout(null);
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int screenWidth = (int) screenSize.getWidth();
         final int screenHeight = (int) screenSize.getHeight();
-        setPreferredSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        setPreferredSize(new Dimension(screenWidth / 2, screenHeight / 2));
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-        setLocation(screenWidth / 8, screenHeight / 8);
+        setLocation(screenWidth / 4, screenHeight / 4);
         pack();
     }
 

@@ -2,8 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
-
 import controller.resources.Resources;
 import view.View;
 import view.game.GamePanel;
@@ -94,10 +92,6 @@ public final class Controller {
 
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
-    }
-
-    public void delete(final JComponent component) {
-        gamePanel.remove(component);
     }
 
     // endregion
