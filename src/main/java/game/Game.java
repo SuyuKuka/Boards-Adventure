@@ -24,7 +24,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final Mode DEFAULT_MODE = Mode.MENU;
+    private static final Mode DEFAULT_MODE = Mode.GAME;
     private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
     private final long nanoStartTime = System.nanoTime();

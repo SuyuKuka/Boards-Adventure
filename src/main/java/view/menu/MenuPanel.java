@@ -466,41 +466,11 @@ public final class MenuPanel extends CorePanel {
             frame.getContentPaneHeight() - frame.getContentPaneHeight() / 4);
         panel.setBackground(Color.ORANGE);
 
-        JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
-        explanationTextArea.setLineWrap(true);
-        explanationTextArea.setWrapStyleWord(true);
-        explanationTextArea.setEditable(false);
-        explanationTextArea.setBackground(Color.CYAN);
         explanationTextArea.setFont(Resources.loadFont(14f, "RifficFree.ttf"));
 
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Panel pour navigation entre rubriques
-        // TODO: revoir texte pour joli
-        JPanel navPanel = new JPanel(new GridLayout(3, 1));
-        JButton howToPlayButton = new JButton("Prise en main du jeu");
-        howToPlayButton.setBackground(Color.YELLOW);
-        howToPlayButton.setFont(Resources.loadFont(16f, "RifficFree.ttf"));
-        JButton gameFlowButton = new JButton("Déroulement de la partie");
-        gameFlowButton.setBackground(Color.YELLOW);
-        gameFlowButton.setFont(Resources.loadFont(16f, "RifficFree.ttf"));
-        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
-        mapSpecialtiesButton.setBackground(Color.YELLOW);
-        mapSpecialtiesButton.setFont(Resources.loadFont(16f, "RifficFree.ttf"));
-
-        howToPlayButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("     - PRISE EN MAIN DU LOGICIEL -\n\n Sur le menu du jeu, vous pouvez modifier les réglages sonores en cliquant sur \"Options\" ou vous pouvez vous lancer directement dans une partie en appuyant sur \"Jouer\".\nUne fois dans ce menu, vous pouvez choisir de rejoindre une partie déjà créée ou d'en être l'hôte. Vous pourrez alors configurer la partie comme cela vous convient le mieux !");
-            }
-        });
-        gameFlowButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("           > Comment se déroule une partie de Board's Adventure ? <\n\n 1 - Début de tour: Faites constat des évènements qui prennent effet avant votre tour. \n\n 2 - Lancer de dé: Sélectionnez et lancez le dé que vous allez jouer à ce tour. Différents types de dés peuvent être obtenus au cours de la partie.\n\n 3 - Déplacement: Déplacez votre pion à la hauteur du résultat, et choisissez quelle direction emprunter si le chemin vous l'impose. \n\n 4 - Action: L'effet de la case sur laquelle vous atterrissez prend effet. Laissez la chance décider de votre sort avec les évènements, ou faites l'acquisition des propriétés du plateau afin d'affirmer votre monopole sur les autres.");
-            }
-        });
         mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -519,24 +489,6 @@ public final class MenuPanel extends CorePanel {
                 //panel.add(mapPanel, BorderLayout.CENTER); // Ajouter le panneau des icônes à la place du texte
             }
         });
-
-        navPanel.add(howToPlayButton);
-        navPanel.add(gameFlowButton);
-        navPanel.add(mapSpecialtiesButton);
-        panel.add(navPanel, BorderLayout.WEST);
-
-        JButton backButton = SwingFactory.createImageButton("back", frame, MenuState.MAINMENU, this);
-        panel.add(backButton, BorderLayout.SOUTH);
-
-        // Useless maintenant qu'il y a du contenu ?
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                e.consume();
-                System.out.println("NAAN CLIQUE PAS ICI Y'A R");
-            }
-        });
-
         return panel;
     }
      * 
