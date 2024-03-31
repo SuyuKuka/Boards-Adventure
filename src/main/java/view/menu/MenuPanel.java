@@ -1,11 +1,13 @@
 package view.menu;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -22,7 +24,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -353,7 +359,8 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 Audio.playSound("button.wav");
-                // getPanels().get(MANUALBOOK_INDEX).setVisible(true);
+                System.out.println("sur manuel là");
+                getPanels().get(MANUALBOOK_INDEX).setVisible(true);
             }
 
             @Override
@@ -378,8 +385,78 @@ public final class MenuPanel extends CorePanel {
     // #region manualBook 7
 
     private JPanel createManualBook() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 1, 1, 1, 1);
         panel.setOpaque(true);
+        panel.setBackground(Color.ORANGE);
+
+        // faire sorte que les deux forment bien bandelette du haut
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("Manuel", SwingConstants.CENTER);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(Color.GREEN);
+        panel.add(titlePanel, BorderLayout.NORTH);
+
+        JButton closeButton = new JButton("X");
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
+            }
+        });
+        titlePanel.add(closeButton, BorderLayout.EAST);
+
+        JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
+        explanationTextArea.setLineWrap(true);
+        explanationTextArea.setWrapStyleWord(true);
+        explanationTextArea.setEditable(false);
+        explanationTextArea.setBackground(Color.CYAN);
+        //explanationTextArea.setFont(Resources.loadFonts(14f, "RifficFree.ttf")); // CHANGER LA MANIERE POUR FONTS ?
+
+        JScrollPane scrollPane = new JScrollPane(explanationTextArea);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        //JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
+
+        JButton howToPlayButton = new JButton("Prise en main du jeu");
+        howToPlayButton.setBackground(Color.YELLOW);
+        //howToPlayButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
+        JButton gameFlowButton = new JButton("Déroulement de la partie");
+        gameFlowButton.setBackground(Color.YELLOW);
+        //gameFlowButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
+        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
+        mapSpecialtiesButton.setBackground(Color.YELLOW);
+        //mapSpecialtiesButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
+
+        navPanel.add(howToPlayButton);
+        navPanel.add(gameFlowButton);
+        navPanel.add(mapSpecialtiesButton);
+        panel.add(navPanel, BorderLayout.WEST);
+
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        navPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        howToPlayButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                explanationTextArea.setText("     - PRISE EN MAIN DU LOGICIEL -\n\n Sur le menu du jeu, vous pouvez modifier les réglages sonores en cliquant sur \"Options\" ou vous pouvez vous lancer directement dans une partie en appuyant sur \"Jouer\".\nUne fois dans ce menu, vous pouvez choisir de rejoindre une partie déjà créée ou d'en être l'hôte. Vous pourrez alors configurer la partie comme cela vous convient le mieux !");
+            }
+        });
+        gameFlowButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                explanationTextArea.setText("           > Comment se déroule une partie de Board's Adventure ? <\n\n 1 - Début de tour: Faites constat des évènements qui prennent effet avant votre tour. \n\n 2 - Lancer de dé: Sélectionnez et lancez le dé que vous allez jouer à ce tour. Différents types de dés peuvent être obtenus au cours de la partie.\n\n 3 - Déplacement: Déplacez votre pion à la hauteur du résultat, et choisissez quelle direction emprunter si le chemin vous l'impose. \n\n 4 - Action: L'effet de la case sur laquelle vous atterrissez prend effet. Laissez la chance décider de votre sort avec les évènements, ou faites l'acquisition des propriétés du plateau afin d'affirmer votre monopole sur les autres.");
+            }
+        });
+        mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
+            }
+        });
+
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -389,10 +466,50 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 e.consume();
+                System.out.println("NAAN CLIQUE PAS ICI Y'A R");
             }
         });
         return panel;
     }
+
+
+    /*ANCIEN MANUEL
+        private JPanel createHelpManual() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBounds(frame.getContentPaneWidth() / 8, frame.getContentPaneHeight() / 8,
+            frame.getContentPaneWidth() - frame.getContentPaneWidth() / 4,
+            frame.getContentPaneHeight() - frame.getContentPaneHeight() / 4);
+        panel.setBackground(Color.ORANGE);
+
+        explanationTextArea.setFont(Resources.loadFont(14f, "RifficFree.ttf"));
+
+        JScrollPane scrollPane = new JScrollPane(explanationTextArea);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
+
+                ADAPTER AUX CASES DISPOS DU JEU (x nb de cases), BREVE EXPLICATION ET IMAGE SI POSSIBLE
+                //JPanel mapPanel = new JPanel(new GridLayout(x, 1));
+                
+                //mapPanel.add(createCaseExplanationPanel("event_case_icon.png", "Case événement"));
+                //mapPanel.add(createCaseExplanationPanel("property_case_icon.png", "Case propriété"));
+                //mapPanel.add(createCaseExplanationPanel("bonus_case_icon.png", "Case bonus"));
+                //mapPanel.add(createCaseExplanationPanel("kingdom_case_icon.png", "Case 'kingdom'"));
+                //mapPanel.add(createCaseExplanationPanel("intersection_case_icon.png", "Case intersection"));
+
+                //explanationTextArea.setVisible(false); // Cache texte ?
+                //panel.add(mapPanel, BorderLayout.CENTER); // Ajouter le panneau des icônes à la place du texte
+            }
+        });
+        return panel;
+    }
+     * 
+     */
+
+
 
     // #endregion
 
