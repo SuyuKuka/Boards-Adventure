@@ -27,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -384,9 +386,25 @@ public final class MenuPanel extends CorePanel {
     // #region manualBook 7
 
     private JPanel createManualBook() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 1, 1, 1, 1);
         panel.setOpaque(true);
         panel.setBackground(Color.ORANGE);
+
+        // faire sorte que les deux forment bien bandelette du haut
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("Manuel", SwingConstants.CENTER);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(Color.GREEN);
+        panel.add(titlePanel, BorderLayout.NORTH);
+
+        JButton closeButton = new JButton("X");
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
+            }
+        });
+        titlePanel.add(closeButton, BorderLayout.EAST);
 
         JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
         explanationTextArea.setLineWrap(true);
@@ -398,7 +416,10 @@ public final class MenuPanel extends CorePanel {
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        //JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
+
         JButton howToPlayButton = new JButton("Prise en main du jeu");
         howToPlayButton.setBackground(Color.YELLOW);
         //howToPlayButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
@@ -408,6 +429,15 @@ public final class MenuPanel extends CorePanel {
         JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
         mapSpecialtiesButton.setBackground(Color.YELLOW);
         //mapSpecialtiesButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
+
+        navPanel.add(howToPlayButton);
+        navPanel.add(gameFlowButton);
+        navPanel.add(mapSpecialtiesButton);
+        panel.add(navPanel, BorderLayout.WEST);
+
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        navPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         howToPlayButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -427,20 +457,6 @@ public final class MenuPanel extends CorePanel {
                 explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
             }
         });
-
-        navPanel.add(howToPlayButton);
-        navPanel.add(gameFlowButton);
-        navPanel.add(mapSpecialtiesButton);
-        panel.add(navPanel, BorderLayout.WEST);
-
-        JButton backButton = createSwitchStateButton("back", MenuState.MAINMENU, 40, 10); // nécessaire avec l'event click ?
-        backButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {    // Ferme bien le manuel avec l'event (le rend non-visible)
-                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
-            }
-        });
-        panel.add(backButton, BorderLayout.SOUTH);
 
         panel.addMouseListener(new MouseAdapter() {
             @Override
