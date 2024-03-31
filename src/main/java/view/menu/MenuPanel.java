@@ -385,18 +385,21 @@ public final class MenuPanel extends CorePanel {
     // #region manualBook 7
 
     private JPanel createManualBook() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 1, 1, 1, 1);
-        panel.setOpaque(true);
-        panel.setBackground(Color.ORANGE);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 5, 5);
+        panel.setOpaque(false);
 
-        // faire sorte que les deux forment bien bandelette du haut
+        // Panel qui représente l'ensemble de la fenêtre.
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.ORANGE);
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 4));
+
         JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("Manuel", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial Black", Font.BOLD, 28));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
-        titlePanel.setBackground(Color.GREEN);
-        panel.add(titlePanel, BorderLayout.NORTH);
+        titlePanel.setBackground(Color.ORANGE);
 
-        JButton closeButton = new JButton("X");
+        JButton closeButton = SwingFactory.createImageButton(this, "notready", 4, 4, false);
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -404,39 +407,47 @@ public final class MenuPanel extends CorePanel {
             }
         });
         titlePanel.add(closeButton, BorderLayout.EAST);
+        int titleHeight = (int) (panel.getHeight() * 0.05);
+        titlePanel.setPreferredSize(new Dimension(panel.getWidth(), titleHeight));
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new GridLayout(1,2));
+        contentPanel.setBackground(Color.ORANGE);
+
+        JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        JButton howToPlayButton = new JButton("Prise en main du jeu");
+        howToPlayButton.setBackground(Color.YELLOW);
+        howToPlayButton.setFont(new Font("Courrier", Font.BOLD, 22));
+        JButton gameFlowButton = new JButton("Déroulement de la partie");
+        gameFlowButton.setBackground(Color.YELLOW);
+        gameFlowButton.setFont(new Font("Courrier", Font.BOLD, 22));
+        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
+        mapSpecialtiesButton.setBackground(Color.YELLOW);
+        mapSpecialtiesButton.setFont(new Font("Courrier", Font.BOLD, 22));
+        navPanel.add(howToPlayButton, BorderLayout.NORTH);
+        navPanel.add(gameFlowButton, BorderLayout.CENTER);
+        navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
+
+        int navPanelWidth = (int) (contentPanel.getWidth() * 0.3);      // Soucis pour 30%
+        navPanel.setPreferredSize(new Dimension(navPanelWidth, contentPanel.getHeight()));
+        contentPanel.add(navPanel, BorderLayout.WEST);
 
         JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
         explanationTextArea.setLineWrap(true);
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
         explanationTextArea.setBackground(Color.CYAN);
-        //explanationTextArea.setFont(Resources.loadFonts(14f, "RifficFree.ttf")); // CHANGER LA MANIERE POUR FONTS ?
-
+        explanationTextArea.setFont(new Font("Century", Font.PLAIN, 16)); // CHANGER LA MANIERE POUR FONTS ?
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
-        panel.add(scrollPane, BorderLayout.CENTER);
 
-        //JPanel navPanel = new JPanel(new GridLayout(3, 1));
-        JPanel navPanel = new JPanel();
-        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
+        int scrollPaneWidth = (int) (contentPanel.getWidth() * 0.7);    // Soucis pour 70%
+        scrollPane.setPreferredSize(new Dimension(scrollPaneWidth, contentPanel.getHeight()));
+        scrollPane.setViewportBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        scrollPane.setBackground(Color.CYAN);
+        contentPanel.add(scrollPane, BorderLayout.EAST);
 
-        JButton howToPlayButton = new JButton("Prise en main du jeu");
-        howToPlayButton.setBackground(Color.YELLOW);
-        //howToPlayButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
-        JButton gameFlowButton = new JButton("Déroulement de la partie");
-        gameFlowButton.setBackground(Color.YELLOW);
-        //gameFlowButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
-        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
-        mapSpecialtiesButton.setBackground(Color.YELLOW);
-        //mapSpecialtiesButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
-
-        navPanel.add(howToPlayButton);
-        navPanel.add(gameFlowButton);
-        navPanel.add(mapSpecialtiesButton);
-        panel.add(navPanel, BorderLayout.WEST);
-
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        navPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        panel.add(mainPanel);
 
         howToPlayButton.addMouseListener(new MouseAdapter() {
             @Override
