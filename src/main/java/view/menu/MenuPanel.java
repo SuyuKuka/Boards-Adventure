@@ -28,7 +28,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -466,6 +465,23 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
+                /*JPanel mapPanel = new JPanel(new GridLayout(9, 1));
+                //JButton case1 = SwingFactory.createImageButton(scrollPane, "gain", 10, 6, false); ???????
+                //mapPanel.add(case1);
+
+                //panel.add(new JScrollPane(mapPanel), BorderLayout.WEST);
+
+                mapPanel.add(createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or."));  // gain
+                mapPanel.add(createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or."));  // loss
+                mapPanel.add(createCaseExplanationPanel("card_defense", "Défense: Vous protège face aux dangers."));    // defense
+                mapPanel.add(createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala..."));    // danger
+                mapPanel.add(createCaseExplanationPanel("intersection", "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route."));    // intersection
+                mapPanel.add(createCaseExplanationPanel("kingdom", "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !"));    // kingdom
+                mapPanel.add(createCaseExplanationPanel("property", "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu."));    // property
+                mapPanel.add(createCaseExplanationPanel("shop", "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or."));    // shop
+                mapPanel.add(createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.'"));    // void
+
+                explanationTextArea.add(new JScrollPane(mapPanel), BorderLayout.WEST); // Utilisation d'un JScrollPane pour les rubriques */
             }
         });
 
@@ -481,6 +497,19 @@ public final class MenuPanel extends CorePanel {
                 System.out.println("NAAN CLIQUE PAS ICI Y'A R");
             }
         });
+        return panel;
+    }
+
+    private JPanel createCaseExplanationPanel(String img, String description) {
+        final Image image = Resources.getImage(img);
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel iconLabel = new JLabel(new ImageIcon(image));
+        JTextArea descriptionTextArea = new JTextArea(description);
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setWrapStyleWord(true);
+        panel.add(iconLabel, BorderLayout.WEST);
+        panel.add(descriptionTextArea, BorderLayout.CENTER);
         return panel;
     }
 
