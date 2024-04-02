@@ -107,6 +107,15 @@ public final class Model {
                 gameState = GameState.PLAYER_MOVE;
                 break;
             case ASK_PROPERTY:
+                // final Property playerCell = (Property) currentPlayer.getPlayerCell(gameMap);
+                // if (playerCell.hasOwner()) {
+                //     System.out.println("Payement");
+                // } else {
+                //     System.out.println("Tu veux acheter une propriété ?");
+                //     if (true) {
+                //         playerCell.playCellEffect(currentPlayer, this);
+                //     }
+                // }
             case ASK_SHOP:
             case NORMAL_CELL:
                 gameState = GameState.END_TURN;

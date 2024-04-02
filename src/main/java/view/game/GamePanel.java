@@ -12,15 +12,19 @@ import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Controller;
 import controller.resources.Resources;
 import model.GameState;
 import model.config.cells.Intersection;
+import model.config.cells.Property;
 import model.config.players.Player;
 import view.CorePanel;
 import view.SwingFactory;
@@ -122,6 +126,8 @@ public final class GamePanel extends CorePanel {
                     });
                     break;
                 case PLAYER_MOVE:
+                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
+                    revalidate();
                     break;
                 case PLAYER_ARRIVED:
                     playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
@@ -142,7 +148,7 @@ public final class GamePanel extends CorePanel {
                     addPanel(createIntersectionPanel(), INTERACTION);
                     break;
                 case ASK_PROPERTY:
-                    // addPanel(createPropertyPanel(), INTERACTION);
+                    addPanel(createPropertyPanel(), INTERACTION);
                     break;
                 case ASK_SHOP:
                     // addPanel(createShopPanel(), INTERACTION);
@@ -267,13 +273,52 @@ public final class GamePanel extends CorePanel {
 
     // #region Propriété
 
-    private JPanel createPropertyPanel() {
-        final JPanel container = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
-        container.add(SwingFactory.createTransparentPanel(container, 100, 25));
-        final JPanel panel = SwingFactory.createImagePanel(container, "button", 50, 50);
-        container.add(panel);
-        container.setVisible(true);
-        return container;
+    public JPanel createPropertyPanel() {
+        JPanel panel = SwingFactory.createBoxLayoutPanel();
+        panel.setOpaque(true);
+        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
+                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+
+        Property property = (Property) controller.getCurrentPlayerCell();
+        JLabel propertyName = SwingFactory.createTextLabel(
+            "Veux tu acheter cette propriete ?\n",
+            "RifficFree", Color.BLACK, 32);
+        propertyName.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel propertyPrice = SwingFactory.createTextLabel("Nom de la propriete "
+            + property.getBuyPrices().get(property.getPropertyState()) + "$\n",
+            "RifficFree", Color.BLACK, 18
+        );
+        propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        JButton yes = new JButton("Oui");
+        yes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                controller.playerBuyProperty(property);
+                controller.setShouldStateUpdate(true);
+                removePanel(INTERACTION);
+                revalidate();
+            }
+        });
+        JButton no = new JButton("Non");
+        no.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                removePanel(INTERACTION);
+                revalidate();
+            }
+        });
+        buttonPanel.add(yes);
+        buttonPanel.add(no);
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(propertyName);
+        panel.add(propertyPrice);
+        panel.add(buttonPanel);
+        return panel;
     }
 
     // #endregion

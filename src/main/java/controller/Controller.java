@@ -11,6 +11,7 @@ import view.game.GamePanel;
 import game.Game;
 import model.Model;
 import model.config.cells.Cell;
+import model.config.cells.Property;
 import model.config.players.Player;
 
 /**
@@ -68,6 +69,11 @@ public final class Controller {
 
     public void playerChooseIntersection(final int cellID) {
         getCurrentPlayer().setIntersectionCellID(cellID);
+    }
+
+    public void playerBuyProperty(final Property property) {
+        System.out.println("oui");
+        property.playCellEffect(getCurrentPlayer(), model);
     }
 
     public Cell getCurrentPlayerCell() {
