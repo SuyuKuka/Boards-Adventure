@@ -20,7 +20,7 @@ public enum GameState {
     // Couche 4 : Le joueur tombe sur une case normale (Vue) ou propriété ou shop ou intersection (Vue + Contrôleur)
     // {Affiche une fenêtre correspondant à la case et auquel le joueur peut intéragir avec}.
     ASK_INTERSECTION(-1),
-    ASK_PROPERTY(0),
+    ASK_PROPERTY(-1),
     ASK_SHOP(0),
     NORMAL_CELL(0.5),
     // Couche 4 : Le joueur fini son tour (Vue) {Affiche une animation ou transition vers le prochain joueur}.

@@ -26,14 +26,10 @@ public final class Property extends Cell {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
                 + buyPrices.get(0) + "$).");
             } else {
-                // String str = System.console().readLine("Cette maison est à vendre. Voulez vous l'acheter ? "
-                // + buyPrices.get(0) + " :  (oui/non)");
-                // if (str.toLowerCase().equals("oui")) {
-                    owner = player;
-                    player.getTeam().addProperty(this);
-                    player.getTeam().incrementMoney(-buyPrices.get(propertyState));
-                    propertyState++;
-                // }
+                owner = player;
+                player.getTeam().addProperty(this);
+                player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+                propertyState++;
             }
         } else if (isAtHome(player)) {
             if (propertyState + 1 > buyPrices.size()) {
@@ -42,13 +38,9 @@ public final class Property extends Cell {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
                 + buyPrices.get(propertyState + 1) + "$).");
             } else {
-                // String str = System.console().readLine("Voulez vous améliorer votre propriété ? "
-                // + buyPrices.get(propertyState + 1) + " : ");
-                // if (str.toLowerCase().equals("oui")) {
-                    owner = player;
-                    player.getTeam().incrementMoney(-buyPrices.get(propertyState));
-                    propertyState++;
-                // }
+                owner = player;
+                player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+                propertyState++;
             }
         } else {
             final int price = buyPrices.get(propertyState - 1);
