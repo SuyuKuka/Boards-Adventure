@@ -7,7 +7,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -96,24 +95,44 @@ public final class MenuPanel extends CorePanel {
 
     private void createPanels() {
         addPanel(createBackground(), BACKGROUND_INDEX);
-        addPanel(createMainMenu(), MenuState.MAINMENU.getLayerIndex());
-        addPanel(createSettingsMenu(), MenuState.SETTINGSMENU.getLayerIndex());
-        addPanel(createCreateJoinMenu(), MenuState.CREATEJOIN.getLayerIndex());
-        addPanel(createJoinCodeMenu(), MenuState.JOINCODE.getLayerIndex());
-        addPanel(createGameLobbyMenu(), MenuState.GAMELOBBY.getLayerIndex());
         addPanel(createManualIcon(), MANUALICON_INDEX);
         addPanel(createManualBook(), MANUALBOOK_INDEX);
     }
 
     public void changeState(final MenuState newMenuState) {
         if (menuState != null) {
-            getPanels().get(menuState.getLayerIndex()).setVisible(false);
+            removePanel(menuState.getLayerIndex());
         }
         this.menuState = newMenuState;
+        addPanel(createPanel(), menuState.getLayerIndex());
         final JPanel newStatePanel = getPanels().get(menuState.getLayerIndex());
         newStatePanel.setBounds(0, 0, getWidth(), getHeight());
         newStatePanel.setVisible(true);
         revalidate();
+    }
+
+    public JPanel createPanel() {
+        final JPanel panel;
+        switch (menuState.getLayerIndex()) {
+            case 2:
+                panel = createSettingsMenu();
+                break;
+            case 3:
+                panel = createCreateJoinMenu();
+                break;
+            case 4:
+                panel = createJoinCodeMenu();
+                break;
+            case 5:
+                panel = createGameLobbyMenu();
+                break;
+            default:
+                panel = createMainMenu();
+                break;
+        }
+        panel.setBounds(0, 0, getWidth(), getHeight());
+        panel.setVisible(true);
+        return panel;
     }
 
     private JButton createSwitchStateButton(final String img, final MenuState newMenuState,

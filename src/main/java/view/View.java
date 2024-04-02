@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -31,13 +32,13 @@ public final class View extends JFrame {
         setTitle("Board's Adventure.");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLACK);
-        setLayout(null);
+        setLayout(new BorderLayout());
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int screenWidth = (int) screenSize.getWidth();
         final int screenHeight = (int) screenSize.getHeight();
         setPreferredSize(new Dimension(screenWidth / 2, screenHeight / 2));
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-        setLocation(screenWidth / 4, screenHeight / 4);
+        setLocationRelativeTo(null);
         pack();
     }
 
@@ -45,15 +46,13 @@ public final class View extends JFrame {
         corePanel = new MenuPanel(this);
         final Container container = getContentPane();
         for (JPanel panel : corePanel.getPanels().values()) {
-            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
             panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
         }
-        add(corePanel);
+        add(corePanel, BorderLayout.CENTER);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Container container = getContentPane();
-                corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
                 corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 for (JPanel panel : corePanel.getPanels().values()) {
                     panel.setBounds(0, 0, container.getWidth(), container.getHeight());
@@ -68,15 +67,13 @@ public final class View extends JFrame {
         corePanel = new GamePanel(this, controller, gameMapGraphics);
         final Container container = getContentPane();
         for (JPanel panel : corePanel.getPanels().values()) {
-            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
             panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
         }
-        add(corePanel);
+        add(corePanel, BorderLayout.CENTER);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Container container = getContentPane();
-                corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
                 corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 for (JPanel panel : corePanel.getPanels().values()) {
                     panel.setBounds(0, 0, container.getWidth(), container.getHeight());
