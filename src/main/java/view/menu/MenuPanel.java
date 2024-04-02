@@ -12,6 +12,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
