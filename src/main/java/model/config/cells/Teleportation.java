@@ -1,5 +1,6 @@
 package model.config.cells;
 
+import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -16,6 +17,7 @@ public final class Teleportation extends Cell {
     public void playCellEffect(final Player player, final Model model) {
         player.setPosition(idTargetCell);
         System.out.println("TELEPORTATION A LA CASE " + idTargetCell);
+        model.setGameState(GameState.TELEPORTATION);
     }
 
 }

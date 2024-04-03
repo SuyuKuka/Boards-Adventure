@@ -1,5 +1,6 @@
 package model.config.cells;
 
+import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -29,6 +30,7 @@ public final class Kingdom extends Cell {
             System.out.println(player.getUsername() + " a donné " + tax + "$ au roi " + currentKing
                 + " ! Longue vie au Roi !");
         }
+        model.setGameState(GameState.KINGDOM);
     }
 
 }

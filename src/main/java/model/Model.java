@@ -6,8 +6,6 @@ import java.util.HashMap;
 import model.config.GameMap;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
-import model.config.cells.Property;
-import model.config.cells.Shop;
 import model.config.players.Player;
 
 /**
@@ -43,7 +41,7 @@ public final class Model {
     }
 
     private void initValues() {
-        gameState = GameState.GAME_START;
+        gameState = null;
         currentTurn = 1;
         currentLeader = null;
         currentPlayer = null;
@@ -55,6 +53,10 @@ public final class Model {
      * met en les joueurs {@link Player} avec la map {@link GameMap}.
      */
     public void update() {
+        if (gameState == null) {
+            gameState = GameState.GAME_START;
+            return;
+        }
         switch (gameState) {
             case GAME_START:
                 currentPlayer = players.get(playerListIterator);
@@ -88,36 +90,28 @@ public final class Model {
                 gameState = GameState.PLAYER_ARRIVED;
             }
                 break;
-            case PLAYER_ARRIVED : {
-                final Cell playerCell = currentPlayer.getPlayerCell(gameMap);
-                if (playerCell instanceof Shop) {
-                    gameState = GameState.ASK_SHOP;
-                } else if (playerCell instanceof Property) {
-                    gameState = GameState.ASK_PROPERTY;
-                } else {
-                    playerCell.playCellEffect(currentPlayer, this);
-                    gameState = GameState.NORMAL_CELL;
-                }
-            }
-                break;
             case ASK_INTERSECTION:
                 currentPlayer.setPosition(currentPlayer.getIntersectionCellID());
                 currentPlayer.setIntersectionCellID(0);
                 currentPlayer.incrementDiceRollValue(-1);
                 gameState = GameState.PLAYER_MOVE;
                 break;
+            case PLAYER_ARRIVED : {
+                final Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+                playerCell.playCellEffect(currentPlayer, this);
+                // playCellEffect s'occupe de changer de GameState.
+            }
+                break;
+            case START:
+            case CARD:
+            case DANGER:
+            case GAIN:
+            case LOSS:
+            case KINGDOM:
+            case VOID:
+            case TELEPORTATION:
             case ASK_PROPERTY:
-                // final Property playerCell = (Property) currentPlayer.getPlayerCell(gameMap);
-                // if (playerCell.hasOwner()) {
-                //     System.out.println("Payement");
-                // } else {
-                //     System.out.println("Tu veux acheter une propriété ?");
-                //     if (true) {
-                //         playerCell.playCellEffect(currentPlayer, this);
-                //     }
-                // }
             case ASK_SHOP:
-            case NORMAL_CELL:
                 gameState = GameState.END_TURN;
                 break;
             case END_TURN:
@@ -138,6 +132,39 @@ public final class Model {
             default:
                 break;
         }
+    }
+
+    private GameState getCellGameState(final Cell cell) {
+        switch (cell.getCellType()) {
+            case START:
+                return GameState.START;
+            case JAIL:
+                return GameState.JAIL;
+            case VOID:
+                return GameState.VOID;
+            case GAIN:
+                return GameState.GAIN;
+            case LOSS:
+                return GameState.LOSS;
+            case INTERSECTION:
+                return GameState.ASK_INTERSECTION;
+            case PROPERTY:
+                return GameState.ASK_PROPERTY;
+            case SHOP:
+                return GameState.ASK_SHOP;
+            case TELEPORTATION:
+                return GameState.TELEPORTATION;
+            case CARD_ATTACK:
+            case CARD_DEFENSE:
+                return GameState.CARD;
+            case KINGDOM:
+                return GameState.KINGDOM;
+            case DANGER:
+                return GameState.DANGER;
+            default:
+                break;
+        }
+        return null;
     }
 
     public void changeLeader(final Player player) {

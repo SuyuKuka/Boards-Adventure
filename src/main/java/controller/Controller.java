@@ -15,7 +15,7 @@ import model.config.cells.Property;
 import model.config.players.Player;
 
 /**
- * Classe qui fait office de Controlleur pour le jeu qui appelle {@link #run()}. <p>
+ * Classe qui fait office de Controlleur pour le {@link Model} qui appelle {@link #run()}. <p>
  * Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
  * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
  */
@@ -25,13 +25,13 @@ public final class Controller {
     private final Model model;
     private final GamePanel gamePanel;
     /** Vrai si le model devrait se mettre à jour. */
-    private boolean shouldGameUpdate;
+    private boolean shouldStateUpdate;
 
     public Controller(final Game game, final Model model, final View view) {
         this.game = game;
         this.model = model;
         gamePanel = view.initNewGamePanel(this, Resources.getGameMapGraphics());
-        shouldGameUpdate = false;
+        shouldStateUpdate = true;
         gamePanel.revalidate();
         run();
     }
@@ -43,20 +43,12 @@ public final class Controller {
      * et en mettant à jour le model seulement si necéssaire.
      */
     public void run() {
-            // if (changeState) {
-            //     model.update();
-            //     gamePanel.update(model.getGameState());
-            //     model.updateState();
-            //     changeState = false;
-            // } else {
-            //     gamePanel.render(model.getGameState());
-            // }
-        if (shouldGameUpdate) {
+        if (shouldStateUpdate) {
             model.update();
-            gamePanel.resetState();
-            shouldGameUpdate = false;
+            gamePanel.render(model.getGameState());
+            shouldStateUpdate = false;
         }
-        gamePanel.render(model.getGameState());
+        gamePanel.animate(model.getGameState());
     }
 
     public void playerRollDice(final String diceName) {
@@ -72,8 +64,11 @@ public final class Controller {
     }
 
     public void playerBuyProperty(final Property property) {
-        System.out.println("oui");
-        property.playCellEffect(getCurrentPlayer(), model);
+        property.buy(getCurrentPlayer());
+    }
+
+    public void playerUpgradeProperty(final Property property) {
+        property.upgrade(getCurrentPlayer());
     }
 
     public Cell getCurrentPlayerCell() {
@@ -83,7 +78,7 @@ public final class Controller {
     // region model getters/setters
 
     public void setShouldStateUpdate(final boolean shouldStateUpdate) {
-        this.shouldGameUpdate = shouldStateUpdate;
+        this.shouldStateUpdate = shouldStateUpdate;
     }
 
     public ArrayList<Player> getPlayers() {

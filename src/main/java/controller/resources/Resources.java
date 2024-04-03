@@ -24,6 +24,24 @@ import view.game.cellsgraphics.CellGraphicsFactory;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.
+ * <p> === <{@link Image}> === <p>
+ * Dans le menu, seules les images contenus dans "src/main/resources/" et "src/main/resources/menu/.." sont accessibles.
+ * <p> En jeu, seules les images contenus dans "src/main/resources/" et "src/main/resources/game/.." sont accessibles.
+ * <p> Pour obtenir un {@link Image}, utilisez {@link #getImage(String)} avec String le nom du fichier sans extension.
+ * <p> (Par exemple, getImage("test") pour test.png ou test.jpg). Evitez d'avoir plusieurs fichiers du même nom!
+ *
+ * <p> === <{@link Font}> === <p>
+ * Toutes les polices d'écritures sont chargées dès le lancement du programme.
+ * <p> Pour obtenir un objet {@link Font}, utilisez {@link #getFont(String, float)} avec String le nom du fichier
+ * sans extension et float la taille souhaitée.
+ *
+ * <p> === <{@link GameMapGraphics}> === <p>
+ * Lorsqu'une partie commence, un {@link GameMapGraphics} associé à
+ * la map choisie est crée et attribué a {@link #gameMapGraphics}.
+ * <p> Elle contient toutes les {@link Image} contenue dans le dossier "src/main/resources/maps/#map#/.."
+ * (avec #map# le nom de la map) et prend la priorité dans les appels de {@link #getImage(String)}.
+ * <p> (Par exemple, si le dossier "resources/game/" et "resources/maps/#map#/" contiennent un fichier "test.png",
+ * alors getImage(test) retournera l'{@link Image} contenue dans le dossier "maps/#map#/").
  */
 public final class Resources {
     private static final float DEFAULT_FONT_SIZE = 12;

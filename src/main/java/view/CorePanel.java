@@ -31,7 +31,6 @@ public abstract class CorePanel extends JLayeredPane {
         if (!panels.containsKey(layerIndex)) {
             super.add(panel, Integer.valueOf(layerIndex));
             panels.put(layerIndex, panel);
-            System.out.println(panels.keySet());
             revalidate();
         }
     }
@@ -47,7 +46,6 @@ public abstract class CorePanel extends JLayeredPane {
             panels.remove(layerIndex);
             remove(panel);
             repaint();
-            System.out.println(panels.keySet());
         }
     }
 

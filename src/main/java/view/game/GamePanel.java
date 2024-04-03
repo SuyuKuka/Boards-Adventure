@@ -87,81 +87,86 @@ public final class GamePanel extends CorePanel {
         }
     }
 
-    private void animate() {
-        // rien pour l'instant
+    public void animate(final GameState gameState) {
+        final double animationTime = gameState.getAnimationTime();
+        if (animationTime != -1 && elaspedTime >= animationTime) {
+            controller.setShouldStateUpdate(true);
+            lastGameUpdateTime = System.nanoTime();
+            elaspedTime = 0;
+        } else {
+            // animation des panels
+        }
+        elaspedTime = (double) (System.nanoTime() - lastGameUpdateTime) / NANO_S;
     }
 
     public void render(final GameState gameState) {
-        animate();
-        final double animationTime = gameState.getAnimationTime();
-        if (hasRendered) {
-            if (animationTime == -1) { // <- Actions où on attend l'input du joueur
-                return;
-            } else if (elaspedTime >= animationTime) { // Si l'action a dépassé le temps voulue, update le jeu.
-                controller.setShouldStateUpdate(true);
-                return;
-            }
-        } else {
-            final Player player = controller.getCurrentPlayer();
-            System.out.println(gameState);
-            switch (gameState) {
-                case GAME_START:
-                    playButton.setText("Début du jeu !");
-                    break;
-                case NEW_TURN:
-                    playButton.setText("Tour " + controller.getCurrentTurn() + " de " + player.getUsername());
-                    break;
-                case IN_JAIL:
-                    playButton.setText(player.getJailTurn() + " tour(s) en prison restant.");
-                    break;
-                case ROLL_DICE:
-                    playButton.setText("Cliquez pour lancer votre dé.");
-                    playButton.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(final MouseEvent e) {
-                            controller.setShouldStateUpdate(true);
-                            controller.playerRollDice("normal");
-                            playButton.removeMouseListener(playButton.getMouseListeners()[1]);
-                        }
-                    });
-                    break;
-                case PLAYER_MOVE:
-                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-                    revalidate();
-                    break;
-                case PLAYER_ARRIVED:
-                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-                    revalidate();
-                    break;
-                case NORMAL_CELL:
-                    playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
-                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-                    break;
-                case ASK_INTERSECTION:
-                    playerGraphicsMap.get(player).updatePosition();
-                    playButton.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(final MouseEvent e) {
-                            e.consume();
-                        }
-                    });
-                    addPanel(createIntersectionPanel(), INTERACTION);
-                    break;
-                case ASK_PROPERTY:
-                    addPanel(createPropertyPanel(), INTERACTION);
-                    break;
-                case ASK_SHOP:
-                    // addPanel(createShopPanel(), INTERACTION);
-                    break;
-                case END_TURN:
-                    playButton.setText("Fin du tour de " + player.getUsername() + ".");
-                    break;
-                default:
-                    break;
-            }
-            hasRendered = true;
+        final Player player = controller.getCurrentPlayer();
+        switch (gameState) {
+            case GAME_START:
+                playButton.setText("Début du jeu !");
+                break;
+            case NEW_TURN:
+                playButton.setText("Tour " + controller.getCurrentTurn() + " de " + player.getUsername());
+                break;
+            case IN_JAIL:
+                playButton.setText(player.getJailTurn() + " tour(s) en prison restant.");
+                break;
+            case ROLL_DICE:
+                playButton.setText("Cliquez pour lancer votre dé.");
+                playButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(final MouseEvent e) {
+                        controller.setShouldStateUpdate(true);
+                        controller.playerRollDice("normal");
+                        playButton.removeMouseListener(playButton.getMouseListeners()[1]);
+                    }
+                });
+                break;
+            case PLAYER_MOVE:
+                break;
+            case ASK_INTERSECTION:
+                playerGraphicsMap.get(player).updatePosition();
+                playButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(final MouseEvent e) {
+                        e.consume();
+                    }
+                });
+                addPanel(createIntersectionPanel(), INTERACTION);
+                break;
+            case PLAYER_ARRIVED:
+                playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
+                break;
+            case START:
+                break;
+            case CARD:
+                break;
+            case DANGER:
+                break;
+            case GAIN:
+                break;
+            case LOSS:
+                break;
+            case KINGDOM:
+                break;
+            case VOID:
+                break;
+            case TELEPORTATION:
+                break;
+            case ASK_PROPERTY:
+                addPanel(createPropertyPanel(), INTERACTION);
+                revalidate();
+                break;
+            case ASK_SHOP:
+                // addPanel(createShopPanel(), INTERACTION);
+                break;
+            case END_TURN:
+                revalidate();
+                playButton.setText("Fin du tour de " + player.getUsername() + ".");
+                break;
+            default:
+                break;
         }
-        elaspedTime = (double) (System.nanoTime() - lastGameUpdateTime) / NANO_S;
     }
 
     public void updateCurrentPlayerPosition() {
@@ -297,7 +302,11 @@ public final class GamePanel extends CorePanel {
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.playerBuyProperty(property);
+                if (!property.hasOwner()) {
+                    controller.playerBuyProperty(property);
+                } else {
+                    controller.playerUpgradeProperty(property);
+                }
                 controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);
                 revalidate();
@@ -307,6 +316,7 @@ public final class GamePanel extends CorePanel {
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
+                controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);
                 revalidate();
             }
