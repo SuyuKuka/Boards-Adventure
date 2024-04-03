@@ -285,12 +285,20 @@ public final class GamePanel extends CorePanel {
                 getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
 
         Property property = (Property) controller.getCurrentPlayerCell();
-        JLabel propertyName = SwingFactory.createTextLabel(
+        if (property.isAtHome(controller.getCurrentPlayer())) {
+            JLabel upgradeProperty = SwingFactory.createTextLabel(
+            "Veux tu ameliorer cette propriete ?\n",
+            "RifficFree", Color.BLACK, 32);
+            upgradeProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(upgradeProperty);
+        } else {
+            JLabel buyProperty = SwingFactory.createTextLabel(
             "Veux tu acheter cette propriete ?\n",
             "RifficFree", Color.BLACK, 32);
-        propertyName.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel propertyPrice = SwingFactory.createTextLabel("Nom de la propriete "
+            buyProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(buyProperty);
+        }
+        JLabel propertyPrice = SwingFactory.createTextLabel("\"Nom de la propriete\" "
             + property.getBuyPrices().get(property.getPropertyState()) + "$\n",
             "RifficFree", Color.BLACK, 18
         );
@@ -298,6 +306,7 @@ public final class GamePanel extends CorePanel {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
+
         JButton yes = new JButton("Oui");
         yes.addMouseListener(new MouseAdapter() {
             @Override
@@ -312,6 +321,7 @@ public final class GamePanel extends CorePanel {
                 revalidate();
             }
         });
+
         JButton no = new JButton("Non");
         no.addMouseListener(new MouseAdapter() {
             @Override
@@ -325,7 +335,6 @@ public final class GamePanel extends CorePanel {
         buttonPanel.add(no);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel.add(propertyName);
         panel.add(propertyPrice);
         panel.add(buttonPanel);
         return panel;
