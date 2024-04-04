@@ -382,8 +382,15 @@
 	{
 		"id" : 48,
 		"type" : "VOID",
-		"nextCellID" : 22,
+		"nextCellID" : 20,
 		"xPos" : 288,
 		"yPos" : 199
+	}
+	{
+		"id" : 301,
+		"type" : "GAIN",
+		"gain" : -50,
+		"xPos" : 540,
+		"yPos" : 108
 	}
 ]
