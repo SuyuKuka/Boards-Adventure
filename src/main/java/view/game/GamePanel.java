@@ -288,6 +288,7 @@ public final class GamePanel extends CorePanel {
                 getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
 
         controller.setCurrentCell();
+        controller.playerGainMoney();
         int gain = controller.getGainedMoney();
 
         JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
