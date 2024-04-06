@@ -11,6 +11,7 @@ import view.game.GamePanel;
 import game.Game;
 import model.Model;
 import model.config.cells.Cell;
+import model.config.cells.Gain;
 import model.config.cells.Property;
 import model.config.players.Player;
 
@@ -24,6 +25,7 @@ public final class Controller {
 
     private final Model model;
     private final GamePanel gamePanel;
+    private Cell currentCell;
     /** Vrai si le model devrait se mettre à jour. */
     private boolean shouldStateUpdate;
 
@@ -63,19 +65,27 @@ public final class Controller {
         getCurrentPlayer().setIntersectionCellID(cellID);
     }
 
-    public void playerBuyProperty(final Property property) {
-        property.buy(getCurrentPlayer());
+    public void playerGainMoney() {
+        getCurrentPlayer().getTeam().incrementMoney(getGainedMoney());
     }
 
-    public void playerUpgradeProperty(final Property property) {
-        property.upgrade(getCurrentPlayer());
+    public void playerBuyProperty() {
+        ((Property) currentCell).buy(getCurrentPlayer());
     }
+
+    public void playerUpgradeProperty() {
+        ((Property) currentCell).upgrade(getCurrentPlayer());
+    }
+
+    // region model getters/setters
 
     public Cell getCurrentPlayerCell() {
         return model.getGameMap().getCell(getCurrentPlayer().getPosition());
     }
 
-    // region model getters/setters
+    public void setCurrentCell() {
+        this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
+    }
 
     public void setShouldStateUpdate(final boolean shouldStateUpdate) {
         this.shouldStateUpdate = shouldStateUpdate;
@@ -95,6 +105,22 @@ public final class Controller {
 
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
+    }
+
+    public int getGainedMoney() {
+        return ((Gain) currentCell).getGain();
+    }
+
+    public int getPropertyPrice() {
+        return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState());
+    }
+
+    public boolean playerIsAtHome() {
+        return ((Property) currentCell).isAtHome(getCurrentPlayer());
+    }
+
+    public boolean propertyHasOwner() {
+        return ((Property) currentCell).hasOwner();
     }
 
     public void delete(final JComponent component) {

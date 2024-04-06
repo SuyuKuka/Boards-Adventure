@@ -18,4 +18,8 @@ public final class Gain extends Cell {
         player.getTeam().incrementMoney(gain);
         model.setGameState(GameState.GAIN);
     }
+
+    public int getGain() {
+        return gain;
+    }
 }

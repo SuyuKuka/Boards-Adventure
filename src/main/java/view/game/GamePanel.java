@@ -4,7 +4,7 @@ import static game.Game.NANO_S;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -19,12 +19,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import controller.Controller;
 import controller.resources.Resources;
 import model.GameState;
 import model.config.cells.Intersection;
-import model.config.cells.Property;
 import model.config.players.Player;
 import view.CorePanel;
 import view.SwingFactory;
@@ -144,6 +144,9 @@ public final class GamePanel extends CorePanel {
             case DANGER:
                 break;
             case GAIN:
+            System.out.println("GAIN");
+                addPanel(createGainPanel(), INTERACTION);
+                revalidate();
                 break;
             case LOSS:
                 break;
@@ -276,7 +279,50 @@ public final class GamePanel extends CorePanel {
 
     // #endregion
 
-    // #region Propriété
+    // #region Gain
+
+    public JPanel createGainPanel() {
+        JPanel panel = SwingFactory.createBoxLayoutPanel();
+        panel.setOpaque(true);
+        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
+                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+
+        controller.setCurrentCell();
+        int gain = controller.getGainedMoney();
+
+        JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
+            "RifficFree", Color.BLACK, 32);
+        gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(gainLabel);
+
+        final int[] remainingSeconds = {2};
+
+        JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
+        "RifficFree", Color.BLACK, 16);
+        closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(closeLabel);
+
+        Timer timer = new Timer(1000, e -> {
+            remainingSeconds[0]--;
+            if (remainingSeconds[0] > 0) {
+                closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
+            } else {
+                ((Timer) e.getSource()).stop();
+                removePanel(INTERACTION);
+                panel.revalidate();
+            }
+        });
+        timer.start();
+        return panel;
+    }
+
+    // #endregion
+
+    //#region Loss
+
+    //#endregion
+
+    // #region Property
 
     public JPanel createPropertyPanel() {
         JPanel panel = SwingFactory.createBoxLayoutPanel();
@@ -284,8 +330,10 @@ public final class GamePanel extends CorePanel {
         panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
                 getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
 
-        Property property = (Property) controller.getCurrentPlayerCell();
-        if (property.isAtHome(controller.getCurrentPlayer())) {
+        controller.setCurrentCell();
+        int price = controller.getPropertyPrice();
+        String name = "\"Nom de la propriete\"";
+        if (controller.playerIsAtHome()) {
             JLabel upgradeProperty = SwingFactory.createTextLabel(
             "Veux tu ameliorer cette propriete ?\n",
             "RifficFree", Color.BLACK, 32);
@@ -298,8 +346,7 @@ public final class GamePanel extends CorePanel {
             buyProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
             panel.add(buyProperty);
         }
-        JLabel propertyPrice = SwingFactory.createTextLabel("\"Nom de la propriete\" "
-            + property.getBuyPrices().get(property.getPropertyState()) + "$\n",
+        JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
             "RifficFree", Color.BLACK, 18
         );
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -311,10 +358,10 @@ public final class GamePanel extends CorePanel {
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                if (!property.hasOwner()) {
-                    controller.playerBuyProperty(property);
+                if (!controller.propertyHasOwner()) {
+                    controller.playerBuyProperty();
                 } else {
-                    controller.playerUpgradeProperty(property);
+                    controller.playerUpgradeProperty();
                 }
                 controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);

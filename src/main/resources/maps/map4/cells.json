@@ -19,7 +19,7 @@
 		"gain" : 100,
 		"xPos" : 582,
 		"yPos" : 305
-	},	
+	},
 	{
 		"id" : 2,
 		"type" : "PROPERTY",
@@ -385,11 +385,11 @@
 		"nextCellID" : 20,
 		"xPos" : 288,
 		"yPos" : 199
-	}
+	},
 	{
 		"id" : 301,
-		"type" : "GAIN",
-		"gain" : -50,
+		"type" : "LOSS",
+		"loss" : 50,
 		"xPos" : 540,
 		"yPos" : 108
 	}
