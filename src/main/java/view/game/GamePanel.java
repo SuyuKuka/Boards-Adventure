@@ -4,7 +4,6 @@ import static game.Game.NANO_S;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -15,7 +14,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -252,11 +250,6 @@ public final class GamePanel extends CorePanel {
 
     // #region Interaction Player/Game 3
 
-
-
-
-
-
     // #region Cellule Intersection
     private JPanel createIntersectionPanel() {
         final JPanel panel = new JPanel(null);
@@ -432,7 +425,8 @@ public final class GamePanel extends CorePanel {
         shop.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(shop);
 
-        
+        //LISTE ITEMS
+
         return panel;
     }
 
@@ -523,9 +517,10 @@ public final class GamePanel extends CorePanel {
             if (remainingSeconds[0] > 0) {
                 closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
             } else {
-                ((Timer) e.getSource()).stop();
                 removePanel(INTERACTION);
                 panel.revalidate();
+                controller.setShouldStateUpdate(true);
+                ((Timer) e.getSource()).stop();
             }
         });
         timer.start();

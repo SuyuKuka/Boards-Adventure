@@ -47,6 +47,7 @@ public final class Controller {
      */
     public void run() {
         if (shouldStateUpdate) {
+            System.out.println(model.getGameState());
             model.update();
             gamePanel.render(model.getGameState());
             shouldStateUpdate = false;
