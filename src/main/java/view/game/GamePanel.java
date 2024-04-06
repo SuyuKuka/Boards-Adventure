@@ -99,6 +99,8 @@ public final class GamePanel extends CorePanel {
         elaspedTime = (double) (System.nanoTime() - lastGameUpdateTime) / NANO_S;
     }
 
+    // #region Render
+
     public void render(final GameState gameState) {
         final Player player = controller.getCurrentPlayer();
         switch (gameState) {
@@ -144,11 +146,12 @@ public final class GamePanel extends CorePanel {
             case DANGER:
                 break;
             case GAIN:
-            System.out.println("GAIN");
                 addPanel(createGainPanel(), INTERACTION);
                 revalidate();
                 break;
             case LOSS:
+                addPanel(createLossPanel(), INTERACTION);
+                revalidate();
                 break;
             case KINGDOM:
                 break;
@@ -161,7 +164,8 @@ public final class GamePanel extends CorePanel {
                 revalidate();
                 break;
             case ASK_SHOP:
-                // addPanel(createShopPanel(), INTERACTION);
+                addPanel(createShopPanel(), INTERACTION);
+                revalidate();
                 break;
             case END_TURN:
                 revalidate();
@@ -171,6 +175,8 @@ public final class GamePanel extends CorePanel {
                 break;
         }
     }
+
+    // #endregion
 
     public void updateCurrentPlayerPosition() {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
@@ -246,6 +252,11 @@ public final class GamePanel extends CorePanel {
 
     // #region Interaction Player/Game 3
 
+
+
+
+
+
     // #region Cellule Intersection
     private JPanel createIntersectionPanel() {
         final JPanel panel = new JPanel(null);
@@ -282,6 +293,7 @@ public final class GamePanel extends CorePanel {
     // #region Gain
 
     public JPanel createGainPanel() {
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
         JPanel panel = SwingFactory.createBoxLayoutPanel();
         panel.setOpaque(true);
         panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
@@ -296,30 +308,34 @@ public final class GamePanel extends CorePanel {
         gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(gainLabel);
 
-        final int[] remainingSeconds = {2};
-
-        JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
-        "RifficFree", Color.BLACK, 16);
-        closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(closeLabel);
-
-        Timer timer = new Timer(1000, e -> {
-            remainingSeconds[0]--;
-            if (remainingSeconds[0] > 0) {
-                closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
-            } else {
-                ((Timer) e.getSource()).stop();
-                removePanel(INTERACTION);
-                panel.revalidate();
-            }
-        });
-        timer.start();
+        createCloseTimerLabel(panel);
         return panel;
     }
 
     // #endregion
 
     //#region Loss
+
+    public JPanel createLossPanel() {
+        System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
+        JPanel panel = SwingFactory.createBoxLayoutPanel();
+        panel.setOpaque(true);
+        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
+                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+
+        controller.setCurrentCell();
+        controller.playerLossMoney();
+        int loss = controller.getLossMoney();
+
+        JLabel lossLabel = SwingFactory.createTextLabel("Tu as perdu " + loss + " $ !\n",
+            "RifficFree", Color.BLACK, 32);
+            lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lossLabel);
+        System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
+
+        createCloseTimerLabel(panel);
+        return panel;
+    }
 
     //#endregion
 
@@ -393,19 +409,30 @@ public final class GamePanel extends CorePanel {
     // #region Shop
 
     private JPanel createShopPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setOpaque(false);
-        panel.setBackground(Color.RED);
-        panel.addComponentListener(new ComponentAdapter() {
+        JPanel panel = SwingFactory.createBoxLayoutPanel();
+        panel.setOpaque(true);
+        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
+                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+
+        controller.setCurrentCell();
+
+        JButton close = new JButton("X");
+        close.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        close.addMouseListener(new MouseAdapter() {
             @Override
-            public void componentResized(final ComponentEvent e) {
-                final int width = (int) (getFrame().getWidth() * 0.2);
-                final int height = (int) (getFrame().getHeight() * 0.25);
-                panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
+            public void mouseClicked(final MouseEvent e) {
+                controller.setShouldStateUpdate(true);
+                removePanel(INTERACTION);
+                revalidate();
             }
         });
-        // panel.setVisible(true);
+        panel.add(close);
+
+        JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
+        shop.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(shop);
+
+        
         return panel;
     }
 
@@ -483,4 +510,24 @@ public final class GamePanel extends CorePanel {
         return hasRendered;
     }
 
+    public void createCloseTimerLabel(JPanel panel) {
+        final int[] remainingSeconds = {2};
+
+        JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
+        "RifficFree", Color.BLACK, 16);
+        closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(closeLabel);
+
+        Timer timer = new Timer(1000, e -> {
+            remainingSeconds[0]--;
+            if (remainingSeconds[0] > 0) {
+                closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
+            } else {
+                ((Timer) e.getSource()).stop();
+                removePanel(INTERACTION);
+                panel.revalidate();
+            }
+        });
+        timer.start();
+    }
 }

@@ -52,8 +52,8 @@
 	},
 	{
 		"id" : 5,
-		"type" : "GAIN",
-		"gain" : 100,
+		"type" : "LOSS",
+		"loss" : 50,
 		"xPos" : 537,
 		"yPos" : 202
 	},

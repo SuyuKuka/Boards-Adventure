@@ -17,4 +17,8 @@ public final class Loss extends Cell {
         player.getTeam().incrementMoney(-loss);
         model.setGameState(GameState.LOSS);
     }
+
+    public int getLoss() {
+        return loss;
+    }
 }

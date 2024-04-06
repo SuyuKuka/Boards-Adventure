@@ -12,6 +12,7 @@ import game.Game;
 import model.Model;
 import model.config.cells.Cell;
 import model.config.cells.Gain;
+import model.config.cells.Loss;
 import model.config.cells.Property;
 import model.config.players.Player;
 
@@ -69,6 +70,10 @@ public final class Controller {
         getCurrentPlayer().getTeam().incrementMoney(getGainedMoney());
     }
 
+    public void playerLossMoney() {
+        getCurrentPlayer().getTeam().incrementMoney(-getLossMoney());
+    }
+
     public void playerBuyProperty() {
         ((Property) currentCell).buy(getCurrentPlayer());
     }
@@ -109,6 +114,10 @@ public final class Controller {
 
     public int getGainedMoney() {
         return ((Gain) currentCell).getGain();
+    }
+
+    public int getLossMoney() {
+        return ((Loss) currentCell).getLoss();
     }
 
     public int getPropertyPrice() {

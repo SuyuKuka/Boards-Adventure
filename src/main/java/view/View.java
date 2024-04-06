@@ -27,7 +27,7 @@ public final class View extends JFrame {
     public View(final Game game) {
         this.game = game;
         corePanel = null;
-        setTitle("Kingdom Revolution");
+        setTitle("Board's Adventure");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLACK);
         setLayout(null);
