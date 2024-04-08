@@ -23,6 +23,7 @@ public final class RoundedRectCell extends CellGraphics {
         COLORS.add(Color.YELLOW);
         COLORS.add(Color.ORANGE);
         COLORS.add(Color.LIGHT_GRAY);
+        COLORS.add(Color.MAGENTA);
     }
 
     private static final int ARC_WIDTH = 5;

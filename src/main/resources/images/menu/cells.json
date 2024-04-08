@@ -102,13 +102,6 @@
 		"yPos" : 139
 	},
 	{
-		"id" : 300,
-		"type" : "GAIN",
-		"gain" : -50,
-		"xPos" : 540,
-		"yPos" : 108
-	},
-	{
 		"id" : 12,
 		"type" : "SHOP",
 		"xPos" : 496,
