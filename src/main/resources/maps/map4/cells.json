@@ -288,7 +288,7 @@
 	{
 		"id" : 38,
 		"type" : "INTERSECTION",
-		"nextCellID" : [39, 700],
+		"nextCellID" : [39, 600],
 		"xPos" : 433,
 		"yPos" : 336
 	},
@@ -299,13 +299,6 @@
 		"group" : 5,
 		"xPos" : 441,
 		"yPos" : 307
-	},
-	{
-		"id" : 700,
-		"type" : "LOSS",
-		"loss" : 150,
-		"xPos" : 433,
-		"yPos" : 373
 	},
 	{
 		"id" : 40,
@@ -508,6 +501,25 @@
 		"yPos" : 13
 	},
 	{
+		"id" : 402,
+		"type" : "VOID",
+		"xPos" : 229,
+		"yPos" : 469
+	},
+	{
+		"id" : 403,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 229,
+		"yPos" : 429
+	},
+	{
+		"id" : 404,
+		"type" : "GAIN",
+		"gain" : 100,
+		"xPos" : 222,
+		"yPos" : 401
+	},
+	{
 		"id" : 500,
 		"type" : "VOID",
 		"xPos" : 40,
@@ -523,20 +535,118 @@
 	{
 		"id" : 502,
 		"type" : "VOID",
-		"xPos" : 229,
+		"xPos" : 664,
 		"yPos" : 469
 	},
 	{
-		"id" : 503,
-		"type" : "CARD_DEFENSE",
-		"xPos" : 229,
-		"yPos" : 429
+		"id" : 600,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 434,
+		"yPos" : 387
 	},
 	{
-		"id" : 504,
+		"id" : 601,
+		"type" : "SHOP",
+		"xPos" : 437,
+		"yPos" : 416
+	},
+	{
+		"id" : 602,
 		"type" : "GAIN",
-		"gain" : 100,
-		"xPos" : 222,
-		"yPos" : 401
+		"gain" : 300,
+		"xPos" : 363,
+		"yPos" : 444
+	},
+	{
+		"id" : 603,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 379,
+		"yPos" : 470
+	},
+	{
+		"id" : 604,
+		"type" : "VOID",
+		"xPos" : 408,
+		"yPos" : 471
+	},
+	{
+		"id" : 605,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 436,
+		"yPos" : 470
+	},
+	{
+		"id" : 606,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 462,
+		"yPos" : 456
+	},
+	{
+		"id" : 607,
+		"type" : "DANGER",
+		"xPos" : 492,
+		"yPos" : 456
+	},
+	{
+		"id" : 608,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 520,
+		"yPos" : 457
+	},
+	{
+		"id" : 609,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 548,
+		"yPos" : 457
+	},
+	{
+		"id" : 610,
+		"type" : "KINGDOM",
+		"xPos" : 576,
+		"yPos" : 457
+	},
+	{
+		"id" : 611,
+		"type" : "VOID",
+		"xPos" : 639,
+		"yPos" : 457
+	},
+	{
+		"id" : 612,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 640,
+		"yPos" : 426
+	},
+	{
+		"id" : 613,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 641,
+		"yPos" : 394
+	},
+	{
+		"id" : 614,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 661,
+		"yPos" : 374
+	},
+	{
+		"id" : 615,
+		"type" : "VOID",
+		"xPos" : 678,
+		"yPos" : 351
+	},
+	{
+		"id" : 616,
+		"type" : "GAIN",
+		"gain" : 350,
+		"xPos" : 651,
+		"yPos" : 340
 	}
 ]
