@@ -361,7 +361,7 @@
 	{
 		"id" : 48,
 		"type" : "VOID",
-		"nextCellID" : 20,
+		"nextCellID" : 19,
 		"xPos" : 288,
 		"yPos" : 199
 	},
@@ -496,7 +496,7 @@
 	{
 		"id" : 401,
 		"type" : "TELEPORTATION",
-		"targetCell" : 0,
+		"targetCell" : 402,
 		"xPos" : 409,
 		"yPos" : 13
 	},
@@ -516,6 +516,7 @@
 		"id" : 404,
 		"type" : "GAIN",
 		"gain" : 100,
+		"nextCellID" : 32,
 		"xPos" : 222,
 		"yPos" : 401
 	},
@@ -528,13 +529,14 @@
 	{
 		"id" : 501,
 		"type" : "TELEPORTATION",
-		"targetCell" : 0,
+		"targetCell" : 502,
 		"xPos" : 11,
 		"yPos" : 202
 	},
 	{
 		"id" : 502,
 		"type" : "VOID",
+		"nextCellID" : 611,
 		"xPos" : 664,
 		"yPos" : 469
 	},
@@ -646,6 +648,7 @@
 		"id" : 616,
 		"type" : "GAIN",
 		"gain" : 350,
+		"nextCellID" : 0,
 		"xPos" : 651,
 		"yPos" : 340
 	}
