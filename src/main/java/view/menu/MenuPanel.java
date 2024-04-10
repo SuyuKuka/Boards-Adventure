@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
@@ -15,6 +16,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.awt.GridLayout;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -495,33 +500,33 @@ public final class MenuPanel extends CorePanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
-                JPanel mapPanel = new JPanel(new GridLayout(9, 1));
+                JPanel mapPanel = new JPanel(new GridLayout(8, 1));
 
-                JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.");
+                JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.", 10);
                 gainCase.setBackground(Color.CYAN);
                 mapPanel.add(gainCase);  // gain
-                JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.");
+                JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.", 10);
                 lossCase.setBackground(Color.CYAN);
                 mapPanel.add(lossCase);  // loss
-                JPanel defenseCase = createCaseExplanationPanel("card_defense", "Défense: Vous protège face aux dangers.");
-                defenseCase.setBackground(Color.CYAN);
-                mapPanel.add(defenseCase);    // defense
-                JPanel dangerCase = createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...");
+                //JPanel defenseCase = createCaseExplanationPanel("card_defense", "Défense: Vous protège face aux dangers.", 10);
+                //defenseCase.setBackground(Color.CYAN);
+                //mapPanel.add(defenseCase);    // defense
+                JPanel dangerCase = createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
                 dangerCase.setBackground(Color.CYAN);
                 mapPanel.add(dangerCase);    // danger
-                JPanel intersectionCase = createCaseExplanationPanel("intersection", "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.");
+                JPanel intersectionCase = createCaseExplanationPanel("intersection", "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
                 intersectionCase.setBackground(Color.CYAN);
                 mapPanel.add(intersectionCase);    // intersection
-                JPanel kingdomCase = createCaseExplanationPanel("kingdom", "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !");
+                JPanel kingdomCase = createCaseExplanationPanel("kingdom", "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
                 kingdomCase.setBackground(Color.CYAN);
                 mapPanel.add(kingdomCase);    // kingdom
-                JPanel propertyCase = createCaseExplanationPanel("property", "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.");
+                JPanel propertyCase = createCaseExplanationPanel("property", "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
                 propertyCase.setBackground(Color.CYAN);
                 mapPanel.add(propertyCase);    // property
-                JPanel shopCase = createCaseExplanationPanel("shop", "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.");
+                JPanel shopCase = createCaseExplanationPanel("shop", "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.", 10);
                 shopCase.setBackground(Color.CYAN);
                 mapPanel.add(shopCase);    // shop
-                JPanel voidCase = createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.'");
+                JPanel voidCase = createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.", 10);
                 voidCase.setBackground(Color.CYAN);
                 mapPanel.add(voidCase);    // void
 
@@ -546,21 +551,10 @@ public final class MenuPanel extends CorePanel {
         return panel;
     }
 
-    /*private JPanel createCaseExplanationPanel(String img, String description) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
-        JTextArea descriptionTextArea = new JTextArea(description);
-        descriptionTextArea.setEditable(false);
-        descriptionTextArea.setLineWrap(true);
-        descriptionTextArea.setWrapStyleWord(true);
-        descriptionTextArea.setBackground(Color.CYAN);
-        descriptionTextArea.setFont(Resources.getFont("RifficFree", 11));
-        panel.add(iconLabel, BorderLayout.WEST);
-        panel.add(descriptionTextArea, BorderLayout.CENTER);
-        return panel;
-    }*/
+    private JPanel createCaseExplanationPanel(String img, String description, int imageSize) {
+        BufferedImage caseImage = loadImage(img);
+        caseImage = resizeImage(caseImage, imageSize, imageSize);
 
-    private JPanel createCaseExplanationPanel(String img, String description) {
         // Création du JPanel avec un GridBagLayout
         JPanel casePanel = new JPanel(new GridBagLayout());
         // Création des contraintes pour le placement des composants
@@ -568,7 +562,7 @@ public final class MenuPanel extends CorePanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(3, 3, 3, 3); // Ajout d'une marge de 5 pixels de chaque côté
+        gbc.insets = new Insets(5, 3, 5, 3);
     
         // Ajout de l'image de la case
         JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
@@ -581,6 +575,24 @@ public final class MenuPanel extends CorePanel {
         casePanel.add(descriptionLabel, gbc);
     
         return casePanel;
+    }
+
+    // VOIR COMMENT MODIFIER POUR AJUSTER CORRECTEMENT IMG DEFENSE
+    private static BufferedImage loadImage(String filename) {
+        try {
+            return ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        graphics2D.dispose();
+        return resizedImage;
     }
 
 
