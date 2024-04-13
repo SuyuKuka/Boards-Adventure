@@ -48,7 +48,7 @@ public final class GameMap {
         return "mapName : " + mapName + ", Nombre de Cells accessibles : " + walkableCells.size();
     }
 
-    public ArrayList<CardManagement> getCards() {
+    public ArrayList<CardEffect> getCards() {
         return cards;
     }
 
