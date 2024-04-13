@@ -154,8 +154,7 @@ public final class Model {
                 return GameState.ASK_SHOP;
             case TELEPORTATION:
                 return GameState.TELEPORTATION;
-            case CARD_ATTACK:
-            case CARD_DEFENSE:
+            case CARD:
                 return GameState.CARD;
             case KINGDOM:
                 return GameState.KINGDOM;
