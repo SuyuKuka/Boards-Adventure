@@ -2,7 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 
-import controller.resources.Resources;
 import view.View;
 import view.game.GamePanel;
 
@@ -27,7 +26,7 @@ public final class Controller {
     public Controller(final Game game, final Model model, final View view) {
         this.game = game;
         this.model = model;
-        gamePanel = view.initNewGamePanel(this, Resources.getGameMapGraphics());
+        gamePanel = view.initNewGamePanel(this);
         shouldGameUpdate = false;
         gamePanel.revalidate();
         run();

@@ -32,41 +32,51 @@ public final class Resources {
     private static HashMap<String, Font> fonts = new HashMap<>();
     private static HashMap<String, Image> commonImages = new HashMap<>();
     private static HashMap<String, Image> modeImages = new HashMap<>();
-    private static GameMapGraphics gameMapGraphics = null;
 
-    static {
+    /**
+     * Charge les ressources communes au mode de jeu {@link game.Mode#GAME} et {@link game.Mode#MENU}.
+     * <p> Ces ressources sont constamment chargées par l'application.
+     */
+    public static void loadCommonResources() {
         loadImages(new File(PATH + "images/"), commonImages, false);
         loadFonts(new File(PATH + "fonts/"), fonts);
     }
 
+    /**
+     * Charge les ressources du menu.
+     * <p> Ces ressources sont déchargées lorsque le joueur est en jeu.
+     */
     public static void loadMenuResources() {
         modeImages.clear();
         loadImages(new File(PATH + "images/menu/"), modeImages, true);
     }
 
-    public static void loadGameResources(final String map) {
+    /**
+     * Charge les ressources du jeu ainsi que ceux de la map choisie.
+     * <p> Ces ressources sont déchargées lorsque le joueur est dans le menu.
+     * @param mapName nom du dossier de la map (dans resources\maps\).
+     * @return {@link GameMapGraphics}
+     */
+    public static GameMapGraphics loadGameResources(final String mapName) {
         modeImages.clear();
         loadImages(new File(PATH + "images/game/"), modeImages, true);
-        loadImages(new File(PATH + "maps/" + map), modeImages, true);
-        loadGameMapGraphics(map);
-    }
-
-    public static void clearModeResources() {
-        modeImages.clear();
+        loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
+        return loadGameMapGraphics(mapName);
     }
 
     // region gamemap/cells
 
-    public static void loadGameMapGraphics(final String mapName) {
+    public static GameMapGraphics loadGameMapGraphics(final String mapName) {
         try {
             File map = new File(PATH + "maps/" + mapName);
             HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
             HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-            gameMapGraphics = new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
+            return new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("Resource/maps directory not found.");
         }
+        return null;
     }
 
     private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
@@ -166,14 +176,6 @@ public final class Resources {
             return commonImages.get(key);
         }
         return commonImages.get("placeholder32_32");
-    }
-
-    public static void setGameMapGraphics(GameMapGraphics gameMapGraphics) {
-        Resources.gameMapGraphics = gameMapGraphics;
-    }
-
-    public static GameMapGraphics getGameMapGraphics() {
-        return gameMapGraphics;
     }
 
     // endregion

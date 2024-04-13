@@ -1,20 +1,22 @@
 package view.game;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import controller.resources.Resources;
 import model.config.players.Player;
 import view.game.cellsgraphics.CellGraphics;
 
-public final class PlayerGraphics extends JLabel {
+public final class PlayerGraphics extends JPanel {
 
     private static final int PLAYER_DEFAULT_WIDTH = 14;
     private static final int PLAYER_DEFAULT_HEIGHT = 14;
 
-    private final GameMapGraphics gameMapGraphics;
+    private final GamePanel gamePanel;
 
     private int playerWidth;
     private int playerHeight;
@@ -25,36 +27,47 @@ public final class PlayerGraphics extends JLabel {
     private Image playerImage;
 
 
-    public PlayerGraphics(final Player player, final GameMapGraphics gameMapGraphics) {
+    public PlayerGraphics(final Player player, final GamePanel gamePanel) {
         this.player = player;
-        this.gameMapGraphics = gameMapGraphics;
-        playerWidth = PLAYER_DEFAULT_WIDTH;
-        playerHeight = PLAYER_DEFAULT_HEIGHT;
-        final CellGraphics cellGraphics = gameMapGraphics.getCellGraphics(player.getPosition());
+        this.gamePanel = gamePanel;
+        playerWidth = (int) (PLAYER_DEFAULT_WIDTH * gamePanel.getZoom());
+        playerHeight = (int) (PLAYER_DEFAULT_HEIGHT * gamePanel.getZoom());
+        System.out.println(playerWidth);
+        final CellGraphics cellGraphics = gamePanel.getGameMapGraphics().getCellGraphics(player.getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
         playerImage = Resources.getImage("j" + player.getPlayerID());
-        setHorizontalAlignment(JLabel.CENTER);
-        setVerticalAlignment(JLabel.CENTER);
-        setBounds(0, 0, playerWidth, playerHeight);
-        setIcon(new ImageIcon(playerImage.getScaledInstance(playerWidth, playerHeight, Image.SCALE_SMOOTH)));
+        setBounds(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
         setLocation(xPos - cellGraphics.getCellWidth() / 4, yPos - cellGraphics.getCellHeight() / 4);
+        setOpaque(false);
         setVisible(true);
+    }
+
+    @Override
+    public void paintComponent(final Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        AffineTransform at = new AffineTransform();
+        final double zoom = gamePanel.getZoom();
+        // at.translate(gamePanel.getWidth() / 2, gamePanel.getHeight() / 2);
+        // at.scale(zoom, zoom);
+        // at.translate(-588, -263);
+        g2d.transform(at);
+        g2d.drawImage(playerImage, 0, 0, playerWidth, playerHeight, this);
     }
 
     public void update(final double zoomScaleX, final double zoomScaleY) {
         playerWidth = (int) (PLAYER_DEFAULT_WIDTH * zoomScaleX);
         playerHeight = (int) (PLAYER_DEFAULT_HEIGHT * zoomScaleY);
-        final CellGraphics cellGraphics = gameMapGraphics.getCellGraphics(player.getPosition());
+        final CellGraphics cellGraphics = gamePanel.getGameMapGraphics().getCellGraphics(player.getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
-        setBounds(0, 0, playerWidth, playerHeight);
+        setBounds(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
         setLocation(xPos - cellGraphics.getCellWidth() / 4, yPos - cellGraphics.getCellHeight() / 4);
-        setIcon(new ImageIcon(playerImage.getScaledInstance(playerWidth, playerHeight, Image.SCALE_SMOOTH)));
     }
 
     public void updatePosition() {
-        final CellGraphics cellGraphics = gameMapGraphics.getCellGraphics(player.getPosition());
+        final CellGraphics cellGraphics = gamePanel.getGameMapGraphics().getCellGraphics(player.getPosition());
         setLocation(cellGraphics.getXPos() - cellGraphics.getCellWidth() / 4,
             cellGraphics.getYPos() - cellGraphics.getCellHeight() / 4);
     }

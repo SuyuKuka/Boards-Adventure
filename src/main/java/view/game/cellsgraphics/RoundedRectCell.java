@@ -33,8 +33,8 @@ public final class RoundedRectCell extends CellGraphics {
     }
 
     @Override
-    public void paint(final Graphics g) {
-        super.paint(g);
+    public void paintComponent(final Graphics g) {
+        super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
         final Property cell = (Property) getCell();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

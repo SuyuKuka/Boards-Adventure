@@ -7,51 +7,60 @@ import java.util.Random;
 import controller.Controller;
 import controller.resources.Resources;
 import model.Model;
+import model.config.GameMap;
 import model.config.Team;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
+import view.game.GameMapGraphics;
 
 /**
- * Classe mère du jeu.
- * Le jeu est scindé en 2 parties : le menu et le jeu en lui-même.
- * Le menu ne contient qu'un fichier {@link MenuPanel} qui s'occupe de la vue dans le menu.
- * Lorsqu'une partie est lancée, un {@link Model} et un {@link Controller} est crée.
- * La vue est modifiée pour remplacer le {@link MenuPanel} par un {@link GamePanel}.
+ * Classe mère de l'application.
+ * <p> Crée un objet {@link view.View} au lancement du programme et initialise {@link controller.resources.Resources}
+ * et l'application en fonction de {@link #mode}.
+ *
+ * <p> L'application est scindé en 2 parties : le menu et le jeu en lui-même.
+ *
+ * <p> Lorsque le joueur est dans le menu :
+ * un {@link view.menu.MenuPanel} est crée et {@link view.View} agit de manière indépendante.
+ *
+ * <p> Lorsque le joueur est dans le jeu :
+ * un {@link view.game.GamePanel}, un {@link controller.Controller} et un {@link model.Model} sont créés
+ * et le {@link model.Model}, {@link controller.Controller} et la {@link view.View} agissent ensembles.
+ *
+ * @see controller.Controller
+ * @see model.Model
+ * @see view.View
+ * @see controller.resources.Resources
  */
 public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final Mode DEFAULT_MODE = Mode.MENU;
     private static final String DEFAULT_GAME_MAP_NAME = "map4";
 
-    private final long nanoStartTime = System.nanoTime();
-    private long nanoUpTime = 0;
+    private Controller controller = null;
+    private Model model = null;
+    private final View view;
 
-    private Model model;
-    private View view;
-    private Controller controller;
-
-    private Mode mode;
+    private Mode mode = Mode.GAME;
     /** Si vraie, alors change de mode.*/
-    private volatile boolean switchMode;
+    private volatile boolean switchMode = false;
 
     private Game() {
-        this.mode = DEFAULT_MODE;
-        controller = null;
-        model = null;
-        switchMode = false;
+        Resources.loadCommonResources();
         view = new View(this);
         init();
         run();
     }
 
+    /**
+     * Méthode qui initialise l'application en fonction de {@link #mode}.
+     */
     private void init() {
         if (view.hasPanel()) {
             view.removePanel();
-            Resources.clearModeResources();
         }
         switch (mode) {
             case MENU:
@@ -59,16 +68,14 @@ public final class Game {
                 view.initNewMenuPanel();
                 break;
             case GAME:
-                Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
-                if (Resources.getGameMapGraphics() == null) {
-                    System.out.println("Map non reconnu.");
-                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et "
-                        + "les maps disponibles dans le dossier resources/maps");
+                GameMapGraphics gameMapGraphics = Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
+                if (gameMapGraphics == null) {
+                    System.out.println("Map non reconnu.\nVoir DEFAULT_GAME_MAP_NAME dans Game.java et "
+                    + "les maps disponibles dans le dossier resources/maps");
                     System.exit(0);
                 }
                 if (model == null) {
-                    model = createTestModel();
-                    System.out.println("MAP PAR DEFAUT GENEREE");
+                    model = createTestModel(gameMapGraphics);
                 }
                 controller = new Controller(this, model, view);
                 break;
@@ -77,6 +84,9 @@ public final class Game {
         }
     }
 
+    /**
+     * Méthode qui update le jeu.
+     */
     private void run() {
         while (true) {
             if (switchMode) {
@@ -96,7 +106,7 @@ public final class Game {
         }
     }
 
-    private Model createTestModel() {
+    private Model createTestModel(final GameMapGraphics gameMapGraphics) {
         final HashMap<String, Integer> gameSettings = new HashMap<>();
         gameSettings.put("turns", 45);
         final ArrayList<Player> players = new ArrayList<>();
@@ -104,7 +114,8 @@ public final class Game {
         // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
         // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
         // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
-        return new Model(Resources.getGameMapGraphics().getGameMap(), gameSettings, players);
+        System.out.println("MAP PAR DEFAUT GENEREE");
+        return new Model(gameMapGraphics.getGameMap(), gameSettings, players);
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {

@@ -19,7 +19,7 @@
 		"gain" : 100,
 		"xPos" : 582,
 		"yPos" : 305
-	},	
+	},
 	{
 		"id" : 2,
 		"type" : "PROPERTY",
@@ -52,8 +52,8 @@
 	},
 	{
 		"id" : 5,
-		"type" : "GAIN",
-		"gain" : 100,
+		"type" : "LOSS",
+		"loss" : 50,
 		"xPos" : 537,
 		"yPos" : 202
 	},
@@ -102,13 +102,6 @@
 		"yPos" : 139
 	},
 	{
-		"id" : 300,
-		"type" : "LOSS",
-		"loss" : 50,
-		"xPos" : 540,
-		"yPos" : 108
-	},
-	{
 		"id" : 12,
 		"type" : "SHOP",
 		"xPos" : 496,
@@ -116,9 +109,8 @@
 	},
 	{
 		"id" : 13,
-		"type" : "GAIN",
-		"gain" : 150,
-		"xPos" : 464,
+		"type" : "VOID",
+		"xPos" : 466,
 		"yPos" : 138
 	},
 	{
@@ -154,8 +146,8 @@
 	},
 	{
 		"id" : 18,
-		"type" : "GAIN",
-		"gain" : 175,
+		"type" : "LOSS",
+		"loss" : 125,
 		"xPos" : 314,
 		"yPos" : 163
 	},
@@ -171,7 +163,7 @@
 		"id" : 20,
 		"type" : "GAIN",
 		"gain" : 175,
-		"xPos" : 255,
+		"xPos" : 252,
 		"yPos" : 169
 	},
 	{
@@ -179,13 +171,13 @@
 		"type" : "PROPERTY",
 		"prices" : [200, 250, 300, 400],
 		"group" : 3,
-		"xPos" : 177,
-		"yPos" : 178
+		"xPos" : 182,
+		"yPos" : 175
 	},
 	{
 		"id" : 22,
 		"type" : "DANGER",
-		"xPos" : 148,
+		"xPos" : 152,
 		"yPos" : 184
 	},
 	{
@@ -193,14 +185,14 @@
 		"type" : "PROPERTY",
 		"prices" : [225, 275, 325, 425],
 		"group" : 3,
-		"xPos" : 121,
-		"yPos" : 195
+		"xPos" : 124,
+		"yPos" : 193
 	},
 	{
 		"id" : 24,
 		"type" : "INTERSECTION",
-		"nextCellID" : [25, 400],
-		"xPos" : 93,
+		"nextCellID" : [25, 500],
+		"xPos" : 95,
 		"yPos" : 202
 	},
 	{
@@ -209,12 +201,6 @@
 		"gain" : 200,
 		"xPos" : 99,
 		"yPos" : 228
-	},
-	{
-		"id" : 400,
-		"type" : "VOID",
-		"xPos" : 40,
-		"yPos" : 204
 	},
 	{
 		"id" : 26,
@@ -302,7 +288,7 @@
 	{
 		"id" : 38,
 		"type" : "INTERSECTION",
-		"nextCellID" : [39, 500],
+		"nextCellID" : [39, 600],
 		"xPos" : 433,
 		"yPos" : 336
 	},
@@ -313,13 +299,6 @@
 		"group" : 5,
 		"xPos" : 441,
 		"yPos" : 307
-	},
-	{
-		"id" : 500,
-		"type" : "LOSS",
-		"loss" : 150,
-		"xPos" : 433,
-		"yPos" : 373
 	},
 	{
 		"id" : 40,
@@ -382,8 +361,295 @@
 	{
 		"id" : 48,
 		"type" : "VOID",
-		"nextCellID" : 22,
+		"nextCellID" : 19,
 		"xPos" : 288,
 		"yPos" : 199
+	},
+	{
+		"id" : 300,
+		"type" : "SHOP",
+		"xPos" : 540,
+		"yPos" : 108
+	},
+	{
+		"id" : 301,
+		"type" : "LOSS",
+		"loss" : 50,
+		"xPos" : 534,
+		"yPos" : 80
+	},
+	{
+		"id" : 302,
+		"type" : "PROPERTY",
+		"prices" : [150, 200, 250, 350],
+		"group" : 7,
+		"xPos" : 504,
+		"yPos" : 74
+	},
+	{
+		"id" : 303,
+		"type" : "PROPERTY",
+		"prices" : [150, 200, 250, 350],
+		"group" : 7,
+		"xPos" : 472,
+		"yPos" : 74
+	},
+	{
+		"id" : 304,
+		"type" : "VOID",	
+		"xPos" : 445,
+		"yPos" : 74
+	},
+	{
+		"id" : 305,
+		"type" : "INTERSECTION",
+		"nextCellID" : [306, 400],
+		"xPos" : 417,
+		"yPos" : 71
+	},
+	{
+		"id" : 306,
+		"type" : "PROPERTY",
+		"prices" : [150, 200, 250, 350],
+		"group" : 7,
+		"xPos" : 385,
+		"yPos" : 79
+	},
+	{
+		"id" : 307,
+		"type" : "GAIN",
+		"gain" : 100,
+		"xPos" : 353,
+		"yPos" : 77
+	},
+	{
+		"id" : 308,
+		"type" : "PROPERTY",
+		"prices" : [175, 225, 275, 375],
+		"group" : 7,
+		"xPos" : 322,
+		"yPos" : 80
+	},
+	{
+		"id" : 309,
+		"type" : "DANGER",
+		"xPos" : 300,
+		"yPos" : 54
+	},
+	{
+		"id" : 310,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 8,
+		"xPos" : 269,
+		"yPos" : 50
+	},
+	{
+		"id" : 311,
+		"type" : "GAIN",
+		"gain" : 150,
+		"xPos" : 239,
+		"yPos" : 46
+	},
+	{
+		"id" : 312,
+		"type" : "VOID",
+		"xPos" : 211,
+		"yPos" : 38
+	},
+	{
+		"id" : 313,
+		"type" : "GAIN",
+		"gain" : 150,
+		"xPos" : 189,
+		"yPos" : 59
+	},
+	{
+		"id" : 314,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 8,
+		"xPos" : 143,
+		"yPos" : 98
+	},
+	{
+		"id" : 315,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 130,
+		"yPos" : 130
+	},
+	{
+		"id" : 316,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 450],
+		"group" : 8,
+		"xPos" : 130,
+		"yPos" : 160
+	},
+	{
+		"id" : 400,
+		"type" : "LOSS",
+		"loss" : 100,
+		"xPos" : 410,
+		"yPos" : 44
+	},
+	{
+		"id" : 401,
+		"type" : "TELEPORTATION",
+		"targetCell" : 402,
+		"xPos" : 409,
+		"yPos" : 13
+	},
+	{
+		"id" : 402,
+		"type" : "VOID",
+		"xPos" : 229,
+		"yPos" : 469
+	},
+	{
+		"id" : 403,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 229,
+		"yPos" : 429
+	},
+	{
+		"id" : 404,
+		"type" : "GAIN",
+		"gain" : 100,
+		"nextCellID" : 32,
+		"xPos" : 222,
+		"yPos" : 401
+	},
+	{
+		"id" : 500,
+		"type" : "VOID",
+		"xPos" : 40,
+		"yPos" : 202
+	},
+	{
+		"id" : 501,
+		"type" : "TELEPORTATION",
+		"targetCell" : 502,
+		"xPos" : 11,
+		"yPos" : 202
+	},
+	{
+		"id" : 502,
+		"type" : "VOID",
+		"nextCellID" : 611,
+		"xPos" : 664,
+		"yPos" : 469
+	},
+	{
+		"id" : 600,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 434,
+		"yPos" : 387
+	},
+	{
+		"id" : 601,
+		"type" : "SHOP",
+		"xPos" : 437,
+		"yPos" : 416
+	},
+	{
+		"id" : 602,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 363,
+		"yPos" : 444
+	},
+	{
+		"id" : 603,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 379,
+		"yPos" : 470
+	},
+	{
+		"id" : 604,
+		"type" : "VOID",
+		"xPos" : 408,
+		"yPos" : 471
+	},
+	{
+		"id" : 605,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 436,
+		"yPos" : 470
+	},
+	{
+		"id" : 606,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 462,
+		"yPos" : 456
+	},
+	{
+		"id" : 607,
+		"type" : "DANGER",
+		"xPos" : 492,
+		"yPos" : 456
+	},
+	{
+		"id" : 608,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 520,
+		"yPos" : 457
+	},
+	{
+		"id" : 609,
+		"type" : "GAIN",
+		"gain" : 300,
+		"xPos" : 548,
+		"yPos" : 457
+	},
+	{
+		"id" : 610,
+		"type" : "KINGDOM",
+		"xPos" : 576,
+		"yPos" : 457
+	},
+	{
+		"id" : 611,
+		"type" : "VOID",
+		"xPos" : 639,
+		"yPos" : 457
+	},
+	{
+		"id" : 612,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 640,
+		"yPos" : 426
+	},
+	{
+		"id" : 613,
+		"type" : "LOSS",
+		"loss" : 200,
+		"xPos" : 641,
+		"yPos" : 394
+	},
+	{
+		"id" : 614,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 661,
+		"yPos" : 374
+	},
+	{
+		"id" : 615,
+		"type" : "VOID",
+		"xPos" : 678,
+		"yPos" : 351
+	},
+	{
+		"id" : 616,
+		"type" : "GAIN",
+		"gain" : 350,
+		"nextCellID" : 0,
+		"xPos" : 651,
+		"yPos" : 340
 	}
 ]

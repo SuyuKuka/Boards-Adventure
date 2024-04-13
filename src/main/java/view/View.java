@@ -1,5 +1,7 @@
 package view;
 
+import java.util.HashMap;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -13,10 +15,18 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import game.Game;
-import view.game.GameMapGraphics;
 import view.game.GamePanel;
+import view.game.cellsgraphics.CellGraphics;
 import view.menu.MenuPanel;
 
+/**
+ * Classe mère de la vue qui s'occupe de la fenêtre de l'application et contient un {@link CorePanel}.
+ * <p> Lorsque le joueur est dans le menu, un {@link view.menu.MenuPanel} est crée et affecté à {@link #corePanel}.
+ * <p> Lorsque le joueur est en jeu, un {@link view.game.GamePanel} est crée et affecté à {@link #corePanel}.
+ * <p> La classe mère se charge de redimensionner les éléments que composent {@link #corePanel}.
+ *
+ * @see CorePanel
+ */
 public final class View extends JFrame {
     // 720 * 1 ou 1366 * 1.897.
     private static final int MIN_WIDTH = 720;
@@ -63,8 +73,8 @@ public final class View extends JFrame {
         setVisible(true);
     }
 
-    public GamePanel initNewGamePanel(final Controller controller, final GameMapGraphics gameMapGraphics) {
-        corePanel = new GamePanel(this, controller, gameMapGraphics);
+    public GamePanel initNewGamePanel(final Controller controller, final HashMap<Integer, CellGraphics> cellsGraphics) {
+        corePanel = new GamePanel(this, controller, cellsGraphics);
         final Container container = getContentPane();
         for (JPanel panel : corePanel.getPanels().values()) {
             panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));

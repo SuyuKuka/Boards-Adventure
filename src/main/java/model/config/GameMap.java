@@ -5,9 +5,16 @@ import java.util.HashMap;
 import model.config.cells.Cell;
 import model.config.cells.Start;
 
+/**
+ * Classe qui contient les données (non graphiques) d'une map.
+ * Un {@link GameMap} contient :
+ * <p> - Une liste de {@link model.config.cells.Cell} qui composent le plateau du jeu.
+ * <p> - Liste de cartes disponibles (pour les {@link model.config.cells.Card} {A IMPLEMENTER}).
+ */
 public final class GameMap {
+
     private final String mapName;
-    /** Liste qui contient toutes les cellules accessibles à pied par les joueurs (la case 0 est toujours le START). */
+    /** Map qui contient toutes les cellules accessibles à pied par les joueurs. */
     private final HashMap<Integer, Cell> walkableCells = new HashMap<>();
     /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (trône, prison, ...). */
     private final HashMap<Integer, Cell> specialCells = new HashMap<>();

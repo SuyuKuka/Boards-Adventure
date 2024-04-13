@@ -5,10 +5,13 @@ import java.util.HashMap;
 import model.config.GameMap;
 import view.game.cellsgraphics.CellGraphics;
 
+/**
+ * Classe qui contient toutes les données uniquement graphiques d'une {@link GameMap}.
+ * Elle contient :
+ * <p> - Une {@link GameMap}.
+ * <p> - Des {@link CellGraphics} pour chaque {@link model.config.cells.Cell} du jeu.
+ */
 public final class GameMapGraphics {
-
-    private static final int CELL_HEIGHT = 25;
-    private static final int CELL_WIDTH = 25;
 
     private final GameMap gameMap;
     private final HashMap<Integer, CellGraphics> cellsGraphics;

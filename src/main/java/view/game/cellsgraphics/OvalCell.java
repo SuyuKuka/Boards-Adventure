@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -28,9 +29,10 @@ public final class OvalCell extends CellGraphics {
     }
 
     @Override
-    public void paint(final Graphics g) {
-        super.paint(g);
+    public void paintComponent(final Graphics g) {
+        super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
+        final AffineTransform at = new AffineTransform();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.fillOval(0, 0, getCellWidth(), getCellHeight());
         final int inside = 3;

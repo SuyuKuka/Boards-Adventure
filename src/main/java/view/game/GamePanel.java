@@ -9,9 +9,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -37,11 +40,15 @@ public final class GamePanel extends CorePanel {
     private static final int PAUSE = 5;
 
     private final Controller controller;
-    private final GameMapGraphics gameMapGraphics;
+
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
+    /** zoom sur la map. */
+    private double zoom;
+    /** zoom sur les cellules x. (TEMPORAIRE). */
     private double zoomX;
+    /** zoom sur les cellules y. (TEMPORAIRE). */
     private double zoomY;
 
     private boolean hasRendered;
@@ -50,21 +57,22 @@ public final class GamePanel extends CorePanel {
 
     private JButton playButton;
 
-    public GamePanel(final View frame, final Controller controller, final GameMapGraphics gameMapGraphics) {
+    public GamePanel(final View frame, final Controller controller,
+        final HashMap<Integer, CellGraphics> cellsGraphics) {
         super(frame);
         this.controller = controller;
-        this.gameMapGraphics = gameMapGraphics;
-        this.cellsGraphics = gameMapGraphics.getCellsGraphics();
+        this.cellsGraphics = cellsGraphics;
         this.playerGraphicsMap = new HashMap<>();
         initValues();
         addPanel(createBackground(), BACKGROUND);
         addPanel(createCellsGraphics(), CELLS);
-        addPanel(createPlayersGraphics(), PLAYERS);
+        // addPanel(createPlayersGraphics(), PLAYERS);
         addPanel(createGUI(), GUI);
         setVisible(true);
     }
 
     private void initValues() {
+        zoom = 5;
         zoomX = ((double) getWidth() / getMinimumSize().width);
         zoomY = ((double) getHeight() / getMinimumSize().height) * 0.9;
         addComponentListener(new ComponentAdapter() {
@@ -78,7 +86,7 @@ public final class GamePanel extends CorePanel {
         hasRendered = false;
         lastGameUpdateTime = System.nanoTime();
         for (Player player : controller.getPlayers()) {
-            playerGraphicsMap.put(player, new PlayerGraphics(player, gameMapGraphics));
+            playerGraphicsMap.put(player, new PlayerGraphics(player, this));
         }
     }
 
@@ -171,12 +179,20 @@ public final class GamePanel extends CorePanel {
     // #region Background 0
 
     private JPanel createBackground() {
-        final JPanel panel = new JPanel() {
+        final JPanel panel = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                AffineTransform at = new AffineTransform();
                 Image image = Resources.getImage("board");
-                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                at.translate(getWidth() / 2, getHeight() / 2);
+                at.scale(zoom, zoom);
+                System.out.println(-playerGraphics.getX() * zoomX + " " + -playerGraphics.getY() * zoomY);
+                at.translate(-playerGraphics.getX() * zoomX, -playerGraphics.getY() * zoomY);
+                g2d.transform(at);
+                g2d.drawImage(image, 0, 0, getWidth(), getHeight(), this);
             }
         };
         return panel;
@@ -368,6 +384,10 @@ public final class GamePanel extends CorePanel {
 
     public boolean hasRendered() {
         return hasRendered;
+    }
+
+    public double getZoom() {
+        return zoom;
     }
 
 }

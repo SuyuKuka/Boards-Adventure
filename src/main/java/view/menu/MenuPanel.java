@@ -430,7 +430,7 @@ public final class MenuPanel extends CorePanel {
         mainPanel.add(titlePanel, BorderLayout.NORTH);
 
         // BAS, CHANGER FONTS
-        JPanel contentPanel = new JPanel(new GridLayout(1,2));
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2));
         contentPanel.setBackground(Color.ORANGE);
 
         JPanel navPanel = new JPanel(new GridLayout(3, 1));

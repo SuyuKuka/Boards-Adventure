@@ -7,6 +7,15 @@ import java.util.HashMap;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+/**
+ * Classe étendue par {@link view.menu.MenuPanel} et {@link view.game.GamePanel} qui étend {@link JLayeredPane}.
+ * <p> Les 2 panels (MenuPanel et GamePanel) s'occupent de la vue respectivement du menu et du jeu.
+ * <p> Les 2 contiennent une liste de {@link JPanel} qui composent les étages du {@link JLayeredPane}.
+ *
+ * @see View
+ * @see view.menu.MenuPanel
+ * @see view.game.GamePanel
+ */
 public abstract class CorePanel extends JLayeredPane {
 
     private final View frame;
