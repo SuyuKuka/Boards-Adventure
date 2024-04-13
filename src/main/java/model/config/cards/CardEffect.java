@@ -8,13 +8,15 @@ public abstract class CardEffect {
 // Teleportation sur une certaine case ?
 // Gain d'argent                                    ✔
 // Perte d'argent                                   ✔
-// Tombe sur une propriété (soit achat soit payer)
 // Perte d'une propriété                            ✔
 // Echanger de position avec un autre joueur
 // Gain objet (du shop)
 // Perte objet (items de départ non compris)
 // Gain d'un point ?
 // Prison
+
+// TP exemple :
+// Tombe sur une propriété (soit achat soit payer)
 // Case départ? (donc gagne 1 point + argent)
 
 }
