@@ -6,6 +6,7 @@ import model.Model;
 import model.config.players.Player;
 
 public class LossPropertyEffect extends CardEffect {
+
     /**
      * Le joueur perd une de ces propriétés de manière aléatoire.
      *
@@ -18,4 +19,5 @@ public class LossPropertyEffect extends CardEffect {
         int i = rand.nextInt(player.getTeam().getProperties().size());
         player.getTeam().getProperties().remove(i);
     }
+
 }
