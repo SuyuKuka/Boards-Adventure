@@ -350,8 +350,8 @@ public final class GamePanel extends CorePanel {
         kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(kingdomLabel);
 
-        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint() + " points !\n",
-            "RifficFree", Color.BLACK, 26);
+        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint()
+        + " points !\n", "RifficFree", Color.BLACK, 26);
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(pointsLabel);
 
@@ -369,28 +369,28 @@ public final class GamePanel extends CorePanel {
                 getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
 
         controller.setCurrentCell();
+
         int price = controller.getPropertyPrice();
         String name = "\"Nom de la propriete\"";
         if (controller.playerIsAtHome()) {
-            JLabel upgradeProperty = SwingFactory.createTextLabel(
-            "Veux tu ameliorer cette propriete ?\n",
+            JLabel upgradeProperty = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
             "RifficFree", Color.BLACK, 32);
             upgradeProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
             panel.add(upgradeProperty);
         } else {
-            JLabel buyProperty = SwingFactory.createTextLabel(
-            "Veux tu acheter cette propriete ?\n",
+            JLabel buyProperty = SwingFactory.createTextLabel("Veux tu acheter cette propriete ?\n",
             "RifficFree", Color.BLACK, 32);
             buyProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
             panel.add(buyProperty);
         }
+
         JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
-            "RifficFree", Color.BLACK, 18
-        );
+            "RifficFree", Color.BLACK, 18);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton yes = new JButton("Oui");
         yes.addMouseListener(new MouseAdapter() {
@@ -418,7 +418,6 @@ public final class GamePanel extends CorePanel {
         });
         buttonPanel.add(yes);
         buttonPanel.add(no);
-        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(propertyPrice);
         panel.add(buttonPanel);

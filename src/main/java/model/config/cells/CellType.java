@@ -10,8 +10,7 @@ public enum CellType {
     PROPERTY,
     SHOP,
     TELEPORTATION,
-    CARD_ATTACK,
-    CARD_DEFENSE,
+    CARD,
     KINGDOM,
     DANGER,
 }

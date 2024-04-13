@@ -75,7 +75,7 @@
 	},
 	{
 		"id" : 8,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 607,
 		"yPos" : 150
 	},
@@ -354,7 +354,7 @@
 	},
 	{
 		"id" : 47,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 308,
 		"yPos" : 221
 	},
@@ -474,7 +474,7 @@
 	},
 	{
 		"id" : 315,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 130,
 		"yPos" : 130
 	},
@@ -508,7 +508,7 @@
 	},
 	{
 		"id" : 403,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 229,
 		"yPos" : 429
 	},
@@ -582,7 +582,7 @@
 	},
 	{
 		"id" : 606,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 462,
 		"yPos" : 456
 	},
@@ -634,7 +634,7 @@
 	},
 	{
 		"id" : 614,
-		"type" : "CARD_DEFENSE",
+		"type" : "CARD",
 		"xPos" : 661,
 		"yPos" : 374
 	},

@@ -24,9 +24,7 @@ public final class CellFactory {
                 return new Kingdom(id, type, jObject.optInt("nextCellID", id + 1), jObject.optInt("throneCell", id));
             case START:
                 return new Start(id, type, jObject.optInt("nextCellID", id + 1),  jObject.getInt("lapGain"));
-            case CARD_ATTACK:
-                return new Card(id, type, jObject.optInt("nextCellID", id + 1));
-            case CARD_DEFENSE:
+            case CARD:
                 return new Card(id, type, jObject.optInt("nextCellID", id + 1));
             case INTERSECTION: {
                 final JSONArray nextCellIDsJArray = jObject.getJSONArray("nextCellID");
