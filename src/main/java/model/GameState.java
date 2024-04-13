@@ -26,7 +26,7 @@ public enum GameState {
     LOSS(-1),
     TELEPORTATION(0),
     CARD(0),
-    KINGDOM(0),
+    KINGDOM(-1),
     DANGER(0),
 
     ASK_PROPERTY(-1),

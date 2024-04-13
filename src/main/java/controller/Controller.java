@@ -121,6 +121,10 @@ public final class Controller {
         return ((Loss) currentCell).getLoss();
     }
 
+    public int getGamePoint() {
+        return getCurrentPlayer().getTeam().getGamePoint();
+    }
+
     public int getPropertyPrice() {
         return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState());
     }

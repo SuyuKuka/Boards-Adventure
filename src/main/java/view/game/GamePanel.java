@@ -135,7 +135,7 @@ public final class GamePanel extends CorePanel {
                 addPanel(createIntersectionPanel(), INTERACTION);
                 break;
             case PLAYER_ARRIVED:
-                playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
+                updateCurrentPlayerPosition();
                 break;
             case START:
                 break;
@@ -152,10 +152,13 @@ public final class GamePanel extends CorePanel {
                 revalidate();
                 break;
             case KINGDOM:
+                addPanel(createKingdomPanel(), INTERACTION);
+                revalidate();
                 break;
             case VOID:
                 break;
             case TELEPORTATION:
+                updateCurrentPlayerPosition();
                 break;
             case ASK_PROPERTY:
                 addPanel(createPropertyPanel(), INTERACTION);
@@ -331,6 +334,31 @@ public final class GamePanel extends CorePanel {
     }
 
     //#endregion
+
+    // #region Kingdom
+
+    public JPanel createKingdomPanel() {
+        JPanel panel = SwingFactory.createBoxLayoutPanel();
+        panel.setOpaque(true);
+        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
+                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+
+        controller.setCurrentCell();
+
+        JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner un point en plus !\n",
+            "RifficFree", Color.BLACK, 32);
+        kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(kingdomLabel);
+
+        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint() + " points !\n",
+            "RifficFree", Color.BLACK, 26);
+        pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(pointsLabel);
+
+        createCloseTimerLabel(panel);
+        return panel;
+    }
+    // #endregion
 
     // #region Property
 

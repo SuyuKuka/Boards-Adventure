@@ -15,4 +15,12 @@ public final class Danger extends Cell {
         System.out.println(getCellType());
         model.setGameState(GameState.DANGER);
     }
+
+
+// Changement d'équipe entre joueur
+// swap de propriétés entre équipes
+// swap de points et argents entre joueurs et équipe
+// swap d'items de départ entre tout le monde
+// HUD désactivé (les pts, l'argent, le nombre de prop. est remplacé par des ??? et
+// les propriétés sur la map perdent leurs couleurs)
 }
