@@ -1,12 +1,15 @@
 package model.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.config.cards.CardEffect;
 import model.config.cells.Cell;
 import model.config.cells.Start;
 
 public final class GameMap {
     private final String mapName;
+    private ArrayList<CardEffect> cards = new ArrayList<>();
     /** Liste qui contient toutes les cellules accessibles à pied par les joueurs (la case 0 est toujours le START). */
     private final HashMap<Integer, Cell> walkableCells = new HashMap<>();
     /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (trône, prison, ...). */
@@ -44,4 +47,9 @@ public final class GameMap {
     public String toString() {
         return "mapName : " + mapName + ", Nombre de Cells accessibles : " + walkableCells.size();
     }
+
+    public ArrayList<CardManagement> getCards() {
+        return cards;
+    }
+
 }

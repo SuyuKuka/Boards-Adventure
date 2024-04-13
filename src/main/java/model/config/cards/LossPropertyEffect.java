@@ -1,4 +1,4 @@
-package model.config.cells.cards;
+package model.config.cards;
 
 import java.util.Random;
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.config.Card;
+
 public final class CellFactory {
 
     public static Cell createCell(final JSONObject jObject) {

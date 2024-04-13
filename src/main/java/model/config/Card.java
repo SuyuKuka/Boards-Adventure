@@ -1,17 +1,16 @@
-package model.config.cells;
+package model.config;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import model.GameState;
 import model.Model;
-import model.config.cells.cards.CardManagement;
-import model.config.cells.cards.MoneyEffect;
+import model.config.cards.MoneyEffect;
+import model.config.cells.Cell;
+import model.config.cells.CellType;
 import model.config.players.Player;
 
 public class Card extends Cell {
 
-    private ArrayList<CardManagement> cards = new ArrayList<>();
 
     public Card(int id, CellType cellType, int nextCellID) {
         super(id, cellType, nextCellID);
@@ -48,7 +47,4 @@ public class Card extends Cell {
         model.setGameState(GameState.CARD);
     }
 
-    public final ArrayList<CardManagement> getCards() {
-        return cards;
-    }
 }
