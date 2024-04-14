@@ -2,6 +2,7 @@ package view.game.cellsgraphics;
 
 import java.util.ArrayList;
 
+import controller.Controller;
 import controller.resources.Resources;
 
 import java.awt.Color;
@@ -9,7 +10,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import model.config.cells.Cell;
 import model.config.cells.Property;
 
 public final class RoundedRectCell extends CellGraphics {
@@ -29,15 +29,16 @@ public final class RoundedRectCell extends CellGraphics {
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
 
-    public RoundedRectCell(final Cell cell, final int xPos, final int yPos) {
-        super(cell, xPos, yPos);
+    public RoundedRectCell(final Controller controller, final int cellID, final int xPos, final int yPos) {
+        super(controller, cellID, xPos, yPos);
     }
 
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
         final Graphics2D g2d = (Graphics2D) g;
-        final Property cell = (Property) getCell();
+        final int cellID = getCellID();
+        final Property cell = (Property) getController().getCell(cellID);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(COLORS.get(cell.getGroup() - 1));
         g2d.fillRoundRect(0, 0, getCellWidth(), getCellHeight(), ARC_WIDTH, ARC_HEIGHT);
@@ -53,7 +54,7 @@ public final class RoundedRectCell extends CellGraphics {
         g2d.drawImage(getImage(), icon, icon, getCellWidth() - icon * 2, getCellHeight() - icon * 2, null);
         g2d.setColor(new Color(663399));
         g2d.setFont(Resources.getFont("RifficFree", 12));
-        g2d.drawString(String.valueOf(getCell().getId()), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
+        g2d.drawString(String.valueOf(cellID), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
     }
 
 }

@@ -1,22 +1,21 @@
 package view.game.cellsgraphics;
 
-import model.config.cells.Cell;
-
 import java.awt.Image;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import controller.Controller;
 import controller.resources.Resources;
 
 public abstract class CellGraphics extends JPanel {
     private static final int CELL_DEFAULT_HEIGHT = 24;
     private static final int CELL_DEFAULT_WIDTH = 24;
 
+    private final Controller controller;
+    private final int cellID;
     private final int defaultXPos;
     private final int defaultYPos;
-
-    private Cell cell;
 
     private int cellWidth;
     private int cellHeight;
@@ -25,11 +24,12 @@ public abstract class CellGraphics extends JPanel {
 
     private Image image;
 
-    public CellGraphics(final Cell cell, final int defaultXPos, final int defaultYPos) {
-        this.cell = cell;
+    public CellGraphics(final Controller controller, final int cellID, final int defaultXPos, final int defaultYPos) {
+        this.controller = controller;
+        this.cellID = cellID;
         this.defaultXPos = defaultXPos;
         this.defaultYPos = defaultYPos;
-        image = Resources.getImage(cell.getCellType().name().toLowerCase());
+        image = Resources.getImage(controller.getCell(cellID).getCellType().name().toLowerCase());
         update(1, 1);
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -45,8 +45,12 @@ public abstract class CellGraphics extends JPanel {
         setBounds(xPos - cellWidth / 2, yPos - cellHeight / 2, cellWidth, cellHeight);
     }
 
-    public final Cell getCell() {
-        return cell;
+    public final Controller getController() {
+        return controller;
+    }
+
+    public final int getCellID() {
+        return cellID;
     }
 
     public final Image getImage() {

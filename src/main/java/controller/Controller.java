@@ -17,43 +17,30 @@ import model.config.cells.Property;
 import model.config.players.Player;
 
 /**
- * Classe qui fait office de Controlleur pour le {@link Model} qui appelle {@link #run()}. <p>
- * Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
+ * Classe qui fait office de Contrôleur pour le {@link Model} et la {@link View}.
+ * <p> Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
  * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
  */
 public final class Controller {
+    // Game
     private final Game game;
-
+    // Model
     private final Model model;
+    // View
     private final GamePanel gamePanel;
+
+    // Jeu
     private Cell currentCell;
-    /** Vrai si le model devrait se mettre à jour. */
-    private boolean shouldStateUpdate;
 
     public Controller(final Game game, final Model model, final View view) {
         this.game = game;
         this.model = model;
-        gamePanel = view.initNewGamePanel(this, Resources.getGameMapGraphics());
-        shouldStateUpdate = true;
+        Resources.loadGameResources(model.getGameMap().getMapName());
+        gamePanel = view.initNewGamePanel(this);
         gamePanel.revalidate();
-        run();
     }
 
     // region controller methods
-
-    /**
-     * Méthode mère qui fait fonctionner le jeu en mettant à jour constament la vue
-     * et en mettant à jour le model seulement si necéssaire.
-     */
-    public void run() {
-        if (shouldStateUpdate) {
-            System.out.println(model.getGameState());
-            model.update();
-            gamePanel.render(model.getGameState());
-            shouldStateUpdate = false;
-        }
-        gamePanel.animate(model.getGameState());
-    }
 
     public void playerRollDice(final String diceName) {
         final Player currentPlayer = getCurrentPlayer();
@@ -85,16 +72,16 @@ public final class Controller {
 
     // region model getters/setters
 
+    public Cell getCell(final int cellID) {
+        return model.getGameMap().getCell(cellID);
+    }
+
     public Cell getCurrentPlayerCell() {
         return model.getGameMap().getCell(getCurrentPlayer().getPosition());
     }
 
     public void setCurrentCell() {
         this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
-    }
-
-    public void setShouldStateUpdate(final boolean shouldStateUpdate) {
-        this.shouldStateUpdate = shouldStateUpdate;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -144,6 +131,10 @@ public final class Controller {
     // endregion
 
     // region getters/setters
+
+    public String getMapName() {
+        return model.getGameMap().getMapName();
+    }
 
     // endregion
 }

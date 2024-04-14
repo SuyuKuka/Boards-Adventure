@@ -39,7 +39,6 @@ public final class GamePanel extends CorePanel {
     private static final int PAUSE = 5;
 
     private final Controller controller;
-    private final GameMapGraphics gameMapGraphics;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
@@ -52,11 +51,10 @@ public final class GamePanel extends CorePanel {
 
     private JButton playButton;
 
-    public GamePanel(final View frame, final Controller controller, final GameMapGraphics gameMapGraphics) {
+    public GamePanel(final View frame, final Controller controller) {
         super(frame);
         this.controller = controller;
-        this.gameMapGraphics = gameMapGraphics;
-        this.cellsGraphics = gameMapGraphics.getCellsGraphics();
+        this.cellsGraphics = Resources.loadCellsGraphics(controller, controller.getMapName());
         this.playerGraphicsMap = new HashMap<>();
         initValues();
         addPanel(createBackground(), BACKGROUND);
@@ -81,14 +79,14 @@ public final class GamePanel extends CorePanel {
         hasRendered = false;
         lastGameUpdateTime = System.nanoTime();
         for (Player player : controller.getPlayers()) {
-            playerGraphicsMap.put(player, new PlayerGraphics(player, gameMapGraphics));
+            playerGraphicsMap.put(player, new PlayerGraphics(player, cellsGraphics));
         }
     }
 
     public void animate(final GameState gameState) {
         final double animationTime = gameState.getAnimationTime();
         if (animationTime != -1 && elaspedTime >= animationTime) {
-            controller.setShouldStateUpdate(true);
+            // controller.setShouldStateUpdate(true);
             lastGameUpdateTime = System.nanoTime();
             elaspedTime = 0;
         } else {
@@ -116,7 +114,7 @@ public final class GamePanel extends CorePanel {
                 playButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(final MouseEvent e) {
-                        controller.setShouldStateUpdate(true);
+                        // controller.setShouldStateUpdate(true);
                         controller.playerRollDice("normal");
                         playButton.removeMouseListener(playButton.getMouseListeners()[1]);
                     }
@@ -277,7 +275,7 @@ public final class GamePanel extends CorePanel {
             public void mouseReleased(final MouseEvent e) {
                 removePanel(INTERACTION);
                 controller.playerChooseIntersection(targetCellID);
-                controller.setShouldStateUpdate(true);
+                // controller.setShouldStateUpdate(true);
             }
         });
         button.setVisible(true);
@@ -401,7 +399,7 @@ public final class GamePanel extends CorePanel {
                 } else {
                     controller.playerUpgradeProperty();
                 }
-                controller.setShouldStateUpdate(true);
+                // controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -411,7 +409,7 @@ public final class GamePanel extends CorePanel {
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.setShouldStateUpdate(true);
+                // controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -441,7 +439,7 @@ public final class GamePanel extends CorePanel {
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.setShouldStateUpdate(true);
+                // controller.setShouldStateUpdate(true);
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -546,7 +544,7 @@ public final class GamePanel extends CorePanel {
             } else {
                 removePanel(INTERACTION);
                 panel.revalidate();
-                controller.setShouldStateUpdate(true);
+                // controller.setShouldStateUpdate(true);
                 ((Timer) e.getSource()).stop();
             }
         });

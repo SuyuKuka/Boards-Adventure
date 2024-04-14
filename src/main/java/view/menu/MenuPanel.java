@@ -31,6 +31,7 @@ import javax.swing.JTextArea;
 import controller.resources.Audio;
 import controller.resources.Resources;
 import game.Game;
+import game.Mode;
 import view.CorePanel;
 import view.SwingFactory;
 import view.View;
@@ -271,7 +272,8 @@ public final class MenuPanel extends CorePanel {
                 Audio.stopMusic();
                 final Game game = getFrame().getGame();
                 game.createModel("map4", gameConfig, playersConfig);
-                game.setSwitchMode(true);
+                game.setMode(Mode.GAME);
+                game.initGame();
             }
         });
         buttonsPanel.add(startGame);

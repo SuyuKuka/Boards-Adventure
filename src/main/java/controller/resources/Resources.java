@@ -3,6 +3,7 @@ package controller.resources;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.awt.Image;
@@ -15,10 +16,12 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import controller.Controller;
 import model.config.GameMap;
+import model.config.cardeffects.CardEffect;
+import model.config.cardeffects.CardEffectFactory;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
-import view.game.GameMapGraphics;
 import view.game.cellsgraphics.CellGraphics;
 import view.game.cellsgraphics.CellGraphicsFactory;
 
@@ -35,13 +38,6 @@ import view.game.cellsgraphics.CellGraphicsFactory;
  * <p> Pour obtenir un objet {@link Font}, utilisez {@link #getFont(String, float)} avec String le nom du fichier
  * sans extension et float la taille souhaitée.
  *
- * <p> === <{@link GameMapGraphics}> === <p>
- * Lorsqu'une partie commence, un {@link GameMapGraphics} associé à
- * la map choisie est crée et attribué a {@link #gameMapGraphics}.
- * <p> Elle contient toutes les {@link Image} contenue dans le dossier "src/main/resources/maps/#map#/.."
- * (avec #map# le nom de la map) et prend la priorité dans les appels de {@link #getImage(String)}.
- * <p> (Par exemple, si le dossier "resources/game/" et "resources/maps/#map#/" contiennent un fichier "test.png",
- * alors getImage(test) retournera l'{@link Image} contenue dans le dossier "maps/#map#/").
  */
 public final class Resources {
     private static final float DEFAULT_FONT_SIZE = 12;
@@ -50,76 +46,92 @@ public final class Resources {
     private static HashMap<String, Font> fonts = new HashMap<>();
     private static HashMap<String, Image> commonImages = new HashMap<>();
     private static HashMap<String, Image> modeImages = new HashMap<>();
-    private static GameMapGraphics gameMapGraphics = null;
 
-    static {
+    /**
+     * Charge les ressources communes au jeu et menu de l'application.
+     */
+    public static void loadCommonResources() {
         loadImages(new File(PATH + "images/"), commonImages, false);
         loadFonts(new File(PATH + "fonts/"), fonts);
     }
 
+    /**
+     * Charge les ressources du menu.
+     */
     public static void loadMenuResources() {
         modeImages.clear();
         loadImages(new File(PATH + "images/menu/"), modeImages, true);
     }
 
-    public static void loadGameResources(final String map) {
+    /**
+     * Charge les ressources du jeu et de la map choisie.
+     * @param mapName
+     */
+    public static void loadGameResources(final String mapName) {
         modeImages.clear();
         loadImages(new File(PATH + "images/game/"), modeImages, true);
-        loadImages(new File(PATH + "maps/" + map), modeImages, true);
-        loadGameMapGraphics(map);
+        loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
     }
 
-    public static void clearModeResources() {
-        modeImages.clear();
-    }
+    // region gameMap
 
-    // region gamemap/cells
-
-    public static void loadGameMapGraphics(final String mapName) {
+    public static GameMap loadGameMap(final String mapName) {
         try {
-            File map = new File(PATH + "maps/" + mapName);
-            HashMap<Integer, CellGraphics> cellsGraphics = readCells(new File(map.getPath() + "/cells.json"));
-            HashMap<Integer, Cell> cells = getCells(cellsGraphics);
-            gameMapGraphics = new GameMapGraphics(new GameMap(mapName, cells), cellsGraphics);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("Resource/maps directory not found.");
-        }
-    }
-
-    private static HashMap<Integer, CellGraphics> readCells(final File cellsFile) {
-        HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
-        try {
-            final String cellsString = FileUtils.readFileToString(cellsFile, StandardCharsets.UTF_8);
-            final JSONArray jArrayCells = new JSONArray(cellsString);
-            for (int i = 0; i < jArrayCells.length(); i++) {
-                final JSONObject jCell = jArrayCells.getJSONObject(i);
-                final int id = jCell.getInt("id");
-                final Cell cell = CellFactory.createCell(jCell);
-                final int xPos = jCell.getInt("xPos");
-                final int yPos = jCell.getInt("yPos");
-                cellsGraphics.put(id, CellGraphicsFactory.createCellGraphics(cell, yPos, xPos));
-            }
-        } catch (IOException e) {
-            System.out.println("Fichier cells.json non trouvé.");
+            final File file = new File(PATH + "maps/" + mapName + "/config.json");
+            final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+            final ArrayList<CardEffect> cardEffects = loadCardEffects(configJObject.getJSONArray("cards_effect"));
+            final HashMap<Integer, Cell> cells = loadCells(configJObject.getJSONArray("cells"));
+            return new GameMap(mapName, cardEffects, cells);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return cellsGraphics;
+        return null;
     }
 
-    private static HashMap<Integer, Cell> getCells(final HashMap<Integer, CellGraphics> cellsGraphics) {
-        HashMap<Integer, Cell> cells = new HashMap<>();
-        for (int id : cellsGraphics.keySet()) {
-            cells.put(id, cellsGraphics.get(id).getCell());
+    private static ArrayList<CardEffect> loadCardEffects(final JSONArray jCardEffect) {
+        final ArrayList<CardEffect> cardEffects = new ArrayList<>();
+        for (int i = 0; i < jCardEffect.length(); i++) {
+            cardEffects.add(CardEffectFactory.createCardEffect(jCardEffect.getJSONObject(i)));
+        }
+        return cardEffects;
+    }
+
+    private static HashMap<Integer, Cell> loadCells(final JSONArray jCells) {
+        final HashMap<Integer, Cell> cells = new HashMap<>();
+        for (int i = 0; i < jCells.length(); i++) {
+            final JSONObject jCell = jCells.getJSONObject(i);
+            cells.put(jCell.getInt("id"), CellFactory.createCell(jCell));
         }
         return cells;
     }
 
     // endregion
 
+    // region gameMapGraphics
+
+    public static HashMap<Integer, CellGraphics> loadCellsGraphics(final Controller controller, final String mapName) {
+        try {
+            final File file = new File(PATH + "maps/" + mapName + "/config.json");
+            final JSONArray jCellsArray = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8))
+                .getJSONArray("cells");
+            final HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
+            for (int i = 0; i < jCellsArray.length(); i++) {
+                final JSONObject jCell = jCellsArray.getJSONObject(i);
+                cellsGraphics.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(controller, jCell));
+            }
+            return cellsGraphics;
+        } catch (Exception e) {
+            System.out.println("Resource/maps directory not found.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // endregion
+
     // region images
 
-    private static void loadImages(final File folder, final HashMap<String, Image> hashMap, final boolean recursive) {
+    public static void loadImages(final File folder, final HashMap<String, Image> hashMap, final boolean recursive) {
         try {
             for (File file : folder.listFiles()) {
                 if (recursive && file.isDirectory()) {
@@ -132,6 +144,7 @@ public final class Resources {
                 }
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             System.out.println("Resource directory not found.");
         }
     }
@@ -184,14 +197,6 @@ public final class Resources {
             return commonImages.get(key);
         }
         return commonImages.get("placeholder32_32");
-    }
-
-    public static void setGameMapGraphics(GameMapGraphics gameMapGraphics) {
-        Resources.gameMapGraphics = gameMapGraphics;
-    }
-
-    public static GameMapGraphics getGameMapGraphics() {
-        return gameMapGraphics;
     }
 
     // endregion

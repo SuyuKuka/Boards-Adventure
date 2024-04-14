@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 import controller.Controller;
 import controller.resources.Resources;
 import model.Model;
+import model.config.GameMap;
 import model.config.Team;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
@@ -24,34 +27,23 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final Mode DEFAULT_MODE = Mode.GAME;
-    private static final String DEFAULT_GAME_MAP_NAME = "map4";
+    private Mode mode = Mode.MENU;
 
-    private final long nanoStartTime = System.nanoTime();
-    private long nanoUpTime = 0;
-
-    private Model model;
     private View view;
-    private Controller controller;
-
-    private Mode mode;
-    /** Si vraie, alors change de mode.*/
-    private volatile boolean switchMode;
+    private Model model = null;
+    private Controller controller = null;
 
     private Game() {
-        this.mode = DEFAULT_MODE;
-        controller = null;
-        model = null;
-        switchMode = false;
-        view = new View(this);
-        init();
-        run();
+        SwingUtilities.invokeLater(() -> {
+            view = new View(this);
+            Resources.loadCommonResources();
+            initGame();
+        });
     }
 
-    private void init() {
+    public void initGame() {
         if (view.hasPanel()) {
             view.removePanel();
-            Resources.clearModeResources();
         }
         switch (mode) {
             case MENU:
@@ -59,16 +51,9 @@ public final class Game {
                 view.initNewMenuPanel();
                 break;
             case GAME:
-                Resources.loadGameResources(DEFAULT_GAME_MAP_NAME);
-                if (Resources.getGameMapGraphics() == null) {
-                    System.out.println("Map non reconnu.");
-                    System.out.println("voir DEFAULT_GAME_MAP_NAME dans Game.java et"
-                        + "les maps disponibles dans le dossier resources/maps");
-                    System.exit(0);
-                }
                 if (model == null) {
-                    model = createTestModel();
-                    System.out.println("MAP PAR DEFAUT GENEREE");
+                    final String testMap = "map4";
+                    model = createTestModel(testMap);
                 }
                 controller = new Controller(this, model, view);
                 break;
@@ -77,26 +62,13 @@ public final class Game {
         }
     }
 
-    private void run() {
-        while (true) {
-            if (switchMode) {
-                switch (mode) {
-                    case MENU:
-                        mode = Mode.GAME;
-                        break;
-                    default:
-                        mode = Mode.MENU;
-                        break;
-                }
-                init();
-                switchMode = false;
-            } else if (controller != null) {
-                controller.run();
-            }
-        }
-    }
-
-    private Model createTestModel() {
+    /**
+     * Crée un {@link Model} test si l'application a été lancée avec {@link #mode} = {@link Mode#GAME}.
+     * @param mapName
+     * @return {@link Model}.
+     */
+    private Model createTestModel(final String mapName) {
+        final GameMap gameMap = Resources.loadGameMap(mapName);
         final HashMap<String, Integer> gameSettings = new HashMap<>();
         gameSettings.put("turns", 45);
         final ArrayList<Player> players = new ArrayList<>();
@@ -104,7 +76,18 @@ public final class Game {
         // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
         // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
         // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
-        return new Model(Resources.getGameMapGraphics().getGameMap(), gameSettings, players);
+        return new Model(gameMap, gameSettings, players);
+    }
+
+    /**
+     * Crée un {@link Model} à partir du nom de la map, les paramètres du jeu et les paramètres des joueurs.
+     * @param mapName
+     * @param gameSettings
+     * @param playersConfig
+     */
+    public void createModel(final String mapName, final HashMap<String, Integer> gameSettings,
+        final ArrayList<HashMap<String, String>> playersConfig) {
+        model = new Model(Resources.loadGameMap(mapName), gameSettings, createPlayers(playersConfig));
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
@@ -113,18 +96,8 @@ public final class Game {
         return players;
     }
 
-    public void createModel(final String mapName, final HashMap<String, Integer> gameConfig,
-        final ArrayList<HashMap<String, String>> playersConfig) {
-        Resources.loadGameMapGraphics(mapName);
-        model = new Model(Resources.getGameMapGraphics().getGameMap(), gameConfig, createPlayers(playersConfig));
-    }
-
-    public void setSwitchMode(final boolean switchMode) {
-        this.switchMode = switchMode;
-    }
-
-    public boolean getSwitchMode() {
-        return switchMode;
+    public void setMode(final Mode mode) {
+        this.mode = mode;
     }
 
     public Mode getMode() {

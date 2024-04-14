@@ -1,12 +1,17 @@
-package model.config.cards;
+package model.config.cardeffects;
 
 import model.Model;
 import model.config.players.Player;
 
-public class MoneyEffect extends CardEffect {
+/**
+ * Ajoute ou diminue l'argent que possède l'équipe du joueur par {@link #amount}.
+ */
+public final class MoneyEffect extends CardEffect {
+
     private int amount;
 
-    public MoneyEffect(int amount) {
+    public MoneyEffect(final int quantity, final int amount) {
+        super(quantity);
         this.amount = amount;
     }
 
@@ -19,5 +24,9 @@ public class MoneyEffect extends CardEffect {
     @Override
     public void applyEffect(Player player, Model model) {
         player.getTeam().incrementMoney(amount);
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

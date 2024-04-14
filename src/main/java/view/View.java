@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import game.Game;
-import view.game.GameMapGraphics;
 import view.game.GamePanel;
 import view.menu.MenuPanel;
 
@@ -63,8 +62,8 @@ public final class View extends JFrame {
         setVisible(true);
     }
 
-    public GamePanel initNewGamePanel(final Controller controller, final GameMapGraphics gameMapGraphics) {
-        corePanel = new GamePanel(this, controller, gameMapGraphics);
+    public GamePanel initNewGamePanel(final Controller controller) {
+        corePanel = new GamePanel(this, controller);
         final Container container = getContentPane();
         for (JPanel panel : corePanel.getPanels().values()) {
             panel.setBounds(0, 0, container.getWidth(), container.getHeight());

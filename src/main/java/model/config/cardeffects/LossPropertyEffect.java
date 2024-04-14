@@ -1,4 +1,4 @@
-package model.config.cards;
+package model.config.cardeffects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,14 @@ import model.Model;
 import model.config.cells.Property;
 import model.config.players.Player;
 
+/**
+ * Fait perdre une propriété au joueur courant si possible.
+ */
 public class LossPropertyEffect extends CardEffect {
+
+    public LossPropertyEffect(int quantity) {
+        super(quantity);
+    }
 
     /**
      * Le joueur perd une de ces propriétés de manière aléatoire.

@@ -8,16 +8,15 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import controller.Controller;
 import controller.resources.Resources;
-import model.config.cells.Cell;
 
 public final class OvalCell extends CellGraphics {
 
     private JLabel iconLabel;
 
-    public OvalCell(final Cell cell, final int xPos, final int yPos) {
-        super(cell, xPos, yPos);
-        setVisible(true);
+    public OvalCell(final Controller controller, final int cellID, final int xPos, final int yPos) {
+        super(controller, cellID, xPos, yPos);
     }
 
     public void initIconPanel() {
@@ -40,7 +39,7 @@ public final class OvalCell extends CellGraphics {
         g2d.drawImage(getImage(), icon, icon, getCellWidth() - icon * 2, getCellHeight() - icon * 2, null);
         g2d.setColor(new Color(663399));
         g2d.setFont(Resources.getFont("RifficFree", 12));
-        g2d.drawString(String.valueOf(getCell().getId()), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
+        g2d.drawString(String.valueOf(getCellID()), getCellWidth() / 2 - 5, getCellHeight() / 2 - 5);
     }
 
 }
