@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -15,7 +14,6 @@ public final class Loss extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         player.getTeam().incrementMoney(-loss);
-        model.setGameState(GameState.LOSS);
     }
 
     public int getLoss() {

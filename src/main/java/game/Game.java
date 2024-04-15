@@ -27,7 +27,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private Mode mode = Mode.MENU;
+    private Mode mode = Mode.GAME;
 
     private View view;
     private Model model = null;

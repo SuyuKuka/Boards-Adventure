@@ -9,6 +9,7 @@ import view.View;
 import view.game.GamePanel;
 
 import game.Game;
+import game.GameState;
 import model.Model;
 import model.config.cells.Cell;
 import model.config.cells.Gain;
@@ -21,7 +22,7 @@ import model.config.players.Player;
  * <p> Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
  * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
  */
-public final class Controller {
+public final class Controller implements GameState {
     // Game
     private final Game game;
     // Model
@@ -37,8 +38,67 @@ public final class Controller {
         this.model = model;
         Resources.loadGameResources(model.getGameMap().getMapName());
         gamePanel = view.initNewGamePanel(this);
-        gamePanel.revalidate();
+        gameStart();
     }
+
+    // region gameState
+
+    public void gameStart() {
+        model.gameStart();
+        gamePanel.gameStart();
+    }
+
+    public void newTurn() {
+        model.newTurn();
+        gamePanel.newTurn();
+    }
+
+    public void inJail() {
+        model.inJail();
+        gamePanel.inJail();
+    }
+
+    public void rollDice() {
+        model.rollDice();
+        gamePanel.rollDice();
+    }
+
+    public void playerMove() {
+        model.playerMove();
+        gamePanel.playerMove();
+    }
+
+    public void askIntersection() {
+        model.askIntersection();
+        gamePanel.askIntersection();
+    }
+
+    public void playerArrived() {
+        model.playerArrived();
+        gamePanel.playerArrived();
+    }
+
+    public void askProperty() {
+        model.askProperty();
+        gamePanel.askProperty();
+    }
+
+    public void askShop() {
+        model.askShop();
+        gamePanel.askShop();
+    }
+
+    public void endTurn() {
+        model.endTurn();
+        gamePanel.askShop();
+    }
+
+    public void gameEnd() {
+        model.gameEnd();
+        gamePanel.gameEnd();
+    }
+
+    // endregion
 
     // region controller methods
 

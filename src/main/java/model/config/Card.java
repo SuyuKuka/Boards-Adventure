@@ -1,10 +1,6 @@
 package model.config;
 
-import java.util.Random;
-
-import model.GameState;
 import model.Model;
-import model.config.cardeffects.MoneyEffect;
 import model.config.cells.Cell;
 import model.config.cells.CellType;
 import model.config.players.Player;

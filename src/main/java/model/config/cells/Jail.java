@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -20,7 +19,6 @@ public final class Jail extends Cell {
         player.setJailTurn(2);
         player.setPreviousPosition(player.getPosition());
         player.setPosition(targetCell);
-        model.setGameState(GameState.JAIL);
     }
 
 }

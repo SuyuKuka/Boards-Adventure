@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -13,7 +12,6 @@ public final class Danger extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         System.out.println(getCellType());
-        model.setGameState(GameState.DANGER);
     }
 
 

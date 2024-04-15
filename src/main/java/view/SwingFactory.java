@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.sound.sampled.FloatControl;
+import javax.swing.Timer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -454,6 +455,10 @@ public class SwingFactory {
             }
         });
         return soundSlider;
+    }
+
+    public static Timer createTimer() {
+        return new Timer(10, e -> System.out.println("hello"));
     }
 
     public static String getPath() {

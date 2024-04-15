@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -31,7 +30,6 @@ public final class Kingdom extends Cell {
         //         + " ! Longue vie au Roi !");
         // }
         player.getTeam().incrementGamePoint(1);
-        model.setGameState(GameState.KINGDOM);
     }
 
 }

@@ -2,7 +2,6 @@ package model.config.cells;
 
 import java.util.ArrayList;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -26,20 +25,13 @@ public final class Property extends Cell {
             if (player.getTeam().getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
                 + buyPrices.get(0) + "$).");
-                model.setGameState(GameState.END_TURN);
-            } else {
-                model.setGameState(GameState.ASK_PROPERTY);
             }
         } else if (isAtHome(player)) {
             if (propertyState + 1 > buyPrices.size()) {
                 System.out.println("Votre propriété est déjà au max.");
-                model.setGameState(GameState.END_TURN);
             } else if (player.getTeam().getMoney() < buyPrices.get(propertyState + 1)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
                 + buyPrices.get(propertyState + 1) + "$).");
-                model.setGameState(GameState.END_TURN);
-            } else {
-                model.setGameState(GameState.ASK_PROPERTY);
             }
         } else {
             final int price = buyPrices.get(propertyState - 1);
@@ -50,7 +42,6 @@ public final class Property extends Cell {
                 player.getTeam().incrementMoney(-price);
                 owner.getTeam().incrementMoney(price);
             }
-            model.setGameState(GameState.END_TURN);
         }
     }
 

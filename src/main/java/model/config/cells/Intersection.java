@@ -3,7 +3,6 @@ package model.config.cells;
 import static game.Game.RAND;
 import java.util.ArrayList;
 
-import model.GameState;
 import model.Model;
 import model.config.players.Player;
 
@@ -23,7 +22,6 @@ public final class Intersection extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         player.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
-        model.setGameState(GameState.ASK_INTERSECTION);
     }
 
 }

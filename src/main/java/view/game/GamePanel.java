@@ -1,7 +1,5 @@
 package view.game;
 
-import static game.Game.NANO_S;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ComponentAdapter;
@@ -13,6 +11,7 @@ import java.awt.Image;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,7 +20,7 @@ import javax.swing.Timer;
 
 import controller.Controller;
 import controller.resources.Resources;
-import model.GameState;
+import game.GameState;
 import model.config.cells.Intersection;
 import model.config.players.Player;
 import view.CorePanel;
@@ -29,7 +28,7 @@ import view.SwingFactory;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
-public final class GamePanel extends CorePanel {
+public final class GamePanel extends CorePanel implements GameState {
     // LAYERS
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
@@ -83,99 +82,62 @@ public final class GamePanel extends CorePanel {
         }
     }
 
-    public void animate(final GameState gameState) {
-        final double animationTime = gameState.getAnimationTime();
-        if (animationTime != -1 && elaspedTime >= animationTime) {
-            // controller.setShouldStateUpdate(true);
-            lastGameUpdateTime = System.nanoTime();
-            elaspedTime = 0;
+    public void gameStart() {
+        playButton.setText("Début du jeu !");
+        startSingleActionTimer(1500, e -> controller.newTurn());
+    }
+
+    public void newTurn() {
+        // TODO call les méthodes sur currentPlayer respecte MVC ou pas ?
+        // Si non, trouver une alternative (faire toutes les méthodes dans le controller ?)
+        final Player currentPlayer = controller.getCurrentPlayer();
+        playButton.setText("Tour " + controller.getCurrentTurn() + " de "
+            + currentPlayer.getUsername());
+        if (currentPlayer.isJailed()) {
+            startSingleActionTimer(1500, e -> controller.inJail());
         } else {
-            // animation des panels
-        }
-        elaspedTime = (double) (System.nanoTime() - lastGameUpdateTime) / NANO_S;
-    }
-
-    // #region Render
-
-    public void render(final GameState gameState) {
-        final Player player = controller.getCurrentPlayer();
-        switch (gameState) {
-            case GAME_START:
-                playButton.setText("Début du jeu !");
-                break;
-            case NEW_TURN:
-                playButton.setText("Tour " + controller.getCurrentTurn() + " de " + player.getUsername());
-                break;
-            case IN_JAIL:
-                playButton.setText(player.getJailTurn() + " tour(s) en prison restant.");
-                break;
-            case ROLL_DICE:
-                playButton.setText("Cliquez pour lancer votre dé.");
-                playButton.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(final MouseEvent e) {
-                        // controller.setShouldStateUpdate(true);
-                        controller.playerRollDice("normal");
-                        playButton.removeMouseListener(playButton.getMouseListeners()[1]);
-                    }
-                });
-                break;
-            case PLAYER_MOVE:
-                break;
-            case ASK_INTERSECTION:
-                playerGraphicsMap.get(player).updatePosition();
-                playButton.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(final MouseEvent e) {
-                        e.consume();
-                    }
-                });
-                addPanel(createIntersectionPanel(), INTERACTION);
-                break;
-            case PLAYER_ARRIVED:
-                updateCurrentPlayerPosition();
-                break;
-            case START:
-                break;
-            case CARD:
-                break;
-            case DANGER:
-                break;
-            case GAIN:
-                addPanel(createGainPanel(), INTERACTION);
-                revalidate();
-                break;
-            case LOSS:
-                addPanel(createLossPanel(), INTERACTION);
-                revalidate();
-                break;
-            case KINGDOM:
-                addPanel(createKingdomPanel(), INTERACTION);
-                revalidate();
-                break;
-            case VOID:
-                break;
-            case TELEPORTATION:
-                updateCurrentPlayerPosition();
-                break;
-            case ASK_PROPERTY:
-                addPanel(createPropertyPanel(), INTERACTION);
-                revalidate();
-                break;
-            case ASK_SHOP:
-                addPanel(createShopPanel(), INTERACTION);
-                revalidate();
-                break;
-            case END_TURN:
-                revalidate();
-                playButton.setText("Fin du tour de " + player.getUsername() + ".");
-                break;
-            default:
-                break;
+            startSingleActionTimer(1500, e -> controller.rollDice());
         }
     }
 
-    // #endregion
+    public void inJail() {
+        final Player currentPlayer = controller.getCurrentPlayer();
+        playButton.setText(currentPlayer.getUsername() + " est en Prison.");
+        startSingleActionTimer(1000, e -> controller.rollDice());
+    }
+
+    public void rollDice() {
+        return;
+    }
+
+    public void playerMove() {
+        return;
+    }
+
+    public void askIntersection() {
+        return;
+    }
+
+    public void playerArrived() {
+        return;
+    }
+
+    public void askProperty() {
+        return;
+    }
+
+    public void askShop() {
+        return;
+    }
+
+    public void endTurn() {
+        return;
+    }
+
+    public void gameEnd() {
+        return;
+    }
+
 
     public void updateCurrentPlayerPosition() {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
@@ -550,4 +512,16 @@ public final class GamePanel extends CorePanel {
         });
         timer.start();
     }
+
+    /**
+     * Joue une action après un délai.
+     * @param delay délai en millisecondes.
+     * @param action action réalisée APRES le délai.
+     */
+    private void startSingleActionTimer(final int delay, final ActionListener action) {
+        final Timer timer = new Timer(delay, action);
+        timer.setRepeats(false);
+        timer.start();
+    }
+
 }

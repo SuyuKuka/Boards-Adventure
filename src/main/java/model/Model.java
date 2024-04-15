@@ -3,29 +3,28 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import game.GameState;
 import model.config.GameMap;
-import model.config.cells.Cell;
-import model.config.cells.Intersection;
 import model.config.players.Player;
 
 /**
  * Classe qui s'occupe de la logique du jeu.
  */
-public final class Model {
+public final class Model implements GameState {
 
     private final GameMap gameMap;
 
     private final int totalTurns;
-    private int currentTurn;
+    private int currentTurn = 1;
 
     /** Variable qui indique l'état actuel du jeu. {@link GameState}. */
-    private GameState gameState;
+    private GameState gameState = null;
 
-    private Player currentLeader;
-    private Player currentPlayer;
+    private Player currentLeader = null;
+    private Player currentPlayer = null;
 
     private final ArrayList<Player> players;
-    private int playerListIterator;
+    private int playerListIterator = 0;
 
     /**
      * Constructeur du GameState.
@@ -37,134 +36,133 @@ public final class Model {
         this.gameMap = gameMap;
         this.totalTurns = gameSettings.get("turns");
         this.players = players;
-        initValues();
     }
 
-    private void initValues() {
-        gameState = null;
-        currentTurn = 1;
-        currentLeader = null;
-        currentPlayer = null;
-        playerListIterator = 0;
+    public void gameStart() {
+        currentPlayer = players.get(playerListIterator);
     }
 
-    /**
-     * Méthode principale du model qui met à jour l'état du jeu et
-     * met en les joueurs {@link Player} avec la map {@link GameMap}.
-     */
-    public void update() {
-        if (gameState == null) {
-            gameState = GameState.GAME_START;
-            return;
-        }
-        switch (gameState) {
-            case GAME_START:
-                currentPlayer = players.get(playerListIterator);
-                gameState = GameState.NEW_TURN;
-                break;
-            case NEW_TURN:
-                if (currentPlayer.isJailed()) {
-                    gameState = GameState.IN_JAIL;
-                } else {
-                    gameState = GameState.ROLL_DICE;
-                }
-                break;
-            case IN_JAIL:
-                gameState = GameState.ROLL_DICE;
-                break;
-            case ROLL_DICE:
-                gameState = GameState.PLAYER_MOVE;
-                break;
-            case PLAYER_MOVE: {
-                Cell playerCell = currentPlayer.getPlayerCell(gameMap);
-                while (currentPlayer.getDiceRollValue() > 0) {
-                    currentPlayer.setPosition(playerCell.getNextCellID());
-                    playerCell = currentPlayer.getPlayerCell(gameMap);
-                    if (playerCell instanceof Intersection) {
-                        gameState = GameState.ASK_INTERSECTION;
-                        return;
-                    } else {
-                        currentPlayer.incrementDiceRollValue(-1);
-                    }
-                }
-                gameState = GameState.PLAYER_ARRIVED;
-            }
-                break;
-            case ASK_INTERSECTION:
-                currentPlayer.setPosition(currentPlayer.getIntersectionCellID());
-                currentPlayer.setIntersectionCellID(0);
-                currentPlayer.incrementDiceRollValue(-1);
-                gameState = GameState.PLAYER_MOVE;
-                break;
-            case PLAYER_ARRIVED : {
-                final Cell playerCell = currentPlayer.getPlayerCell(gameMap);
-                playerCell.playCellEffect(currentPlayer, this);
-                // playCellEffect s'occupe de changer de GameState.
-            }
-                break;
-            case START:
-            case CARD:
-            case DANGER:
-            case GAIN:
-            case LOSS:
-            case KINGDOM:
-            case VOID:
-            case TELEPORTATION:
-            case ASK_PROPERTY:
-            case ASK_SHOP:
-                gameState = GameState.END_TURN;
-                break;
-            case END_TURN:
-                if (currentTurn > totalTurns && playerListIterator == players.size() - 1) {
-                    gameState = GameState.GAME_END;
-                } else {
-                    gameState = GameState.NEW_TURN;
-                    playerListIterator = (playerListIterator + 1) % players.size();
-                    if (playerListIterator == 0) {
-                        currentTurn++;
-                        if (currentLeader != null) {
-                            currentLeader.getTeam().incrementGamePoint(1);
-                        }
-                    }
-                    currentPlayer = players.get(playerListIterator);
-                }
-                break;
-            default:
-                break;
-        }
+    public void newTurn() {
+        return; // rien ici je pense
     }
 
-    private GameState getCellGameState(final Cell cell) {
-        switch (cell.getCellType()) {
-            case START:
-                return GameState.START;
-            case JAIL:
-                return GameState.JAIL;
-            case VOID:
-                return GameState.VOID;
-            case GAIN:
-                return GameState.GAIN;
-            case LOSS:
-                return GameState.LOSS;
-            case INTERSECTION:
-                return GameState.ASK_INTERSECTION;
-            case PROPERTY:
-                return GameState.ASK_PROPERTY;
-            case SHOP:
-                return GameState.ASK_SHOP;
-            case TELEPORTATION:
-                return GameState.TELEPORTATION;
-            case CARD:
-                return GameState.CARD;
-            case KINGDOM:
-                return GameState.KINGDOM;
-            case DANGER:
-                return GameState.DANGER;
-            default:
-                break;
-        }
-        return null;
+    public void inJail() {
+        return; // truc à faire ici 100%
     }
+
+    public void rollDice() {
+        return; // truc à faire ici 100%
+    }
+
+    public void playerMove() {
+        return; // truc à faire ici 100%
+    }
+
+    public void askIntersection() {
+        return; // ici jsp il est 3heure
+    }
+
+    public void playerArrived() {
+        return; // truc à faire ici 100%
+    }
+
+    public void askProperty() {
+        return; // ici jsp il est 3heure
+    }
+
+    public void askShop() {
+        return; // ici jsp il est 3heure
+    }
+
+    public void endTurn() {
+        return; // truc à faire ici 100%
+    }
+
+    public void gameEnd() {
+        return; // rien ici
+    }
+
+    // public void update() {
+    //     if (gameState == null) {
+    //         gameState = GameState.GAME_START;
+    //         return;
+    //     }
+    //     switch (gameState) {
+    //         case GAME_START:
+    //             currentPlayer = players.get(playerListIterator);
+    //             gameState = GameState.NEW_TURN;
+    //             break;
+    //         case NEW_TURN:
+    //             if (currentPlayer.isJailed()) {
+    //                 gameState = GameState.IN_JAIL;
+    //             } else {
+    //                 gameState = GameState.ROLL_DICE;
+    //             }
+    //             break;
+    //         case IN_JAIL:
+    //             gameState = GameState.ROLL_DICE;
+    //             break;
+    //         case ROLL_DICE:
+    //             gameState = GameState.PLAYER_MOVE;
+    //             break;
+    //         case PLAYER_MOVE: {
+    //             Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+    //             while (currentPlayer.getDiceRollValue() > 0) {
+    //                 currentPlayer.setPosition(playerCell.getNextCellID());
+    //                 playerCell = currentPlayer.getPlayerCell(gameMap);
+    //                 if (playerCell instanceof Intersection) {
+    //                     gameState = GameState.ASK_INTERSECTION;
+    //                     return;
+    //                 } else {
+    //                     currentPlayer.incrementDiceRollValue(-1);
+    //                 }
+    //             }
+    //             gameState = GameState.PLAYER_ARRIVED;
+    //         }
+    //             break;
+    //         case ASK_INTERSECTION:
+    //             currentPlayer.setPosition(currentPlayer.getIntersectionCellID());
+    //             currentPlayer.setIntersectionCellID(0);
+    //             currentPlayer.incrementDiceRollValue(-1);
+    //             gameState = GameState.PLAYER_MOVE;
+    //             break;
+    //         case PLAYER_ARRIVED : {
+    //             final Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+    //             playerCell.playCellEffect(currentPlayer, this);
+    //             // playCellEffect s'occupe de changer de GameState.
+    //         }
+    //             break;
+    //         case START:
+    //         case CARD:
+    //         case DANGER:
+    //         case GAIN:
+    //         case LOSS:
+    //         case KINGDOM:
+    //         case VOID:
+    //         case TELEPORTATION:
+    //         case ASK_PROPERTY:
+    //         case ASK_SHOP:
+    //             gameState = GameState.END_TURN;
+    //             break;
+    //         case END_TURN:
+    //             if (currentTurn > totalTurns && playerListIterator == players.size() - 1) {
+    //                 gameState = GameState.GAME_END;
+    //             } else {
+    //                 gameState = GameState.NEW_TURN;
+    //                 playerListIterator = (playerListIterator + 1) % players.size();
+    //                 if (playerListIterator == 0) {
+    //                     currentTurn++;
+    //                     if (currentLeader != null) {
+    //                         currentLeader.getTeam().incrementGamePoint(1);
+    //                     }
+    //                 }
+    //                 currentPlayer = players.get(playerListIterator);
+    //             }
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
 
     public void changeLeader(final Player player) {
         currentLeader = player;
@@ -205,4 +203,5 @@ public final class Model {
     public Player getCurrentPlayer() {
         return players.get(playerListIterator);
     }
+
 }
