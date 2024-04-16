@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import game.GameState;
 import model.config.GameMap;
+import model.config.cells.Cell;
+import model.config.cells.Intersection;
 import model.config.players.Player;
 
 /**
@@ -39,47 +41,63 @@ public final class Model implements GameState {
     }
 
     public void gameStart() {
-        currentPlayer = players.get(playerListIterator);
+        return;
     }
 
     public void newTurn() {
-        return; // rien ici je pense
+        currentPlayer = players.get(playerListIterator);
     }
 
     public void inJail() {
-        return; // truc à faire ici 100%
+        return;
     }
 
     public void rollDice() {
-        return; // truc à faire ici 100%
+        return;
+    }
+
+    public void playDice(final String diceName) {
+        currentPlayer.rollDice(diceName);
     }
 
     public void playerMove() {
-        return; // truc à faire ici 100%
+        Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+        while (currentPlayer.getDiceRollValue() > 0) {
+            currentPlayer.setPosition(playerCell.getNextCellID());
+            playerCell = currentPlayer.getPlayerCell(gameMap);
+            if (playerCell instanceof Intersection) {
+                return;
+            } else {
+                currentPlayer.incrementDiceRollValue(-1);
+            }
+        }
     }
 
     public void askIntersection() {
-        return; // ici jsp il est 3heure
+        return;
     }
 
     public void playerArrived() {
-        return; // truc à faire ici 100%
+        gameMap.getCell(currentPlayer.getPosition()).playCellEffect(currentPlayer, this);
     }
 
     public void askProperty() {
-        return; // ici jsp il est 3heure
+        return;
     }
 
     public void askShop() {
-        return; // ici jsp il est 3heure
+        return;
     }
 
     public void endTurn() {
-        return; // truc à faire ici 100%
+        playerListIterator = playerListIterator + 1 % players.size();
+        if (playerListIterator == 0) {
+            currentTurn++;
+        }
     }
 
     public void gameEnd() {
-        return; // rien ici
+        return;
     }
 
     // public void update() {

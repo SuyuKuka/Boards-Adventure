@@ -21,6 +21,7 @@ import javax.swing.Timer;
 import controller.Controller;
 import controller.resources.Resources;
 import game.GameState;
+import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import model.config.players.Player;
 import view.CorePanel;
@@ -107,11 +108,24 @@ public final class GamePanel extends CorePanel implements GameState {
     }
 
     public void rollDice() {
+        playButton.setText("Cliquez pour lancer le dé :");
+        playButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                controller.playDice("normal");
+                controller.playerMove();
+            }
+        });
         return;
     }
 
     public void playerMove() {
-        return;
+        updateCurrentPlayerPosition();
+        if (controller.playerHasDiceValueLeft()) {
+            addPanel(createIntersectionPanel(), INTERACTION);
+        } else {
+            controller.playerArrived();
+        }
     }
 
     public void askIntersection() {
@@ -119,7 +133,19 @@ public final class GamePanel extends CorePanel implements GameState {
     }
 
     public void playerArrived() {
-        return;
+        final CellType cellType = controller.getCurrentPlayerCellType();
+        // Faire les animations pour chaque cellType
+        switch (cellType) {
+            case PROPERTY:
+                addPanel(createPropertyPanel(), INTERACTION);
+                break;
+            case SHOP:
+                addPanel(createShopPanel(), INTERACTION);
+                break;
+            default:
+                controller.endTurn();
+                break;
+        }
     }
 
     public void askProperty() {
@@ -131,10 +157,18 @@ public final class GamePanel extends CorePanel implements GameState {
     }
 
     public void endTurn() {
-        return;
+        // animation de fin de tour
+        if (controller.getTotalTurns() == controller.getCurrentTurn()) {
+            startSingleActionTimer(1500, e -> controller.gameEnd());
+        } else {
+            playButton.setText("fin du tour");
+            startSingleActionTimer(1000, e -> controller.newTurn());
+        }
     }
 
     public void gameEnd() {
+        playButton.setText("fin du jeu.");
+        // afficher un panel avec les points de chaque joueurs et bouton revenir au menu.
         return;
     }
 
@@ -236,8 +270,8 @@ public final class GamePanel extends CorePanel implements GameState {
             @Override
             public void mouseReleased(final MouseEvent e) {
                 removePanel(INTERACTION);
-                controller.playerChooseIntersection(targetCellID);
-                // controller.setShouldStateUpdate(true);
+                controller.setPlayerPosition(targetCellID);
+                controller.playerMove();
             }
         });
         button.setVisible(true);
@@ -361,7 +395,7 @@ public final class GamePanel extends CorePanel implements GameState {
                 } else {
                     controller.playerUpgradeProperty();
                 }
-                // controller.setShouldStateUpdate(true);
+                controller.endTurn();
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -371,7 +405,7 @@ public final class GamePanel extends CorePanel implements GameState {
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                // controller.setShouldStateUpdate(true);
+                controller.endTurn();
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -401,7 +435,7 @@ public final class GamePanel extends CorePanel implements GameState {
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                // controller.setShouldStateUpdate(true);
+                controller.endTurn();
                 removePanel(INTERACTION);
                 revalidate();
             }

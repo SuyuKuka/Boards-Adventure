@@ -16,13 +16,12 @@ public abstract class Player {
     private final Item startItem;
     private final HashMap<String, Dice> dices;
 
-    private int jailTurn;
-    private int mapLap;
-    private int position;
-    private int previousPosition;
-    private int intersectionCellID;
+    private int jailTurn = 0;
+    private int mapLap = 0;
+    private int position = 0;
+    private int previousPosition = 0;
 
-    private int diceRollValue;
+    private int diceRollValue = 0;
 
     public Player(final int playerID, final String username, final Team team, final Item startItem) {
         this.playerID = playerID;
@@ -30,17 +29,7 @@ public abstract class Player {
         this.team = team;
         this.startItem = startItem;
         dices = new HashMap<>();
-        initValues();
-    }
-
-    private void initValues() {
         dices.put("normal", new Dice());
-        intersectionCellID = 0;
-        position = 0;
-        mapLap = 0;
-        jailTurn = 0;
-        previousPosition = 0;
-        diceRollValue = 0;
     }
 
     // region model methods
@@ -74,14 +63,6 @@ public abstract class Player {
     // endregion
 
     // region getters/setters
-
-    public final void setIntersectionCellID(final int intersectionCellID) {
-        this.intersectionCellID = intersectionCellID;
-    }
-
-    public final int getIntersectionCellID() {
-        return intersectionCellID;
-    }
 
     public final int getDiceRollValue() {
         return diceRollValue;

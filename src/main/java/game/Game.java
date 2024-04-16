@@ -52,8 +52,7 @@ public final class Game {
                 break;
             case GAME:
                 if (model == null) {
-                    final String testMap = "map4";
-                    model = createTestModel(testMap);
+                    model = createTestModel("map4");
                 }
                 controller = new Controller(this, model, view);
                 break;

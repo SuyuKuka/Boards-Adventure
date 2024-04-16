@@ -12,6 +12,7 @@ import game.Game;
 import game.GameState;
 import model.Model;
 import model.config.cells.Cell;
+import model.config.cells.CellType;
 import model.config.cells.Gain;
 import model.config.cells.Loss;
 import model.config.cells.Property;
@@ -44,56 +45,74 @@ public final class Controller implements GameState {
     // region gameState
 
     public void gameStart() {
+        System.out.println("gameStart !");
         model.gameStart();
         gamePanel.gameStart();
     }
 
     public void newTurn() {
+        System.out.println("newTurn !");
         model.newTurn();
         gamePanel.newTurn();
     }
 
     public void inJail() {
+        System.out.println("inJail !");
         model.inJail();
         gamePanel.inJail();
     }
 
+    // region rollDice
     public void rollDice() {
+        System.out.println("rollDice !");
         model.rollDice();
         gamePanel.rollDice();
     }
 
+    public void playDice(final String diceName) {
+        model.playDice(diceName);
+    }
+
+    // endregion
+
     public void playerMove() {
+        System.out.println("playerMove !");
         model.playerMove();
         gamePanel.playerMove();
     }
 
     public void askIntersection() {
+        System.out.println("askIntersection !");
         model.askIntersection();
         gamePanel.askIntersection();
     }
 
     public void playerArrived() {
+        System.out.println("playerArrived !");
         model.playerArrived();
         gamePanel.playerArrived();
     }
 
     public void askProperty() {
+        System.out.println("askProperty !");
         model.askProperty();
         gamePanel.askProperty();
     }
 
     public void askShop() {
+        System.out.println("askShop !");
         model.askShop();
         gamePanel.askShop();
     }
 
     public void endTurn() {
+        System.out.println("endTurn !");
         model.endTurn();
-        gamePanel.askShop();
+        gamePanel.endTurn();
     }
 
     public void gameEnd() {
+        System.out.println("gameEnd !");
         model.gameEnd();
         gamePanel.gameEnd();
     }
@@ -101,6 +120,10 @@ public final class Controller implements GameState {
     // endregion
 
     // region controller methods
+
+    public void setPlayerPosition(final int cellID) {
+        getCurrentPlayer().setPosition(cellID);
+    }
 
     public void playerRollDice(final String diceName) {
         final Player currentPlayer = getCurrentPlayer();
@@ -110,8 +133,8 @@ public final class Controller implements GameState {
         }
     }
 
-    public void playerChooseIntersection(final int cellID) {
-        getCurrentPlayer().setIntersectionCellID(cellID);
+    public boolean playerHasDiceValueLeft() {
+        return getCurrentPlayer().getDiceRollValue() > 0;
     }
 
     public void playerGainMoney() {
@@ -138,6 +161,10 @@ public final class Controller implements GameState {
 
     public Cell getCurrentPlayerCell() {
         return model.getGameMap().getCell(getCurrentPlayer().getPosition());
+    }
+
+    public CellType getCurrentPlayerCellType() {
+        return model.getGameMap().getCell(getCurrentPlayer().getPosition()).getCellType();
     }
 
     public void setCurrentCell() {
