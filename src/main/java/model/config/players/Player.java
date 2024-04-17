@@ -36,7 +36,7 @@ public abstract class Player {
 
     public final void rollDice(final String diceName) {
         // dices.get("normal").rollDice()
-        diceRollValue = 28;
+        diceRollValue = 4;
         System.out.println(diceRollValue);
     }
 

@@ -65,10 +65,9 @@ public final class Model implements GameState {
         while (currentPlayer.getDiceRollValue() > 0) {
             currentPlayer.setPosition(playerCell.getNextCellID());
             playerCell = currentPlayer.getPlayerCell(gameMap);
+            currentPlayer.incrementDiceRollValue(-1);
             if (playerCell instanceof Intersection) {
                 return;
-            } else {
-                currentPlayer.incrementDiceRollValue(-1);
             }
         }
     }

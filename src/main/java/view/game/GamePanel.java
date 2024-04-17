@@ -45,10 +45,6 @@ public final class GamePanel extends CorePanel implements GameState {
     private double zoomX;
     private double zoomY;
 
-    private boolean hasRendered;
-    private long lastGameUpdateTime;
-    private double elaspedTime;
-
     private JButton playButton;
 
     public GamePanel(final View frame, final Controller controller) {
@@ -75,9 +71,6 @@ public final class GamePanel extends CorePanel implements GameState {
                 zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
             }
         });
-        elaspedTime = 0;
-        hasRendered = false;
-        lastGameUpdateTime = System.nanoTime();
         for (Player player : controller.getPlayers()) {
             playerGraphicsMap.put(player, new PlayerGraphics(player, cellsGraphics));
         }
@@ -89,8 +82,6 @@ public final class GamePanel extends CorePanel implements GameState {
     }
 
     public void newTurn() {
-        // TODO call les méthodes sur currentPlayer respecte MVC ou pas ?
-        // Si non, trouver une alternative (faire toutes les méthodes dans le controller ?)
         final Player currentPlayer = controller.getCurrentPlayer();
         playButton.setText("Tour " + controller.getCurrentTurn() + " de "
             + currentPlayer.getUsername());
@@ -175,13 +166,6 @@ public final class GamePanel extends CorePanel implements GameState {
 
     public void updateCurrentPlayerPosition() {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-    }
-
-
-    public void resetState() {
-        hasRendered = false;
-        elaspedTime = 0;
-        lastGameUpdateTime = System.nanoTime();
     }
 
     // #region Background 0
@@ -519,10 +503,6 @@ public final class GamePanel extends CorePanel implements GameState {
         panel.setOpaque(false);
         panel.setVisible(false);
         return panel;
-    }
-
-    public boolean hasRendered() {
-        return hasRendered;
     }
 
     public void createCloseTimerLabel(JPanel panel) {
