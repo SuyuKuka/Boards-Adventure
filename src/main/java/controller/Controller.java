@@ -133,10 +133,6 @@ public final class Controller implements GameState {
         }
     }
 
-    public boolean playerHasDiceValueLeft() {
-        return getCurrentPlayer().getDiceRollValue() > 0;
-    }
-
     public void playerGainMoney() {
         getCurrentPlayer().getTeam().incrementMoney(getGainedMoney());
     }

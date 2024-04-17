@@ -105,6 +105,7 @@ public final class GamePanel extends CorePanel implements GameState {
             public void mouseReleased(MouseEvent e) {
                 controller.playDice("normal");
                 controller.playerMove();
+                playButton.removeMouseListener(this);
             }
         });
         return;
@@ -112,7 +113,7 @@ public final class GamePanel extends CorePanel implements GameState {
 
     public void playerMove() {
         updateCurrentPlayerPosition();
-        if (controller.playerHasDiceValueLeft()) {
+        if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
             addPanel(createIntersectionPanel(), INTERACTION);
         } else {
             controller.playerArrived();

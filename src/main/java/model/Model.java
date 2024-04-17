@@ -45,7 +45,9 @@ public final class Model implements GameState {
     }
 
     public void newTurn() {
+        System.out.println("iterator" + playerListIterator);
         currentPlayer = players.get(playerListIterator);
+        System.out.println(currentPlayer.getUsername());
     }
 
     public void inJail() {
@@ -89,7 +91,7 @@ public final class Model implements GameState {
     }
 
     public void endTurn() {
-        playerListIterator = playerListIterator + 1 % players.size();
+        playerListIterator = (playerListIterator + 1) % players.size();
         if (playerListIterator == 0) {
             currentTurn++;
         }

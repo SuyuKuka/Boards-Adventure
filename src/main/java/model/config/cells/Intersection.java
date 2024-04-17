@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import static game.Game.RAND;
 import java.util.ArrayList;
 
 import model.Model;
@@ -21,7 +20,7 @@ public final class Intersection extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
+        return;
     }
 
 }

@@ -12,7 +12,6 @@ public class TeamGraphics extends JPanel {
 
     private Team team;
 
-
     static {
         COLORS.add(Color.RED);
         COLORS.add(Color.BLUE);

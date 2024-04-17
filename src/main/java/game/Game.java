@@ -11,6 +11,7 @@ import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
 import model.config.Team;
+import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
@@ -72,7 +73,7 @@ public final class Game {
         gameSettings.put("turns", 45);
         final ArrayList<Player> players = new ArrayList<>();
         players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
-        // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
+        players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
         // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
         // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
         return new Model(gameMap, gameSettings, players);
