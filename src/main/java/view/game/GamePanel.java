@@ -8,15 +8,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.Timer;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import controller.Controller;
 import controller.resources.Resources;
@@ -76,8 +84,11 @@ public final class GamePanel extends CorePanel implements GameState {
         }
     }
 
+    //#region gameState
+
     public void gameStart() {
         playButton.setText("Début du jeu !");
+        playButton.setFocusPainted(false);
         startSingleActionTimer(1500, e -> controller.newTurn());
     }
 
@@ -128,6 +139,15 @@ public final class GamePanel extends CorePanel implements GameState {
         final CellType cellType = controller.getCurrentPlayerCellType();
         // Faire les animations pour chaque cellType
         switch (cellType) {
+            case GAIN:
+                addPanel(createGainPanel(), INTERACTION);
+                break;
+            case LOSS:
+                addPanel(createLossPanel(), INTERACTION);
+                break;
+            case KINGDOM:
+                addPanel(createKingdomPanel(), INTERACTION);
+                break;
             case PROPERTY:
                 addPanel(createPropertyPanel(), INTERACTION);
                 break;
@@ -164,6 +184,7 @@ public final class GamePanel extends CorePanel implements GameState {
         return;
     }
 
+    //#endregion
 
     public void updateCurrentPlayerPosition() {
         playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
@@ -244,6 +265,7 @@ public final class GamePanel extends CorePanel implements GameState {
         panel.setVisible(true);
         return panel;
     }
+
     private JButton createIntersectChoiceButton(final int targetCellID) {
         final CellGraphics cellGraphics = cellsGraphics.get(targetCellID);
         JButton button = new JButton();
@@ -267,12 +289,13 @@ public final class GamePanel extends CorePanel implements GameState {
 
     // #region Gain
 
-    public JPanel createGainPanel() {
+    private JPanel createGainPanel() {
         // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
-        JPanel panel = SwingFactory.createBoxLayoutPanel();
-        panel.setOpaque(true);
-        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
-                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createImagePanel(this, "frame", 60, 60);
+        background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
 
         controller.setCurrentCell();
         controller.playerGainMoney();
@@ -281,22 +304,21 @@ public final class GamePanel extends CorePanel implements GameState {
         JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
             "RifficFree", Color.BLACK, 32);
         gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(gainLabel);
+        background.add(gainLabel);
 
-        createCloseTimerLabel(panel);
-        return panel;
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     // #endregion
 
     //#region Loss
 
-    public JPanel createLossPanel() {
+    private JPanel createLossPanel() {
         System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
-        JPanel panel = SwingFactory.createBoxLayoutPanel();
-        panel.setOpaque(true);
-        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
-                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        panel.setVisible(true);
 
         controller.setCurrentCell();
         controller.playerLossMoney();
@@ -316,11 +338,9 @@ public final class GamePanel extends CorePanel implements GameState {
 
     // #region Kingdom
 
-    public JPanel createKingdomPanel() {
-        JPanel panel = SwingFactory.createBoxLayoutPanel();
-        panel.setOpaque(true);
-        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
-                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+    private JPanel createKingdomPanel() {
+        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        panel.setVisible(true);
 
         controller.setCurrentCell();
 
@@ -337,47 +357,58 @@ public final class GamePanel extends CorePanel implements GameState {
         createCloseTimerLabel(panel);
         return panel;
     }
+
     // #endregion
 
     // #region Property
 
-    public JPanel createPropertyPanel() {
-        JPanel panel = SwingFactory.createBoxLayoutPanel();
-        panel.setOpaque(true);
-        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
-                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+    private JPanel createPropertyPanel() {
+        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        panel.setVisible(true);
 
         controller.setCurrentCell();
 
+        if (!controller.propertyHasOwner()) {
+            createBuyAndUpgradePanel(panel);
+        } else if (!controller.playerIsAtHome() && controller.propertyHasOwner()) {
+            createRentPanel(panel);
+        }
+
+        return panel;
+    }
+
+    private void createBuyAndUpgradePanel(JPanel panel) {
+        JPanel labelPanel = SwingFactory.createBoxLayoutPanel();
+        labelPanel.setOpaque(true);
         int price = controller.getPropertyPrice();
         String name = "\"Nom de la propriete\"";
+        JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
+                "RifficFree", Color.BLACK, 32);
+        propertyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         if (controller.playerIsAtHome()) {
-            JLabel upgradeProperty = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
-            "RifficFree", Color.BLACK, 32);
-            upgradeProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(upgradeProperty);
+            propertyLabel.setText("Veux tu ameliorer cette propriete ?\n");
         } else {
-            JLabel buyProperty = SwingFactory.createTextLabel("Veux tu acheter cette propriete ?\n",
-            "RifficFree", Color.BLACK, 32);
-            buyProperty.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(buyProperty);
+            propertyLabel.setText("Veux tu acheter cette propriete ?\n");
         }
+        labelPanel.add(propertyLabel);
 
         JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
             "RifficFree", Color.BLACK, 18);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelPanel.add(propertyPrice);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton yes = new JButton("Oui");
+        yes.setFocusPainted(false);
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (!controller.propertyHasOwner()) {
                     controller.playerBuyProperty();
-                } else {
+                } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
                     controller.playerUpgradeProperty();
                 }
                 controller.endTurn();
@@ -387,6 +418,7 @@ public final class GamePanel extends CorePanel implements GameState {
         });
 
         JButton no = new JButton("Non");
+        no.setFocusPainted(false);
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -398,9 +430,39 @@ public final class GamePanel extends CorePanel implements GameState {
         buttonPanel.add(yes);
         buttonPanel.add(no);
 
-        panel.add(propertyPrice);
+        panel.add(labelPanel);
         panel.add(buttonPanel);
-        return panel;
+    }
+
+    private void createRentPanel(JPanel panel) {
+        JTextPane rentTextPane = new JTextPane();
+        rentTextPane.setText("Oops, tu as atterri sur la propriété de quelqu'un d'autre. Tu dois payer "
+        + controller.getRentPrice() + "$.\n");
+        rentTextPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        rentTextPane.setFont(Resources.getFont("RifficFree", 32));
+        rentTextPane.setForeground(Color.BLACK);
+        rentTextPane.setEditable(false);
+        rentTextPane.setFocusable(false);
+        rentTextPane.setPreferredSize(new Dimension(WIDTH, 50));
+
+        //Center le texte du rentTextPane
+        StyledDocument doc = rentTextPane.getStyledDocument();
+        Style centerStyle = rentTextPane.addStyle("CenterStyle", null);
+        StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), centerStyle, false);
+
+        panel.add(rentTextPane);
+
+        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentMoney() + "$.\n",
+        "RifficFree", Color.BLACK, 26);
+        moneyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(moneyLabel);
+
+        createCloseTimerLabel(panel);
+
+        JLabel voidLabel = new JLabel();
+        voidLabel.setBorder(BorderFactory.createEmptyBorder((int) (panel.getHeight() / 1.6), 0, 0, 0));
+        panel.add(voidLabel);
     }
 
     // #endregion
@@ -408,10 +470,8 @@ public final class GamePanel extends CorePanel implements GameState {
     // #region Shop
 
     private JPanel createShopPanel() {
-        JPanel panel = SwingFactory.createBoxLayoutPanel();
-        panel.setOpaque(true);
-        panel.setBounds(getFrame().getWidth() / 4, getFrame().getHeight() / 4,
-                getFrame().getWidth() - getFrame().getWidth() / 2, getFrame().getHeight() - getFrame().getHeight() / 2);
+        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        panel.setVisible(true);
 
         controller.setCurrentCell();
 
@@ -521,7 +581,7 @@ public final class GamePanel extends CorePanel implements GameState {
             } else {
                 removePanel(INTERACTION);
                 panel.revalidate();
-                // controller.setShouldStateUpdate(true);
+                controller.endTurn();
                 ((Timer) e.getSource()).stop();
             }
         });

@@ -183,6 +183,10 @@ public final class Controller implements GameState {
         return model.getCurrentPlayer();
     }
 
+    public int getCurrentMoney() {
+        return getCurrentPlayer().getTeam().getMoney();
+    }
+
     public int getGainedMoney() {
         return ((Gain) currentCell).getGain();
     }
@@ -197,6 +201,10 @@ public final class Controller implements GameState {
 
     public int getPropertyPrice() {
         return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState());
+    }
+
+    public int getRentPrice() { // diviser par 5 pour 20%, + ou - ?
+        return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState()) / 5;
     }
 
     public boolean playerIsAtHome() {
