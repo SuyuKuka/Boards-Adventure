@@ -569,7 +569,7 @@ public final class GamePanel extends CorePanel {
             } else {
                 removePanel(INTERACTION);
                 panel.revalidate();
-                controller.endTurn();
+                controller.gameUpdate();
                 ((Timer) e.getSource()).stop();
             }
         });
