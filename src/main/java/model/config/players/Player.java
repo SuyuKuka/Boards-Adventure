@@ -36,7 +36,7 @@ public abstract class Player {
 
     public final void rollDice(final String diceName) {
         // diceRollValue = dices.get("normal").rollDice();
-        diceRollValue = 1;
+        diceRollValue = 9;
         System.out.println(diceRollValue);
     }
 

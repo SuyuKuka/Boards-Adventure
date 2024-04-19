@@ -154,6 +154,27 @@ public class SwingFactory {
         return panel;
     }
 
+    public static JPanel createGamePanelCells(final Component parent,
+    final int widthPer, final int heightPer) {
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        final Dimension size = new Dimension(parent.getWidth() * 60 / 100, parent.getHeight() * 60 / 100);
+        panel.setMaximumSize(size);
+        panel.setPreferredSize(size);
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension size = new Dimension((int) (parent.getWidth() * 60 / 100),
+                    (int) (parent.getHeight() * 60 / 100));
+                panel.setMaximumSize(size);
+                panel.setPreferredSize(size);
+            }
+        });
+        panel.setVisible(true);
+        return panel;
+    }
+
     public static JLabel createImageLabel(final Component parent, final String img,
         final int widthPer, final int heightPer, final boolean resize) {
         final Image image = Resources.getImage(img);

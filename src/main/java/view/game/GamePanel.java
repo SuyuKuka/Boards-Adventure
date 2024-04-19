@@ -16,11 +16,11 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -294,8 +294,9 @@ public final class GamePanel extends CorePanel implements GameState {
         JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
         resizePanel.setVisible(true);
 
-        JPanel background = SwingFactory.createImagePanel(this, "frame", 60, 60);
-        background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
         controller.playerGainMoney();
@@ -316,9 +317,13 @@ public final class GamePanel extends CorePanel implements GameState {
     //#region Loss
 
     private JPanel createLossPanel() {
-        System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
-        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        panel.setVisible(true);
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
         controller.playerLossMoney();
@@ -327,11 +332,12 @@ public final class GamePanel extends CorePanel implements GameState {
         JLabel lossLabel = SwingFactory.createTextLabel("Tu as perdu " + loss + " $ !\n",
             "RifficFree", Color.BLACK, 32);
             lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lossLabel);
-        System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
+            background.add(lossLabel);
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
 
-        createCloseTimerLabel(panel);
-        return panel;
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     //#endregion
@@ -339,23 +345,28 @@ public final class GamePanel extends CorePanel implements GameState {
     // #region Kingdom
 
     private JPanel createKingdomPanel() {
-        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        panel.setVisible(true);
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
 
         JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner un point en plus !\n",
             "RifficFree", Color.BLACK, 32);
         kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(kingdomLabel);
+        background.add(kingdomLabel);
 
         JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint()
         + " points !\n", "RifficFree", Color.BLACK, 26);
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(pointsLabel);
+        background.add(pointsLabel);
 
-        createCloseTimerLabel(panel);
-        return panel;
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     // #endregion
@@ -363,23 +374,26 @@ public final class GamePanel extends CorePanel implements GameState {
     // #region Property
 
     private JPanel createPropertyPanel() {
-        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        panel.setVisible(true);
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
 
         if (!controller.propertyHasOwner()) {
-            createBuyAndUpgradePanel(panel);
+            createBuyAndUpgradePanel(background);
         } else if (!controller.playerIsAtHome() && controller.propertyHasOwner()) {
-            createRentPanel(panel);
+            createRentPanel(background);
         }
 
-        return panel;
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     private void createBuyAndUpgradePanel(JPanel panel) {
-        JPanel labelPanel = SwingFactory.createBoxLayoutPanel();
-        labelPanel.setOpaque(true);
         int price = controller.getPropertyPrice();
         String name = "\"Nom de la propriete\"";
         JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
@@ -390,14 +404,15 @@ public final class GamePanel extends CorePanel implements GameState {
         } else {
             propertyLabel.setText("Veux tu acheter cette propriete ?\n");
         }
-        labelPanel.add(propertyLabel);
+        panel.add(propertyLabel);
 
         JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
             "RifficFree", Color.BLACK, 18);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
-        labelPanel.add(propertyPrice);
+        panel.add(propertyPrice);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -430,7 +445,6 @@ public final class GamePanel extends CorePanel implements GameState {
         buttonPanel.add(yes);
         buttonPanel.add(no);
 
-        panel.add(labelPanel);
         panel.add(buttonPanel);
     }
 
@@ -461,7 +475,7 @@ public final class GamePanel extends CorePanel implements GameState {
         createCloseTimerLabel(panel);
 
         JLabel voidLabel = new JLabel();
-        voidLabel.setBorder(BorderFactory.createEmptyBorder((int) (panel.getHeight() / 1.6), 0, 0, 0));
+        voidLabel.setBorder(BorderFactory.createEmptyBorder((int) (panel.getHeight() / 1.7), 0, 0, 0));
         panel.add(voidLabel);
     }
 
@@ -470,10 +484,18 @@ public final class GamePanel extends CorePanel implements GameState {
     // #region Shop
 
     private JPanel createShopPanel() {
-        JPanel panel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        panel.setVisible(true);
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setLayout(new BorderLayout());
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
+
+        JPanel top = new JPanel();
+        top.setLayout(new FlowLayout());
 
         JButton close = new JButton("X");
         close.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -485,15 +507,18 @@ public final class GamePanel extends CorePanel implements GameState {
                 revalidate();
             }
         });
-        panel.add(close);
+        top.add(close, FlowLayout.RIGHT);
 
         JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
         shop.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(shop);
+        top.add(shop, FlowLayout.CENTER);
 
         //LISTE ITEMS
 
-        return panel;
+        background.add(top, BorderLayout.NORTH);
+
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     // #endregion
