@@ -12,7 +12,7 @@ import model.config.players.Player;
 /**
  * Classe qui s'occupe de la logique du jeu.
  */
-public final class Model implements GameState {
+public final class Model {
 
     private final GameMap gameMap;
 
@@ -40,27 +40,15 @@ public final class Model implements GameState {
         this.players = players;
     }
 
-    public void gameStart() {
-        return;
-    }
-
     public void newTurn() {
-        System.out.println("iterator" + playerListIterator);
         currentPlayer = players.get(playerListIterator);
-        System.out.println(currentPlayer.getUsername());
-    }
-
-    public void inJail() {
-        return;
     }
 
     public void rollDice() {
-        return;
+        currentPlayer.rollDice("normal");
     }
 
-    public void playDice(final String diceName) {
-        currentPlayer.rollDice(diceName);
-    }
+    // region playerMove
 
     public void playerMove() {
         Cell playerCell = currentPlayer.getPlayerCell(gameMap);
@@ -70,24 +58,17 @@ public final class Model implements GameState {
             currentPlayer.incrementDiceRollValue(-1);
             if (playerCell instanceof Intersection) {
                 return;
+            } else if (playerCell.shouldPlayerStop()) {
+                currentPlayer.setDiceRollValue(0);
+                return;
             }
         }
     }
 
-    public void askIntersection() {
-        return;
-    }
+    // endregion
 
     public void playerArrived() {
         gameMap.getCell(currentPlayer.getPosition()).playCellEffect(currentPlayer, this);
-    }
-
-    public void askProperty() {
-        return;
-    }
-
-    public void askShop() {
-        return;
     }
 
     public void endTurn() {
@@ -95,10 +76,6 @@ public final class Model implements GameState {
         if (playerListIterator == 0) {
             currentTurn++;
         }
-    }
-
-    public void gameEnd() {
-        return;
     }
 
     // public void update() {

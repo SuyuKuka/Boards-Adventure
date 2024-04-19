@@ -6,8 +6,9 @@ import model.config.players.Player;
 public final class Loss extends Cell {
     private final int loss;
 
-    public Loss(final int id, final CellType cellType, final int nextCellID, final int loss) {
-        super(id, cellType, nextCellID);
+    public Loss(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final int nextCellID, final int loss) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.loss = loss;
     }
 

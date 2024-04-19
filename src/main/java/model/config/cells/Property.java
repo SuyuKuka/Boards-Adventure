@@ -12,9 +12,9 @@ public final class Property extends Cell {
     private int propertyState = 0;
     private Player owner = null;
 
-    public Property(final int id, final CellType cellType, final int nextCellID,
+    public Property(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
         final ArrayList<Integer> buyPrices, final int group) {
-        super(id, cellType, nextCellID);
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.buyPrices = buyPrices;
         this.group = group;
     }

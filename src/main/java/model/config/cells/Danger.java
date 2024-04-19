@@ -5,8 +5,8 @@ import model.config.players.Player;
 
 public final class Danger extends Cell {
 
-    public Danger(final int id, final CellType cellType, final int nextCellID) {
-        super(id, cellType, nextCellID);
+    public Danger(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
     }
 
     @Override
