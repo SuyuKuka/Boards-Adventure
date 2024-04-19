@@ -23,9 +23,10 @@ import model.config.players.Player;
  * <p> Elle contient un {@link Model} qui s'occupe de la logique du jeu et d'un
  * {@link GamePanel} qui s'occupe de la vue du jeu et fait le lien entre ces 2 classes.
  */
-public final class Controller implements GameState {
+public final class Controller {
     // Game
     private final Game game;
+    private GameState prevGameState;
     // Model
     private final Model model;
     // View
@@ -36,84 +37,110 @@ public final class Controller implements GameState {
 
     public Controller(final Game game, final Model model, final View view) {
         this.game = game;
+        this.prevGameState = null;
         this.model = model;
         Resources.loadGameResources(model.getGameMap().getMapName());
         gamePanel = view.initNewGamePanel(this);
-        gameStart();
+        gameUpdate();
+    }
+
+    public void gameUpdate() {
+        if (prevGameState == null) {
+            gameStart();
+            return;
+        }
+        switch (prevGameState) {
+            case GAME_START:
+                newTurn();
+                break;
+            case NEW_TURN:
+                if (getCurrentPlayer().isJailed()) {
+                    inJail();
+                } else {
+                    playerAction();
+                }
+                break;
+            case IN_JAIL:
+                playerAction();
+                break;
+            case ROLL_DICE:
+                playerMove();
+                break;
+            case PLAYER_MOVE:
+                if (getCurrentPlayer().getDiceRollValue() > 0 || getCurrentPlayerCell().shouldPlayerStop()) {
+                    playerMove();
+                } else {
+                    playerArrived();
+                }
+                break;
+            case PLAYER_ARRIVED:
+                endTurn();
+                break;
+            case END_TURN:
+                if (model.getCurrentTurn() == model.getTotalTurns()) {
+                    gameEnd();
+                } else {
+                    newTurn();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     // region gameState
 
-    public void gameStart() {
-        System.out.println("gameStart !");
-        model.gameStart();
+    private void gameStart() {
+        prevGameState = GameState.GAME_START;
         gamePanel.gameStart();
     }
 
-    public void newTurn() {
-        System.out.println("newTurn !");
+    private void newTurn() {
+        prevGameState = GameState.NEW_TURN;
         model.newTurn();
         gamePanel.newTurn();
     }
 
-    public void inJail() {
-        System.out.println("inJail !");
-        model.inJail();
+    private void inJail() {
+        prevGameState = GameState.IN_JAIL;
         gamePanel.inJail();
     }
 
-    // region rollDice
-    public void rollDice() {
-        System.out.println("rollDice !");
-        model.rollDice();
-        gamePanel.rollDice();
+    // region playerAction
+    private void playerAction() {
+        prevGameState = GameState.PLAYER_ACTION;
+        gamePanel.playerAction();
     }
 
-    public void playDice(final String diceName) {
-        model.playDice(diceName);
+    public void rollDice() {
+        prevGameState = GameState.ROLL_DICE;
+        model.rollDice();
+        gamePanel.rollDice();
+        gameUpdate();
     }
 
     // endregion
 
-    public void playerMove() {
-        System.out.println("playerMove !");
+    private void playerMove() {
+        prevGameState = GameState.PLAYER_MOVE;
         model.playerMove();
         gamePanel.playerMove();
     }
 
-    public void askIntersection() {
-        System.out.println("askIntersection !");
-        model.askIntersection();
-        gamePanel.askIntersection();
-    }
-
-    public void playerArrived() {
-        System.out.println("playerArrived !");
+    private void playerArrived() {
+        prevGameState = GameState.PLAYER_ARRIVED;
         model.playerArrived();
         gamePanel.playerArrived();
     }
 
-    public void askProperty() {
-        System.out.println("askProperty !");
-        model.askProperty();
-        gamePanel.askProperty();
-    }
-
-    public void askShop() {
-        System.out.println("askShop !");
-        model.askShop();
-        gamePanel.askShop();
-    }
-
-    public void endTurn() {
-        System.out.println("endTurn !");
+    private void endTurn() {
+        prevGameState = GameState.END_TURN;
         model.endTurn();
         gamePanel.endTurn();
     }
 
-    public void gameEnd() {
-        System.out.println("gameEnd !");
-        model.gameEnd();
+    private void gameEnd() {
+        prevGameState = GameState.GAME_END;
         gamePanel.gameEnd();
     }
 

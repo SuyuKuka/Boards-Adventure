@@ -28,7 +28,6 @@ import javax.swing.text.StyledDocument;
 
 import controller.Controller;
 import controller.resources.Resources;
-import game.GameState;
 import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import model.config.players.Player;
@@ -37,7 +36,7 @@ import view.SwingFactory;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
-public final class GamePanel extends CorePanel implements GameState {
+public final class GamePanel extends CorePanel {
     // LAYERS
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
@@ -88,38 +87,35 @@ public final class GamePanel extends CorePanel implements GameState {
 
     public void gameStart() {
         playButton.setText("Début du jeu !");
-        playButton.setFocusPainted(false);
-        startSingleActionTimer(1500, e -> controller.newTurn());
+        startSingleActionTimer(1500, e -> controller.gameUpdate());
     }
 
     public void newTurn() {
         final Player currentPlayer = controller.getCurrentPlayer();
         playButton.setText("Tour " + controller.getCurrentTurn() + " de "
             + currentPlayer.getUsername());
-        if (currentPlayer.isJailed()) {
-            startSingleActionTimer(1500, e -> controller.inJail());
-        } else {
-            startSingleActionTimer(1500, e -> controller.rollDice());
-        }
+        startSingleActionTimer(1500, e -> controller.gameUpdate());
     }
 
     public void inJail() {
         final Player currentPlayer = controller.getCurrentPlayer();
         playButton.setText(currentPlayer.getUsername() + " est en Prison.");
-        startSingleActionTimer(1000, e -> controller.rollDice());
+        startSingleActionTimer(1000, e -> controller.gameUpdate());
     }
 
-    public void rollDice() {
+    public void playerAction() {
         playButton.setText("Cliquez pour lancer le dé :");
         playButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                controller.playDice("normal");
-                controller.playerMove();
+                controller.rollDice();
                 playButton.removeMouseListener(this);
             }
         });
-        return;
+    }
+
+    public void rollDice() {
+        // faire tourner le dé.
     }
 
     public void playerMove() {
@@ -127,16 +123,14 @@ public final class GamePanel extends CorePanel implements GameState {
         if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
             addPanel(createIntersectionPanel(), INTERACTION);
         } else {
-            controller.playerArrived();
+            controller.gameUpdate();
         }
     }
 
-    public void askIntersection() {
-        return;
-    }
-
     public void playerArrived() {
+        updateCurrentPlayerPosition();
         final CellType cellType = controller.getCurrentPlayerCellType();
+        playButton.setText(cellType.name().toUpperCase());
         // Faire les animations pour chaque cellType
         switch (cellType) {
             case GAIN:
@@ -155,27 +149,20 @@ public final class GamePanel extends CorePanel implements GameState {
                 addPanel(createShopPanel(), INTERACTION);
                 break;
             default:
-                controller.endTurn();
+                startSingleActionTimer(500, e -> controller.gameUpdate());
                 break;
         }
     }
 
-    public void askProperty() {
-        return;
-    }
-
-    public void askShop() {
-        return;
-    }
 
     public void endTurn() {
         // animation de fin de tour
         if (controller.getTotalTurns() == controller.getCurrentTurn()) {
-            startSingleActionTimer(1500, e -> controller.gameEnd());
+            playButton.setText("fin du jeu");
         } else {
             playButton.setText("fin du tour");
-            startSingleActionTimer(1000, e -> controller.newTurn());
         }
+        startSingleActionTimer(1000, e -> controller.gameUpdate());
     }
 
     public void gameEnd() {
@@ -278,7 +265,7 @@ public final class GamePanel extends CorePanel implements GameState {
             public void mouseReleased(final MouseEvent e) {
                 removePanel(INTERACTION);
                 controller.setPlayerPosition(targetCellID);
-                controller.playerMove();
+                controller.gameUpdate();
             }
         });
         button.setVisible(true);
@@ -426,7 +413,7 @@ public final class GamePanel extends CorePanel implements GameState {
                 } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
                     controller.playerUpgradeProperty();
                 }
-                controller.endTurn();
+                controller.gameUpdate();
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -437,7 +424,7 @@ public final class GamePanel extends CorePanel implements GameState {
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.endTurn();
+                controller.gameUpdate();
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -502,7 +489,7 @@ public final class GamePanel extends CorePanel implements GameState {
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.endTurn();
+                controller.gameUpdate();
                 removePanel(INTERACTION);
                 revalidate();
             }
@@ -544,6 +531,7 @@ public final class GamePanel extends CorePanel implements GameState {
 
     private void createPlayButton() {
         playButton = new JButton();
+        playButton.setFocusPainted(false);
         playButton.setBounds(0, 0, 200, 50);
         playButton.setVerticalAlignment(JButton.CENTER);
         playButton.setHorizontalAlignment(JButton.CENTER);
@@ -606,7 +594,7 @@ public final class GamePanel extends CorePanel implements GameState {
             } else {
                 removePanel(INTERACTION);
                 panel.revalidate();
-                controller.endTurn();
+                controller.gameUpdate();
                 ((Timer) e.getSource()).stop();
             }
         });

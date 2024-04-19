@@ -1,15 +1,13 @@
-package model.config;
+package model.config.cells;
 
 import model.Model;
-import model.config.cells.Cell;
-import model.config.cells.CellType;
 import model.config.players.Player;
 
 public class Card extends Cell {
 
 
-    public Card(int id, CellType cellType, int nextCellID) {
-        super(id, cellType, nextCellID);
+    public Card(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         // if (cards.size() == 0) {
         //     createAllCards();
         // }

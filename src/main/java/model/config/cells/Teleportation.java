@@ -7,8 +7,9 @@ public final class Teleportation extends Cell {
 
     private final int idTargetCell;
 
-    public Teleportation(final int id, final CellType cellType, final int nextCellID, final int idTargetCell) {
-        super(id, cellType, nextCellID);
+    public Teleportation(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
+        final int idTargetCell) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.idTargetCell = idTargetCell;
     }
 

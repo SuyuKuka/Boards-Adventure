@@ -35,9 +35,9 @@ public abstract class Player {
     // region model methods
 
     public final void rollDice(final String diceName) {
-        // diceRollValue = dices.get("normal").rollDice();
+        diceRollValue = dices.get("normal").rollDice();
         diceRollValue = 9;
-        System.out.println(diceRollValue);
+        System.out.println(username + " a lancé un dé de : " + diceRollValue + " !");
     }
 
     // endregion
@@ -63,6 +63,10 @@ public abstract class Player {
     // endregion
 
     // region getters/setters
+
+    public final void setDiceRollValue(final int diceRollValue) {
+        this.diceRollValue = diceRollValue;
+    }
 
     public final int getDiceRollValue() {
         return diceRollValue;

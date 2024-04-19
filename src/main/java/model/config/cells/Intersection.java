@@ -9,8 +9,9 @@ public final class Intersection extends Cell {
 
     private final ArrayList<Integer> nextCellIDs;
 
-    public Intersection(final int id, final CellType cellType, final ArrayList<Integer> nextCellIDs) {
-        super(id, cellType, id);
+    public Intersection(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final ArrayList<Integer> nextCellIDs) {
+        super(id, shouldPlayerStop, cellType, id);
         this.nextCellIDs = nextCellIDs;
     }
 

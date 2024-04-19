@@ -7,8 +7,9 @@ public final class Kingdom extends Cell {
 
     private final int targetCell;
 
-    public Kingdom(final int id, final CellType cellType, final int nextCellID, final int targetCell) {
-        super(id, cellType, nextCellID);
+    public Kingdom(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final int nextCellID, final int targetCell) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.targetCell = targetCell;
     }
 
