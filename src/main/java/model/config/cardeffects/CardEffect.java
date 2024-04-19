@@ -24,7 +24,6 @@ public abstract class CardEffect {
         // Gain objet (du shop)
         // Perte objet (items de départ non compris)
         // Gain d'un point ?
-        // Prison
 
         // TP exemple :
         // Tombe sur une propriété (soit achat soit payer)

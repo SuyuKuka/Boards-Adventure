@@ -17,7 +17,7 @@ public final class TeleportationEffect extends CardEffect {
 
     @Override
     public void applyEffect(final Player player, final Model model) {
-        throw new UnsupportedOperationException("Unimplemented method 'applyEffect'");
+
     }
 
     public int getCellID() {

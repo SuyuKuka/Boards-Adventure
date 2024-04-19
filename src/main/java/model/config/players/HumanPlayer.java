@@ -1,7 +1,7 @@
 package model.config.players;
 
-import model.config.Item;
 import model.config.Team;
+import model.config.items.Item;
 
 public class HumanPlayer extends Player {
 

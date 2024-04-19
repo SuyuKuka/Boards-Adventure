@@ -1,5 +1,7 @@
 package model.config.cardeffects;
 
+import java.util.Random;
+
 import model.Model;
 import model.config.players.Player;
 
@@ -14,7 +16,12 @@ public final class LoseItemEffect extends CardEffect {
 
     @Override
     public void applyEffect(Player player, Model model) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'applyEffect'");
+        if (player.getItems().size() == 0) {
+            return;
+        } else {
+            Random rand = new Random();
+            player.getItems().remove(rand.nextInt(player.getItems().size()));
+        }
+
     }
 }

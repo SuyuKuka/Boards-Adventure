@@ -1,12 +1,13 @@
 package model.config.players;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.config.Dice;
 import model.config.GameMap;
-import model.config.Item;
 import model.config.Team;
 import model.config.cells.Cell;
+import model.config.items.Item;
 
 public abstract class Player {
 
@@ -15,11 +16,13 @@ public abstract class Player {
     private final Team team;
     private final Item startItem;
     private final HashMap<String, Dice> dices;
+    private final ArrayList<Item> items = new ArrayList<>();
 
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position = 0;
     private int previousPosition = 0;
+    private int maxItems = 3;
 
     private int diceRollValue = 0;
 
@@ -60,6 +63,10 @@ public abstract class Player {
         return gameMap.getCell(position);
     }
 
+    public final boolean hasExceedItems() {
+        return items.size() >= maxItems;
+    }
+
     // endregion
 
     // region getters/setters
@@ -86,6 +93,10 @@ public abstract class Player {
 
     public final int getJailTurn() {
         return jailTurn;
+    }
+
+    public final ArrayList<Item> getItems() {
+        return items;
     }
 
     public final void setPosition(final int position) {

@@ -20,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -482,10 +481,9 @@ public final class GamePanel extends CorePanel {
         controller.setCurrentCell();
 
         JPanel top = new JPanel();
-        top.setLayout(new FlowLayout());
+        top.setLayout(new BorderLayout());
 
         JButton close = new JButton("X");
-        close.setAlignmentX(Component.RIGHT_ALIGNMENT);
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -494,11 +492,10 @@ public final class GamePanel extends CorePanel {
                 revalidate();
             }
         });
-        top.add(close, FlowLayout.RIGHT);
+        top.add(close, BorderLayout.EAST);
 
         JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
-        shop.setAlignmentX(Component.CENTER_ALIGNMENT);
-        top.add(shop, FlowLayout.CENTER);
+        top.add(shop, BorderLayout.CENTER);
 
         //LISTE ITEMS
 
