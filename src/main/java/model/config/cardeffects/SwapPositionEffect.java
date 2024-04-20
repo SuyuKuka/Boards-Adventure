@@ -1,5 +1,7 @@
 package model.config.cardeffects;
 
+import java.util.Random;
+
 import model.Model;
 import model.config.players.Player;
 
@@ -14,7 +16,12 @@ public final class SwapPositionEffect extends CardEffect {
 
     @Override
     public void applyEffect(final Player player, final Model model) {
-        throw new UnsupportedOperationException("Unimplemented method 'applyEffect'");
+        Random rand = new Random();
+        Player swaped = model.getPlayers().get(rand.nextInt(model.getPlayers().size()));
+
+        int tmp = player.getPosition();
+        player.setPosition(swaped.getPosition());
+        swaped.setPosition(tmp);
     }
 
 }
