@@ -13,7 +13,7 @@ public abstract class Player {
     private final String username;
     private final Team team;
     private final Item startItem;
-    private final Item shopItem;
+    private Item shopItem;
 
     private int jailTurn = 0;
     private int mapLap = 0;
@@ -34,6 +34,10 @@ public abstract class Player {
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
+    }
+
+    public final void tooMuchShopItem(Item newItem) {
+        // Il doit choisir entre le nouveau item ou son item actuel
     }
 
     // endregion
@@ -118,6 +122,14 @@ public abstract class Player {
 
     public final int getPlayerID() {
         return playerID;
+    }
+
+    public final void setShopItem(final Item shopItem) {
+        this.shopItem = shopItem;
+    }
+
+    public final boolean hasShopItem() {
+        return shopItem != null;
     }
 
     // endregion
