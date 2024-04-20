@@ -41,7 +41,6 @@ public final class Controller {
         this.model = model;
         Resources.loadGameResources(model.getGameMap().getMapName());
         gamePanel = view.initNewGamePanel(this);
-        gameUpdate();
     }
 
     public void gameUpdate() {
@@ -152,9 +151,9 @@ public final class Controller {
         getCurrentPlayer().setPosition(cellID);
     }
 
-    public void playerRollDice(final String diceName) {
+    public void playerRollDice() {
         final Player currentPlayer = getCurrentPlayer();
-        currentPlayer.rollDice(diceName);
+        currentPlayer.rollDice();
         if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
             currentPlayer.setJailTurn(0);
         }

@@ -11,7 +11,6 @@ import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
 import model.config.Team;
-import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
@@ -56,6 +55,7 @@ public final class Game {
                     model = createTestModel("map4");
                 }
                 controller = new Controller(this, model, view);
+                controller.gameUpdate();
                 break;
             default:
                 break;
