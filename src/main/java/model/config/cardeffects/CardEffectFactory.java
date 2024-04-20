@@ -20,7 +20,7 @@ public final class CardEffectFactory {
             case SWAP_POSITION_EFFECT:
                 return new SwapPositionEffect(quantity);
             case GAIN_ITEM_EFFECT:
-                return new GainItemEffect(quantity, jCardEffect.getString("itemName"));
+                return new GainItemEffect(quantity);
             case LOSE_ITEM_EFFECT:
                 return new LoseItemEffect(quantity);
             case GAIN_GAMEPOINT_EFFECT:

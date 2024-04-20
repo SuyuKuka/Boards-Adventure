@@ -2,7 +2,43 @@
 	"cards_effect" : [
 		{
 			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 10
+			"cellID" : 8
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 300
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 40
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 37
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 600
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 607
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 502
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 402
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 29
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 23
 		},
 		{
 			"type" : "MONEY_EFFECT",
@@ -13,16 +49,16 @@
 			"type" : "MONEY_EFFECT",
 			"amount" : -100,
 			"quantity" : 2
-		}, 
+		},
 		{
-			"type" : "LOSE_PROPERTY_EFFECT"
+			"type" : "LOSE_PROPERTY_EFFECT",
+			"quantity" : 8
 		}, 
 		{
 			"type" : "SWAP_POSITION_EFFECT"
 		}, 
 		{
-			"type" : "GAIN_ITEM_EFFECT",
-			"itemName" : "EPEE_DE_LA_MUERTE"
+			"type" : "GAIN_ITEM_EFFECT"
 		}, 
 		{
 			"type" : "LOSE_ITEM_EFFECT"

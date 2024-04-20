@@ -6,6 +6,7 @@ import java.util.HashMap;
 import model.config.cardeffects.CardEffect;
 import model.config.cells.Cell;
 import model.config.cells.Start;
+import model.config.items.Item;
 
 /**
  * Classe qui contient toutes les données "logiques" d'une map sous forme de fichier "config.json"
@@ -22,11 +23,15 @@ public final class GameMap {
     private final ArrayList<CardEffect> cardEffects;
     /** Liste des cellules du jeu. */
     private final HashMap<Integer, Cell> cells;
+    /** Liste des items du jeu. */
+    private final ArrayList<Item> items;
 
-    public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells) {
+    public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
+        final ArrayList<Item> items) {
         this.mapName = mapName;
         this.cardEffects = cardEffects;
         this.cells = cells;
+        this.items = items;
     }
 
     public int getLapGain() {
@@ -39,6 +44,10 @@ public final class GameMap {
 
     public Cell getCell(final int pos) {
         return cells.get(pos);
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
     }
 
 }

@@ -1,5 +1,7 @@
 package model.config.cardeffects;
 
+import java.util.Random;
+
 import model.Model;
 import model.config.players.Player;
 
@@ -8,20 +10,18 @@ import model.config.players.Player;
  */
 public final class GainItemEffect extends CardEffect {
 
-    private final String itemName;
-
-    public GainItemEffect(int quantity, final String itemName) {
+    public GainItemEffect(int quantity) {
         super(quantity);
-        this.itemName = itemName;
     }
 
     @Override
     public void applyEffect(Player player, Model model) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'applyEffect'");
-    }
-
-    public String getItemName() {
-        return itemName;
+        Random rand = new Random();
+        if (player.hasExceedItems()) {
+            player.removeItem(0);
+        } else {
+            player.getItems().add(model.getGameMap().getItems().get(
+                rand.nextInt(model.getGameMap().getItems().size())));
+        }
     }
 }

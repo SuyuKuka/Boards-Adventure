@@ -22,6 +22,7 @@ import model.config.cardeffects.CardEffect;
 import model.config.cardeffects.CardEffectFactory;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
+import model.config.items.Item;
 import view.game.cellsgraphics.CellGraphics;
 import view.game.cellsgraphics.CellGraphicsFactory;
 
@@ -81,7 +82,8 @@ public final class Resources {
             final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
             final ArrayList<CardEffect> cardEffects = loadCardEffects(configJObject.getJSONArray("cards_effect"));
             final HashMap<Integer, Cell> cells = loadCells(configJObject.getJSONArray("cells"));
-            return new GameMap(mapName, cardEffects, cells);
+            final Item items = new Item("tmp", null);
+            return new GameMap(mapName, cardEffects, cells, items.getShopItems());
         } catch (Exception e) {
             e.printStackTrace();
         }

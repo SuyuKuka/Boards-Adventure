@@ -43,6 +43,9 @@ public abstract class Player {
         System.out.println(username + " a lancé un dé de : " + diceRollValue + " !");
     }
 
+    public final void removeItem(int index) {
+        items.remove(index);
+    }
     // endregion
 
     // region increment
