@@ -43,11 +43,41 @@
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : 100,
+			"quantity" : 20
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -50,
+			"quantity" : 20
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 200,
+			"quantity" : 10
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -200,
+			"quantity" : 10
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 300,
+			"quantity" : 5
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -300,
+			"quantity" : 5
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 400,
 			"quantity" : 2
 		},
 		{
 			"type" : "MONEY_EFFECT",
-			"amount" : -100,
+			"amount" : -400,
 			"quantity" : 2
 		},
 		{
@@ -55,11 +85,12 @@
 			"quantity" : 8
 		}, 
 		{
-			"type" : "SWAP_POSITION_EFFECT"
+			"type" : "SWAP_POSITION_EFFECT",
+			"quantity" : 10
 		}, 
 		{
 			"type" : "GAIN_ITEM_EFFECT",
-			"quantity" : 10
+			"quantity" : 15
 		}, 
 		{
 			"type" : "LOSE_ITEM_EFFECT",
