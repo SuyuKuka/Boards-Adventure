@@ -74,13 +74,16 @@
 			"type" : "SWAP_POSITION_EFFECT"
 		}, 
 		{
-			"type" : "GAIN_ITEM_EFFECT"
+			"type" : "GAIN_ITEM_EFFECT",
+			"quantity" : 10
 		}, 
 		{
-			"type" : "LOSE_ITEM_EFFECT"
+			"type" : "LOSE_ITEM_EFFECT",
+			"quantity" : 10
 		}, 
 		{
-			"type" : "GAIN_GAMEPOINT_EFFECT"
+			"type" : "GAIN_GAMEPOINT_EFFECT",
+			"quantity" : 2
 		}
 	],
 	"cells" : [

@@ -22,6 +22,5 @@ public final class LoseItemEffect extends CardEffect {
             Random rand = new Random();
             player.getItems().remove(rand.nextInt(player.getItems().size()));
         }
-
     }
 }

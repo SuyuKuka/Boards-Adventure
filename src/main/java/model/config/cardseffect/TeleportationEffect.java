@@ -17,11 +17,7 @@ public final class TeleportationEffect extends CardEffect {
 
     @Override
     public void applyEffect(final Player player, final Model model) {
-
-    }
-
-    public int getCellID() {
-        return cellID;
+        player.setPosition(cellID);
     }
 
 }
