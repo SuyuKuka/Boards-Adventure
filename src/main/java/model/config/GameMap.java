@@ -46,6 +46,10 @@ public final class GameMap {
         return cells.get(pos);
     }
 
+    public ArrayList<CardEffect> getCardEffects() {
+        return cardEffects;
+    }
+
     public ArrayList<Item> getShopItems() {
         return shopItems;
     }

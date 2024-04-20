@@ -1,6 +1,9 @@
 package model.config.cells;
 
+import java.util.Random;
+
 import model.Model;
+import model.config.cardseffect.CardEffect;
 import model.config.players.Player;
 
 public class Card extends Cell {
@@ -18,10 +21,11 @@ public class Card extends Cell {
      */
     @Override
     public void playCellEffect(Player player, Model model) {
-        // Random rand = new Random();
-        // int i = rand.nextInt(cards.size());
-        // cards.get(i).applyEffect(player, model);
-        // model.setGameState(GameState.CARD);
+        Random rand = new Random();
+        CardEffect card = model.getGameMap().getCardEffects().get(
+            rand.nextInt(model.getGameMap().getCardEffects().size()));
+        model.getGameMap().getCardEffects().remove(card);
+        card.applyEffect(player, model);
     }
 
 }

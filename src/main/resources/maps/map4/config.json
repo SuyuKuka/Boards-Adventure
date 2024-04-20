@@ -59,58 +59,48 @@
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : 100,
-			"quantity" : 20
+			"quantity" : 5
 		},
 		{
 			"type" : "MONEY_EFFECT",
-			"amount" : -50,
-			"quantity" : 20
+			"amount" : -100,
+			"quantity" : 5
 		},
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : 200,
-			"quantity" : 10
+			"quantity" : 4
 		},
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : -200,
-			"quantity" : 10
+			"quantity" : 4
 		},
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : 300,
-			"quantity" : 5
+			"quantity" : 2
 		},
 		{
 			"type" : "MONEY_EFFECT",
 			"amount" : -300,
-			"quantity" : 5
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : 400,
-			"quantity" : 2
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : -400,
 			"quantity" : 2
 		},
 		{
 			"type" : "LOSE_PROPERTY_EFFECT",
-			"quantity" : 8
+			"quantity" : 3
 		}, 
 		{
 			"type" : "SWAP_POSITION_EFFECT",
-			"quantity" : 10
+			"quantity" : 3
 		}, 
 		{
 			"type" : "GAIN_ITEM_EFFECT",
-			"quantity" : 15
+			"quantity" : 3
 		}, 
 		{
 			"type" : "LOSE_ITEM_EFFECT",
-			"quantity" : 10
+			"quantity" : 3
 		}, 
 		{
 			"type" : "GAIN_GAMEPOINT_EFFECT",
