@@ -1,8 +1,9 @@
-package model.config.cardeffects;
+package model.config.cardseffect;
 
 import java.util.Random;
 
 import model.Model;
+import model.config.items.ItemName;
 import model.config.players.Player;
 
 /**
@@ -10,12 +11,14 @@ import model.config.players.Player;
  */
 public final class GainItemEffect extends CardEffect {
 
-    public GainItemEffect(int quantity) {
+    private final ItemName itemName;
+
+    public GainItemEffect(final int quantity) {
         super(quantity);
     }
 
     @Override
-    public void applyEffect(Player player, Model model) {
+    public void applyEffect(final Player player, final Model model) {
         Random rand = new Random();
         if (player.hasExceedItems()) {
             player.removeItem(0);

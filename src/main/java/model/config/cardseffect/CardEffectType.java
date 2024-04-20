@@ -1,4 +1,4 @@
-package model.config.cardeffects;
+package model.config.cardseffect;
 
 public enum CardEffectType {
     TELEPORTATION_EFFECT, // Téléporte sur 'cellID'

@@ -45,7 +45,7 @@ public final class Model {
     }
 
     public void rollDice() {
-        currentPlayer.rollDice("normal");
+        currentPlayer.rollDice();
     }
 
     // region playerMove

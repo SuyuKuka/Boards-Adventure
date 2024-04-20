@@ -1,9 +1,7 @@
 package model.config.players;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import static game.Game.RAND;
 
-import model.config.Dice;
 import model.config.GameMap;
 import model.config.Team;
 import model.config.cells.Cell;
@@ -15,14 +13,12 @@ public abstract class Player {
     private final String username;
     private final Team team;
     private final Item startItem;
-    private final HashMap<String, Dice> dices;
-    private final ArrayList<Item> items = new ArrayList<>();
+    private final Item shopItem;
 
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position = 0;
     private int previousPosition = 0;
-    private int maxItems = 3;
 
     private int diceRollValue = 0;
 
@@ -31,21 +27,15 @@ public abstract class Player {
         this.username = username;
         this.team = team;
         this.startItem = startItem;
-        dices = new HashMap<>();
-        dices.put("normal", new Dice());
+        shopItem = null;
     }
 
     // region model methods
 
-    public final void rollDice(final String diceName) {
-        diceRollValue = dices.get("normal").rollDice();
-        diceRollValue = 9;
-        System.out.println(username + " a lancé un dé de : " + diceRollValue + " !");
+    public final void rollDice() {
+        diceRollValue = RAND.nextInt(6) + 1;
     }
 
-    public final void removeItem(int index) {
-        items.remove(index);
-    }
     // endregion
 
     // region increment
@@ -64,10 +54,6 @@ public abstract class Player {
 
     public final Cell getPlayerCell(final GameMap gameMap) {
         return gameMap.getCell(position);
-    }
-
-    public final boolean hasExceedItems() {
-        return items.size() >= maxItems;
     }
 
     // endregion
@@ -98,8 +84,12 @@ public abstract class Player {
         return jailTurn;
     }
 
-    public final ArrayList<Item> getItems() {
-        return items;
+    public final Item getStartItem() {
+        return startItem;
+    }
+
+    public final Item getShopItem() {
+        return shopItem;
     }
 
     public final void setPosition(final int position) {

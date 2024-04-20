@@ -3,7 +3,7 @@ package model.config;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import model.config.cardeffects.CardEffect;
+import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
 import model.config.cells.Start;
 import model.config.items.Item;
@@ -19,19 +19,19 @@ public final class GameMap {
 
     private final String mapName;
 
+    /** Liste des items des shops de la map disponibles. */
+    private final ArrayList<Item> shopItems;
     /** Liste des cartes disponibles pour cette map. */
     private final ArrayList<CardEffect> cardEffects;
     /** Liste des cellules du jeu. */
     private final HashMap<Integer, Cell> cells;
-    /** Liste des items du jeu. */
-    private final ArrayList<Item> items;
 
     public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
-        final ArrayList<Item> items) {
+        final ArrayList<Item> shopItems) {
         this.mapName = mapName;
         this.cardEffects = cardEffects;
         this.cells = cells;
-        this.items = items;
+        this.shopItems = shopItems;
     }
 
     public int getLapGain() {
@@ -46,8 +46,8 @@ public final class GameMap {
         return cells.get(pos);
     }
 
-    public ArrayList<Item> getItems() {
-        return items;
+    public ArrayList<Item> getShopItems() {
+        return shopItems;
     }
 
 }

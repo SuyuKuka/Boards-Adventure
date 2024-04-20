@@ -1,4 +1,4 @@
-package model.config.cardeffects;
+package model.config.cardseffect;
 
 import java.util.Random;
 
@@ -6,7 +6,7 @@ import model.Model;
 import model.config.players.Player;
 
 /**
- * Fait perdre un objet au joueur courant choisi aléatoirement si possible.
+ * Fait perdre l'objet de shop du joueur si il en possède un.
  */
 public final class LoseItemEffect extends CardEffect {
 

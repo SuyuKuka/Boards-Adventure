@@ -1,4 +1,4 @@
-package model.config.cardeffects;
+package model.config.cardseffect;
 
 import model.Model;
 import model.config.players.Player;
