@@ -1,4 +1,4 @@
-package model.config.cardeffects;
+package model.config.cardseffect;
 
 import java.util.Random;
 

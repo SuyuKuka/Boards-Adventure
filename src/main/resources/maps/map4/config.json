@@ -1,4 +1,20 @@
 {
+	"shop_items" : [
+		{
+			"name" : "shop_item1"
+		},
+		{
+			"name" : "shop_item2"
+		}
+	],
+	"start_items" : [
+		{
+			"name" : "start_item1"
+		},
+		{
+			"name" : "start_item2"
+		}
+	],
 	"cards_effect" : [
 		{
 			"type" : "TELEPORTATION_EFFECT",

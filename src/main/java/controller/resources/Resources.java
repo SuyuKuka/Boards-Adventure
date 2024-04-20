@@ -18,11 +18,12 @@ import org.json.JSONObject;
 
 import controller.Controller;
 import model.config.GameMap;
-import model.config.cardeffects.CardEffect;
-import model.config.cardeffects.CardEffectFactory;
+import model.config.cardseffect.CardEffect;
+import model.config.cardseffect.CardEffectFactory;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
 import model.config.items.Item;
+import model.config.items.ItemFactory;
 import view.game.cellsgraphics.CellGraphics;
 import view.game.cellsgraphics.CellGraphicsFactory;
 
@@ -82,8 +83,8 @@ public final class Resources {
             final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
             final ArrayList<CardEffect> cardEffects = loadCardEffects(configJObject.getJSONArray("cards_effect"));
             final HashMap<Integer, Cell> cells = loadCells(configJObject.getJSONArray("cells"));
-            final Item items = new Item("tmp", null);
-            return new GameMap(mapName, cardEffects, cells, items.getShopItems());
+            final ArrayList<Item> shopItems = loadShopItems(configJObject.getJSONArray("shop_items"));
+            return new GameMap(mapName, cardEffects, cells, shopItems);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,6 +106,14 @@ public final class Resources {
             cells.put(jCell.getInt("id"), CellFactory.createCell(jCell));
         }
         return cells;
+    }
+
+    private static ArrayList<Item> loadShopItems(final JSONArray jShopItems) {
+        final ArrayList<Item> shopItems = new ArrayList<>();
+        for (int i = 0; i < jShopItems.length(); i++) {
+            shopItems.add(ItemFactory.createItem(jShopItems.getJSONObject(i), true));
+        }
+        return shopItems;
     }
 
     // endregion

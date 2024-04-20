@@ -1,7 +1,6 @@
 package model.config.players;
 
 import model.config.Team;
-import model.config.items.Item;
 
 public class ComputerPlayer extends Player {
 

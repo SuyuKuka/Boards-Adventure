@@ -1,64 +1,51 @@
 package model.config.items;
 
-import java.util.ArrayList;
+import model.Model;
 
-public class Item {
+public abstract class Item {
 
-    private ArrayList<Item> startItems = new ArrayList<>();
-    private static ArrayList<Item> shopItems = new ArrayList<>();
+    private final ItemName itemName;
 
-    private String name;
-    private ItemEffect effect;
+    private final boolean isShopItem;
+    // Shop Item
+    private final int buyPrice;
+    // Starter Item
+    private final int turnCooldown;
 
-    public Item(final String name, final ItemEffect effect) {
-        //name sera sous la forme de "nom_type", true = start, false = shop
-        if (!name.equals("tmp")) {
-            this.effect = effect;
-            int index = name.indexOf('_');
-            if (index != -1) {
-                this.name = name.substring(0, index);
-                String check = name.substring(index + 1);
-                if (check.contains("start")) {
-                    createItems(true);
-                } else {
-                    createItems(false);
-                }
-            }
-        }
-    }
-
-    /**
-     * La fonction va créer la liste des items de départs et les items du shop.
-     * @param type Détermine le type de l'objet permettant de l'insérer dans la bonne liste.
-     */
-    public void createItems(boolean type) {
-        if (type) {
-            startItems.add(this);
+    public Item(final ItemName itemName, final boolean isShopItem, final int value) {
+        this.itemName = itemName;
+        this.isShopItem = isShopItem;
+        if (isShopItem) {
+            buyPrice = value;
+            turnCooldown = -1;
         } else {
-            shopItems.add(this);
+            buyPrice = -1;
+            turnCooldown = value;
         }
     }
+
+    public abstract void playItemEffect(Model model);
 
     // #region setter / getter
 
-    public final String getName() {
-        return name;
+    public final ItemName getItemName() {
+        return itemName;
     }
 
-    public final ItemEffect getEffect() {
-        return effect;
+    public final boolean isShopItem() {
+        return isShopItem;
     }
 
-    public final void setEffect(final ItemEffect effect) {
-        this.effect = effect;
+    public final boolean isStarterItem() {
+        return !isShopItem;
     }
 
-    public final void setName(final String name) {
-        this.name = name;
+    public final int getBuyPrice() {
+        return buyPrice;
     }
 
-    public final ArrayList<Item> getShopItems() {
-        return shopItems;
+    public final int getTurnCooldown() {
+        return turnCooldown;
     }
 
     // #endregion
