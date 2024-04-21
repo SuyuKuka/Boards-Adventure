@@ -1,18 +1,18 @@
 {
 	"shop_items" : [
 		{
-			"name" : "shop_item1"
+			"name" : "LITTLE_DICE"
 		},
 		{
-			"name" : "shop_item2"
+			"name" : "HOE"
 		}
 	],
 	"start_items" : [
 		{
-			"name" : "start_item1"
+			"name" : "LITTLE_DICE"
 		},
 		{
-			"name" : "start_item2"
+			"name" : "HOE"
 		}
 	],
 	"cards_effect" : [
