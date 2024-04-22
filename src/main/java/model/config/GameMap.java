@@ -2,6 +2,7 @@ package model.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
@@ -26,12 +27,39 @@ public final class GameMap {
     /** Liste des cellules du jeu. */
     private final HashMap<Integer, Cell> cells;
 
+    private int cardEffectsCounter;
+
     public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
         final ArrayList<Item> shopItems) {
         this.mapName = mapName;
         this.cardEffects = cardEffects;
         this.cells = cells;
         this.shopItems = shopItems;
+        cardEffectsCounter = countCardEffectsQuantity();
+    }
+
+    private int countCardEffectsQuantity() {
+        int counter = 0;
+        for (int i = 0; i < cardEffects.size(); i++) {
+            counter += cardEffects.get(i).getQuantity();
+        }
+        return counter;
+    }
+
+    public CardEffect loadRandomCardEffect() {
+        final Random rand = new Random();
+        int randInt = rand.nextInt(cardEffectsCounter);
+        CardEffect cardEffect = null;
+        for (int i = 0; i < cardEffects.size(); i++) {
+            cardEffect = cardEffects.get(i);
+            if (randInt <= 0) {
+                break;
+            }
+            randInt -= cardEffect.getQuantity();
+        }
+        cardEffects.remove(cardEffect);
+        cardEffectsCounter--;
+        return cardEffect;
     }
 
     public int getLapGain() {

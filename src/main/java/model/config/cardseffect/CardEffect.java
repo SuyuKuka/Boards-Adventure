@@ -29,4 +29,7 @@ public abstract class CardEffect {
         // Tombe sur une propriété (soit achat soit payer)
         // Case départ? (donc gagne 1 point + argent)
 
+    public final int getQuantity() {
+        return quantity;
+    }
 }
