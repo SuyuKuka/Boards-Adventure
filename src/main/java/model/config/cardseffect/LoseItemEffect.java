@@ -16,4 +16,10 @@ public final class LoseItemEffect extends CardEffect {
     public void applyEffect(Player player, Model model) {
         player.setShopItem(null);
     }
+
+    @Override
+    public String toString() {
+        return "Fait perdre l'objet de shop du joueur si il en possède un.";
+    }
+
 }

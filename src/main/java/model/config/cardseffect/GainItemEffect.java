@@ -25,4 +25,9 @@ public final class GainItemEffect extends CardEffect {
             player.setShopItem(item);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Fait gagner au joueur courant l'objet de nom si rien ne le contraint.";
+    }
 }

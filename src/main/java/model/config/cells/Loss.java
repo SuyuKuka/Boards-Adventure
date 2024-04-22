@@ -4,6 +4,7 @@ import model.Model;
 import model.config.players.Player;
 
 public final class Loss extends Cell {
+
     private final int loss;
 
     public Loss(final int id, final boolean shouldPlayerStop, final CellType cellType,
@@ -20,4 +21,5 @@ public final class Loss extends Cell {
     public int getLoss() {
         return loss;
     }
+
 }

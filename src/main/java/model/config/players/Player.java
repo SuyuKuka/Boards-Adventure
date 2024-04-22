@@ -2,8 +2,11 @@ package model.config.players;
 
 import static game.Game.RAND;
 
+import java.util.ArrayList;
+
 import model.config.GameMap;
 import model.config.Team;
+import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
 import model.config.items.Item;
 
@@ -13,6 +16,7 @@ public abstract class Player {
     private final String username;
     private final Team team;
     private final Item startItem;
+    private final ArrayList<CardEffect> cards = new ArrayList<>();
     private Item shopItem;
 
     private int jailTurn = 0;
@@ -34,6 +38,7 @@ public abstract class Player {
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
+        diceRollValue = 7;
     }
 
     public final void tooMuchShopItem(Item newItem) {

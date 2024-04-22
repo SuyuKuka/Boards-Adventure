@@ -21,4 +21,5 @@ public final class Gain extends Cell {
     public int getGain() {
         return gain;
     }
+
 }

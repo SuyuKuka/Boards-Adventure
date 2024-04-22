@@ -31,4 +31,9 @@ public class LossPropertyEffect extends CardEffect {
         list.remove(i.nextInt(list.size()));
     }
 
+    @Override
+    public final String toString() {
+        return "Fait perdre une propriété au joueur courant si possible.";
+    }
+
 }

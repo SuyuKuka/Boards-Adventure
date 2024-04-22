@@ -55,4 +55,5 @@ public final class CellFactory {
         }
         throw new IllegalArgumentException();
     }
+
 }

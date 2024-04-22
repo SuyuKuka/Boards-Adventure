@@ -175,6 +175,13 @@ public final class Controller {
         ((Property) currentCell).upgrade(getCurrentPlayer());
     }
 
+    public void playShowCard() {
+        //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
+        // ((Card) currentCell).showCard(getCurrentPlayer(), model);
+    }
+
+    // #endregion
+
     // region model getters/setters
 
     public Cell getCell(final int cellID) {
@@ -191,6 +198,16 @@ public final class Controller {
 
     public void setCurrentCell() {
         this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
+    }
+
+    public Cell getCurrentCell() {
+        return currentCell;
+    }
+
+    public String getCardEffect() {
+        //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
+        //return ((Card) currentCell).getCardEffect().toString();
+        return "carte !!";
     }
 
     public ArrayList<Player> getPlayers() {

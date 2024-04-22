@@ -6,7 +6,6 @@ import model.config.players.Player;
 
 public class Card extends Cell {
 
-
     public Card(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
         super(id, shouldPlayerStop, cellType, nextCellID);
     }

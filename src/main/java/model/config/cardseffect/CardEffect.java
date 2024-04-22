@@ -16,17 +16,17 @@ public abstract class CardEffect {
     }
 
     public abstract void applyEffect(Player player, Model model);
-        // Teleportation sur une certaine case ?
+        // Teleportation sur une certaine case ?            ✔
         // Gain d'argent                                    ✔
         // Perte d'argent                                   ✔
         // Perte d'une propriété                            ✔
-        // Echanger de position avec un autre joueur
+        // Echanger de position avec un autre joueur        ✔
         // Gain objet (du shop)
-        // Perte objet (items de départ non compris)
-        // Gain d'un point ?
+        // Perte objet (items de départ non compris)        ✔
+        // Gain d'un point ?                                ✔
 
         // TP exemple :
-        // Tombe sur une propriété (soit achat soit payer)
+        // Tombe sur une propriété (soit achat soit payer)  ✔
         // Case départ? (donc gagne 1 point + argent)
 
     public final int getQuantity() {
