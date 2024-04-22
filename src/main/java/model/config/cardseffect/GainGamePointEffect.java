@@ -17,4 +17,9 @@ public final class GainGamePointEffect extends CardEffect {
         player.getTeam().incrementGamePoint(1);
     }
 
+    @Override
+    public String toString() {
+        return "Donne 1 point à l'équipe du joueur courant.";
+    }
+
 }

@@ -17,6 +17,7 @@ import model.config.cells.Gain;
 import model.config.cells.Loss;
 import model.config.cells.Property;
 import model.config.players.Player;
+import model.config.cells.Card;
 
 /**
  * Classe qui fait office de Contrôleur pour le {@link Model} et la {@link View}.
@@ -175,6 +176,12 @@ public final class Controller {
         ((Property) currentCell).upgrade(getCurrentPlayer());
     }
 
+    public void playShowCard() {
+        ((Card) currentCell).showCard(getCurrentPlayer(), model);
+    }
+
+    // #endregion
+
     // region model getters/setters
 
     public Cell getCell(final int cellID) {
@@ -191,6 +198,14 @@ public final class Controller {
 
     public void setCurrentCell() {
         this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
+    }
+
+    public Cell getCurrentCell() {
+        return currentCell;
+    }
+
+    public String getCardEffect() {
+        return ((Card) currentCell).getCardEffect().toString();
     }
 
     public ArrayList<Player> getPlayers() {

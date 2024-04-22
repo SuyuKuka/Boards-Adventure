@@ -20,4 +20,9 @@ public final class TeleportationEffect extends CardEffect {
         player.setPosition(cellID);
     }
 
+    @Override
+    public String toString() {
+        return "Fait teleporter le joueur courant sur la cellule " + cellID;
+    }
+
 }

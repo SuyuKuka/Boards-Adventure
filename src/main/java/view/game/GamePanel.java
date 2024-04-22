@@ -147,6 +147,10 @@ public final class GamePanel extends CorePanel {
             case SHOP:
                 addPanel(createShopPanel(), INTERACTION);
                 break;
+            case CARD:
+                System.out.println("AAAAAAAAAAAAAAA");
+                addPanel(createCardPanel(), INTERACTION);
+                break;
             default:
                 startSingleActionTimer(500, e -> controller.gameUpdate());
                 break;
@@ -500,6 +504,39 @@ public final class GamePanel extends CorePanel {
         //LISTE ITEMS
 
         background.add(top, BorderLayout.NORTH);
+
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    // #endregion
+
+    // #region Card
+
+    public JPanel createCardPanel() {
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setLayout(new BorderLayout());
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+
+        JButton open = new JButton("X");
+        open.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                controller.playShowCard();
+                removePanel(INTERACTION);
+                revalidate();
+                String test = controller.getCardEffect();
+
+            System.out.println(test);
+            }
+        });
+        background.add(open);
 
         resizePanel.add(background);
         return resizePanel;

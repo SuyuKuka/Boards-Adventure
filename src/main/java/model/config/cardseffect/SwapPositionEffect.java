@@ -24,4 +24,9 @@ public final class SwapPositionEffect extends CardEffect {
         swaped.setPosition(tmp);
     }
 
+    @Override
+    public String toString() {
+        return "Echange la position du joueur courant avec un autre joueur choisi aléatoirement.";
+    }
+
 }

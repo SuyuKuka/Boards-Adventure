@@ -26,6 +26,11 @@ public final class MoneyEffect extends CardEffect {
         player.getTeam().incrementMoney(amount);
     }
 
+    @Override
+    public String toString() {
+        return "Ajoute ou diminue l'argent que possède l'équipe du joueur par " + amount;
+    }
+
     public int getAmount() {
         return amount;
     }
