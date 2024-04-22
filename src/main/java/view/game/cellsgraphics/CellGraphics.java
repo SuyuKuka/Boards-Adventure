@@ -9,8 +9,8 @@ import controller.Controller;
 import controller.resources.Resources;
 
 public abstract class CellGraphics extends JPanel {
-    private static final int CELL_DEFAULT_HEIGHT = 24;
-    private static final int CELL_DEFAULT_WIDTH = 24;
+    private static final int CELL_DEFAULT_HEIGHT = 65;
+    private static final int CELL_DEFAULT_WIDTH = 65;
 
     private final Controller controller;
     private final int cellID;

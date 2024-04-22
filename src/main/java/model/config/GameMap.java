@@ -6,6 +6,7 @@ import java.util.Random;
 
 import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
+import model.config.cells.CellType;
 import model.config.cells.Start;
 import model.config.items.Item;
 
@@ -26,6 +27,7 @@ public final class GameMap {
     private final ArrayList<CardEffect> cardEffects;
     /** Liste des cellules du jeu. */
     private final HashMap<Integer, Cell> cells;
+    private final Start startCell;
 
     private int cardEffectsCounter;
 
@@ -36,6 +38,7 @@ public final class GameMap {
         this.cells = cells;
         this.shopItems = shopItems;
         cardEffectsCounter = countCardEffectsQuantity();
+        startCell = findStartCell();
     }
 
     private int countCardEffectsQuantity() {
@@ -44,6 +47,15 @@ public final class GameMap {
             counter += cardEffects.get(i).getQuantity();
         }
         return counter;
+    }
+
+    private Start findStartCell() {
+        for (Cell cell : cells.values()) {
+            if (cell.getCellType() == CellType.START) {
+                return (Start) cell;
+            }
+        }
+        return null;
     }
 
     public CardEffect loadRandomCardEffect() {
@@ -62,8 +74,12 @@ public final class GameMap {
         return cardEffect;
     }
 
+    public Start getStartCell() {
+        return startCell;
+    }
+
     public int getLapGain() {
-        return ((Start) cells.get(0)).getLapGain();
+        return startCell.getLapGain();
     }
 
     public String getMapName() {

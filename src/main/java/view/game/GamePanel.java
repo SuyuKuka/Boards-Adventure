@@ -68,15 +68,8 @@ public final class GamePanel extends CorePanel {
     }
 
     private void initValues() {
-        zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
-        zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                zoomX = ((double) getWidth() / getMinimumSize().width) * 1.897;
-                zoomY = ((double) getHeight() / getMinimumSize().height) * 1.6;
-            }
-        });
+        zoomX = 1;
+        zoomY = 1;
         for (Player player : controller.getPlayers()) {
             playerGraphicsMap.put(player, new PlayerGraphics(player, cellsGraphics));
         }
@@ -184,7 +177,7 @@ public final class GamePanel extends CorePanel {
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
                 Image image = Resources.getImage("board");
-                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), this);
             }
         };
         return panel;

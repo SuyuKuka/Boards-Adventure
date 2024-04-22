@@ -38,6 +38,9 @@ public final class Model {
         this.gameMap = gameMap;
         this.totalTurns = gameSettings.get("turns");
         this.players = players;
+        for (Player player : players) {
+            player.setPosition(gameMap.getStartCell().getId());
+        }
     }
 
     public void newTurn() {
