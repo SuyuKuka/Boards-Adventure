@@ -499,7 +499,7 @@ public final class MenuPanel extends CorePanel {
         mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
+                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
                 JPanel mapPanel = new JPanel(new GridLayout(8, 1));
 
                 JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.", 10);
@@ -508,9 +508,6 @@ public final class MenuPanel extends CorePanel {
                 JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.", 10);
                 lossCase.setBackground(Color.CYAN);
                 mapPanel.add(lossCase);  // loss
-                //JPanel defenseCase = createCaseExplanationPanel("card_defense", "Défense: Vous protège face aux dangers.", 10);
-                //defenseCase.setBackground(Color.CYAN);
-                //mapPanel.add(defenseCase);    // defense
                 JPanel dangerCase = createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
                 dangerCase.setBackground(Color.CYAN);
                 mapPanel.add(dangerCase);    // danger
