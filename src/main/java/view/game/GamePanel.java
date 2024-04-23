@@ -2,12 +2,11 @@ package view.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -48,8 +47,13 @@ public final class GamePanel extends CorePanel {
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
-    private double zoomX;
-    private double zoomY;
+    private static final int CAMERA_WIDTH = 720;
+    private static final int CAMERA_HEIGHT = 480;
+
+    private double cameraX;
+    private double cameraY;
+    private Point cameraTarget;
+    private double zoom;
 
     private JButton playButton;
 
@@ -68,8 +72,9 @@ public final class GamePanel extends CorePanel {
     }
 
     private void initValues() {
-        zoomX = 1;
-        zoomY = 1;
+        cameraX = 0;
+        cameraY = 0;
+        zoom = 1;
         for (Player player : controller.getPlayers()) {
             playerGraphicsMap.put(player, new PlayerGraphics(player, cellsGraphics));
         }
@@ -195,14 +200,6 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                for (Integer key : cellsGraphics.keySet()) {
-                    cellsGraphics.get(key).update(zoomX, zoomY);
-                }
-            }
-        });
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
         }
@@ -217,14 +214,6 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
-                    playerGraphics.update(zoomX, zoomY);
-                }
-            }
-        });
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }

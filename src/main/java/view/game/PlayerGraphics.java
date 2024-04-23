@@ -13,13 +13,11 @@ import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
 
-    private static final int PLAYER_DEFAULT_WIDTH = 14;
-    private static final int PLAYER_DEFAULT_HEIGHT = 14;
+    private static final int PLAYER_WIDTH = 14;
+    private static final int PLAYER_HEIGHT = 14;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
 
-    private int playerWidth;
-    private int playerHeight;
     private int xPos;
     private int yPos;
 
@@ -31,34 +29,21 @@ public final class PlayerGraphics extends JLabel {
     public PlayerGraphics(final Player player, final HashMap<Integer, CellGraphics> cellsGraphics) {
         this.player = player;
         this.cellsGraphics = cellsGraphics;
-        playerWidth = PLAYER_DEFAULT_WIDTH;
-        playerHeight = PLAYER_DEFAULT_HEIGHT;
         final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
         playerImage = Resources.getImage("j" + player.getPlayerID());
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
-        setBounds(0, 0, playerWidth, playerHeight);
-        setIcon(new ImageIcon(playerImage.getScaledInstance(playerWidth, playerHeight, Image.SCALE_SMOOTH)));
-        setLocation(xPos - cellGraphics.getCellWidth() / 4, yPos - cellGraphics.getCellHeight() / 4);
+        setBounds(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
+        setIcon(new ImageIcon(playerImage.getScaledInstance(PLAYER_WIDTH, PLAYER_HEIGHT, Image.SCALE_SMOOTH)));
+        setLocation(xPos - CellGraphics.getCellWidth() / 4, yPos - CellGraphics.getCellHeight() / 4);
         setVisible(true);
-    }
-
-    public void update(final double zoomScaleX, final double zoomScaleY) {
-        playerWidth = (int) (PLAYER_DEFAULT_WIDTH * zoomScaleX);
-        playerHeight = (int) (PLAYER_DEFAULT_HEIGHT * zoomScaleY);
-        final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
-        xPos = cellGraphics.getXPos();
-        yPos = cellGraphics.getYPos();
-        setBounds(0, 0, playerWidth, playerHeight);
-        setLocation(xPos - cellGraphics.getCellWidth() / 4, yPos - cellGraphics.getCellHeight() / 4);
-        setIcon(new ImageIcon(playerImage.getScaledInstance(playerWidth, playerHeight, Image.SCALE_SMOOTH)));
     }
 
     public void updatePosition() {
         final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
-        setLocation(cellGraphics.getXPos() - cellGraphics.getCellWidth() / 4,
-            cellGraphics.getYPos() - cellGraphics.getCellHeight() / 4);
+        setLocation(cellGraphics.getXPos() - CellGraphics.getCellWidth() / 4,
+            cellGraphics.getYPos() - CellGraphics.getCellHeight() / 4);
     }
 }
