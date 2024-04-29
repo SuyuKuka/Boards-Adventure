@@ -7,14 +7,19 @@ public final class Gain extends Cell {
 
     private int gain = 0;
 
-    public Gain(final int id, final CellType cellType, final int nextCellID, final int gain) {
-        super(id, cellType, nextCellID);
+    public Gain(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final int nextCellID, final int gain) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.gain = gain;
     }
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
         player.getTeam().incrementMoney(gain);
-        return;
     }
+
+    public int getGain() {
+        return gain;
+    }
+
 }

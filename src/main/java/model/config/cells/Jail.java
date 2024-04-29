@@ -9,8 +9,9 @@ public final class Jail extends Cell {
 
     private int targetCell;
 
-    public Jail(final int id, final CellType cellType, final int nextCellID, final int targetCell) {
-        super(id, cellType, nextCellID);
+    public Jail(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final int nextCellID, final int targetCell) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.targetCell = targetCell;
     }
 

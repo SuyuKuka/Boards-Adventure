@@ -1,32 +1,84 @@
 package view.game.cellsgraphics;
 
-import model.config.cells.Cell;
+import java.awt.Image;
 
-import java.awt.BorderLayout;
+import javax.swing.JLabel;
 
-import javax.swing.JPanel;
+import controller.Controller;
+import controller.resources.Resources;
+import view.game.GamePanel;
 
-public abstract class CellGraphics extends JPanel {
-    private Cell cell;
-    private int xPos;
-    private int yPos;
+public abstract class CellGraphics extends JLabel {
+    private static final int CELL_DIAMETER = 65;
 
-    private static final int CELL_HEIGHT = 24;
-    private static final int CELL_WIDTH = 24;
+    private final GamePanel gamePanel;
+    private final Controller controller;
+    private final int cellID;
+    private final int xPos;
+    private final int yPos;
 
-    public CellGraphics(final Cell cell, final int xPos, final int yPos) {
-        this.cell = cell;
+    private Image cellImage;
+
+    public CellGraphics(final GamePanel gamePanel, final int cellID, final int xPos, final int yPos) {
+        this.gamePanel = gamePanel;
+        this.controller = gamePanel.getController();
+        this.cellID = cellID;
         this.xPos = xPos;
         this.yPos = yPos;
-        setLayout(new BorderLayout());
-        setOpaque(false);
-        setSize(CELL_WIDTH, CELL_HEIGHT);
-        setBounds(xPos - CELL_WIDTH / 2, yPos - CELL_HEIGHT / 2, CELL_WIDTH, CELL_HEIGHT);
+        cellImage = Resources.getImage(controller.getCell(cellID).getCellType().name().toLowerCase());
+        update();
         setVisible(true);
     }
 
-    public final Cell getCell() {
-        return cell;
+    public final void update() {
+        updateSize();
+        updateLocation();
+    }
+
+    private void updateSize() {
+        final double zoom = gamePanel.getZoom();
+        setSize((int) (gamePanel.getWidth() / GamePanel.getCameraMaxWidth() * CELL_DIAMETER * zoom),
+            (int) (gamePanel.getHeight() / GamePanel.getCameraMaxHeight() * CELL_DIAMETER * zoom));
+        // System.out.println(getSize());
+    }
+
+
+    private void updateLocation() {
+        // final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / GamePanel.getCameraMaxWidth();
+        // final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / GamePanel.getCameraMaxHeight();
+        final double zoom = gamePanel.getZoom();
+        final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / gamePanel.getCameraWidth();
+        final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / gamePanel.getCameraHeight();
+
+        final int cameraX = (int) (gamePanel.getCameraX() - GamePanel.getCameraMaxWidth() / 2 * zoom);
+        final int cameraY = (int) (gamePanel.getCameraY() - GamePanel.getCameraMaxHeight() / 2 * zoom);
+
+        final int posCamX = (int) ((configToScreenRatioW * (xPos - cameraX)) - CELL_DIAMETER / 2 * zoom);
+        final int posCamY = (int) ((configToScreenRatioH * (yPos - cameraY)) - CELL_DIAMETER / 2 * zoom);
+
+        setLocation(posCamX, posCamY);
+        // System.out.println(getLocation() + " " + gamePanel.getCameraWidth() + " " + gamePanel.getCameraX());
+
+    }
+
+    public final GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
+    public static int getCellDiameter() {
+        return CELL_DIAMETER;
+    }
+
+    public final Controller getController() {
+        return controller;
+    }
+
+    public final int getCellID() {
+        return cellID;
+    }
+
+    public final Image getCellImage() {
+        return cellImage;
     }
 
     public final int getXPos() {
@@ -36,13 +88,4 @@ public abstract class CellGraphics extends JPanel {
     public final int getYPos() {
         return yPos;
     }
-
-    public static int getCellWidth() {
-        return CELL_WIDTH;
-    }
-
-    public static int getCellHeight() {
-        return CELL_HEIGHT;
-    }
-
 }

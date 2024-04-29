@@ -1,29 +1,37 @@
 package view.game;
 
-import static game.Game.NANO_S;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 
-import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
-import controller.GameController;
-import model.GameState;
+import controller.Controller;
+import controller.resources.Resources;
+import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import model.config.players.Player;
 import view.CorePanel;
+import view.SwingFactory;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
@@ -36,130 +44,229 @@ public final class GamePanel extends CorePanel {
     private static final int GUI = 4;
     private static final int PAUSE = 5;
 
-    private final HashMap<Integer, JPanel> panels;
-
-    private final GameController controller;
-    private final GameMapGraphics gameMapGraphics;
+    private final Controller controller;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
-    private double zoomScale;
-    private boolean hasRendered;
-    private long lastGameUpdateTime;
-    private double elaspedTime;
+    // CAMERA ET ZOOM
+    private static final int CAMERA_MAX_WIDTH = 720;
+    private static final int CAMERA_MAX_HEIGHT = 480;
+
+    private double zoom = 1;
+    private int cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
+    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
+
+    private int cameraX = 500;
+    private int cameraY = 500;
+    private Point cameraPanStartPos = null;
+    private Point cameraPan = null;
+
+    private Image boardImage;
 
     private JButton playButton;
 
-    public GamePanel(final View frame, final GameController controller, final GameMapGraphics gameMapGraphics) {
+    public GamePanel(final View frame, final Controller controller) {
         super(frame);
-        setMinimumSize(new Dimension(720, 480));
-        this.panels = new HashMap<>();
         this.controller = controller;
-        this.gameMapGraphics = gameMapGraphics;
-        this.cellsGraphics = gameMapGraphics.getCellsGraphics();
+        boardImage = Resources.getImage("board");
+        this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
         this.playerGraphicsMap = new HashMap<>();
         initValues();
-        add(createBackground(), Integer.valueOf(BACKGROUND));
-        add(createCellsGraphics(), Integer.valueOf(CELLS));
-        add(createPlayersGraphics(), Integer.valueOf(PLAYERS));
-        add(createGUI(), Integer.valueOf(GUI));
-        add(createPause(), Integer.valueOf(PAUSE));
+        addPanel(createBackground(), BACKGROUND);
+        addPanel(createCellsGraphics(), CELLS);
+        addPanel(createPlayersGraphics(), PLAYERS);
+        addPanel(createGUI(), GUI);
+        addPanel(createPause(), PAUSE);
         setVisible(true);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON2) {
+                    cameraPanStartPos = e.getPoint();
+                    cameraPan = e.getPoint();
+                }
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON2) {
+                    // Quand le joueur clique molette sans bouger le curseur, téléporte la caméra
+                    // sur le joueur courant.
+                    if (e.getPoint().equals(cameraPanStartPos)) {
+                        final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                        cameraX = playerGraphics.getXPos();
+                        cameraY = playerGraphics.getYPos();
+                        updateCameraPosition();
+                        redraw();
+                    }
+                    cameraPanStartPos = null;
+                    cameraPan = null;
+                }
+            }
+        });
+        // TODO le zoom : il manque le repositionnement des cellGraphics et playerGraphics pour que ça marche bien
+        // addMouseWheelListener(new MouseWheelListener() {
+        //     @Override
+        //     public void mouseWheelMoved(final MouseWheelEvent e) {
+        //         if (!e.isControlDown()) {
+        //             if (e.getWheelRotation() < 0) {
+        //                 if (zoom <= 9.9) {
+        //                     zoom += 0.1;
+        //                 }
+        //             } else {
+        //                 if (zoom >= 1.1) {
+        //                     zoom -= 0.1;
+        //                 }
+        //             }
+        //             cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
+        //             cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
+        //             updateCameraPosition();
+        //             redraw();
+        //         }
+        //     }
+        // });
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (SwingUtilities.isMiddleMouseButton(e) && cameraPanStartPos != null) {
+                    int deltaX = e.getX() - cameraPan.x;
+                    int deltaY = e.getY() - cameraPan.y;
+                    cameraX += deltaX;
+                    cameraY += deltaY;
+                    updateCameraPosition();
+                    cameraPan = e.getPoint();
+                    redraw();
+                }
+            }
+        });
+    }
+
+    public void redraw() {
+        repaint();
+        for (CellGraphics cellGraphics : cellsGraphics.values()) {
+            cellGraphics.update();
+        }
+        for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
+            playerGraphics.update();
+        }
+    }
+
+    public void updateCameraPosition() {
+        if (cameraX < cameraWidth / 2) {
+            cameraX = cameraWidth / 2;
+        } else if (cameraX > boardImage.getWidth(null) - cameraWidth / 2) {
+            cameraX = boardImage.getWidth(null) - cameraWidth / 2;
+        }
+        if (cameraY < cameraHeight / 2) {
+            cameraY = cameraHeight / 2;
+        } else if (cameraY > boardImage.getHeight(null) - cameraHeight / 2) {
+            cameraY = boardImage.getHeight(null) - cameraHeight / 2;
+        }
     }
 
     private void initValues() {
-        zoomScale = 1;
-        elaspedTime = 0;
-        hasRendered = false;
-        lastGameUpdateTime = System.nanoTime();
         for (Player player : controller.getPlayers()) {
-            playerGraphicsMap.put(player, new PlayerGraphics(player, gameMapGraphics));
+            playerGraphicsMap.put(player, new PlayerGraphics(player, this));
         }
     }
 
-    private void animate() {
-        // rien pour l'instant
+    //#region gameState
+
+    public void gameStart() {
+        playButton.setText("Début du jeu !");
+        startSingleActionTimer(1500, e -> controller.gameUpdate());
     }
 
-    public void render(final GameState gameState) {
-        animate();
-        final double animationTime = gameState.getAnimationTime();
-        if (hasRendered) {
-            if (animationTime == -1) { // <- Actions où on attend l'input du joueur
-                return;
-            } else if (elaspedTime >= animationTime) { // Si l'action a dépassé le temps voulue, update le jeu.
-                controller.setShouldStateUpdate(true);
-                return;
+    public void newTurn() {
+        final Player currentPlayer = controller.getCurrentPlayer();
+        playButton.setText("Tour " + controller.getCurrentTurn() + " de "
+            + currentPlayer.getUsername());
+        startSingleActionTimer(1500, e -> controller.gameUpdate());
+    }
+
+    public void inJail() {
+        final Player currentPlayer = controller.getCurrentPlayer();
+        playButton.setText(currentPlayer.getUsername() + " est en Prison.");
+        startSingleActionTimer(1000, e -> controller.gameUpdate());
+    }
+
+    public void playerAction() {
+        playButton.setText("Cliquez pour lancer le dé :");
+        playButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                controller.rollDice();
+                playButton.removeMouseListener(this);
             }
+        });
+    }
+
+    public void rollDice() {
+        // faire tourner le dé.
+    }
+
+    public void playerMove() {
+        updateCurrentPlayerPosition();
+        if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
+            addPanel(createIntersectionPanel(), INTERACTION);
         } else {
-            if (animationTime == -1) {
-                removeLayer(INTERACTION);
-            }
-            final Player player = controller.getCurrentPlayer();
-            switch (gameState) {
-                case GAME_START:
-                    playButton.setText("Début du jeu !");
-                    break;
-                case NEW_TURN:
-                    playButton.setText("Tour " + controller.getCurrentTurn() + " de " + player.getUsername());
-                    break;
-                case IN_JAIL:
-                    playButton.setText(player.getJailTurn() + " tour(s) en prison restant.");
-                    break;
-                case ROLL_DICE:
-                    playButton.setText("Cliquez pour lancer votre dé.");
-                    playButton.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(final MouseEvent e) {
-                            controller.setShouldStateUpdate(true);
-                            controller.playerRollDice("normal");
-                            playButton.removeMouseListener(playButton.getMouseListeners()[1]);
-                        }
-                    });
-                    break;
-                case PLAYER_MOVE:
-                    playerGraphicsMap.get(player).updatePosition();
-                    revalidate();
-                    break;
-                case NORMAL_CELL:
-                    playButton.setText(controller.getCurrentPlayerCell().getCellType().name());
-                    playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-                    break;
-                case ASK_INTERSECTION:
-                    playButton.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(final MouseEvent e) {
-                            e.consume();
-                        }
-                    });
-                    add(createIntersectionPanel(), Integer.valueOf(INTERACTION));
-                    break;
-                case ASK_PROPERTY:
-                    add(createPropertyPanel(), Integer.valueOf(INTERACTION));
-                    break;
-                case ASK_SHOP:
-                    add(createShopPanel(), Integer.valueOf(INTERACTION));
-                    break;
-                case END_TURN:
-                    playButton.setText("Fin du tour de " + player.getUsername() + ".");
-                    break;
-                default:
-                    break;
-            }
-            hasRendered = true;
+            controller.gameUpdate();
         }
-        elaspedTime = (double) (System.nanoTime() - lastGameUpdateTime) / NANO_S;
     }
+
+    public void playerArrived() {
+        updateCurrentPlayerPosition();
+        final CellType cellType = controller.getCurrentPlayerCellType();
+        playButton.setText(cellType.name().toUpperCase());
+        // Faire les animations pour chaque cellType
+        switch (cellType) {
+            case GAIN:
+                addPanel(createGainPanel(), INTERACTION);
+                break;
+            case LOSS:
+                addPanel(createLossPanel(), INTERACTION);
+                break;
+            case KINGDOM:
+                addPanel(createKingdomPanel(), INTERACTION);
+                break;
+            case PROPERTY:
+                addPanel(createPropertyPanel(), INTERACTION);
+                break;
+            case SHOP:
+                addPanel(createShopPanel(), INTERACTION);
+                break;
+            case CARD:
+                System.out.println("AAAAAAAAAAAAAAA");
+                addPanel(createCardPanel(), INTERACTION);
+                break;
+            default:
+                startSingleActionTimer(500, e -> controller.gameUpdate());
+                break;
+        }
+    }
+
+
+    public void endTurn() {
+        // animation de fin de tour
+        if (controller.getTotalTurns() == controller.getCurrentTurn()) {
+            playButton.setText("fin du jeu");
+        } else {
+            playButton.setText("fin du tour");
+        }
+        startSingleActionTimer(1000, e -> controller.gameUpdate());
+    }
+
+    public void gameEnd() {
+        playButton.setText("fin du jeu.");
+        // afficher un panel avec les points de chaque joueurs et bouton revenir au menu.
+        return;
+    }
+
+    //#endregion
 
     public void updateCurrentPlayerPosition() {
-        playerGraphicsMap.get(controller.getCurrentPlayer()).updatePosition();
-    }
-
-
-    public void resetState() {
-        hasRendered = false;
-        elaspedTime = 0;
-        lastGameUpdateTime = System.nanoTime();
+        final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+        playerGraphics.updateCoordinates();
+        playerGraphics.update();
     }
 
     // #region Background 0
@@ -169,11 +276,15 @@ public final class GamePanel extends CorePanel {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
-                Image image = gameMapGraphics.getImage("boardaaaaa");
-                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                final int halfWidth = cameraWidth / 2;
+                final int halfHeight = cameraHeight / 2;
+                final int sx1 = cameraX - halfWidth;
+                final int sy1 = cameraY - halfHeight;
+                final int sx2 = cameraX + halfWidth;
+                final int sy2 = cameraY + halfHeight;
+                g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
             }
         };
-        panels.put(BACKGROUND, panel);
         return panel;
     }
 
@@ -188,8 +299,6 @@ public final class GamePanel extends CorePanel {
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
         }
-        // panel.setVisible(true);
-        panels.put(CELLS, panel);
         return panel;
     }
 
@@ -204,8 +313,7 @@ public final class GamePanel extends CorePanel {
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }
-        // panel.setVisible(true);
-        panels.put(PLAYERS, panel);
+        panel.setVisible(true);
         return panel;
     }
 
@@ -216,55 +324,227 @@ public final class GamePanel extends CorePanel {
     // #region Cellule Intersection
     private JPanel createIntersectionPanel() {
         final JPanel panel = new JPanel(null);
+        panel.setOpaque(false);
+        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         for (int i = 0; i < intersectIDs.size(); i++) {
             panel.add(createIntersectChoiceButton(intersectIDs.get(i)));
         }
-        panel.setOpaque(false);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
+        panel.setVisible(true);
         return panel;
     }
+
     private JButton createIntersectChoiceButton(final int targetCellID) {
         final CellGraphics cellGraphics = cellsGraphics.get(targetCellID);
         JButton button = new JButton();
         button.setLocation(cellGraphics.getLocation());
         button.setBounds(cellGraphics.getLocation().x, cellGraphics.getLocation().y,
-            CellGraphics.getCellWidth(), CellGraphics.getCellHeight());
+            CellGraphics.getCellDiameter(), CellGraphics.getCellDiameter());
         button.setBackground(Color.GREEN);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
-                controller.playerChooseIntersection(targetCellID);
-                controller.setShouldStateUpdate(true);
-                removeLayer(INTERACTION);
+                removePanel(INTERACTION);
+                controller.setPlayerPosition(targetCellID);
+                controller.gameUpdate();
             }
         });
-        // button.setVisible(true);
+        button.setVisible(true);
         return button;
     }
 
     // #endregion
 
-    // #region Propriété
+    // #region Gain
+
+    private JPanel createGainPanel() {
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+        controller.playerGainMoney();
+        int gain = controller.getGainedMoney();
+
+        JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
+            "RifficFree", Color.BLACK, 32);
+        gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        background.add(gainLabel);
+
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    // #endregion
+
+    //#region Loss
+
+    private JPanel createLossPanel() {
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+        controller.playerLossMoney();
+        int loss = controller.getLossMoney();
+
+        JLabel lossLabel = SwingFactory.createTextLabel("Tu as perdu " + loss + " $ !\n",
+            "RifficFree", Color.BLACK, 32);
+            lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            background.add(lossLabel);
+        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
+
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    //#endregion
+
+    // #region Kingdom
+
+    private JPanel createKingdomPanel() {
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+
+        JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner un point en plus !\n",
+            "RifficFree", Color.BLACK, 32);
+        kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        background.add(kingdomLabel);
+
+        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint()
+        + " points !\n", "RifficFree", Color.BLACK, 26);
+        pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        background.add(pointsLabel);
+
+        createCloseTimerLabel(background);
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    // #endregion
+
+    // #region Property
 
     private JPanel createPropertyPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setOpaque(false);
-        panel.setBackground(Color.RED);
-        panel.addComponentListener(new ComponentAdapter() {
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+
+        if (!controller.propertyHasOwner()) {
+            createBuyAndUpgradePanel(background);
+        } else if (!controller.playerIsAtHome() && controller.propertyHasOwner()) {
+            createRentPanel(background);
+        }
+
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    private void createBuyAndUpgradePanel(JPanel panel) {
+        int price = controller.getPropertyPrice();
+        String name = "\"Nom de la propriete\"";
+        JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
+                "RifficFree", Color.BLACK, 32);
+        propertyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        if (controller.playerIsAtHome()) {
+            propertyLabel.setText("Veux tu ameliorer cette propriete ?\n");
+        } else {
+            propertyLabel.setText("Veux tu acheter cette propriete ?\n");
+        }
+        panel.add(propertyLabel);
+
+        JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
+            "RifficFree", Color.BLACK, 18);
+        propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(propertyPrice);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton yes = new JButton("Oui");
+        yes.setFocusPainted(false);
+        yes.addMouseListener(new MouseAdapter() {
             @Override
-            public void componentResized(final ComponentEvent e) {
-                final int width = (int) (getFrame().getWidth() * 0.2);
-                final int height = (int) (getFrame().getHeight() * 0.25);
-                // panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
+            public void mouseClicked(final MouseEvent e) {
+                if (!controller.propertyHasOwner()) {
+                    controller.playerBuyProperty();
+                } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
+                    controller.playerUpgradeProperty();
+                }
+                controller.gameUpdate();
+                removePanel(INTERACTION);
+                revalidate();
             }
         });
-        // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
-        return panel;
+
+        JButton no = new JButton("Non");
+        no.setFocusPainted(false);
+        no.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                controller.gameUpdate();
+                removePanel(INTERACTION);
+                revalidate();
+            }
+        });
+        buttonPanel.add(yes);
+        buttonPanel.add(no);
+
+        panel.add(buttonPanel);
+    }
+
+    private void createRentPanel(JPanel panel) {
+        JTextPane rentTextPane = new JTextPane();
+        rentTextPane.setText("Oops, tu as atterri sur la propriété de quelqu'un d'autre. Tu dois payer "
+        + controller.getRentPrice() + "$.\n");
+        rentTextPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        rentTextPane.setFont(Resources.getFont("RifficFree", 32));
+        rentTextPane.setForeground(Color.BLACK);
+        rentTextPane.setEditable(false);
+        rentTextPane.setFocusable(false);
+        rentTextPane.setPreferredSize(new Dimension(WIDTH, 50));
+
+        //Center le texte du rentTextPane
+        StyledDocument doc = rentTextPane.getStyledDocument();
+        Style centerStyle = rentTextPane.addStyle("CenterStyle", null);
+        StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), centerStyle, false);
+
+        panel.add(rentTextPane);
+
+        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentMoney() + "$.\n",
+        "RifficFree", Color.BLACK, 26);
+        moneyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(moneyLabel);
+
+        createCloseTimerLabel(panel);
+
+        JLabel voidLabel = new JLabel();
+        voidLabel.setBorder(BorderFactory.createEmptyBorder((int) (panel.getHeight() / 1.7), 0, 0, 0));
+        panel.add(voidLabel);
     }
 
     // #endregion
@@ -272,21 +552,72 @@ public final class GamePanel extends CorePanel {
     // #region Shop
 
     private JPanel createShopPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        // panel.setOpaque(false);
-        panel.setBackground(Color.RED);
-        panel.addComponentListener(new ComponentAdapter() {
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setLayout(new BorderLayout());
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+
+        JPanel top = new JPanel();
+        top.setLayout(new BorderLayout());
+
+        JButton close = new JButton("X");
+        close.addMouseListener(new MouseAdapter() {
             @Override
-            public void componentResized(final ComponentEvent e) {
-                final int width = (int) (getFrame().getWidth() * 0.2);
-                final int height = (int) (getFrame().getHeight() * 0.25);
-                panel.setBorder(BorderFactory.createEmptyBorder(height, width, height, width));
+            public void mouseClicked(final MouseEvent e) {
+                controller.gameUpdate();
+                removePanel(INTERACTION);
+                revalidate();
             }
         });
-        // panel.setVisible(true);
-        panels.put(INTERACTION, panel);
-        return panel;
+        top.add(close, BorderLayout.EAST);
+
+        JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
+        top.add(shop, BorderLayout.CENTER);
+
+        //LISTE ITEMS
+
+        background.add(top, BorderLayout.NORTH);
+
+        resizePanel.add(background);
+        return resizePanel;
+    }
+
+    // #endregion
+
+    // #region Card
+
+    public JPanel createCardPanel() {
+        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        resizePanel.setVisible(true);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.setLayout(new BorderLayout());
+        background.setBackground(Color.CYAN);
+        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+
+        controller.setCurrentCell();
+
+        JButton open = new JButton("X");
+        open.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                controller.playShowCard();
+                removePanel(INTERACTION);
+                revalidate();
+                String test = controller.getCardEffect();
+
+            System.out.println(test);
+            }
+        });
+        background.add(open);
+
+        resizePanel.add(background);
+        return resizePanel;
     }
 
     // #endregion
@@ -299,14 +630,30 @@ public final class GamePanel extends CorePanel {
         final JPanel panel = new JPanel(null);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
+        createPlayButton();
+        panel.add(playButton);
+        int height = 150;
+        for (Player player : controller.getPlayers()) {
+            add(createPlayerInfo(player, height));
+            height += 100;
+        }
+        panel.setVisible(true);
+        return panel;
+    }
+
+    private void createPlayButton() {
         playButton = new JButton();
+        playButton.setFocusPainted(false);
         playButton.setBounds(0, 0, 200, 50);
         playButton.setVerticalAlignment(JButton.CENTER);
         playButton.setHorizontalAlignment(JButton.CENTER);
-        panel.add(playButton);
-        panel.setVisible(true);
-        panels.put(GUI, panel);
-        return panel;
+    }
+
+    private JPanel createPlayerInfo(final Player player, final int startHeight) {
+        final JPanel container = SwingFactory.createContainerPanel(this, 70, 70, 70, 70);
+        final JPanel panel = SwingFactory.createImagePanel(container, "button", 100, 100);
+        container.add(panel);
+        return container;
     }
 
     // #endregion
@@ -318,7 +665,6 @@ public final class GamePanel extends CorePanel {
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setOpaque(false);
         panel.setVisible(false);
-        panels.put(PAUSE, panel);
         return panel;
     }
 
@@ -345,34 +691,77 @@ public final class GamePanel extends CorePanel {
         return panel;
     }
 
-    private void removeLayer(final int layer) {
-        SwingUtilities.invokeLater(() -> {
-            if (panels.containsKey(layer)) {
-                final JPanel panel = panels.get(layer);
-                if (getObjectForLayer(layer) == layer) {
-                    remove(panel);
-                    panels.remove(layer);
-                }
+    public void createCloseTimerLabel(JPanel panel) {
+        final int[] remainingSeconds = {2};
+
+        JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
+        "RifficFree", Color.BLACK, 16);
+        closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(closeLabel);
+
+        Timer timer = new Timer(1000, e -> {
+            remainingSeconds[0]--;
+            if (remainingSeconds[0] > 0) {
+                closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
+            } else {
+                removePanel(INTERACTION);
+                panel.revalidate();
+                controller.gameUpdate();
+                ((Timer) e.getSource()).stop();
             }
-            revalidate();
-            repaint();
         });
+        timer.start();
     }
 
-    @Override
-    public void resized() {
-        setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        for (int i : panels.keySet()) {
-            final JPanel panel = panels.get(i);
-            if (panel.isVisible()) {
-                panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-            }
-        }
-        revalidate();
+    /**
+     * Joue une action après un délai.
+     * @param delay délai en millisecondes.
+     * @param action action réalisée APRES le délai.
+     */
+    private void startSingleActionTimer(final int delay, final ActionListener action) {
+        final Timer timer = new Timer(delay, action);
+        timer.setRepeats(false);
+        timer.start();
     }
 
-    public boolean hasRendered() {
-        return hasRendered;
+    public HashMap<Integer, CellGraphics> getCellsGraphics() {
+        return cellsGraphics;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public int getCameraX() {
+        return cameraX;
+    }
+
+    public int getCameraY() {
+        return cameraY;
+    }
+
+    public int getCameraHeight() {
+        return cameraHeight;
+    }
+
+    public int getCameraWidth() {
+        return cameraWidth;
+    }
+
+    public static int getCameraMaxWidth() {
+        return CAMERA_MAX_WIDTH;
+    }
+
+    public static int getCameraMaxHeight() {
+        return CAMERA_MAX_HEIGHT;
+    }
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public Image getBoardImage() {
+        return boardImage;
     }
 
 }

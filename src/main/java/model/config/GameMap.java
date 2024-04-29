@@ -1,30 +1,85 @@
 package model.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
+import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
+import model.config.cells.CellType;
 import model.config.cells.Start;
+import model.config.items.Item;
 
+/**
+ * Classe qui contient toutes les données "logiques" d'une map sous forme de fichier "config.json"
+ * trouvable dans "src/resources/maps/{@link #mapName}".
+ * <p> Une map contient :
+ * <p> - Les {@link Cell} qui composent le plateau de la map.
+ * <p> - Une liste de cartes ayant des effets {@link CardEffect}.
+ */
 public final class GameMap {
-    private final String mapName;
-    /** Liste qui contient toutes les cellules accessibles à pied par les joueurs (la case 0 est toujours le START). */
-    private final HashMap<Integer, Cell> walkableCells = new HashMap<>();
-    /** Map qui contient toutes les cellules inaccessibles sauf par moyen spécial (trône, prison, ...). */
-    private final HashMap<Integer, Cell> specialCells = new HashMap<>();
 
-    public GameMap(final String mapName, final HashMap<Integer, Cell> cells) {
+    private final String mapName;
+
+    /** Liste des items des shops de la map disponibles. */
+    private final ArrayList<Item> shopItems;
+    /** Liste des cartes disponibles pour cette map. */
+    private final ArrayList<CardEffect> cardEffects;
+    /** Liste des cellules du jeu. */
+    private final HashMap<Integer, Cell> cells;
+    private final Start startCell;
+
+    private int cardEffectsCounter;
+
+    public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
+        final ArrayList<Item> shopItems) {
         this.mapName = mapName;
-        for (Integer cellId : cells.keySet()) {
-            if (cellId < 0) {
-                specialCells.put(cellId, cells.get(cellId));
-            } else {
-                walkableCells.put(cellId, cells.get(cellId));
+        this.cardEffects = cardEffects;
+        this.cells = cells;
+        this.shopItems = shopItems;
+        cardEffectsCounter = countCardEffectsQuantity();
+        startCell = findStartCell();
+    }
+
+    private int countCardEffectsQuantity() {
+        int counter = 0;
+        for (int i = 0; i < cardEffects.size(); i++) {
+            counter += cardEffects.get(i).getQuantity();
+        }
+        return counter;
+    }
+
+    private Start findStartCell() {
+        for (Cell cell : cells.values()) {
+            if (cell.getCellType() == CellType.START) {
+                return (Start) cell;
             }
         }
+        return null;
+    }
+
+    public CardEffect loadRandomCardEffect() {
+        final Random rand = new Random();
+        int randInt = rand.nextInt(cardEffectsCounter);
+        CardEffect cardEffect = null;
+        for (int i = 0; i < cardEffects.size(); i++) {
+            cardEffect = cardEffects.get(i);
+            if (randInt <= 0) {
+                break;
+            }
+            randInt -= cardEffect.getQuantity();
+        }
+        cardEffects.remove(cardEffect);
+        cardEffectsCounter--;
+        return cardEffect;
+    }
+
+    public Start getStartCell() {
+        return startCell;
     }
 
     public int getLapGain() {
-        return ((Start) walkableCells.get(0)).getLapGain();
+        return startCell.getLapGain();
     }
 
     public String getMapName() {
@@ -32,16 +87,15 @@ public final class GameMap {
     }
 
     public Cell getCell(final int pos) {
-        if (pos < 0) {
-            return specialCells.get(pos);
-        }
-        return walkableCells.get(pos);
+        return cells.get(pos);
     }
 
-    public HashMap<Integer, Cell> getWalkableCells() {
-        return walkableCells;
+    public ArrayList<CardEffect> getCardEffects() {
+        return cardEffects;
     }
-    public String toString() {
-        return "mapName : " + mapName + ", Nombre de Cells accessibles : " + walkableCells.size();
+
+    public ArrayList<Item> getShopItems() {
+        return shopItems;
     }
+
 }

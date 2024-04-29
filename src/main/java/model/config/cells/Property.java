@@ -12,9 +12,9 @@ public final class Property extends Cell {
     private int propertyState = 0;
     private Player owner = null;
 
-    public Property(final int id, final CellType cellType, final int nextCellID,
+    public Property(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
         final ArrayList<Integer> buyPrices, final int group) {
-        super(id, cellType, nextCellID);
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.buyPrices = buyPrices;
         this.group = group;
     }
@@ -25,15 +25,6 @@ public final class Property extends Cell {
             if (player.getTeam().getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
                 + buyPrices.get(0) + "$).");
-            } else {
-                String str = System.console().readLine("Cette maison n'est pas à vendre. Voulez vous l'acheter ? "
-                + buyPrices.get(0) + " : ");
-                if (str.toLowerCase().equals("oui")) {
-                    owner = player;
-                    player.getTeam().addProperty(this);
-                    player.getTeam().incrementMoney(-buyPrices.get(propertyState));
-                    propertyState++;
-                }
             }
         } else if (isAtHome(player)) {
             if (propertyState + 1 > buyPrices.size()) {
@@ -41,14 +32,6 @@ public final class Property extends Cell {
             } else if (player.getTeam().getMoney() < buyPrices.get(propertyState + 1)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
                 + buyPrices.get(propertyState + 1) + "$).");
-            } else {
-                String str = System.console().readLine("Voulez vous améliorer votre propriété ? "
-                + buyPrices.get(propertyState + 1) + " : ");
-                if (str.toLowerCase().equals("oui")) {
-                    owner = player;
-                    player.getTeam().incrementMoney(-buyPrices.get(propertyState));
-                    propertyState++;
-                }
             }
         } else {
             final int price = buyPrices.get(propertyState - 1);
@@ -62,6 +45,18 @@ public final class Property extends Cell {
         }
     }
 
+    public void buy(final Player player) {
+        owner = player;
+        player.getTeam().addProperty(this);
+        player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+        propertyState++;
+    }
+
+    public void upgrade(final Player player) {
+        player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+        propertyState++;
+    }
+
     public boolean isAtHome(final Player player) {
         return player == owner;
     }
@@ -72,6 +67,18 @@ public final class Property extends Cell {
 
     public void setOwner(final Player player) {
         this.owner = player;
+    }
+
+    public void setPropertyState(int propertyState) {
+        this.propertyState = propertyState;
+    }
+
+    public int getPropertyState() {
+        return propertyState;
+    }
+
+    public ArrayList<Integer> getBuyPrices() {
+        return buyPrices;
     }
 
     public Player getOwner() {

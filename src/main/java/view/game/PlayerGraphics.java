@@ -1,5 +1,6 @@
 package view.game;
 
+import java.util.HashMap;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -11,45 +12,73 @@ import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
 
-    private static final int PLAYER_TOKEN_WIDTH = 14;
-    private static final int PLAYER_TOKEN_HEIGHT = 14;
+    private static final int PLAYER_DIAMETER = 32;
 
-    private final GameMapGraphics gameMapGraphics;
+    private final GamePanel gamePanel;
+    private final HashMap<Integer, CellGraphics> cellsGraphics;
+
+    private int xPos;
+    private int yPos;
 
     private Player player;
+    // TODO : RETIRER player de PlayersGraphics
     private Image playerImage;
 
 
-    public PlayerGraphics(final Player player, final GameMapGraphics gameMapGraphics) {
+    public PlayerGraphics(final Player player, final GamePanel gamePanel) {
         this.player = player;
-        this.gameMapGraphics = gameMapGraphics;
-        initPlayerImage(player.getPlayerID());
+        this.gamePanel = gamePanel;
+        this.cellsGraphics = gamePanel.getCellsGraphics();
+        final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
+        xPos = cellGraphics.getXPos();
+        yPos = cellGraphics.getYPos();
+        playerImage = Resources.getImage("j" + player.getPlayerID());
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
-        setBounds(0, 0, 14, 14);
-        setIcon(new ImageIcon(playerImage.getScaledInstance(14, 14, Image.SCALE_SMOOTH)));
-        final CellGraphics cellGraphics = gameMapGraphics.getCellGraphics(player.getPosition());
-        setLocation(cellGraphics.getXPos() - CellGraphics.getCellWidth() / 4,
-            cellGraphics.getYPos() - CellGraphics.getCellHeight() / 4);
+        update();
         setVisible(true);
     }
 
-    public void render() {
-
+    public void update() {
+        updateSize();
+        updatePosition();
     }
 
-    public void updatePosition() {
-        final CellGraphics cellGraphics = gameMapGraphics.getCellGraphics(player.getPosition());
-        setLocation(cellGraphics.getXPos() - CellGraphics.getCellWidth() / 4,
-            cellGraphics.getYPos() - CellGraphics.getCellHeight() / 4);
+    private void updateSize() {
+        final double zoom = gamePanel.getZoom();
+        final int sizeX = (int) (gamePanel.getWidth() / GamePanel.getCameraMaxWidth() * PLAYER_DIAMETER * zoom);
+        final int sizeY = (int) (gamePanel.getHeight() / GamePanel.getCameraMaxHeight() * PLAYER_DIAMETER * zoom);
+        setSize(sizeX, sizeY);
+        setIcon(new ImageIcon(playerImage.getScaledInstance(sizeX, sizeY, Image.SCALE_SMOOTH)));
     }
 
-    private void initPlayerImage(final int id) {
-        final String playerID = "j" + id;
-        if (gameMapGraphics.getImages().containsKey(playerID)) {
-            playerImage = gameMapGraphics.getImage(playerID);
-        } else {
-            playerImage = Resources.getGameImage(playerID);
-        }
+    private void updatePosition() {
+        final int cellDia = CellGraphics.getCellDiameter();
+        final double zoom = gamePanel.getZoom();
+        final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / gamePanel.getCameraWidth();
+        final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / gamePanel.getCameraHeight();
+
+        final int cameraX = (int) (gamePanel.getCameraX() - GamePanel.getCameraMaxWidth() / 2 * zoom);
+        final int cameraY = (int) (gamePanel.getCameraY() - GamePanel.getCameraMaxHeight() / 2 * zoom);
+
+        final int posCamX = (int) ((configToScreenRatioW * (xPos - cameraX)) - cellDia / 2 * zoom);
+        final int posCamY = (int) ((configToScreenRatioH * (yPos - cameraY)) - cellDia / 2 * zoom);
+
+        setLocation(posCamX + cellDia / 4, posCamY + cellDia / 4);
     }
+
+    public void updateCoordinates() {
+        final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
+        xPos = cellGraphics.getXPos();
+        yPos = cellGraphics.getYPos();
+    }
+
+    public int getXPos() {
+        return xPos;
+    }
+
+    public int getYPos() {
+        return yPos;
+    }
+
 }

@@ -1,6 +1,5 @@
 package model.config.cells;
 
-import static game.Game.RAND;
 import java.util.ArrayList;
 
 import model.Model;
@@ -10,8 +9,9 @@ public final class Intersection extends Cell {
 
     private final ArrayList<Integer> nextCellIDs;
 
-    public Intersection(final int id, final CellType cellType, final ArrayList<Integer> nextCellIDs) {
-        super(id, cellType, id);
+    public Intersection(final int id, final boolean shouldPlayerStop, final CellType cellType,
+        final ArrayList<Integer> nextCellIDs) {
+        super(id, shouldPlayerStop, cellType, id);
         this.nextCellIDs = nextCellIDs;
     }
 
@@ -21,7 +21,7 @@ public final class Intersection extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.setPosition(nextCellIDs.get(RAND.nextInt(nextCellIDs.size())));
+        return;
     }
 
 }

@@ -1,0 +1,382 @@
+[
+	{
+		"id" : 0,
+		"type" : "START",
+		"lapGain" : 300,
+		"xPos" : 606,
+		"yPos" : 326
+	},
+	{
+		"id" : 100,
+		"type" : "VOID",
+		"nextCellID" : 2,
+		"xPos" : 526,
+		"yPos" : 290
+	},
+	{
+		"id" : 1,
+		"type" : "GAIN",
+		"gain" : 100,
+		"xPos" : 582,
+		"yPos" : 305
+	},	
+	{
+		"id" : 2,
+		"type" : "PROPERTY",
+		"prices" : [100, 150, 200, 300],
+		"group" : 1,
+		"xPos" : 563,
+		"yPos" : 278
+	},
+	{
+		"id" : 3,
+		"type" : "INTERSECTION",
+		"nextCellID" : [4, 200],
+		"xPos" : 554,
+		"yPos" : 249
+	},
+	{
+		"id" : 4,
+		"type" : "PROPERTY",
+		"prices" : [100, 150, 200, 300],
+		"group" : 1,
+		"xPos" : 537,
+		"yPos" : 228
+	},
+	{
+		"id" : 200,
+		"type" : "VOID",
+		"nextCellID" : 41,
+		"xPos" : 510,
+		"yPos" : 246
+	},
+	{
+		"id" : 5,
+		"type" : "GAIN",
+		"gain" : 100,
+		"xPos" : 537,
+		"yPos" : 202
+	},
+	{
+		"id" : 6,
+		"type" : "PROPERTY",
+		"prices" : [125, 175, 225, 325],
+		"group" : 1,
+		"xPos" : 565,
+		"yPos" : 186
+	},
+	{
+		"id" : 7,
+		"type" : "PROPERTY",
+		"prices" : [125, 175, 225, 325],
+		"group" : 1,
+		"xPos" : 593,
+		"yPos" : 173
+	},
+	{
+		"id" : 8,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 607,
+		"yPos" : 150
+	},
+	{
+		"id" : 9,
+		"type" : "GAIN",
+		"gain" : 150,
+		"xPos" : 585,
+		"yPos" : 132
+	},
+	{
+		"id" : 10,
+		"type" : "INTERSECTION",
+		"nextCellID" : [11, 300],
+		"xPos" : 557,
+		"yPos" : 128
+	},
+	{
+		"id" : 11,
+		"type" : "PROPERTY",
+		"prices" : [150, 200, 250, 350],
+		"group" : 2,
+		"xPos" : 528,
+		"yPos" : 139
+	},
+	{
+		"id" : 12,
+		"type" : "SHOP",
+		"xPos" : 496,
+		"yPos" : 147
+	},
+	{
+		"id" : 13,
+		"type" : "GAIN",
+		"gain" : 150,
+		"xPos" : 464,
+		"yPos" : 138
+	},
+	{
+		"id" : 14,
+		"type" : "PROPERTY",
+		"prices" : [150, 200, 250, 350],
+		"group" : 2,
+		"xPos" : 435,
+		"yPos" : 126
+	},
+	{
+		"id" : 15,
+		"type" : "PROPERTY",
+		"prices" : [175, 225, 275, 375],
+		"group" : 2,
+		"xPos" : 404,
+		"yPos" : 142
+	},
+	{
+		"id" : 16,
+		"type" : "GAIN",
+		"gain" : 175,
+		"xPos" : 377,
+		"yPos" : 160
+	},
+	{
+		"id" : 17,
+		"type" : "PROPERTY",
+		"prices" : [175, 225, 275, 375],
+		"group" : 3,
+		"xPos" : 346,
+		"yPos" : 163
+	},
+	{
+		"id" : 18,
+		"type" : "GAIN",
+		"gain" : 175,
+		"xPos" : 314,
+		"yPos" : 163
+	},
+	{
+		"id" : 19,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 3,
+		"xPos" : 282,
+		"yPos" : 165
+	},
+	{
+		"id" : 20,
+		"type" : "GAIN",
+		"gain" : 175,
+		"xPos" : 255,
+		"yPos" : 169
+	},
+	{
+		"id" : 21,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 3,
+		"xPos" : 177,
+		"yPos" : 178
+	},
+	{
+		"id" : 22,
+		"type" : "DANGER",
+		"xPos" : 148,
+		"yPos" : 184
+	},
+	{
+		"id" : 23,
+		"type" : "PROPERTY",
+		"prices" : [225, 275, 325, 425],
+		"group" : 3,
+		"xPos" : 121,
+		"yPos" : 195
+	},
+	{
+		"id" : 24,
+		"type" : "INTERSECTION",
+		"nextCellID" : [25, 400],
+		"xPos" : 93,
+		"yPos" : 202
+	},
+	{
+		"id" : 25,
+		"type" : "GAIN",
+		"gain" : 200,
+		"xPos" : 99,
+		"yPos" : 228
+	},
+	{
+		"id" : 400,
+		"type" : "VOID",
+		"xPos" : 40,
+		"yPos" : 204
+	},
+	{
+		"id" : 26,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 450],
+		"group" : 4,
+		"xPos" : 106,
+		"yPos" : 255
+	},
+	{
+		"id" : 27,
+		"type" : "GAIN",
+		"gain" : -100,
+		"xPos" : 136,
+		"yPos" : 265
+	},
+	{
+		"id" : 28,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 450],
+		"group" : 4,
+		"xPos" : 140,
+		"yPos" : 295
+	},
+	{
+		"id" : 29,
+		"type" : "PROPERTY",
+		"prices" : [275, 325, 375, 475],
+		"group" : 4,
+		"xPos" : 142,
+		"yPos" : 325
+	},
+	{
+		"id" : 30,
+		"type" : "GAIN",
+		"gain" : 200,
+		"xPos" : 174,
+		"yPos" : 339
+	},
+	{
+		"id" : 31,
+		"type" : "KINGDOM",
+		"xPos" : 175,
+		"yPos" : 368
+	},
+	{
+		"id" : 32,
+		"type" : "VOID",
+		"xPos" : 202,
+		"yPos" : 382
+	},
+	{
+		"id" : 33,
+		"type" : "DANGER",
+		"xPos" : 270,
+		"yPos" : 330
+	},
+	{
+		"id" : 34,
+		"type" : "PROPERTY",
+		"prices" : [350, 400, 450, 550],
+		"group" : 5,
+		"xPos" : 303,
+		"yPos" : 336
+	},
+	{
+		"id" : 35,
+		"type" : "GAIN",
+		"gain" : -150,
+		"xPos" : 338,
+		"yPos" : 337
+	},
+	{
+		"id" : 36,
+		"type" : "VOID",
+		"xPos" : 368,
+		"yPos" : 335
+	},
+	{
+		"id" : 37,
+		"type" : "DANGER",
+		"xPos" : 401,
+		"yPos" : 336
+	},
+	{
+		"id" : 38,
+		"type" : "INTERSECTION",
+		"nextCellID" : [39, 500],
+		"xPos" : 433,
+		"yPos" : 336
+	},
+	{
+		"id" : 39,
+		"type" : "PROPERTY",
+		"prices" : [350, 400, 450, 550],
+		"group" : 5,
+		"xPos" : 441,
+		"yPos" : 307
+	},
+	{
+		"id" : 500,
+		"type" : "GAIN",
+		"gain" : -150,
+		"xPos" : 433,
+		"yPos" : 373
+	},
+	{
+		"id" : 40,
+		"type" : "PROPERTY",
+		"prices" : [375, 425, 475, 575],
+		"group" : 5,
+		"xPos" : 452,
+		"yPos" : 276
+	},
+	{
+		"id" : 41,
+		"type" : "GAIN",
+		"gain" : 250,
+		"xPos" : 465,
+		"yPos" : 247
+	},
+	{
+		"id" : 42,
+		"type" : "SHOP",
+		"xPos" : 463,
+		"yPos" : 204
+	},
+	{
+		"id" : 43,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 6,
+		"xPos" : 435,
+		"yPos" : 191
+	},
+	{
+		"id" : 44,
+		"type" : "PROPERTY",
+		"prices" : [200, 250, 300, 400],
+		"group" : 6,
+		"xPos" : 404,
+		"yPos" : 204
+	},
+	{
+		"id" : 45,
+		"type" : "GAIN",
+		"gain" : 150,
+		"xPos" : 373,
+		"yPos" : 222
+	},
+	{
+		"id" : 46,
+		"type" : "PROPERTY",
+		"prices" : [250, 300, 350, 450],
+		"group" : 6,
+		"xPos" : 339,
+		"yPos" : 224
+	},
+	{
+		"id" : 47,
+		"type" : "CARD_DEFENSE",
+		"xPos" : 308,
+		"yPos" : 221
+	},
+	{
+		"id" : 48,
+		"type" : "VOID",
+		"nextCellID" : 22,
+		"xPos" : 288,
+		"yPos" : 199
+	}
+]
