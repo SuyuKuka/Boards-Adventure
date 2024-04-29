@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 import controller.Controller;
-import controller.GameController;
-import controller.MenuController;
 import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
@@ -14,56 +14,64 @@ import model.config.Team;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
-import view.game.GameMapGraphics;
 
 /**
- * Classe mère du jeu qui contient un controlleur {@link GameController} ou {@link MenuController}
- * et appelle la méthode {@link Controller#run()}.
+ * Classe mère du jeu.
  * Le jeu est scindé en 2 parties : le menu et le jeu en lui-même.
- * C'est le controlleur associé qui s'occupe de sa partie.
+ * Le menu ne contient qu'un fichier {@link MenuPanel} qui s'occupe de la vue dans le menu.
+ * Lorsqu'une partie est lancée, un {@link Model} et un {@link Controller} est crée.
+ * La vue est modifiée pour remplacer le {@link MenuPanel} par un {@link GamePanel}.
  */
 public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    public enum Mode {
-        MENU, GAME;
-    }
-
-    private long nanoStartTime = System.nanoTime();
-    private long nanoUpTime = 0;
+    private Mode mode = Mode.GAME;
 
     private View view;
-    private Controller controller;
-
-    private Mode mode = Mode.MENU;
-    private static final String TEST_MODEL_MAP_NAME = "map4";
+    private Model model = null;
+    private Controller controller = null;
 
     private Game() {
-        view = new View();
-        init();
-        controller.run();
+        SwingUtilities.invokeLater(() -> {
+            view = new View(this);
+            Resources.loadCommonResources();
+            initGame();
+        });
     }
 
-    private void init() {
+    public void initGame() {
+        if (view.hasPanel()) {
+            view.removePanel();
+        }
         switch (mode) {
             case MENU:
-                controller = new MenuController(this, view);
+                Resources.loadMenuResources();
+                view.initNewMenuPanel();
                 break;
             case GAME:
-                final GameMapGraphics gameMapGraphics = Resources.getGameMapGraphics(TEST_MODEL_MAP_NAME);
-                controller = new GameController(this, view, gameMapGraphics,
-                    createTestModel(gameMapGraphics.getGameMap()));
+                if (model == null) {
+                    model = createTestModel("map4");
+                }
+                Resources.loadGameResources(model.getGameMap().getMapName());
+                controller = new Controller(this, model, view);
+                controller.gameUpdate();
                 break;
             default:
                 break;
         }
     }
 
-    private Model createTestModel(final GameMap gameMap) {
+    /**
+     * Crée un {@link Model} test si l'application a été lancée avec {@link #mode} = {@link Mode#GAME}.
+     * @param mapName
+     * @return {@link Model}.
+     */
+    private Model createTestModel(final String mapName) {
+        final GameMap gameMap = Resources.loadGameMap(mapName);
         final HashMap<String, Integer> gameSettings = new HashMap<>();
-        gameSettings.put("turns", 35);
+        gameSettings.put("turns", 45);
         final ArrayList<Player> players = new ArrayList<>();
         players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
@@ -72,40 +80,32 @@ public final class Game {
         return new Model(gameMap, gameSettings, players);
     }
 
-    public void startGame(final GameMapGraphics gameMapGraphics, final HashMap<String, Integer> gameConfig,
+    /**
+     * Crée un {@link Model} à partir du nom de la map, les paramètres du jeu et les paramètres des joueurs.
+     * @param mapName
+     * @param gameSettings
+     * @param playersConfig
+     */
+    public void createModel(final String mapName, final HashMap<String, Integer> gameSettings,
         final ArrayList<HashMap<String, String>> playersConfig) {
-            final ArrayList<Player> players = createPlayers(playersConfig);
-        controller = new GameController(this, view, gameMapGraphics, createTestModel(gameMapGraphics.getGameMap()));
+        model = new Model(Resources.loadGameMap(mapName), gameSettings, createPlayers(playersConfig));
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
         final ArrayList<Player> players = new ArrayList<>();
-        // TODO créer players à partir des playersConfig.
+        players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
         return players;
     }
 
-    public void goToMenu() {
-        // MENU
+    public void setMode(final Mode mode) {
+        this.mode = mode;
     }
 
-    public long getNanoStartTime() {
-        return nanoStartTime;
-    }
-
-    public double getUpTime() {
-        return nanoUpTime / NANO_S;
-    }
-
-    public long getNanoUpTime() {
-        return nanoUpTime;
-    }
-
-    public void setNanoUpTime(final long nanoUpTime) {
-        this.nanoUpTime = nanoUpTime;
+    public Mode getMode() {
+        return mode;
     }
 
     public static void main(final String[] args) {
-        Resources.loadResources();
         Game launcher = new Game();
     }
 }

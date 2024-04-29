@@ -1,16 +1,16 @@
 package model.config.cells;
 
 public enum CellType {
-    CARD_ATTACK,
-    CARD_DEFENSE,
-    JAIL,
-    KINGDOM,
-    PROPERTY,
     START,
+    JAIL,
+    VOID,
+    GAIN,
+    LOSS,
     INTERSECTION,
+    PROPERTY,
     SHOP,
     TELEPORTATION,
-    GAIN,
+    CARD,
+    KINGDOM,
     DANGER,
-    VOID;
 }

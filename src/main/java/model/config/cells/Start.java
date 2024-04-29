@@ -7,8 +7,9 @@ public final class Start extends Cell {
 
     private final int lapGain;
 
-    public Start(final int id, final CellType cellType, final int nextCellID, final int lapGain) {
-        super(id, cellType, nextCellID);
+    public Start(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
+        final int lapGain) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
         this.lapGain = lapGain;
     }
 

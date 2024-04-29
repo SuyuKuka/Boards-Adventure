@@ -5,8 +5,8 @@ import model.config.players.Player;
 
 public final class Void extends Cell {
 
-    public Void(final int id, final CellType cellType, final int nextCellID) {
-        super(id, cellType, nextCellID);
+    public Void(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+        super(id, shouldPlayerStop, cellType, nextCellID);
     }
 
     @Override

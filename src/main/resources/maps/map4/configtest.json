@@ -1,0 +1,119 @@
+{
+    "shop_items" : [
+		{
+			"name" : "LITTLE_DICE"
+		},
+		{
+			"name" : "HOE"
+		}
+	],
+	"start_items" : [
+		{
+			"name" : "LITTLE_DICE"
+		},
+		{
+			"name" : "HOE"
+		}
+	],
+	"cards_effect" : [
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 8
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 300
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 40
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 37
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 600
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 607
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 502
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 402
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 29
+		},
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellID" : 23
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 100,
+			"quantity" : 5
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -100,
+			"quantity" : 5
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 200,
+			"quantity" : 4
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -200,
+			"quantity" : 4
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : 300,
+			"quantity" : 2
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"amount" : -300,
+			"quantity" : 2
+		},
+		{
+			"type" : "LOSE_PROPERTY_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "SWAP_POSITION_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "LOSE_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_GAMEPOINT_EFFECT",
+			"quantity" : 2
+		}
+	],
+    "cells" : [
+        {
+			"id" : 100,
+			"type" : "START",
+			"lapGain" : 300,
+			"xPos" : 500,
+			"yPos" : 500
+		}
+    ]
+}

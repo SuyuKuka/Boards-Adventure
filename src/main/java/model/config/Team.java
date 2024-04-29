@@ -51,6 +51,10 @@ public final class Team {
 
     // region getters/setters
 
+    public int getTeamID() {
+        return teamID;
+    }
+
     public int getMoney() {
         return money;
     }

@@ -1,12 +1,14 @@
 package model.config.players;
 
-import java.util.HashMap;
+import static game.Game.RAND;
 
-import model.config.Dice;
+import java.util.ArrayList;
+
 import model.config.GameMap;
-import model.config.Item;
 import model.config.Team;
+import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
+import model.config.items.Item;
 
 public abstract class Player {
 
@@ -14,41 +16,33 @@ public abstract class Player {
     private final String username;
     private final Team team;
     private final Item startItem;
-    private final HashMap<String, Dice> dices;
+    private final ArrayList<CardEffect> cards = new ArrayList<>();
+    private Item shopItem;
 
-    private int jailTurn;
-    private int mapLap;
-    private int position;
-    private int previousPosition;
-    private int intersectionCellID;
+    private int jailTurn = 0;
+    private int mapLap = 0;
+    private int position = 0;
+    private int previousPosition = 0;
 
-    private int diceRollValue;
+    private int diceRollValue = 0;
 
     public Player(final int playerID, final String username, final Team team, final Item startItem) {
         this.playerID = playerID;
         this.username = username;
         this.team = team;
         this.startItem = startItem;
-        dices = new HashMap<>();
-        initValues();
-    }
-
-    private void initValues() {
-        dices.put("normal", new Dice());
-        intersectionCellID = 0;
-        position = 0;
-        mapLap = 0;
-        jailTurn = 0;
-        previousPosition = 0;
-        diceRollValue = 0;
+        shopItem = null;
     }
 
     // region model methods
 
-    public final void rollDice(final String diceName) {
-        // dices.get(diceName).rollDice();
-        diceRollValue = 4;
-        System.out.println(diceRollValue);
+    public final void rollDice() {
+        diceRollValue = RAND.nextInt(6) + 1;
+        diceRollValue = 7;
+    }
+
+    public final void tooMuchShopItem(Item newItem) {
+        // Il doit choisir entre le nouveau item ou son item actuel
     }
 
     // endregion
@@ -75,12 +69,8 @@ public abstract class Player {
 
     // region getters/setters
 
-    public final void setIntersectionCellID(final int intersectionCellID) {
-        this.intersectionCellID = intersectionCellID;
-    }
-
-    public final int getIntersectionCellID() {
-        return intersectionCellID;
+    public final void setDiceRollValue(final int diceRollValue) {
+        this.diceRollValue = diceRollValue;
     }
 
     public final int getDiceRollValue() {
@@ -101,6 +91,14 @@ public abstract class Player {
 
     public final int getJailTurn() {
         return jailTurn;
+    }
+
+    public final Item getStartItem() {
+        return startItem;
+    }
+
+    public final Item getShopItem() {
+        return shopItem;
     }
 
     public final void setPosition(final int position) {
@@ -129,6 +127,14 @@ public abstract class Player {
 
     public final int getPlayerID() {
         return playerID;
+    }
+
+    public final void setShopItem(final Item shopItem) {
+        this.shopItem = shopItem;
+    }
+
+    public final boolean hasShopItem() {
+        return shopItem != null;
     }
 
     // endregion

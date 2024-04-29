@@ -6,11 +6,13 @@ import model.config.players.Player;
 public abstract class Cell {
 
     private final int id;
+    private final boolean shouldPlayerStop;
     private final CellType cellType;
     private final int nextCellID;
 
-    public Cell(final int id, final CellType cellType, final int nextCellID) {
+    public Cell(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
         this.id = id;
+        this.shouldPlayerStop = shouldPlayerStop;
         this.cellType = cellType;
         this.nextCellID = nextCellID;
     }
@@ -31,5 +33,9 @@ public abstract class Cell {
 
     public final CellType getCellType() {
         return cellType;
+    }
+
+    public final boolean shouldPlayerStop() {
+        return shouldPlayerStop;
     }
 }
