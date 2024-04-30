@@ -12,7 +12,7 @@ import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
 
-    private static final int PLAYER_DIAMETER = 32;
+    private static final int PLAYER_DIAMETER = CellGraphics.getCellDiameter() / 2;
 
     private final GamePanel gamePanel;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
@@ -53,18 +53,19 @@ public final class PlayerGraphics extends JLabel {
     }
 
     private void updatePosition() {
-        final int cellDia = CellGraphics.getCellDiameter();
-        final double zoom = gamePanel.getZoom();
-        final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / gamePanel.getCameraWidth();
-        final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / gamePanel.getCameraHeight();
+        final int camWidth = gamePanel.getCameraWidth();
+        final int cellCamX = xPos - gamePanel.getCameraX() + camWidth / 2;
+        final double screenRatioX = 1.0 * gamePanel.getWidth() / camWidth;
+        final int centerOffsetX = PLAYER_DIAMETER / 2 * GamePanel.getCameraMaxWidth() / camWidth;
+        final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
 
-        final int cameraX = (int) (gamePanel.getCameraX() - GamePanel.getCameraMaxWidth() / 2 * zoom);
-        final int cameraY = (int) (gamePanel.getCameraY() - GamePanel.getCameraMaxHeight() / 2 * zoom);
+        final int camHeight = gamePanel.getCameraHeight();
+        final int cellCamY = (yPos - gamePanel.getCameraY() + camHeight / 2);
+        final double screenRatioY = 1.0 * gamePanel.getHeight() / camHeight;
+        final int centerOffsetY = PLAYER_DIAMETER / 2 * GamePanel.getCameraMaxHeight() / camHeight;
+        final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
 
-        final int posCamX = (int) ((configToScreenRatioW * (xPos - cameraX)) - cellDia / 2 * zoom);
-        final int posCamY = (int) ((configToScreenRatioH * (yPos - cameraY)) - cellDia / 2 * zoom);
-
-        setLocation(posCamX + cellDia / 4, posCamY + cellDia / 4);
+        setLocation(finalX, finalY);
     }
 
     public void updateCoordinates() {

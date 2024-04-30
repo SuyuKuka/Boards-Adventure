@@ -44,21 +44,19 @@ public abstract class CellGraphics extends JLabel {
 
 
     private void updateLocation() {
-        // final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / GamePanel.getCameraMaxWidth();
-        // final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / GamePanel.getCameraMaxHeight();
-        final double zoom = gamePanel.getZoom();
-        final double configToScreenRatioW = 1.0 * gamePanel.getWidth() / gamePanel.getCameraWidth();
-        final double configToScreenRatioH = 1.0 * gamePanel.getHeight() / gamePanel.getCameraHeight();
+        final int camWidth = gamePanel.getCameraWidth();
+        final int cellCamX = xPos - gamePanel.getCameraX() + camWidth / 2;
+        final double screenRatioX = 1.0 * gamePanel.getWidth() / camWidth;
+        final int centerOffsetX = CELL_DIAMETER / 2 * GamePanel.getCameraMaxWidth() / camWidth;
+        final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
 
-        final int cameraX = (int) (gamePanel.getCameraX() - GamePanel.getCameraMaxWidth() / 2 * zoom);
-        final int cameraY = (int) (gamePanel.getCameraY() - GamePanel.getCameraMaxHeight() / 2 * zoom);
+        final int camHeight = gamePanel.getCameraHeight();
+        final int cellCamY = (yPos - gamePanel.getCameraY() + camHeight / 2);
+        final double screenRatioY = 1.0 * gamePanel.getHeight() / camHeight;
+        final int centerOffsetY = CELL_DIAMETER / 2 * GamePanel.getCameraMaxHeight() / camHeight;
+        final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
 
-        final int posCamX = (int) ((configToScreenRatioW * (xPos - cameraX)) - CELL_DIAMETER / 2 * zoom);
-        final int posCamY = (int) ((configToScreenRatioH * (yPos - cameraY)) - CELL_DIAMETER / 2 * zoom);
-
-        setLocation(posCamX, posCamY);
-        // System.out.println(getLocation() + " " + gamePanel.getCameraWidth() + " " + gamePanel.getCameraX());
-
+        setLocation(finalX, finalY);
     }
 
     public final GamePanel getGamePanel() {

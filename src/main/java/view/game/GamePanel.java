@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -51,11 +53,12 @@ public final class GamePanel extends CorePanel {
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 480;
+    private static final double MIN_ZOOM = 0.5;
+    private static final double MAX_ZOOM = 5;
 
     private double zoom = 1;
-    private int cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
-    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
-
+    private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
+    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
     private int cameraX = 500;
     private int cameraY = 500;
     private Point cameraPanStartPos = null;
@@ -103,27 +106,26 @@ public final class GamePanel extends CorePanel {
                 }
             }
         });
-        // TODO le zoom : il manque le repositionnement des cellGraphics et playerGraphics pour que ça marche bien
-        // addMouseWheelListener(new MouseWheelListener() {
-        //     @Override
-        //     public void mouseWheelMoved(final MouseWheelEvent e) {
-        //         if (!e.isControlDown()) {
-        //             if (e.getWheelRotation() < 0) {
-        //                 if (zoom <= 9.9) {
-        //                     zoom += 0.1;
-        //                 }
-        //             } else {
-        //                 if (zoom >= 1.1) {
-        //                     zoom -= 0.1;
-        //                 }
-        //             }
-        //             cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
-        //             cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
-        //             updateCameraPosition();
-        //             redraw();
-        //         }
-        //     }
-        // });
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                if (!e.isControlDown()) {
+                    if (e.getWheelRotation() < 0) {
+                        if (zoom <= MAX_ZOOM - 0.1) {
+                            zoom += 0.1;
+                        }
+                    } else {
+                        if (zoom >= MIN_ZOOM + 0.1) {
+                            zoom -= 0.1;
+                        }
+                    }
+                    cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
+                    cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
+                    updateCameraPosition();
+                    redraw();
+                }
+            }
+        });
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {

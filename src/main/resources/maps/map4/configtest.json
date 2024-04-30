@@ -1,5 +1,5 @@
 {
-    "shop_items" : [
+	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE"
 		},
@@ -18,73 +18,11 @@
 	"cards_effect" : [
 		{
 			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 8
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 300
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 40
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 37
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 600
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 607
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 502
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 402
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 29
-		},
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellID" : 23
+			"cellIDs" : [109, 400, 302, 511, 513, 520, 130, 502, 605, 126]
 		},
 		{
 			"type" : "MONEY_EFFECT",
-			"amount" : 100,
-			"quantity" : 5
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : -100,
-			"quantity" : 5
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : 200,
-			"quantity" : 4
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : -200,
-			"quantity" : 4
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : 300,
-			"quantity" : 2
-		},
-		{
-			"type" : "MONEY_EFFECT",
-			"amount" : -300,
-			"quantity" : 2
+			"quantity-amount" : [[4, 100], [4, -100], [3, 200], [3, -200], [2, 300], [2, -300]]
 		},
 		{
 			"type" : "LOSE_PROPERTY_EFFECT",
