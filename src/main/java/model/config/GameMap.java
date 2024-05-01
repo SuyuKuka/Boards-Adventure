@@ -58,7 +58,7 @@ public final class GameMap {
         return null;
     }
 
-    public CardEffect loadRandomCardEffect() {
+    public CardEffect getRandomCardEffect() {
         final Random rand = new Random();
         int randInt = rand.nextInt(cardEffectsCounter);
         CardEffect cardEffect = null;

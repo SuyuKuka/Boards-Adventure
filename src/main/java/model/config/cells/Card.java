@@ -18,8 +18,17 @@ public class Card extends Cell {
      */
     @Override
     public void playCellEffect(Player player, Model model) {
-        final CardEffect cardEffect = model.getGameMap().loadRandomCardEffect();
+        final CardEffect cardEffect = model.getGameMap().getRandomCardEffect();
+        player.setCardEffect(cardEffect);
+    }
+
+    public final void playCardEffect(Player player, Model model) {
+        final CardEffect cardEffect = player.getCardEffect();
+        if (cardEffect == null) {
+            return;
+        }
         cardEffect.applyEffect(player, model);
+        player.setCardEffect(null);
     }
 
 }

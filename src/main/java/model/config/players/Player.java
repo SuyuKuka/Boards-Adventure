@@ -17,6 +17,7 @@ public abstract class Player {
     private final Team team;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
+    private CardEffect cardEffect = null;
     private Item shopItem;
 
     private int jailTurn = 0;
@@ -135,6 +136,14 @@ public abstract class Player {
 
     public final boolean hasShopItem() {
         return shopItem != null;
+    }
+
+    public final CardEffect getCardEffect() {
+        return cardEffect;
+    }
+
+    public final void setCardEffect(CardEffect cardEffect) {
+        this.cardEffect = cardEffect;
     }
 
     // endregion
