@@ -26,6 +26,8 @@ public final class RoundedRectCell extends CellGraphics {
         COLORS.add(Color.MAGENTA);
     }
 
+    private static final int INSIDE_COLOR = 3;
+    private static final int ICON = 8;
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
 
@@ -37,25 +39,32 @@ public final class RoundedRectCell extends CellGraphics {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         final int cellID = getCellID();
         final Property cell = (Property) getController().getCell(cellID);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(COLORS.get(cell.getGroup() - 1));
+        final int diam = getCellDiameter();
         final double zoom = getGamePanel().getZoom();
-        g2d.fillRoundRect(0, 0, getCellDiameter(), getCellDiameter(), ARC_WIDTH, ARC_HEIGHT);
-        final int inside = 3;
+        // Contour
+        g2d.setColor(COLORS.get(cell.getGroup() - 1));
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
+        // Couleur intérieure
         if (cell.getOwner() == null) {
             g2d.setColor(Color.WHITE);
         } else {
             g2d.setColor(COLORS.get(cell.getOwner().getTeam().getTeamID()));
         }
-        g2d.fillRoundRect(inside, inside, getCellDiameter() - inside * 2,
-            getCellDiameter() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
-        final int icon = 8;
-        g2d.drawImage(getCellImage(), icon, icon, getCellDiameter() - icon * 2, getCellDiameter() - icon * 2, this);
+        final int startInside = (int) (INSIDE_COLOR * zoom);
+        final int endInside = (int) Math.ceil(((diam - INSIDE_COLOR * 2) * zoom));
+        g2d.fillRoundRect(startInside, startInside, endInside, endInside, ARC_WIDTH, ARC_HEIGHT);
+        // icône
+        final int startIcon = (int) (ICON * zoom);
+        final int endIcon = (int) Math.ceil((diam - ICON * 2) * zoom);
+        g2d.drawImage(getCellImage(), startIcon, startIcon, endIcon, endIcon, this);
+        // id cellule
         g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12));
-        g2d.drawString(String.valueOf(cellID), getCellDiameter() / 2 - 5, getCellDiameter() / 2 - 5);
+        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici =12)
+        g2d.drawString(String.valueOf(cellID), getWidth() / 4, getHeight() / 2);
     }
 
 }

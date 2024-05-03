@@ -46,8 +46,8 @@ public final class PlayerGraphics extends JLabel {
 
     private void updateSize() {
         final double zoom = gamePanel.getZoom();
-        final int sizeX = (int) (gamePanel.getWidth() / GamePanel.getCameraMaxWidth() * PLAYER_DIAMETER * zoom);
-        final int sizeY = (int) (gamePanel.getHeight() / GamePanel.getCameraMaxHeight() * PLAYER_DIAMETER * zoom);
+        final int sizeX = (int) (PLAYER_DIAMETER * zoom);
+        final int sizeY = (int) (PLAYER_DIAMETER * zoom);
         setSize(sizeX, sizeY);
         setIcon(new ImageIcon(playerImage.getScaledInstance(sizeX, sizeY, Image.SCALE_SMOOTH)));
     }

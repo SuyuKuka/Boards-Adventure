@@ -37,9 +37,7 @@ public abstract class CellGraphics extends JLabel {
 
     private void updateSize() {
         final double zoom = gamePanel.getZoom();
-        setSize((int) (gamePanel.getWidth() / GamePanel.getCameraMaxWidth() * CELL_DIAMETER * zoom),
-            (int) (gamePanel.getHeight() / GamePanel.getCameraMaxHeight() * CELL_DIAMETER * zoom));
-        // System.out.println(getSize());
+        setSize((int) (CELL_DIAMETER * zoom), (int) (CELL_DIAMETER * zoom));
     }
 
 
