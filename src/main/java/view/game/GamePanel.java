@@ -53,6 +53,7 @@ public final class GamePanel extends CorePanel {
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 480;
+    private static final boolean ZOOM_WITH_SCROLLWHEEL = false;
     private static final double MIN_ZOOM = 0.5;
     private static final double MAX_ZOOM = 5;
 
@@ -96,9 +97,7 @@ public final class GamePanel extends CorePanel {
                     // sur le joueur courant.
                     if (e.getPoint().equals(cameraPanStartPos)) {
                         final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-                        cameraX = playerGraphics.getXPos();
-                        cameraY = playerGraphics.getYPos();
-                        updateCameraPosition();
+                        updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
                         redraw();
                     }
                     cameraPanStartPos = null;
@@ -106,35 +105,45 @@ public final class GamePanel extends CorePanel {
                 }
             }
         });
-        addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                if (!e.isControlDown()) {
-                    if (e.getWheelRotation() < 0) {
-                        if (zoom <= MAX_ZOOM - 0.1) {
-                            zoom += 0.1;
+        if (ZOOM_WITH_SCROLLWHEEL) {
+            addMouseWheelListener(new MouseWheelListener() {
+                @Override
+                public void mouseWheelMoved(final MouseWheelEvent e) {
+                    if (!e.isControlDown()) {
+                        if (e.getWheelRotation() < 0) {
+                            if (zoom <= MAX_ZOOM - 0.1) {
+                                updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                            }
+                        } else {
+                            if (zoom >= MIN_ZOOM + 0.1) {
+                                updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                            }
                         }
-                    } else {
-                        if (zoom >= MIN_ZOOM + 0.1) {
-                            zoom -= 0.1;
-                        }
+                        redraw();
                     }
-                    cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
-                    cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-                    updateCameraPosition();
-                    redraw();
                 }
-            }
-        });
+            });
+        } else {
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(final MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON1 && zoom <= MAX_ZOOM - 0.1) {
+                        updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                        redraw();
+                    } else if (e.getButton() == MouseEvent.BUTTON3 && zoom >= MIN_ZOOM + 0.1) {
+                        updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                        redraw();
+                    }
+                }
+            });
+        }
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (SwingUtilities.isMiddleMouseButton(e) && cameraPanStartPos != null) {
                     int deltaX = e.getX() - cameraPan.x;
                     int deltaY = e.getY() - cameraPan.y;
-                    cameraX += deltaX;
-                    cameraY += deltaY;
-                    updateCameraPosition();
+                    updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
                     cameraPan = e.getPoint();
                     redraw();
                 }
@@ -152,7 +161,12 @@ public final class GamePanel extends CorePanel {
         }
     }
 
-    public void updateCameraPosition() {
+    public void updateCameraPosition(final double nextZoom, final int nextCameraX, final int nextCameraY) {
+        zoom = nextZoom;
+        cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
+        cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
+        cameraX = nextCameraX;
+        cameraY = nextCameraY;
         if (cameraX < cameraWidth / 2) {
             cameraX = cameraWidth / 2;
         } else if (cameraX > boardImage.getWidth(null) - cameraWidth / 2) {
@@ -340,8 +354,7 @@ public final class GamePanel extends CorePanel {
         final CellGraphics cellGraphics = cellsGraphics.get(targetCellID);
         JButton button = new JButton();
         button.setLocation(cellGraphics.getLocation());
-        button.setBounds(cellGraphics.getLocation().x, cellGraphics.getLocation().y,
-            CellGraphics.getCellDiameter(), CellGraphics.getCellDiameter());
+        button.setSize(cellGraphics.getSize());
         button.setBackground(Color.GREEN);
         button.addMouseListener(new MouseAdapter() {
             @Override
