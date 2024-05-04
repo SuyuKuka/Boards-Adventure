@@ -23,7 +23,7 @@ import model.config.cells.Cell;
 import model.config.cells.CellFactory;
 import model.config.items.Item;
 import model.config.items.ItemFactory;
-import view.game.GamePanel;
+import view.game.BoardPanel;
 import view.game.cellsgraphics.CellGraphics;
 import view.game.cellsgraphics.CellGraphicsFactory;
 
@@ -120,7 +120,7 @@ public final class Resources {
 
     // region gameMapGraphics
 
-    public static HashMap<Integer, CellGraphics> loadCellsGraphics(final GamePanel gamePanel, final String mapName) {
+    public static HashMap<Integer, CellGraphics> loadCellsGraphics(final BoardPanel boardPanel, final String mapName) {
         try {
             final File file = new File(PATH + "maps/" + mapName + "/config.json");
             final JSONArray jCellsArray = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8))
@@ -128,7 +128,7 @@ public final class Resources {
             final HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
             for (int i = 0; i < jCellsArray.length(); i++) {
                 final JSONObject jCell = jCellsArray.getJSONObject(i);
-                cellsGraphics.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(gamePanel, jCell));
+                cellsGraphics.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(boardPanel, jCell));
             }
             return cellsGraphics;
         } catch (Exception e) {

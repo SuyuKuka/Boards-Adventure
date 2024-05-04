@@ -14,7 +14,7 @@ public final class PlayerGraphics extends JLabel {
 
     private static final int PLAYER_DIAMETER = CellGraphics.getCellDiameter() / 2;
 
-    private final GamePanel gamePanel;
+    private final BoardPanel boardPanel;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
 
     private int xPos;
@@ -25,10 +25,10 @@ public final class PlayerGraphics extends JLabel {
     private Image playerImage;
 
 
-    public PlayerGraphics(final Player player, final GamePanel gamePanel) {
+    public PlayerGraphics(final Player player, final BoardPanel boardPanel) {
         this.player = player;
-        this.gamePanel = gamePanel;
-        this.cellsGraphics = gamePanel.getCellsGraphics();
+        this.boardPanel = boardPanel;
+        this.cellsGraphics = boardPanel.getCellsGraphics();
         final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
@@ -45,7 +45,7 @@ public final class PlayerGraphics extends JLabel {
     }
 
     private void updateSize() {
-        final double zoom = gamePanel.getZoom();
+        final double zoom = boardPanel.getZoom();
         final int sizeX = (int) (PLAYER_DIAMETER * zoom);
         final int sizeY = (int) (PLAYER_DIAMETER * zoom);
         setSize(sizeX, sizeY);
@@ -53,16 +53,16 @@ public final class PlayerGraphics extends JLabel {
     }
 
     private void updatePosition() {
-        final int camWidth = gamePanel.getCameraWidth();
-        final int cellCamX = xPos - gamePanel.getCameraX() + camWidth / 2;
-        final double screenRatioX = 1.0 * gamePanel.getWidth() / camWidth;
-        final int centerOffsetX = PLAYER_DIAMETER / 2 * GamePanel.getCameraMaxWidth() / camWidth;
+        final int camWidth = boardPanel.getCameraWidth();
+        final int cellCamX = xPos - boardPanel.getCameraX() + camWidth / 2;
+        final double screenRatioX = 1.0 * boardPanel.getWidth() / camWidth;
+        final int centerOffsetX = PLAYER_DIAMETER / 2 * BoardPanel.getCameraMaxWidth() / camWidth;
         final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
 
-        final int camHeight = gamePanel.getCameraHeight();
-        final int cellCamY = (yPos - gamePanel.getCameraY() + camHeight / 2);
-        final double screenRatioY = 1.0 * gamePanel.getHeight() / camHeight;
-        final int centerOffsetY = PLAYER_DIAMETER / 2 * GamePanel.getCameraMaxHeight() / camHeight;
+        final int camHeight = boardPanel.getCameraHeight();
+        final int cellCamY = (yPos - boardPanel.getCameraY() + camHeight / 2);
+        final double screenRatioY = 1.0 * boardPanel.getHeight() / camHeight;
+        final int centerOffsetY = PLAYER_DIAMETER / 2 * BoardPanel.getCameraMaxHeight() / camHeight;
         final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
 
         setLocation(finalX, finalY);

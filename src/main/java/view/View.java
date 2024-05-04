@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -8,7 +9,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import controller.Controller;
 import game.Game;
@@ -21,7 +21,7 @@ public final class View extends JFrame {
     private static final int MIN_HEIGHT = 768; // 440
 
     private final Game game;
-    private CorePanel corePanel;
+    private JLayeredManager corePanel;
 
     public View(final Game game) {
         this.game = game;
@@ -42,9 +42,9 @@ public final class View extends JFrame {
     public void initNewMenuPanel() {
         corePanel = new MenuPanel(this);
         final Container container = getContentPane();
-        for (JPanel panel : corePanel.getPanels().values()) {
-            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
-            panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+        for (Component comp : corePanel.getLayersMap().values()) {
+            comp.setBounds(0, 0, container.getWidth(), container.getHeight());
+            comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
         }
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
@@ -53,9 +53,9 @@ public final class View extends JFrame {
                 final Container container = getContentPane();
                 corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
                 corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
-                for (JPanel panel : corePanel.getPanels().values()) {
-                    panel.setBounds(0, 0, container.getWidth(), container.getHeight());
-                    panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                for (Component comp : corePanel.getLayersMap().values()) {
+                    comp.setBounds(0, 0, container.getWidth(), container.getHeight());
+                    comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 }
             }
         });
@@ -65,9 +65,9 @@ public final class View extends JFrame {
     public GamePanel initNewGamePanel(final Controller controller) {
         corePanel = new GamePanel(this, controller);
         final Container container = getContentPane();
-        for (JPanel panel : corePanel.getPanels().values()) {
-            panel.setBounds(0, 0, container.getWidth(), container.getHeight());
-            panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+        for (Component comp : corePanel.getLayersMap().values()) {
+            comp.setBounds(0, 0, container.getWidth(), container.getHeight());
+            comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
         }
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
@@ -76,9 +76,9 @@ public final class View extends JFrame {
                 final Container container = getContentPane();
                 corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
                 corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
-                for (JPanel panel : corePanel.getPanels().values()) {
-                    panel.setBounds(0, 0, container.getWidth(), container.getHeight());
-                    panel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
+                for (Component comp : corePanel.getLayersMap().values()) {
+                    comp.setBounds(0, 0, container.getWidth(), container.getHeight());
+                    comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
                 }
             }
         });
@@ -100,7 +100,7 @@ public final class View extends JFrame {
         }
     }
 
-    public void setCorePanel(final CorePanel corePanel) {
+    public void setCorePanel(final JLayeredManager corePanel) {
         this.corePanel = corePanel;
     }
 

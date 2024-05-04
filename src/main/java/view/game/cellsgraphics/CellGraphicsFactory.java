@@ -3,10 +3,10 @@ package view.game.cellsgraphics;
 import org.json.JSONObject;
 
 import model.config.cells.CellType;
-import view.game.GamePanel;
+import view.game.BoardPanel;
 
 public final class CellGraphicsFactory {
-    public static CellGraphics createCellGraphics(final GamePanel gamePanel, final JSONObject jObject) {
+    public static CellGraphics createCellGraphics(final BoardPanel boardPanel, final JSONObject jObject) {
         final int cellID = jObject.getInt("id");
         final int yPos = jObject.getInt("yPos");
         final int xPos = jObject.getInt("xPos");
@@ -14,13 +14,13 @@ public final class CellGraphicsFactory {
         // TODO MVC appel avec controller pour cellType au lieu de direct appeler le model par la view
         switch (cellType) {
             case PROPERTY:
-                return new PropertyGraphics(gamePanel, cellID, xPos, yPos);
+                return new PropertyGraphics(boardPanel, cellID, xPos, yPos);
             case INTERSECTION:
-                return new IntersectionGraphics(gamePanel, cellID, xPos, yPos);
+                return new IntersectionGraphics(boardPanel, cellID, xPos, yPos);
             default:
                 break;
         }
-        return new CellGraphics(gamePanel, cellID, xPos, yPos);
+        return new CellGraphics(boardPanel, cellID, xPos, yPos);
     }
 
 }

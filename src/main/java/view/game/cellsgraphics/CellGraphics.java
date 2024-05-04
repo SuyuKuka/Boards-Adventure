@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 
 import controller.Controller;
 import controller.resources.Resources;
-import view.game.GamePanel;
+import view.game.BoardPanel;
 
 /**
  * Classe qui s'occupe de la vue des {@link model.config.cells}. <p>
@@ -26,15 +26,15 @@ public class CellGraphics extends JLabel {
     private static final int COLOR_RANGE = 3;
     private static final int ICON_RANGE = 8;
 
-    private final GamePanel gamePanel;
+    private final BoardPanel boardPanel;
     private final Controller controller;
     private final int cellID;
     private final int xPos;
     private final int yPos;
 
-    public CellGraphics(final GamePanel gamePanel, final int cellID, final int xPos, final int yPos) {
-        this.gamePanel = gamePanel;
-        this.controller = gamePanel.getController();
+    public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+        this.boardPanel = boardPanel;
+        this.controller = boardPanel.getController();
         this.cellID = cellID;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -48,22 +48,22 @@ public class CellGraphics extends JLabel {
     }
 
     private void updateSize() {
-        final double zoom = gamePanel.getZoom();
+        final double zoom = boardPanel.getZoom();
         setSize((int) (CELL_DIAMETER * zoom), (int) (CELL_DIAMETER * zoom));
     }
 
 
     private void updateLocation() {
-        final int camWidth = gamePanel.getCameraWidth();
-        final int cellCamX = xPos - gamePanel.getCameraX() + camWidth / 2;
-        final double screenRatioX = 1.0 * gamePanel.getWidth() / camWidth;
-        final int centerOffsetX = CELL_DIAMETER / 2 * GamePanel.getCameraMaxWidth() / camWidth;
+        final int camWidth = boardPanel.getCameraWidth();
+        final int cellCamX = xPos - boardPanel.getCameraX() + camWidth / 2;
+        final double screenRatioX = 1.0 * boardPanel.getWidth() / camWidth;
+        final int centerOffsetX = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxWidth() / camWidth;
         final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
 
-        final int camHeight = gamePanel.getCameraHeight();
-        final int cellCamY = (yPos - gamePanel.getCameraY() + camHeight / 2);
-        final double screenRatioY = 1.0 * gamePanel.getHeight() / camHeight;
-        final int centerOffsetY = CELL_DIAMETER / 2 * GamePanel.getCameraMaxHeight() / camHeight;
+        final int camHeight = boardPanel.getCameraHeight();
+        final int cellCamY = (yPos - boardPanel.getCameraY() + camHeight / 2);
+        final double screenRatioY = 1.0 * boardPanel.getHeight() / camHeight;
+        final int centerOffsetY = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxHeight() / camHeight;
         final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
 
         setLocation(finalX, finalY);
@@ -77,7 +77,7 @@ public class CellGraphics extends JLabel {
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        final double zoom = getGamePanel().getZoom();
+        final double zoom = boardPanel.getZoom();
 
         // Coutour
         g2d.fillOval(0, 0, getWidth(), getHeight());
@@ -98,8 +98,8 @@ public class CellGraphics extends JLabel {
 
     // region getters/setters
 
-    public final GamePanel getGamePanel() {
-        return gamePanel;
+    public final BoardPanel getBoardPanel() {
+        return boardPanel;
     }
 
     public static int getCellDiameter() {

@@ -11,7 +11,7 @@ import java.awt.RenderingHints;
 
 import java.awt.Color;
 
-import view.game.GamePanel;
+import view.game.BoardPanel;
 
 public final class PropertyGraphics extends CellGraphics {
     private static final ArrayList<Color> COLORS = new ArrayList<>();
@@ -30,8 +30,8 @@ public final class PropertyGraphics extends CellGraphics {
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
 
-    public PropertyGraphics(GamePanel gamePanel, int cellID, int xPos, int yPos) {
-        super(gamePanel, cellID, xPos, yPos);
+    public PropertyGraphics(BoardPanel boardPanel, int cellID, int xPos, int yPos) {
+        super(boardPanel, cellID, xPos, yPos);
     }
 
     @Override
@@ -43,7 +43,7 @@ public final class PropertyGraphics extends CellGraphics {
         final int cellID = getCellID();
         final Property cell = (Property) getController().getCell(cellID);
         final int diam = getCellDiameter();
-        final double zoom = getGamePanel().getZoom();
+        final double zoom = getBoardPanel().getZoom();
         // Contour
         g2d.setColor(COLORS.get(cell.getGroup() - 1));
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);

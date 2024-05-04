@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -32,13 +32,27 @@ import controller.resources.Resources;
 import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import model.config.players.Player;
-import view.CorePanel;
+import view.JLayeredManager;
 import view.SwingFactory;
 import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
-public final class GamePanel extends CorePanel {
+public final class GamePanel extends JLayeredManager {
     // LAYERS
+    private static final int DATA_PANEL = 0;
+    private static final int BOARD_PANEL = 1;
+    private static final int ACTION_PANEL = 2;
+    private static final int OVERLAY_PANEL = 3;
+    private static final int PAUSE_GAME = 4;
+
+    private final View frame;
+    private final Controller controller;
+
+    private BoardPanel boardPanel;
+    private ActionPanel actionPanel;
+    private DataPanel dataPanel;
+
+    // KK
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
     private static final int PLAYERS = 2;
@@ -46,130 +60,55 @@ public final class GamePanel extends CorePanel {
     private static final int GUI = 4;
     private static final int PAUSE = 5;
 
-    private final Controller controller;
-    private final HashMap<Integer, CellGraphics> cellsGraphics;
-    private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
-
-    // CAMERA ET ZOOM
-    private static final int CAMERA_MAX_WIDTH = 720;
-    private static final int CAMERA_MAX_HEIGHT = 480;
-    private static final double MIN_ZOOM = 0.5;
-    private static final double MAX_ZOOM = 5;
-
-    private double zoom = 1;
-    private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
-    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-    private int cameraX = 500;
-    private int cameraY = 500;
-    private Point cameraPanStartPos = null;
-    private Point cameraPan = null;
+    private HashMap<Integer, CellGraphics> cellsGraphics;
+    private HashMap<Player, PlayerGraphics> playerGraphicsMap;
 
     private Image boardImage;
 
     private JButton playButton;
 
     public GamePanel(final View frame, final Controller controller) {
-        super(frame);
+        super();
+        setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        setMinimumSize(frame.getMinimumSize());
+        setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        this.frame = frame;
         this.controller = controller;
-        boardImage = Resources.getImage("board");
-        this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
-        this.playerGraphicsMap = new HashMap<>();
-        initValues();
-        addPanel(createBackground(), BACKGROUND);
-        addPanel(createCellsGraphics(), CELLS);
-        addPanel(createPlayersGraphics(), PLAYERS);
-        addPanel(createGUI(), GUI);
-        addPanel(createPause(), PAUSE);
+        setLayout(new GridBagLayout());
+        playButton = new JButton();
+        boardPanel = new BoardPanel(this);
+        dataPanel = new DataPanel(this);
+        actionPanel = new ActionPanel(this);
+        final GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 0.2;
+        gbc.weighty = 0.85;
+        add(dataPanel, gbc);
+        gbc.weightx = 0.8;
+        add(boardPanel, gbc);
+        gbc.gridy = 1;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.weighty = 0.15;
+        add(actionPanel, gbc);
         setVisible(true);
-        addMouseListener(new MouseAdapter() {
+        addComponentListener(new ComponentAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
-                    cameraPanStartPos = e.getPoint();
-                    cameraPan = e.getPoint();
-                }
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON2) {
-                    // Quand le joueur clique molette sans bouger le curseur, téléporte la caméra
-                    // sur le joueur courant.
-                    // if (e.getPoint().equals(cameraPanStartPos)) {
-                    //     final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-                    //     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
-                    //     redraw();
-                    // }
-                    final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-                    updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
-                    redraw();
-                    cameraPanStartPos = null;
-                    cameraPan = null;
-                }
-            }
-        });
-        addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                if (!e.isControlDown()) {
-                    if (e.getWheelRotation() < 0) {
-                        if (zoom <= MAX_ZOOM - 0.1) {
-                            updateCameraPosition(zoom + 0.1, cameraX, cameraY);
-                        }
-                    } else {
-                        if (zoom >= MIN_ZOOM + 0.1) {
-                            updateCameraPosition(zoom - 0.1, cameraX, cameraY);
-                        }
-                    }
-                    redraw();
-                }
-            }
-        });
-        addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
-                    int deltaX = e.getX() - cameraPan.x;
-                    int deltaY = e.getY() - cameraPan.y;
-                    updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
-                    cameraPan = e.getPoint();
-                    redraw();
-                }
+            public void componentResized(final ComponentEvent e) {
+                revalidate();
+                repaint();
             }
         });
     }
 
-    public void redraw() {
-        repaint();
-        for (CellGraphics cellGraphics : cellsGraphics.values()) {
-            cellGraphics.update();
-        }
-        for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
-            playerGraphics.update();
-        }
+    private JPanel createOverlayPanel() {
+        final JPanel panel = new JPanel();
+        return panel;
     }
 
-    public void updateCameraPosition(final double nextZoom, final int nextCameraX, final int nextCameraY) {
-        zoom = nextZoom;
-        cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
-        cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-        cameraX = nextCameraX;
-        cameraY = nextCameraY;
-        if (cameraX < cameraWidth / 2) {
-            cameraX = cameraWidth / 2;
-        } else if (cameraX > boardImage.getWidth(null) - cameraWidth / 2) {
-            cameraX = boardImage.getWidth(null) - cameraWidth / 2;
-        }
-        if (cameraY < cameraHeight / 2) {
-            cameraY = cameraHeight / 2;
-        } else if (cameraY > boardImage.getHeight(null) - cameraHeight / 2) {
-            cameraY = boardImage.getHeight(null) - cameraHeight / 2;
-        }
-    }
-
-    private void initValues() {
-        for (Player player : controller.getPlayers()) {
-            playerGraphicsMap.put(player, new PlayerGraphics(player, this));
-        }
+    private JPanel createPausePanel() {
+        final JPanel panel = new JPanel();
+        return panel;
     }
 
     //#region gameState
@@ -210,7 +149,7 @@ public final class GamePanel extends CorePanel {
     public void playerMove() {
         updateCurrentPlayerPosition();
         if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
-            addPanel(createIntersectionPanel(), INTERACTION);
+            addComp(createIntersectionPanel(), INTERACTION);
         } else {
             controller.gameUpdate();
         }
@@ -223,23 +162,23 @@ public final class GamePanel extends CorePanel {
         // Faire les animations pour chaque cellType
         switch (cellType) {
             case GAIN:
-                addPanel(createGainPanel(), INTERACTION);
+                addComp(createGainPanel(), INTERACTION);
                 break;
             case LOSS:
-                addPanel(createLossPanel(), INTERACTION);
+                addComp(createLossPanel(), INTERACTION);
                 break;
             case KINGDOM:
-                addPanel(createKingdomPanel(), INTERACTION);
+                addComp(createKingdomPanel(), INTERACTION);
                 break;
             case PROPERTY:
-                addPanel(createPropertyPanel(), INTERACTION);
+                addComp(createPropertyPanel(), INTERACTION);
                 break;
             case SHOP:
-                addPanel(createShopPanel(), INTERACTION);
+                addComp(createShopPanel(), INTERACTION);
                 break;
             case CARD:
                 System.out.println("AAAAAAAAAAAAAAA");
-                addPanel(createCardPanel(), INTERACTION);
+                addComp(createCardPanel(), INTERACTION);
                 break;
             default:
                 startSingleActionTimer(500, e -> controller.gameUpdate());
@@ -272,47 +211,10 @@ public final class GamePanel extends CorePanel {
         playerGraphics.update();
     }
 
-    // #region Background 0
-
-    private JPanel createBackground() {
-        final JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                final int halfWidth = cameraWidth / 2;
-                final int halfHeight = cameraHeight / 2;
-                final int sx1 = cameraX - halfWidth;
-                final int sy1 = cameraY - halfHeight;
-                final int sx2 = cameraX + halfWidth;
-                final int sy2 = cameraY + halfHeight;
-                g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
-            }
-        };
-        return panel;
-    }
-
-    // #endregion
-
-    // #region CellsGraphics 1
-
-    private JPanel createCellsGraphics() {
-        final JPanel panel = new JPanel(null);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.setOpaque(false);
-        for (Integer key : cellsGraphics.keySet()) {
-            panel.add(cellsGraphics.get(key));
-        }
-        return panel;
-    }
-
-    // #endregion
-
-    // #region PlayersGraphics 2
-
     private JPanel createPlayersGraphics() {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }
@@ -328,7 +230,7 @@ public final class GamePanel extends CorePanel {
     private JPanel createIntersectionPanel() {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         for (int i = 0; i < intersectIDs.size(); i++) {
             panel.add(createIntersectChoiceButton(intersectIDs.get(i)));
@@ -630,7 +532,7 @@ public final class GamePanel extends CorePanel {
 
     private JPanel createGUI() {
         final JPanel panel = new JPanel(null);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         panel.setOpaque(false);
         createPlayButton();
         panel.add(playButton);
@@ -664,7 +566,7 @@ public final class GamePanel extends CorePanel {
 
     private JPanel createPause() {
         final JPanel panel = new JPanel(null);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         panel.setOpaque(false);
         panel.setVisible(false);
         return panel;
@@ -681,7 +583,7 @@ public final class GamePanel extends CorePanel {
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         };
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
@@ -730,40 +632,16 @@ public final class GamePanel extends CorePanel {
         return cellsGraphics;
     }
 
-    public double getZoom() {
-        return zoom;
-    }
-
-    public int getCameraX() {
-        return cameraX;
-    }
-
-    public int getCameraY() {
-        return cameraY;
-    }
-
-    public int getCameraHeight() {
-        return cameraHeight;
-    }
-
-    public int getCameraWidth() {
-        return cameraWidth;
-    }
-
-    public static int getCameraMaxWidth() {
-        return CAMERA_MAX_WIDTH;
-    }
-
-    public static int getCameraMaxHeight() {
-        return CAMERA_MAX_HEIGHT;
-    }
-
     public Controller getController() {
         return controller;
     }
 
     public Image getBoardImage() {
         return boardImage;
+    }
+
+    public View getFrame() {
+        return frame;
     }
 
 }
