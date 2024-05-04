@@ -9,7 +9,7 @@ import model.config.players.Player;
  */
 public abstract class CardEffect {
 
-    private final int quantity;
+    private int quantity;
 
     public CardEffect(final int quantity) {
         this.quantity = quantity <= 1 ? 1 : quantity;
@@ -32,4 +32,9 @@ public abstract class CardEffect {
     public final int getQuantity() {
         return quantity;
     }
+
+    public final void decreaseQuantity() {
+        quantity--;
+    }
+
 }

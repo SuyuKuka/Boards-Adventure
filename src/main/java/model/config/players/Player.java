@@ -39,7 +39,7 @@ public abstract class Player {
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 7;
+        diceRollValue = 8;
     }
 
     public final void tooMuchShopItem(Item newItem) {

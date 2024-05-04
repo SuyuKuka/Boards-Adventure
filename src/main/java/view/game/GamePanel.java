@@ -602,16 +602,13 @@ public final class GamePanel extends CorePanel {
 
         controller.setCurrentCell();
 
-        JButton open = new JButton("X");
+        JButton open = SwingFactory.createImageButton(this, "card_back", 40, 20, false);
         open.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                controller.playShowCard();
+                controller.playCardEffect();
                 removePanel(INTERACTION);
                 revalidate();
-                String test = controller.getCardEffect();
-
-            System.out.println(test);
             }
         });
         background.add(open);

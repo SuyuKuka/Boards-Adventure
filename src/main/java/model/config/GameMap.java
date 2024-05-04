@@ -9,6 +9,7 @@ import model.config.cells.Cell;
 import model.config.cells.CellType;
 import model.config.cells.Start;
 import model.config.items.Item;
+import model.config.players.Player;
 
 /**
  * Classe qui contient toutes les données "logiques" d'une map sous forme de fichier "config.json"
@@ -58,7 +59,7 @@ public final class GameMap {
         return null;
     }
 
-    public CardEffect getRandomCardEffect() {
+    public CardEffect getRandomCardEffect(Player player) {
         final Random rand = new Random();
         int randInt = rand.nextInt(cardEffectsCounter);
         CardEffect cardEffect = null;
@@ -69,7 +70,10 @@ public final class GameMap {
             }
             randInt -= cardEffect.getQuantity();
         }
-        cardEffects.remove(cardEffect);
+        cardEffect.decreaseQuantity();
+        if (cardEffect.getQuantity() == 0) {
+            cardEffects.remove(cardEffect);
+        }
         cardEffectsCounter--;
         return cardEffect;
     }

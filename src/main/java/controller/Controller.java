@@ -16,6 +16,7 @@ import model.config.cells.Gain;
 import model.config.cells.Loss;
 import model.config.cells.Property;
 import model.config.players.Player;
+import model.config.cells.Card;
 
 /**
  * Classe qui fait office de Contrôleur pour le {@link Model} et la {@link View}.
@@ -173,9 +174,9 @@ public final class Controller {
         ((Property) currentCell).upgrade(getCurrentPlayer());
     }
 
-    public void playShowCard() {
-        //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
-        // ((Card) currentCell).showCard(getCurrentPlayer(), model);
+    public void playCardEffect() {
+        System.out.println(getCurrentPlayer().getCardEffect().toString());
+        ((Card) currentCell).playCardEffect(getCurrentPlayer(), model);
     }
 
     // #endregion
