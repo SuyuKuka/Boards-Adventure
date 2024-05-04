@@ -3,16 +3,17 @@ package view.game.cellsgraphics;
 import java.util.ArrayList;
 
 import controller.resources.Resources;
+import model.config.cells.Property;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import model.config.cells.Property;
+import java.awt.Color;
+
 import view.game.GamePanel;
 
-public final class RoundedRectCell extends CellGraphics {
+public final class PropertyGraphics extends CellGraphics {
     private static final ArrayList<Color> COLORS = new ArrayList<>();
 
     static {
@@ -29,7 +30,7 @@ public final class RoundedRectCell extends CellGraphics {
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
 
-    public RoundedRectCell(final GamePanel gamePanel, final int cellID, final int xPos, final int yPos) {
+    public PropertyGraphics(GamePanel gamePanel, int cellID, int xPos, int yPos) {
         super(gamePanel, cellID, xPos, yPos);
     }
 
@@ -37,25 +38,32 @@ public final class RoundedRectCell extends CellGraphics {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         final int cellID = getCellID();
         final Property cell = (Property) getController().getCell(cellID);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(COLORS.get(cell.getGroup() - 1));
+        final int diam = getCellDiameter();
         final double zoom = getGamePanel().getZoom();
-        g2d.fillRoundRect(0, 0, getCellDiameter(), getCellDiameter(), ARC_WIDTH, ARC_HEIGHT);
-        final int inside = 3;
+        // Contour
+        g2d.setColor(COLORS.get(cell.getGroup() - 1));
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
+        // Couleur intérieure
         if (cell.getOwner() == null) {
             g2d.setColor(Color.WHITE);
         } else {
             g2d.setColor(COLORS.get(cell.getOwner().getTeam().getTeamID()));
         }
-        g2d.fillRoundRect(inside, inside, getCellDiameter() - inside * 2,
-            getCellDiameter() - inside * 2, ARC_WIDTH, ARC_HEIGHT);
-        final int icon = 8;
-        g2d.drawImage(getCellImage(), icon, icon, getCellDiameter() - icon * 2, getCellDiameter() - icon * 2, this);
+        final int startInside = (int) (getColorRange() * zoom);
+        final int endInside = (int) Math.ceil(((diam - getColorRange() * 2) * zoom));
+        g2d.fillRoundRect(startInside, startInside, endInside, endInside, ARC_WIDTH, ARC_HEIGHT);
+        // icône
+        final int startIcon = (int) (getIconRange() * zoom);
+        final int endIcon = (int) Math.ceil((diam - getIconRange() * 2) * zoom);
+        g2d.drawImage(loadCellImage(), startIcon, startIcon, endIcon, endIcon, this);
+        // id cellule
         g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12));
-        g2d.drawString(String.valueOf(cellID), getCellDiameter() / 2 - 5, getCellDiameter() / 2 - 5);
+        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici =12)
+        g2d.drawString(String.valueOf(cellID), getWidth() / 4, getHeight() / 2);
     }
 
 }

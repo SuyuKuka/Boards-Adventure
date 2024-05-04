@@ -69,7 +69,10 @@ public final class GameMap {
             }
             randInt -= cardEffect.getQuantity();
         }
-        cardEffects.remove(cardEffect);
+        cardEffect.decreaseQuantity();
+        if (cardEffect.getQuantity() == 0) {
+            cardEffects.remove(cardEffect);
+        }
         cardEffectsCounter--;
         return cardEffect;
     }

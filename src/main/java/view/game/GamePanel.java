@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -51,11 +53,12 @@ public final class GamePanel extends CorePanel {
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 480;
+    private static final double MIN_ZOOM = 0.5;
+    private static final double MAX_ZOOM = 5;
 
     private double zoom = 1;
-    private int cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
-    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
-
+    private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
+    private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
     private int cameraX = 500;
     private int cameraY = 500;
     private Point cameraPanStartPos = null;
@@ -81,7 +84,7 @@ public final class GamePanel extends CorePanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON2) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     cameraPanStartPos = e.getPoint();
                     cameraPan = e.getPoint();
                 }
@@ -91,48 +94,43 @@ public final class GamePanel extends CorePanel {
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     // Quand le joueur clique molette sans bouger le curseur, téléporte la caméra
                     // sur le joueur courant.
-                    if (e.getPoint().equals(cameraPanStartPos)) {
-                        final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-                        cameraX = playerGraphics.getXPos();
-                        cameraY = playerGraphics.getYPos();
-                        updateCameraPosition();
-                        redraw();
-                    }
+                    // if (e.getPoint().equals(cameraPanStartPos)) {
+                    //     final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    //     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
+                    //     redraw();
+                    // }
+                    final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
+                    redraw();
                     cameraPanStartPos = null;
                     cameraPan = null;
                 }
             }
         });
-        // TODO le zoom : il manque le repositionnement des cellGraphics et playerGraphics pour que ça marche bien
-        // addMouseWheelListener(new MouseWheelListener() {
-        //     @Override
-        //     public void mouseWheelMoved(final MouseWheelEvent e) {
-        //         if (!e.isControlDown()) {
-        //             if (e.getWheelRotation() < 0) {
-        //                 if (zoom <= 9.9) {
-        //                     zoom += 0.1;
-        //                 }
-        //             } else {
-        //                 if (zoom >= 1.1) {
-        //                     zoom -= 0.1;
-        //                 }
-        //             }
-        //             cameraWidth = (int) (CAMERA_MAX_WIDTH * 1 / zoom);
-        //             cameraHeight = (int) (CAMERA_MAX_HEIGHT * 1 / zoom);
-        //             updateCameraPosition();
-        //             redraw();
-        //         }
-        //     }
-        // });
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                if (!e.isControlDown()) {
+                    if (e.getWheelRotation() < 0) {
+                        if (zoom <= MAX_ZOOM - 0.1) {
+                            updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                        }
+                    } else {
+                        if (zoom >= MIN_ZOOM + 0.1) {
+                            updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                        }
+                    }
+                    redraw();
+                }
+            }
+        });
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (SwingUtilities.isMiddleMouseButton(e) && cameraPanStartPos != null) {
+                if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
                     int deltaX = e.getX() - cameraPan.x;
                     int deltaY = e.getY() - cameraPan.y;
-                    cameraX += deltaX;
-                    cameraY += deltaY;
-                    updateCameraPosition();
+                    updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
                     cameraPan = e.getPoint();
                     redraw();
                 }
@@ -150,7 +148,12 @@ public final class GamePanel extends CorePanel {
         }
     }
 
-    public void updateCameraPosition() {
+    public void updateCameraPosition(final double nextZoom, final int nextCameraX, final int nextCameraY) {
+        zoom = nextZoom;
+        cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
+        cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
+        cameraX = nextCameraX;
+        cameraY = nextCameraY;
         if (cameraX < cameraWidth / 2) {
             cameraX = cameraWidth / 2;
         } else if (cameraX > boardImage.getWidth(null) - cameraWidth / 2) {
@@ -338,8 +341,7 @@ public final class GamePanel extends CorePanel {
         final CellGraphics cellGraphics = cellsGraphics.get(targetCellID);
         JButton button = new JButton();
         button.setLocation(cellGraphics.getLocation());
-        button.setBounds(cellGraphics.getLocation().x, cellGraphics.getLocation().y,
-            CellGraphics.getCellDiameter(), CellGraphics.getCellDiameter());
+        button.setSize(cellGraphics.getSize());
         button.setBackground(Color.GREEN);
         button.addMouseListener(new MouseAdapter() {
             @Override
