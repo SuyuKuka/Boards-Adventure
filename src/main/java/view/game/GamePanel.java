@@ -53,7 +53,7 @@ public final class GamePanel extends CorePanel {
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 480;
-    private static final boolean ZOOM_WITH_SCROLLWHEEL = false;
+    private static final boolean ZOOM_WITH_SCROLLWHEEL = true;
     private static final double MIN_ZOOM = 0.5;
     private static final double MAX_ZOOM = 5;
 
@@ -85,7 +85,7 @@ public final class GamePanel extends CorePanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON2) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     cameraPanStartPos = e.getPoint();
                     cameraPan = e.getPoint();
                 }
@@ -95,11 +95,14 @@ public final class GamePanel extends CorePanel {
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     // Quand le joueur clique molette sans bouger le curseur, téléporte la caméra
                     // sur le joueur courant.
-                    if (e.getPoint().equals(cameraPanStartPos)) {
-                        final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-                        updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
-                        redraw();
-                    }
+                    // if (e.getPoint().equals(cameraPanStartPos)) {
+                    //     final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    //     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
+                    //     redraw();
+                    // }
+                    final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
+                    redraw();
                     cameraPanStartPos = null;
                     cameraPan = null;
                 }
@@ -140,7 +143,7 @@ public final class GamePanel extends CorePanel {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (SwingUtilities.isMiddleMouseButton(e) && cameraPanStartPos != null) {
+                if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
                     int deltaX = e.getX() - cameraPan.x;
                     int deltaY = e.getY() - cameraPan.y;
                     updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
