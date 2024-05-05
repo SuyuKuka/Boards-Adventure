@@ -28,14 +28,16 @@ import controller.Controller;
 
 public final class ActionPanel extends JPanel {
 
+    private static final int HEIGHT_PER = 20;
+
     private final GamePanel gamePanel;
     private final Controller controller;
 
     public ActionPanel(final GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
+        setPreferredSize(new Dimension(gamePanel.getWidth(), gamePanel.getHeight() * HEIGHT_PER / 100));
         setLayout(new GridBagLayout());
-        setBackground(Color.BLACK);
         initComponents();
         setOpaque(false);
         setVisible(true);

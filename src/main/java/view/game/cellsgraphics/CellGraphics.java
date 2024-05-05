@@ -18,7 +18,7 @@ import view.game.BoardPanel;
  * <p> Certaines cellules ont leurs propres classes graphiques.
  */
 public class CellGraphics extends JLabel {
-    private static final int CELL_DIAMETER = 65;
+    private static final int CELL_DIAMETER = 3;
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
     // - la couleur intérieure -> COLOR_RANGE
@@ -45,6 +45,7 @@ public class CellGraphics extends JLabel {
     public final void update() {
         updateSize();
         updateLocation();
+        System.out.println(getSize() + " " + getLocation());
     }
 
     private void updateSize() {
@@ -56,13 +57,14 @@ public class CellGraphics extends JLabel {
     private void updateLocation() {
         final int camWidth = boardPanel.getCameraWidth();
         final int cellCamX = xPos - boardPanel.getCameraX() + camWidth / 2;
-        final double screenRatioX = 1.0 * boardPanel.getWidth() / camWidth;
+        final double screenRatioX = 1.0 * boardPanel.getPreferredSize().getWidth() / camWidth;
         final int centerOffsetX = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxWidth() / camWidth;
         final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
+        System.out.println(cellCamX + " " + screenRatioX + " " + centerOffsetX);
 
         final int camHeight = boardPanel.getCameraHeight();
         final int cellCamY = (yPos - boardPanel.getCameraY() + camHeight / 2);
-        final double screenRatioY = 1.0 * boardPanel.getHeight() / camHeight;
+        final double screenRatioY = 1.0 * boardPanel.getPreferredSize().getHeight() / camHeight;
         final int centerOffsetY = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxHeight() / camHeight;
         final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
 
@@ -92,7 +94,7 @@ public class CellGraphics extends JLabel {
         g2d.drawImage(loadCellImage(), startIcon, startIcon, endIcon, endIcon, this);
         // id cellule
         g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici =12)
+        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici = 12)
         g2d.drawString(String.valueOf(cellID), getWidth() / 4, getHeight() / 2);
     }
 

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -39,18 +37,18 @@ import view.game.cellsgraphics.CellGraphics;
 
 public final class GamePanel extends JLayeredManager {
     // LAYERS
-    private static final int DATA_PANEL = 0;
-    private static final int BOARD_PANEL = 1;
-    private static final int ACTION_PANEL = 2;
-    private static final int OVERLAY_PANEL = 3;
-    private static final int PAUSE_GAME = 4;
+    private static final int MAIN_PANEL = 0;
+    private static final int OVERLAY_PANEL = 1;
+    private static final int PAUSE_GAME = 2;
 
     private final View frame;
     private final Controller controller;
 
+    private JPanel mainPanel;
     private BoardPanel boardPanel;
     private ActionPanel actionPanel;
     private DataPanel dataPanel;
+    private JPanel overlayPanel;
 
     // KK
     private static final int BACKGROUND = 0;
@@ -74,23 +72,10 @@ public final class GamePanel extends JLayeredManager {
         setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         this.frame = frame;
         this.controller = controller;
-        setLayout(new GridBagLayout());
         playButton = new JButton();
-        boardPanel = new BoardPanel(this);
-        dataPanel = new DataPanel(this);
-        actionPanel = new ActionPanel(this);
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.2;
-        gbc.weighty = 0.85;
-        add(dataPanel, gbc);
-        gbc.weightx = 0.8;
-        add(boardPanel, gbc);
-        gbc.gridy = 1;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.weightx = 1;
-        gbc.weighty = 0.15;
-        add(actionPanel, gbc);
+        initPanels();
+        addComp(mainPanel, MAIN_PANEL);
+        addComp(overlayPanel, OVERLAY_PANEL);
         setVisible(true);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -101,8 +86,43 @@ public final class GamePanel extends JLayeredManager {
         });
     }
 
+    private void initPanels() {
+        mainPanel = createMainPanel();
+        overlayPanel = createOverlayPanel();
+    }
+
+    private JPanel createMainPanel() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        boardPanel = new BoardPanel(this);
+        dataPanel = new DataPanel(this);
+        actionPanel = new ActionPanel(this);
+        panel.add(dataPanel, BorderLayout.WEST);
+        panel.add(boardPanel, BorderLayout.CENTER);
+        panel.add(actionPanel, BorderLayout.SOUTH);
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final int dataPanelWidth = getWidth() * DataPanel.getWidthPer() / 100;
+                final int dataPanelHeight = getHeight() * DataPanel.getHeightPer() / 100;
+                dataPanel.setPreferredSize(new Dimension(dataPanelWidth, dataPanelHeight));
+
+                final int actionPanelHeight = getHeight() - dataPanelHeight;
+                actionPanel.setPreferredSize(new Dimension(getWidth(), actionPanelHeight));
+
+                final int boardPanelWidth = getWidth() - dataPanelWidth;
+                final int boardPanelHeight = getHeight() - actionPanelHeight;
+                boardPanel.setPreferredSize(new Dimension(boardPanelWidth, boardPanelHeight));
+                boardPanel.redraw();
+            }
+        });
+        panel.setVisible(true);
+        return panel;
+    }
+
     private JPanel createOverlayPanel() {
         final JPanel panel = new JPanel();
+        panel.setBounds(getBounds());
+        panel.setOpaque(false);
         return panel;
     }
 

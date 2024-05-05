@@ -17,6 +17,8 @@ import javax.swing.Timer;
 
 import java.util.ArrayList;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -59,8 +62,8 @@ public final class BoardPanel extends JLayeredManager {
     private double zoom = 1;
     private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
     private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-    private int cameraX = 500;
-    private int cameraY = 500;
+    private int cameraX = CAMERA_MAX_WIDTH / 2;
+    private int cameraY = CAMERA_MAX_HEIGHT / 2;
     private Point cameraPanStartPos = null;
     private Point cameraPan = null;
 
@@ -68,20 +71,6 @@ public final class BoardPanel extends JLayeredManager {
 
     public BoardPanel(final GamePanel gamePanel) {
         super();
-        System.out.println(getLocation());
-        System.out.println(getSize());
-        System.out.println(getBounds());
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // System.out.println("-------------");
-                // System.out.println(getLocation());
-                // System.out.println(getSize());
-                // System.out.println(getBounds());
-            }
-        });
-        // setBounds(200, 200, 500, 500);
-        // setPreferredSize(new Dimension(400, 400));
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
@@ -90,72 +79,79 @@ public final class BoardPanel extends JLayeredManager {
         for (Player player : controller.getPlayers()) {
             playerGraphicsMap.put(player, new PlayerGraphics(player, this));
         }
-        System.out.println(getLayersMap().keySet());
-        addComp(createTest(), BACKGROUND);
-        System.out.println(getLayersMap().keySet());
-        // add(createCellsGraphics(), CELLS);
-        // add(createPlayersGraphics(), PLAYERS);
-        // addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mousePressed(MouseEvent e) {
-        //         if (e.getButton() == MouseEvent.BUTTON3) {
-        //             cameraPanStartPos = e.getPoint();
-        //             cameraPan = e.getPoint();
-        //         }
-        //     }
-        //     @Override
-        //     public void mouseReleased(MouseEvent e) {
-        //         if (e.getButton() == MouseEvent.BUTTON2) {
-        //             final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
-        //             updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
-        //             redraw();
-        //             cameraPanStartPos = null;
-        //             cameraPan = null;
-        //         }
-        //     }
-        // });
-        // addMouseWheelListener(new MouseWheelListener() {
-        //     @Override
-        //     public void mouseWheelMoved(final MouseWheelEvent e) {
-        //         if (!e.isControlDown()) {
-        //             if (e.getWheelRotation() < 0) {
-        //                 if (zoom <= MAX_ZOOM - 0.1) {
-        //                     updateCameraPosition(zoom + 0.1, cameraX, cameraY);
-        //                 }
-        //             } else {
-        //                 if (zoom >= MIN_ZOOM + 0.1) {
-        //                     updateCameraPosition(zoom - 0.1, cameraX, cameraY);
-        //                 }
-        //             }
-        //             redraw();
-        //         }
-        //     }
-        // });
-        // addMouseMotionListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseDragged(MouseEvent e) {
-        //         if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
-        //             int deltaX = e.getX() - cameraPan.x;
-        //             int deltaY = e.getY() - cameraPan.y;
-        //             updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
-        //             cameraPan = e.getPoint();
-        //             redraw();
-        //         }
-        //     }
-        // });
+        addComp(createBackground(), BACKGROUND);
+        addComp(createCellsGraphics(), CELLS);
+        // addComp(createPlayersGraphics(), PLAYERS);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    cameraPanStartPos = e.getPoint();
+                    cameraPan = e.getPoint();
+                }
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON2) {
+                    final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
+                    redraw();
+                    cameraPanStartPos = null;
+                    cameraPan = null;
+                }
+            }
+        });
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                if (!e.isControlDown()) {
+                    if (e.getWheelRotation() < 0) {
+                        if (zoom <= MAX_ZOOM - 0.1) {
+                            updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                        }
+                    } else {
+                        if (zoom >= MIN_ZOOM + 0.1) {
+                            updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                        }
+                    }
+                    redraw();
+                }
+            }
+        });
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
+                    int deltaX = e.getX() - cameraPan.x;
+                    int deltaY = e.getY() - cameraPan.y;
+                    updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
+                    cameraPan = e.getPoint();
+                    redraw();
+                }
+            }
+        });
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension size = getSize();
+                for (Component comp : getLayersMap().values()) {
+                    comp.setBounds(0, 0, size.width, size.height);
+                }
+            }
+        });
         setVisible(true);
-        System.out.println(getWidth() + " " + getHeight());
     }
     // #region camera
 
     public void redraw() {
-        repaint();
         for (CellGraphics cellGraphics : cellsGraphics.values()) {
             cellGraphics.update();
         }
         for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
             playerGraphics.update();
         }
+        revalidate();
+        repaint();
     }
 
     public void updateCameraPosition(final double nextZoom, final int nextCameraX, final int nextCameraY) {
@@ -180,18 +176,7 @@ public final class BoardPanel extends JLayeredManager {
 
     // #region Background 0
 
-        private JPanel createTest() {
-            final JPanel panel = new JPanel();
-            panel.setBounds(0, 0, 210, 100);
-            panel.setSize(new Dimension(200, 200));
-            panel.setOpaque(true);
-            panel.setBackground(Color.BLUE);
-            panel.setVisible(true);
-            return panel;
-        }
-
         private JPanel createBackground() {
-            System.out.println("createBack");
             final JPanel panel = new JPanel() {
                 @Override
                 protected void paintComponent(final Graphics g) {
@@ -203,10 +188,8 @@ public final class BoardPanel extends JLayeredManager {
                     final int sx2 = cameraX + halfWidth;
                     final int sy2 = cameraY + halfHeight;
                     g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
-                    System.out.println("paint");
                 }
             };
-            System.out.println("createBack apres");
             return panel;
         }
 
@@ -216,7 +199,6 @@ public final class BoardPanel extends JLayeredManager {
 
     private JPanel createCellsGraphics() {
         final JPanel panel = new JPanel(null);
-        // panel.setBounds(0, 0, gamePanel.getFrame().getWidth(), gamePanel.getFrame().getHeight());
         panel.setOpaque(false);
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
@@ -231,7 +213,6 @@ public final class BoardPanel extends JLayeredManager {
     private JPanel createPlayersGraphics() {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
-        // panel.setBounds(0, 0, gamePanel.getFrame().getWidth(), gamePanel.getFrame().getHeight());
         for (Player player : playerGraphicsMap.keySet()) {
             panel.add(playerGraphicsMap.get(player));
         }
@@ -265,7 +246,7 @@ public final class BoardPanel extends JLayeredManager {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 controller.setPlayerPosition(targetCellID);
                 controller.gameUpdate();
             }
@@ -416,7 +397,7 @@ public final class BoardPanel extends JLayeredManager {
                     controller.playerUpgradeProperty();
                 }
                 controller.gameUpdate();
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 revalidate();
             }
         });
@@ -427,7 +408,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.gameUpdate();
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 revalidate();
             }
         });
@@ -491,7 +472,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.gameUpdate();
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 revalidate();
             }
         });
@@ -528,11 +509,10 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.playShowCard();
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 revalidate();
                 String test = controller.getCardEffect();
 
-            System.out.println(test);
             }
         });
         background.add(open);
@@ -556,7 +536,7 @@ public final class BoardPanel extends JLayeredManager {
             if (remainingSeconds[0] > 0) {
                 closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
             } else {
-                removePanel(INTERACTION);
+                // removePanel(INTERACTION);
                 panel.revalidate();
                 controller.gameUpdate();
                 ((Timer) e.getSource()).stop();

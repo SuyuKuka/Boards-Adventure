@@ -3,6 +3,7 @@ package view.menu;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -72,9 +73,10 @@ public final class MenuPanel extends JLayeredManager {
 
     public MenuPanel(final View frame) {
         super();
-        setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        setMinimumSize(frame.getMinimumSize());
-        setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        final Container contentPane = frame.getContentPane();
+        setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
+        setMinimumSize(contentPane.getMinimumSize());
+        setPreferredSize(contentPane.getSize());
         this.frame = frame;
         gameConfig = new HashMap<>();
         gameConfig.put("turns", 45);

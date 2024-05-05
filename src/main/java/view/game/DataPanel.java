@@ -1,6 +1,7 @@
 package view.game;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -11,6 +12,9 @@ import controller.Controller;
 
 public final class DataPanel extends JPanel {
 
+    private static final int WIDTH_PER = 20;
+    private static final int HEIGHT_PER = 80;
+
     private final GamePanel gamePanel;
     private final Controller controller;
 
@@ -18,7 +22,9 @@ public final class DataPanel extends JPanel {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         setLayout(new GridBagLayout());
-        setBackground(Color.BLACK);
+        setOpaque(false);
+        setPreferredSize(new Dimension(gamePanel.getWidth() * WIDTH_PER / 100,
+            gamePanel.getHeight() * HEIGHT_PER / 100));
         initComponents();
         setBackground(Color.RED);
         setVisible(true);
@@ -43,7 +49,8 @@ public final class DataPanel extends JPanel {
 
     private JLabel createTurnsLabel() {
         final JLabel label = new JLabel();
-        label.setBackground(Color.BLACK);
+        label.setBackground(Color.RED);
+        label.setOpaque(true);
         return label;
     }
 
@@ -69,5 +76,13 @@ public final class DataPanel extends JPanel {
 
 
     // #endregion
+
+    public static int getWidthPer() {
+        return WIDTH_PER;
+    }
+
+    public static int getHeightPer() {
+        return HEIGHT_PER;
+    }
 
 }
