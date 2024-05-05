@@ -82,4 +82,8 @@ public final class PlayerGraphics extends JLabel {
         return yPos;
     }
 
+    public int getId() {
+        return player.getPlayerID();
+    }
+
 }

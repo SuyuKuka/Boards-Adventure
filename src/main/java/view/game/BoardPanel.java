@@ -48,7 +48,7 @@ public final class BoardPanel extends JLayeredManager {
     private final Controller controller;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
-    private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
+    private final HashMap<Player, PlayerGraphics> playerGraphicsMap = new HashMap<>();
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
@@ -85,11 +85,12 @@ public final class BoardPanel extends JLayeredManager {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
-        this.playerGraphicsMap = new HashMap<>();
-        boardImage = Resources.getImage("board");
         for (Player player : controller.getPlayers()) {
             playerGraphicsMap.put(player, new PlayerGraphics(player, this));
         }
+        gamePanel.setCellsGraphics(cellsGraphics);
+        gamePanel.setPlayerGraphicsMap(playerGraphicsMap);
+        boardImage = Resources.getImage("board");
         System.out.println(getLayersMap().keySet());
         addComp(createTest(), BACKGROUND);
         System.out.println(getLayersMap().keySet());

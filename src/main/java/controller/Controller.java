@@ -178,6 +178,10 @@ public final class Controller {
         // ((Card) currentCell).showCard(getCurrentPlayer(), model);
     }
 
+    public Player getPlayer(int playerId) {
+        return model.getPlayers().get(playerId - 1);
+    }
+
     // #endregion
 
     // region model getters/setters
@@ -192,6 +196,22 @@ public final class Controller {
 
     public CellType getCurrentPlayerCellType() {
         return model.getGameMap().getCell(getCurrentPlayer().getPosition()).getCellType();
+    }
+
+    public void getCurrentPlayerRollDice() {
+        getCurrentPlayer().rollDice();
+    }
+
+    public int getCurrentPlayerRollDiceValue() {
+        return getCurrentPlayer().getDiceRollValue();
+    }
+
+    public boolean getRollDiceState() {
+        if (prevGameState == GameState.PLAYER_ACTION) {
+            return true;
+        }
+        System.out.println(prevGameState);
+        return false;
     }
 
     public void setCurrentCell() {
@@ -259,6 +279,7 @@ public final class Controller {
     public void delete(final JComponent component) {
         gamePanel.remove(component);
     }
+
 
     // endregion
 

@@ -15,30 +15,32 @@ public abstract class Player {
     private final int playerID;
     private final String username;
     private final Team team;
-    private final Item startItem;
+    private final Item classItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
-    private Item shopItem;
+    private ArrayList<Item> item;
+    private int nbItemMax = 3;
+    private String skin;
 
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position = 0;
     private int previousPosition = 0;
 
-    private int diceRollValue = 0;
+    private int diceRollValue = -1;
 
-    public Player(final int playerID, final String username, final Team team, final Item startItem) {
+    public Player(final int playerID, final String username, final Team team, final Item classItem) {
         this.playerID = playerID;
         this.username = username;
         this.team = team;
-        this.startItem = startItem;
-        shopItem = null;
+        this.classItem = classItem;
+        item = null;
     }
 
     // region model methods
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 7;
+        // diceRollValue = 7;
     }
 
     public final void tooMuchShopItem(Item newItem) {
@@ -69,6 +71,10 @@ public abstract class Player {
 
     // region getters/setters
 
+    public final String getSkin() {
+        return skin;
+    }
+
     public final void setDiceRollValue(final int diceRollValue) {
         this.diceRollValue = diceRollValue;
     }
@@ -94,11 +100,11 @@ public abstract class Player {
     }
 
     public final Item getStartItem() {
-        return startItem;
+        return classItem;
     }
 
-    public final Item getShopItem() {
-        return shopItem;
+    public final ArrayList<Item> getShopItem() {
+        return item;
     }
 
     public final void setPosition(final int position) {
@@ -129,12 +135,15 @@ public abstract class Player {
         return playerID;
     }
 
-    public final void setShopItem(final Item shopItem) {
-        this.shopItem = shopItem;
+    public final void setShopItem(final Item newItem) {
+        if (this.item.size() < nbItemMax) {
+            this.item.add(newItem);
+        }
+        // Sinon remplacer ou laisser tomber
     }
 
     public final boolean hasShopItem() {
-        return shopItem != null;
+        return item != null;
     }
 
     // endregion

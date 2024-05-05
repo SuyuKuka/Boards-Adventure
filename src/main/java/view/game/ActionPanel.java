@@ -5,9 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.Timer;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -31,6 +38,14 @@ public final class ActionPanel extends JPanel {
     private final GamePanel gamePanel;
     private final Controller controller;
 
+    private JComboBox<Object> actionList;
+    private JButton action = new JButton();
+
+    private JPanel team1 = createChatPanel();
+    private JPanel team2 = createChatPanel();
+    private JPanel team3 = createChatPanel();
+    private JPanel team4 = createChatPanel();
+
     public ActionPanel(final GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
@@ -47,7 +62,7 @@ public final class ActionPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.weightx = 0.4;
-        add(createChatPane(), gbc); // log/chat
+        add(createTabPanel(), gbc); // system/chat
         gbc.weightx = 0.1;
         add(createButtonsPanel(), gbc); // boutons jouer/autres actions
         gbc.weightx = 0.25;
@@ -57,23 +72,11 @@ public final class ActionPanel extends JPanel {
 
     // #region Chat
 
-    private JTabbedPane createChatPane() {
+    private JTabbedPane createTabPanel() {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Global", createChatPanel());
-        tabbedPane.add("Team", createChatPanel());
-        tabbedPane.add("Log", createLogPanel());
+        tabbedPane.add("Systeme", createSystemPanel());
         return tabbedPane;
-    }
-
-    private JPanel createLogPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
-        final JTextPane textPane = createTextPane();
-        final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textPane.setPreferredSize(new Dimension(0, 0));
-        scrollPane.setPreferredSize(new Dimension(0, 0));
-        panel.add(scrollPane, BorderLayout.CENTER);
-        return panel;
     }
 
     private JPanel createChatPanel() {
@@ -83,8 +86,21 @@ public final class ActionPanel extends JPanel {
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         textPane.setPreferredSize(new Dimension(0, 0));
         scrollPane.setPreferredSize(new Dimension(0, 0));
+
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(createTextField(textPane), BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private JPanel createSystemPanel() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JTextPane textPane = createTextPane();
+        final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        textPane.setPreferredSize(new Dimension(0, 0));
+        scrollPane.setPreferredSize(new Dimension(0, 0));
+        panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
     }
 
@@ -151,6 +167,9 @@ public final class ActionPanel extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
                     try {
                         final Document doc = textPane.getDocument();
+                        doc.insertString(doc.getLength(),
+                            controller.getCurrentPlayer().getUsername() + ": ", null);
+
                         doc.insertString(doc.getLength(), textField.getText() + "\n", null);
                     } catch (BadLocationException bde) {
                         bde.printStackTrace();
@@ -173,11 +192,65 @@ public final class ActionPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        panel.add(new JComboBox<>(), gbc);
+
+        Object[] items =
+            {
+                // new ImageIcon("src/main/resources/maps/map4/j1.png"),
+                new ImageIcon("src/main/resources/maps/map4/j1.png"),
+                new ImageIcon("src/main/resources/maps/map4/j2.png"),
+                new ImageIcon("src/main/resources/maps/map4/j3.png"),
+                new ImageIcon("src/main/resources/maps/map4/j4.png")
+
+            };
+        actionList = new JComboBox<Object>(items);
+        action.setIcon(new ImageIcon("src/main/resources/images/game/roll_dice.gif"));
+
+        DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
+        listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+        actionList.setRenderer(listRenderer);
+        actionList.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("Action : " + actionList.getSelectedItem());
+                    action.setEnabled(false);
+                    Timer timer = new Timer(5000, t -> {
+                        System.out.println("test");
+                        action.setEnabled(true);
+                        ((Timer) t.getSource()).stop();
+                    });
+                    timer.start();
+                }
+            }
+        });
+        actionList.setPreferredSize(new Dimension(40, 10));
+        panel.add(actionList, gbc);
+
+        action.setBorderPainted(false);
+        action.setOpaque(false);
+        action.setContentAreaFilled(false);
+        action.setFocusPainted(false);
+        action.setPreferredSize(new Dimension(40, 10));
+
+        action.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //C'était pour test le roll dice, faudra l'adapter pour que ca change le state etc...
+                if (controller.getRollDiceState()) {
+                    // controller.getCurrentPlayerRollDice();
+                    controller.rollDice();
+                    int rollDiceValue = controller.getCurrentPlayerRollDiceValue();
+                    System.out.println(rollDiceValue);
+                    action.setIcon(new ImageIcon("src/main/resources/images/game/dice" + rollDiceValue + ".png"));
+                }
+            }
+        });
+
         gbc.gridy = 1;
-        panel.add(new JButton("playDice"), gbc);
+        panel.add(action, gbc);
         return panel;
     }
+
 
     // #endregion
 

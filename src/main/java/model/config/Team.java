@@ -9,6 +9,7 @@ public final class Team {
 
     private int teamID;
     private String teamName;
+    private int rank;
 
     private int gamePoint = 0;
     private HashMap<Integer, ArrayList<Property>> properties = new HashMap<>();
@@ -50,6 +51,10 @@ public final class Team {
     }
 
     // region getters/setters
+
+    public int getRank() {
+        return rank;
+    }
 
     public int getTeamID() {
         return teamID;

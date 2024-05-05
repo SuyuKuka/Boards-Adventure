@@ -61,7 +61,7 @@ public final class GamePanel extends JLayeredManager {
     private static final int PAUSE = 5;
 
     private HashMap<Integer, CellGraphics> cellsGraphics;
-    private HashMap<Player, PlayerGraphics> playerGraphicsMap;
+    private HashMap<Player, PlayerGraphics> playerGraphicsMap = new HashMap<>();;
 
     private Image boardImage;
 
@@ -642,6 +642,18 @@ public final class GamePanel extends JLayeredManager {
 
     public View getFrame() {
         return frame;
+    }
+
+    public HashMap<Player, PlayerGraphics> getPlayerGraphicsMap() {
+        return playerGraphicsMap;
+    }
+
+    public void setPlayerGraphicsMap(HashMap<Player, PlayerGraphics> playerGraphicsMap) {
+        this.playerGraphicsMap = playerGraphicsMap;
+    }
+
+    public void setCellsGraphics(HashMap<Integer, CellGraphics> cellsGraphics) {
+        this.cellsGraphics = cellsGraphics;
     }
 
 }
