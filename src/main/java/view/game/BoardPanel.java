@@ -81,17 +81,17 @@ public final class BoardPanel extends JLayeredManager {
         }
         addComp(createBackground(), BACKGROUND);
         addComp(createCellsGraphics(), CELLS);
-        // addComp(createPlayersGraphics(), PLAYERS);
+        addComp(createPlayersGraphics(), PLAYERS);
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     cameraPanStartPos = e.getPoint();
                     cameraPan = e.getPoint();
                 }
             }
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseReleased(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
@@ -120,7 +120,7 @@ public final class BoardPanel extends JLayeredManager {
         });
         addMouseMotionListener(new MouseAdapter() {
             @Override
-            public void mouseDragged(MouseEvent e) {
+            public void mouseDragged(final MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
                     int deltaX = e.getX() - cameraPan.x;
                     int deltaY = e.getY() - cameraPan.y;

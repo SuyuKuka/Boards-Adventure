@@ -1,0 +1,57 @@
+{
+	"shop_items" : [
+		{
+			"name" : "LITTLE_DICE"
+		},
+		{
+			"name" : "HOE"
+		}
+	],
+	"start_items" : [
+		{
+			"name" : "LITTLE_DICE"
+		},
+		{
+			"name" : "HOE"
+		}
+	],
+	"cards_effect" : [
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellIDs" : [109, 400, 302, 511, 513, 520, 130, 502, 605, 126]
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"quantity-amount" : [[4, 100], [4, -100], [3, 200], [3, -200], [2, 300], [2, -300]]
+		},
+		{
+			"type" : "LOSE_PROPERTY_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "SWAP_POSITION_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "LOSE_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_GAMEPOINT_EFFECT",
+			"quantity" : 2
+		}
+	],
+    "cells" : [
+        {
+			"id" : 100,
+			"type" : "START",
+			"lapGain" : 300,
+			"xPos" : 300,
+			"yPos" : 300
+		}
+    ]
+}

@@ -77,13 +77,6 @@ public final class GamePanel extends JLayeredManager {
         addComp(mainPanel, MAIN_PANEL);
         addComp(overlayPanel, OVERLAY_PANEL);
         setVisible(true);
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                revalidate();
-                repaint();
-            }
-        });
     }
 
     private void initPanels() {
@@ -93,9 +86,9 @@ public final class GamePanel extends JLayeredManager {
 
     private JPanel createMainPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
-        boardPanel = new BoardPanel(this);
         dataPanel = new DataPanel(this);
         actionPanel = new ActionPanel(this);
+        boardPanel = new BoardPanel(this);
         panel.add(dataPanel, BorderLayout.WEST);
         panel.add(boardPanel, BorderLayout.CENTER);
         panel.add(actionPanel, BorderLayout.SOUTH);
