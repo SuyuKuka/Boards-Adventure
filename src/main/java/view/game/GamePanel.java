@@ -2,7 +2,6 @@ package view.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.awt.Image;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -51,13 +50,13 @@ public final class GamePanel extends JLayeredManager {
 
     private void initPanels() {
         overlayPanel = createOverlayPanel();
+        boardPanel = new BoardPanel(this);
+        dataPanel = new DataPanel(this);
+        actionPanel = new ActionPanel(this);
     }
 
     private JPanel createMainPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
-        boardPanel = new BoardPanel(this);
-        dataPanel = new DataPanel(this);
-        actionPanel = new ActionPanel(this);
         panel.add(dataPanel, BorderLayout.WEST);
         panel.add(boardPanel, BorderLayout.CENTER);
         panel.add(actionPanel, BorderLayout.SOUTH);
@@ -110,7 +109,7 @@ public final class GamePanel extends JLayeredManager {
     }
 
     public void playerAction() {
-        actionPanel.playerAction(); 
+        actionPanel.playerAction();
     }
 
     public void playerMove() {

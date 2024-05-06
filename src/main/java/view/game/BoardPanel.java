@@ -322,6 +322,7 @@ public final class BoardPanel extends JLayeredManager {
             }
         };
         panel.setOpaque(false);
+        panel.setBounds(0, 0, getWidth(), getHeight());
         final String labelString = "Début du jeu !";
         final JLabel label = SwingFactory.createJLabel(labelString);
         panel.add(label, BorderLayout.CENTER);
@@ -334,13 +335,14 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
-                final Color backgroundColor = new Color(0, 0, 0, 200);
+                final Color backgroundColor = new Color(0, 0, 0, 150);
                 g.setColor(backgroundColor);
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         };
         panel.setOpaque(false);
-        final String labelString = "HIIII";
+        panel.setBounds(0, 0, getWidth(), getHeight());
+        final String labelString = "Tour de " + controller.getCurrentPlayer().getUsername();
         final JLabel label = SwingFactory.createJLabel(labelString);
         panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
@@ -363,6 +365,7 @@ public final class BoardPanel extends JLayeredManager {
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         };
+        panel.setBounds(0, 0, getWidth(), getHeight());
         panel.setOpaque(false);
         final String labelString = "FIN DU TOUR !";
         final JLabel label = SwingFactory.createJLabel(labelString);
