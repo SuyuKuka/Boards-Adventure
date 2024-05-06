@@ -13,6 +13,7 @@ public final class Team {
     private int gamePoint = 0;
     private HashMap<Integer, ArrayList<Property>> properties = new HashMap<>();
     private int money = 500;
+    private int rank = 1;
 
     public Team(final int teamID, final String teamName) {
         this.teamID = teamID;
@@ -54,6 +55,11 @@ public final class Team {
     public int getTeamID() {
         return teamID;
     }
+
+    public int getRank() {
+        return rank;
+    }
+
 
     public int getMoney() {
         return money;

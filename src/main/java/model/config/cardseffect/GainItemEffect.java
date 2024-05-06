@@ -22,7 +22,7 @@ public final class GainItemEffect extends CardEffect {
         if (player.hasShopItem()) {
             player.tooMuchShopItem(item);
         } else {
-            player.setShopItem(item);
+            player.addShopItem(item);
         }
     }
 

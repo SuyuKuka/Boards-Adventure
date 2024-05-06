@@ -17,7 +17,8 @@ public abstract class Player {
     private final Team team;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
-    private Item shopItem;
+    private final Item[] shopItem = new Item[3];
+    private String skin = "skin";
 
     private int jailTurn = 0;
     private int mapLap = 0;
@@ -31,14 +32,13 @@ public abstract class Player {
         this.username = username;
         this.team = team;
         this.startItem = startItem;
-        shopItem = null;
     }
 
     // region model methods
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 7;
+        diceRollValue = 7; // TODO test
     }
 
     public final void tooMuchShopItem(Item newItem) {
@@ -97,9 +97,14 @@ public abstract class Player {
         return startItem;
     }
 
-    public final Item getShopItem() {
+    public final Item[] getShopItem() {
         return shopItem;
     }
+
+    public final String getSkin() {
+        return skin;
+    }
+
 
     public final void setPosition(final int position) {
         this.position = position;
@@ -129,8 +134,12 @@ public abstract class Player {
         return playerID;
     }
 
-    public final void setShopItem(final Item shopItem) {
-        this.shopItem = shopItem;
+    public final void addShopItem(final Item item) {
+        for (int i = 0; i < shopItem.length; i++) {
+            if (shopItem[i] == null) {
+                shopItem[i] = item;
+            }
+        }
     }
 
     public final boolean hasShopItem() {

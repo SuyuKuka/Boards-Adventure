@@ -1,9 +1,12 @@
 package view.game;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,6 +20,10 @@ public final class DataPanel extends JPanel {
 
     private final GamePanel gamePanel;
     private final Controller controller;
+
+    private final JLabel turn = new JLabel();
+
+    private final ArrayList<PlayerScore> playerScoreList = new ArrayList<>();
 
     public DataPanel(final GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -36,7 +43,7 @@ public final class DataPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.weighty = 0.10;
-        add(createTurnsLabel(), gbc); // tours restants
+        add(createTurnsPanel(), gbc); // tours restants
         gbc.gridy = 1;
         gbc.weighty = 0.40;
         add(createScoreboardPanel(), gbc); // scoreboard
@@ -47,11 +54,14 @@ public final class DataPanel extends JPanel {
 
     // #region turn
 
-    private JLabel createTurnsLabel() {
-        final JLabel label = new JLabel();
-        label.setBackground(Color.RED);
-        label.setOpaque(true);
-        return label;
+    private JPanel createTurnsPanel() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        turn.setText("text");
+        turn.setHorizontalAlignment(JLabel.CENTER);
+        turn.setVerticalAlignment(JLabel.CENTER);
+        panel.add(turn);
+        return panel;
     }
 
     // #endregion
@@ -61,6 +71,15 @@ public final class DataPanel extends JPanel {
     private JPanel createScoreboardPanel() {
         final JPanel panel = new JPanel();
         panel.setBackground(Color.BLACK);
+        panel.setOpaque(false);
+        panel.setLayout(new GridLayout(4, 1));
+
+        gamePanel.getPlayerGraphicsList().forEach((playerGraphics) -> {
+            final PlayerScore playerScore = new PlayerScore(gamePanel, playerGraphics.getPlayerID());
+            playerScoreList.add(playerScore);
+            panel.add(playerScore);
+        });
+
         return panel;
     }
 

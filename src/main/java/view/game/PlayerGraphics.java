@@ -6,6 +6,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import controller.Controller;
 import controller.resources.Resources;
 import model.config.players.Player;
 import view.game.cellsgraphics.CellGraphics;
@@ -15,24 +16,27 @@ public final class PlayerGraphics extends JLabel {
     private static final int PLAYER_DIAMETER = CellGraphics.getCellDiameter() / 2;
 
     private final BoardPanel boardPanel;
+    private final Controller controller;
     private final HashMap<Integer, CellGraphics> cellsGraphics;
 
+    private final int playerID;
     private int xPos;
     private int yPos;
 
-    private Player player;
+    private Player playedr;
     // TODO : RETIRER player de PlayersGraphics
     private Image playerImage;
 
 
-    public PlayerGraphics(final Player player, final BoardPanel boardPanel) {
-        this.player = player;
+    public PlayerGraphics(final int playerID, final BoardPanel boardPanel) {
         this.boardPanel = boardPanel;
+        this.controller = boardPanel.getController();
+        this.playerID = playerID;
         this.cellsGraphics = boardPanel.getCellsGraphics();
-        final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
+        final CellGraphics cellGraphics = cellsGraphics.get(controller.getPlayer(playerID).getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
-        playerImage = Resources.getImage("j" + player.getPlayerID());
+        playerImage = Resources.getImage("j" + playerID);
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
         update();
@@ -69,9 +73,13 @@ public final class PlayerGraphics extends JLabel {
     }
 
     public void updateCoordinates() {
-        final CellGraphics cellGraphics = cellsGraphics.get(player.getPosition());
+        final CellGraphics cellGraphics = cellsGraphics.get(controller.getPlayer(playerID).getPosition());
         xPos = cellGraphics.getXPos();
         yPos = cellGraphics.getYPos();
+    }
+
+    public int getPlayerID() {
+        return playerID;
     }
 
     public int getXPos() {

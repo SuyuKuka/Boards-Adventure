@@ -39,10 +39,10 @@ public abstract class JLayeredManager extends JLayeredPane {
     }
 
     /**
-     * Retire le panel à la couche layerIndex si elle existe.
+     * Retire le {@link Component} à la couche layerIndex si elle existe.
      * @param layerIndex
      */
-    public final void removePanel(final int layerIndex) {
+    public final void removeComp(final int layerIndex) {
         if (layersMap.containsKey(layerIndex)) {
             final Component comp = layersMap.get(layerIndex);
             if (comp instanceof Container) {

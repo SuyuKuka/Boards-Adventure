@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 
 import view.View;
+import view.game.BoardPanel;
 import view.game.GamePanel;
-
+import view.game.PlayerGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -39,6 +40,14 @@ public final class Controller {
         this.prevGameState = null;
         this.model = model;
         gamePanel = view.initNewGamePanel(this);
+    }
+
+    public ArrayList<PlayerGraphics> loadPlayerGraphics(final BoardPanel boardPanel) {
+        final ArrayList<PlayerGraphics> playerGraphicsList = new ArrayList<>();
+        model.getPlayers().forEach((player) -> {
+            playerGraphicsList.add(new PlayerGraphics(player.getPlayerID(), boardPanel));
+        });
+        return playerGraphicsList;
     }
 
     public void gameUpdate() {
@@ -88,6 +97,7 @@ public final class Controller {
     // region gameState
 
     private void gameStart() {
+        System.out.println("gameSTART !!!!!");
         prevGameState = GameState.GAME_START;
         gamePanel.gameStart();
     }
@@ -112,7 +122,6 @@ public final class Controller {
     public void rollDice() {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
-        gamePanel.rollDice();
         gameUpdate();
     }
 
@@ -212,6 +221,11 @@ public final class Controller {
         return model.getPlayers();
     }
 
+    public Player getPlayer(final int playerId) {
+        return model.getPlayers().get(playerId);
+    }
+
+
     public int getTotalTurns() {
         return model.getTotalTurns();
     }
@@ -222,6 +236,10 @@ public final class Controller {
 
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
+    }
+
+    public int getCurrentPlayerID() {
+        return model.getCurrentPlayer().getPlayerID();
     }
 
     public int getCurrentMoney() {
@@ -259,6 +277,23 @@ public final class Controller {
     public void delete(final JComponent component) {
         gamePanel.remove(component);
     }
+
+    public void getCurrentPlayerRollDice() {
+        getCurrentPlayer().rollDice();
+    }
+
+    public int getCurrentPlayerRollDiceValue() {
+        return getCurrentPlayer().getDiceRollValue();
+    }
+
+    public boolean getRollDiceState() {
+        if (prevGameState == GameState.PLAYER_ACTION) {
+            return true;
+        }
+        System.out.println(prevGameState);
+        return false;
+    }
+
 
     // endregion
 

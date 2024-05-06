@@ -2,12 +2,13 @@ package view.game;
 
 import controller.Controller;
 import controller.resources.Resources;
-import model.config.players.Player;
 import view.game.cellsgraphics.CellGraphics;
+import view.game.cellsgraphics.CellGraphicsFactory;
 
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -20,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -36,6 +38,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import view.JLayeredManager;
 import view.SwingFactory;
@@ -51,7 +54,8 @@ public final class BoardPanel extends JLayeredManager {
     private final Controller controller;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
-    private final HashMap<Player, PlayerGraphics> playerGraphicsMap;
+    private final ArrayList<CellGraphics> specialCellsGraphics;
+    private final ArrayList<PlayerGraphics> playerGraphicsList;
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
@@ -62,8 +66,8 @@ public final class BoardPanel extends JLayeredManager {
     private double zoom = 1;
     private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
     private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-    private int cameraX = CAMERA_MAX_WIDTH / 2;
-    private int cameraY = CAMERA_MAX_HEIGHT / 2;
+    private int cameraX;
+    private int cameraY;
     private Point cameraPanStartPos = null;
     private Point cameraPan = null;
 
@@ -73,12 +77,14 @@ public final class BoardPanel extends JLayeredManager {
         super();
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
-        this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
-        this.playerGraphicsMap = new HashMap<>();
         boardImage = Resources.getImage("board");
-        for (Player player : controller.getPlayers()) {
-            playerGraphicsMap.put(player, new PlayerGraphics(player, this));
-        }
+        this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
+        specialCellsGraphics = new ArrayList<>();
+        this.playerGraphicsList = controller.loadPlayerGraphics(this);
+        gamePanel.setPlayerGraphicsList(playerGraphicsList);
+        gamePanel.setCellsGraphics(cellsGraphics);
+        final PlayerGraphics currentPlayerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
+        updateCameraPosition(zoom, currentPlayerGraphics.getXPos(), currentPlayerGraphics.getYPos());
         addComp(createBackground(), BACKGROUND);
         addComp(createCellsGraphics(), CELLS);
         addComp(createPlayersGraphics(), PLAYERS);
@@ -93,7 +99,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseReleased(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON2) {
-                    final PlayerGraphics playerGraphics = playerGraphicsMap.get(controller.getCurrentPlayer());
+                    final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
                     redraw();
                     cameraPanStartPos = null;
@@ -147,9 +153,8 @@ public final class BoardPanel extends JLayeredManager {
         for (CellGraphics cellGraphics : cellsGraphics.values()) {
             cellGraphics.update();
         }
-        for (PlayerGraphics playerGraphics : playerGraphicsMap.values()) {
-            playerGraphics.update();
-        }
+        specialCellsGraphics.forEach(specialCellGraphics -> specialCellGraphics.update());
+        playerGraphicsList.forEach(playerGraphics -> playerGraphics.update());
         revalidate();
         repaint();
     }
@@ -172,26 +177,106 @@ public final class BoardPanel extends JLayeredManager {
         }
     }
 
-    // #endregion
+    //#endregion camera
+
+    //#region gameState
+    public void gameStart() {
+        addComp(createGameStartBanner(), INTERACTION);
+        gamePanel.startSingleActionTimer(1500, action -> {
+            removeComp(INTERACTION);
+            controller.gameUpdate();
+        });
+    }
+
+    public void newTurn() {
+        addComp(createNewTurnBanner(), INTERACTION);
+        gamePanel.startSingleActionTimer(1500, action -> {
+            removeComp(INTERACTION);
+            controller.gameUpdate();
+        });
+    }
+
+    public void inJail() {
+        addComp(createInJailBanner(), INTERACTION);
+        gamePanel.startSingleActionTimer(1500, action -> {
+            removeComp(INTERACTION);
+            controller.gameUpdate();
+        });
+    }
+
+    public void playerMove() {
+        updateCurrentPlayerGraphicsPosition();
+        if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
+            addComp(createIntersectionPanel(), INTERACTION);
+        } else {
+            controller.gameUpdate();
+        }
+    }
+
+    public void playerArrived() {
+        updateCurrentPlayerGraphicsPosition();
+        final CellType cellType = controller.getCurrentPlayerCellType();
+        switch (cellType) {
+            case GAIN:
+                addComp(createGainPanel(), INTERACTION);
+                break;
+            case LOSS:
+                addComp(createLossPanel(), INTERACTION);
+                break;
+            case KINGDOM:
+                addComp(createKingdomPanel(), INTERACTION);
+                break;
+            case PROPERTY:
+                addComp(createPropertyPanel(), INTERACTION);
+                break;
+            case SHOP:
+                addComp(createShopPanel(), INTERACTION);
+                break;
+            case CARD:
+                addComp(createCardPanel(), INTERACTION);
+                break;
+            default:
+                gamePanel.startSingleActionTimer(500, e -> controller.gameUpdate());
+                break;
+        }
+    }
+
+    public void endTurn() {
+        addComp(createEndTurnBanner(), INTERACTION);
+        gamePanel.startSingleActionTimer(1000, action -> {
+            removeComp(INTERACTION);
+            controller.gameUpdate();
+        });
+    }
+
+    private void updateCurrentPlayerGraphicsPosition() {
+        final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
+        playerGraphics.updateCoordinates();
+        playerGraphics.update();
+    }
+
+    //#endregion gameState
 
     // #region Background 0
 
-        private JPanel createBackground() {
-            final JPanel panel = new JPanel() {
-                @Override
-                protected void paintComponent(final Graphics g) {
-                    super.paintComponent(g);
-                    final int halfWidth = cameraWidth / 2;
-                    final int halfHeight = cameraHeight / 2;
-                    final int sx1 = cameraX - halfWidth;
-                    final int sy1 = cameraY - halfHeight;
-                    final int sx2 = cameraX + halfWidth;
-                    final int sy2 = cameraY + halfHeight;
-                    g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
-                }
-            };
-            return panel;
-        }
+    private JPanel createBackground() {
+        final JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                final Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                final int halfWidth = cameraWidth / 2;
+                final int halfHeight = cameraHeight / 2;
+                final int sx1 = cameraX - halfWidth;
+                final int sy1 = cameraY - halfHeight;
+                final int sx2 = cameraX + halfWidth;
+                final int sy2 = cameraY + halfHeight;
+                g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
+            }
+        };
+        return panel;
+    }
 
     // #endregion
 
@@ -213,46 +298,94 @@ public final class BoardPanel extends JLayeredManager {
     private JPanel createPlayersGraphics() {
         final JPanel panel = new JPanel(null);
         panel.setOpaque(false);
-        for (Player player : playerGraphicsMap.keySet()) {
-            panel.add(playerGraphicsMap.get(player));
-        }
+        playerGraphicsList.forEach((playerGraphics) -> {
+            panel.add(playerGraphics);
+        });
         panel.setVisible(true);
         return panel;
     }
 
     // #endregion
 
-    // #region Interaction Player/Game 3
+    // #region Interaction 3
 
-    // #region Cellule Intersection
-    public JPanel createIntersectionPanel() {
-        final JPanel panel = new JPanel(null);
+    // #region Banner
+
+    private JPanel createGameStartBanner() {
+        final JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                final Color backgroundColor = new Color(0, 0, 0, 150);
+                g.setColor(backgroundColor);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         panel.setOpaque(false);
-        // panel.setBounds(0, 0, gamePanel.getFrame().getWidth(), gamePanel.getFrame().getHeight());
-        final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
-        for (int i = 0; i < intersectIDs.size(); i++) {
-            panel.add(createIntersectChoiceButton(intersectIDs.get(i)));
-        }
+        final String labelString = "Début du jeu !";
+        final JLabel label = SwingFactory.createJLabel(labelString);
+        panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
     }
 
-    private JButton createIntersectChoiceButton(final int targetCellID) {
-        final CellGraphics cellGraphics = cellsGraphics.get(targetCellID);
-        JButton button = new JButton();
-        button.setLocation(cellGraphics.getLocation());
-        button.setSize(cellGraphics.getSize());
-        button.setBackground(Color.GREEN);
-        button.addMouseListener(new MouseAdapter() {
+    private JPanel createNewTurnBanner() {
+        final JPanel panel = new JPanel(new BorderLayout()) {
             @Override
-            public void mouseReleased(final MouseEvent e) {
-                // removePanel(INTERACTION);
-                controller.setPlayerPosition(targetCellID);
-                controller.gameUpdate();
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                final Color backgroundColor = new Color(0, 0, 0, 200);
+                g.setColor(backgroundColor);
+                g.fillRect(0, 0, getWidth(), getHeight());
             }
+        };
+        panel.setOpaque(false);
+        final String labelString = "HIIII";
+        final JLabel label = SwingFactory.createJLabel(labelString);
+        panel.add(label, BorderLayout.CENTER);
+        panel.setVisible(true);
+        return panel;
+    }
+
+    private JPanel createInJailBanner() {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        return panel;
+    }
+
+    private JPanel createEndTurnBanner() {
+        final JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                final Color backgroundColor = new Color(0, 0, 0, 150);
+                g.setColor(backgroundColor);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setOpaque(false);
+        final String labelString = "FIN DU TOUR !";
+        final JLabel label = SwingFactory.createJLabel(labelString);
+        panel.add(label, BorderLayout.CENTER);
+        panel.setVisible(true);
+        return panel;
+    }
+
+    // #endregion
+
+    // #region Intersection
+    public JPanel createIntersectionPanel() {
+        final JPanel panel = new JPanel(null);
+        panel.setBounds(0, 0, getWidth(), getHeight());
+        panel.setOpaque(false);
+        final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
+        intersectIDs.forEach(cellID -> {
+            final CellGraphics cell = CellGraphicsFactory.createIntersectionChoice(this, cellsGraphics.get(cellID));
+            specialCellsGraphics.add(cell);
+            panel.add(cell);
         });
-        button.setVisible(true);
-        return button;
+        panel.setVisible(true);
+        return panel;
     }
 
     // #endregion
@@ -569,8 +702,8 @@ public final class BoardPanel extends JLayeredManager {
         return cellsGraphics;
     }
 
-    public HashMap<Player, PlayerGraphics> getPlayerGraphicsMap() {
-        return playerGraphicsMap;
+    public ArrayList<PlayerGraphics> getPlayerGraphicsList() {
+        return playerGraphicsList;
     }
 
     public double getZoom() {
@@ -599,5 +732,9 @@ public final class BoardPanel extends JLayeredManager {
 
     public static int getCameraMaxWidth() {
         return CAMERA_MAX_WIDTH;
+    }
+
+    public static int getInteraction() {
+        return INTERACTION;
     }
 }

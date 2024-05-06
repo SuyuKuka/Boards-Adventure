@@ -1,6 +1,7 @@
 package model.config.cardseffect;
 
 import model.Model;
+import model.config.items.Item;
 import model.config.players.Player;
 
 /**
@@ -14,7 +15,13 @@ public final class LoseItemEffect extends CardEffect {
 
     @Override
     public void applyEffect(Player player, Model model) {
-        player.setShopItem(null);
+        final Item[] itemArr = player.getShopItem();
+        for (int i = 0; i < itemArr.length; i++) {
+            if (itemArr[i] != null) {
+                itemArr[i] = null;
+                return;
+            }
+        }
     }
 
     @Override

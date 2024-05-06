@@ -15,12 +15,15 @@ public final class CellGraphicsFactory {
         switch (cellType) {
             case PROPERTY:
                 return new PropertyGraphics(boardPanel, cellID, xPos, yPos);
-            case INTERSECTION:
-                return new IntersectionGraphics(boardPanel, cellID, xPos, yPos);
             default:
                 break;
         }
         return new CellGraphics(boardPanel, cellID, xPos, yPos);
+    }
+
+    public static CellGraphics createIntersectionChoice(final BoardPanel boardPanel, final CellGraphics cellTarget) {
+        return new IntersectionChoiceGraphics(boardPanel, cellTarget.getCellID(),
+            cellTarget.getXPos(), cellTarget.getYPos());
     }
 
 }

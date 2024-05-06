@@ -1,13 +1,22 @@
 package view.game;
 
+import java.util.ArrayList;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -16,6 +25,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
+import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -33,6 +43,10 @@ public final class ActionPanel extends JPanel {
     private final GamePanel gamePanel;
     private final Controller controller;
 
+    private JComboBox<Object> otherActionBox;
+    private JButton rollDiceButton;
+    private ArrayList<JPanel> chatPanels = new ArrayList<>();
+
     public ActionPanel(final GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
@@ -49,7 +63,7 @@ public final class ActionPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.weightx = 0.4;
-        add(createChatPane(), gbc); // log/chat
+        add(createTabPanel(), gbc); // log/chat
         gbc.weightx = 0.1;
         add(createButtonsPanel(), gbc); // boutons jouer/autres actions
         gbc.weightx = 0.25;
@@ -59,11 +73,10 @@ public final class ActionPanel extends JPanel {
 
     // #region Chat
 
-    private JTabbedPane createChatPane() {
+    private JTabbedPane createTabPanel() {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Global", createChatPanel());
-        tabbedPane.add("Team", createChatPanel());
-        tabbedPane.add("Log", createLogPanel());
+        tabbedPane.add("Systeme", createLogPanel());
         return tabbedPane;
     }
 
@@ -153,6 +166,8 @@ public final class ActionPanel extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
                     try {
                         final Document doc = textPane.getDocument();
+                        doc.insertString(doc.getLength(),
+                            controller.getCurrentPlayer().getUsername() + ": ", null);
                         doc.insertString(doc.getLength(), textField.getText() + "\n", null);
                     } catch (BadLocationException bde) {
                         bde.printStackTrace();
@@ -168,18 +183,60 @@ public final class ActionPanel extends JPanel {
 
     // #region Buttons
 
+    public void playerAction() {
+        rollDiceButton.setIcon(new ImageIcon("src/main/resources/images/game/rolling_dice.gif"));
+        rollDiceButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                controller.rollDice();
+                rollDiceButton.removeMouseListener(this);
+            }
+        });
+    }
+
     private JPanel createButtonsPanel() {
-        final JPanel panel = new JPanel(new GridBagLayout());
+        final JPanel panel = new JPanel(new GridLayout(2, 1));
         panel.setBackground(Color.PINK);
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        panel.add(new JComboBox<>(), gbc);
-        gbc.gridy = 1;
-        panel.add(new JButton("playDice"), gbc);
+        Object[] items =
+            {
+                // new ImageIcon("src/main/resources/maps/map4/j1.png"),
+                new ImageIcon("src/main/resources/maps/map4/j0.png"),
+                new ImageIcon("src/main/resources/maps/map4/j1.png"),
+                new ImageIcon("src/main/resources/maps/map4/j2.png"),
+                new ImageIcon("src/main/resources/maps/map4/j3.png")
+
+            };
+        otherActionBox = new JComboBox<Object>(items);
+        rollDiceButton = new JButton();
+        rollDiceButton.setIcon(new ImageIcon("src/main/resources/images/game/dice1.png"));
+
+        DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
+        listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+        otherActionBox.setRenderer(listRenderer);
+        otherActionBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    rollDiceButton.setEnabled(false);
+                    Timer timer = new Timer(5000, t -> {
+                        rollDiceButton.setEnabled(true);
+                        ((Timer) t.getSource()).stop();
+                    });
+                    timer.start();
+                }
+            }
+        });
+        panel.add(otherActionBox);
+
+        rollDiceButton.setBorderPainted(false);
+        rollDiceButton.setOpaque(false);
+        rollDiceButton.setContentAreaFilled(false);
+        rollDiceButton.setFocusPainted(false);
+
+        panel.add(rollDiceButton);
         return panel;
     }
+
 
     // #endregion
 
