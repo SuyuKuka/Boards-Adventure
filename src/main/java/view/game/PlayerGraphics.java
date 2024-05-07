@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 
 import controller.Controller;
 import controller.resources.Resources;
-import model.config.players.Player;
 import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
@@ -23,8 +22,6 @@ public final class PlayerGraphics extends JLabel {
     private int xPos;
     private int yPos;
 
-    private Player playedr;
-    // TODO : RETIRER player de PlayersGraphics
     private Image playerImage;
 
 
