@@ -58,6 +58,9 @@ public final class MenuPanel extends CorePanel {
     private String map;
     private JPanel rightSidePanel;
 
+    private int height;
+    private int width;
+
     private boolean host = false;
     private boolean resizing = false;
     private int nbPlayers = 0;
@@ -71,6 +74,8 @@ public final class MenuPanel extends CorePanel {
 
     public MenuPanel(final View frame) {
         super(frame);
+        this.height = frame.getHeight();
+        this.width = frame.getWidth();
         gameConfig = new HashMap<>();
         gameConfig.put("turns", 45);
         playersConfig = new ArrayList<>();
@@ -83,8 +88,8 @@ public final class MenuPanel extends CorePanel {
 
     private void initDefaultValues() {
         menuState = null;
-        songSliderVolume = 50;
-        soundSliderVolume = 50;
+        songSliderVolume = 100;
+        soundSliderVolume = 100;
         map = "map4";
         try {
             ip = InetAddress.getLocalHost();
@@ -115,9 +120,7 @@ public final class MenuPanel extends CorePanel {
         revalidate();
     }
 
-    private JButton createSwitchStateButton(final String img, final MenuState newMenuState,
-        final int widthPer, final int heightPer) {
-        final JButton button = SwingFactory.createImageButton(this, img, widthPer, heightPer, false);
+    private void createSwitchStateButton(final JButton button, final MenuState newMenuState) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -125,13 +128,12 @@ public final class MenuPanel extends CorePanel {
                 changeState(newMenuState);
             }
         });
-        return button;
     }
 
     // #region background 0
 
     private JPanel createBackground() {
-        final JPanel panel = SwingFactory.createGifPanel(this, "backgroundA", 100, 100);
+        final JPanel panel = SwingFactory.createGifPanel(this, "ab", 100, 100);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setVisible(true);
         return panel;
@@ -142,15 +144,17 @@ public final class MenuPanel extends CorePanel {
     // #region mainmenu 1
 
     private JPanel createMainMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 10, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
 
-        panel.add(SwingFactory.createImageLabel(panel, "logo", 90, 15, false));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 10));
-        panel.add(createSwitchStateButton("play", MenuState.CREATEJOIN, 60, 10));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        panel.add(createSwitchStateButton("settings", MenuState.SETTINGSMENU, 60, 10));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        final JButton leaveGame = SwingFactory.createImageButton(this, "quit", 60, 10, false);
+        panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
+
+        final JButton play = SwingFactory.createTextButton(panel, "Commencer une aventure", 20, 10, true);
+        createSwitchStateButton(play, MenuState.CREATEJOIN);
+        panel.add(play);
+        final JButton options = SwingFactory.createTextButton(panel, "Préparer l'expédition", 20, 10, true);
+        createSwitchStateButton(options, MenuState.SETTINGSMENU);
+        panel.add(options);
+        final JButton leaveGame = SwingFactory.createTextButton(panel, "Retourner au foyer", 20, 10, true);
         leaveGame.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -169,9 +173,6 @@ public final class MenuPanel extends CorePanel {
 
     private JPanel createSettingsMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 10, 15, 0, 15);
-        panel.add(createSettings(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 10));
-        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
         return panel;
     }
 
@@ -213,21 +214,20 @@ public final class MenuPanel extends CorePanel {
 
     private JPanel createCreateJoinMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
-        panel.add(createCreateJoin(panel));
-        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
-        panel.setVisible(false);
-        return panel;
-    }
 
-    private JPanel createCreateJoin(final Component parent) {
-        final JPanel panel = SwingFactory.createContainerPanel(parent, 40, 0, 30, 0);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setVisible(true);
-        panel.setOpaque(false);
-        final JButton createButton = createSwitchStateButton("host", MenuState.GAMELOBBY, 40, 10);
-        final JButton joinButton = createSwitchStateButton("join", MenuState.JOINCODE, 40, 10);
-        panel.add(createButton);
-        panel.add(joinButton);
+        panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
+
+        final JButton create = SwingFactory.createTextButton(panel, "Créer une nouvelle aventure", 15, 8, true);
+        createSwitchStateButton(create, MenuState.GAMELOBBY);
+        panel.add(create);
+
+        final JButton join = SwingFactory.createTextButton(panel, "Rejoindre une escouade", 20, 10, true);
+        createSwitchStateButton(join, MenuState.JOINCODE);
+        panel.add(join);
+
+        final JButton back = SwingFactory.createTextButton(panel, "Rebrousser chemin", 20, 10, true);
+        createSwitchStateButton(back, MenuState.MAINMENU);
+        panel.add(back);
         return panel;
     }
 
@@ -237,9 +237,6 @@ public final class MenuPanel extends CorePanel {
 
     private JPanel createJoinCodeMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 30, 20, 10, 20);
-        panel.add(createJoinCode(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 20));
-        panel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
         return panel;
     }
 
@@ -254,35 +251,6 @@ public final class MenuPanel extends CorePanel {
 
     private JPanel createGameLobbyMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 0, 5);
-        final JPanel buttonsPanel = SwingFactory.createTransparentPanel(panel, 100, 11);
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, (int) (panel.getWidth() * 0.2), 0));
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                final FlowLayout layout = (FlowLayout) buttonsPanel.getLayout();
-                layout.setHgap((int) (panel.getWidth() * 0.2));
-            }
-        });
-
-        buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-        final JButton startGame = SwingFactory.createImageButton(this, "play", 40, 10, false);
-        startGame.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                Audio.stopMusic();
-                final Game game = getFrame().getGame();
-                game.createModel("map4", gameConfig, playersConfig);
-                game.setMode(Mode.GAME);
-                game.initGame();
-            }
-        });
-        buttonsPanel.add(startGame);
-
-        panel.add(createLobbyCode(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
-        panel.add(createGameLobby(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
-        panel.add(buttonsPanel);
         return panel;
     }
 
@@ -435,27 +403,27 @@ public final class MenuPanel extends CorePanel {
         navPanel.add(mapSpecialtiesButton);
         panel.add(navPanel, BorderLayout.WEST);
 
-        JButton backButton = createSwitchStateButton("back", MenuState.MAINMENU, 40, 10); // nécessaire avec l'event click ?
-        backButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {    // Ferme bien le manuel avec l'event (le rend non-visible)
-                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
-            }
-        });
-        panel.add(backButton, BorderLayout.SOUTH);
+        // JButton backButton = createSwitchStateButton("back", MenuState.MAINMENU, 40, 10); // nécessaire avec l'event click ?
+        // backButton.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {    // Ferme bien le manuel avec l'event (le rend non-visible)
+        //         getPanels().get(MANUALBOOK_INDEX).setVisible(false);
+        //     }
+        // });
+        // panel.add(backButton, BorderLayout.SOUTH);
 
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
+        // panel.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseEntered(MouseEvent e) {
+        //         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        //     }
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                e.consume();
-                System.out.println("NAAN CLIQUE PAS ICI Y'A R");
-            }
-        });
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {
+        //         e.consume();
+        //         System.out.println("NAAN CLIQUE PAS ICI Y'A R");
+        //     }
+        // });
         return panel;
     }
 

@@ -284,6 +284,46 @@ public class SwingFactory {
         return button;
     }
 
+    public static JButton createTextButton(final Component parent, final String text,
+        final int widthPer, final int heightPer, final boolean resize) {
+        final Image image = Resources.getImage("selection");
+        final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
+        final JButton button = new JButton();
+        button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+        button.setText(text);
+        button.setForeground(Color.BLACK);
+        button.setFont(Resources.getFont("NoitaBlackletter", 64));
+        button.setHorizontalTextPosition(JButton.LEFT);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setIcon(new ImageIcon(image.getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setIcon(null);
+                parent.revalidate();
+            }
+        });
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                System.out.println(size);
+                final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
+                button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+            }
+        });
+        return button;
+    }
+
     // public static JPanel createNormalPanel() {
     //     JPanel panel = new JPanel();
     //     panel.setOpaque(false);
