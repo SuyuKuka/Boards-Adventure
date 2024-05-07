@@ -68,7 +68,6 @@ public final class BoardPanel extends JLayeredManager {
     private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
     private int cameraX;
     private int cameraY;
-    private Point cameraPanStartPos = null;
     private Point cameraPan = null;
 
     private Image boardImage;
@@ -92,7 +91,6 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    cameraPanStartPos = e.getPoint();
                     cameraPan = e.getPoint();
                 }
             }
@@ -102,7 +100,6 @@ public final class BoardPanel extends JLayeredManager {
                     final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
                     redraw();
-                    cameraPanStartPos = null;
                     cameraPan = null;
                 }
             }
@@ -127,7 +124,7 @@ public final class BoardPanel extends JLayeredManager {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(final MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e) && cameraPanStartPos != null) {
+                if (SwingUtilities.isRightMouseButton(e) && cameraPan != null) {
                     int deltaX = e.getX() - cameraPan.x;
                     int deltaY = e.getY() - cameraPan.y;
                     updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
@@ -150,6 +147,7 @@ public final class BoardPanel extends JLayeredManager {
     // #region camera
 
     public void redraw() {
+        CellGraphics.updatePaintVariables(getWidthRatio(), getHeightRatio());
         for (CellGraphics cellGraphics : cellsGraphics.values()) {
             cellGraphics.update();
         }
@@ -724,6 +722,14 @@ public final class BoardPanel extends JLayeredManager {
         return cameraY;
     }
 
+    public double getWidthRatio() {
+        return 1.0 * getWidth() / cameraWidth;
+    }
+
+    public double getHeightRatio() {
+        return 1.0 * getHeight() / cameraHeight;
+    }
+
     public int getCameraHeight() {
         return cameraHeight;
     }
@@ -738,6 +744,10 @@ public final class BoardPanel extends JLayeredManager {
 
     public static int getCameraMaxWidth() {
         return CAMERA_MAX_WIDTH;
+    }
+
+    public Image getBoardImage() {
+        return boardImage;
     }
 
     public static int getInteraction() {

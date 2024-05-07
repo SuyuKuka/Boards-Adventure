@@ -1,9 +1,11 @@
 package view.game.cellsgraphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
@@ -18,13 +20,17 @@ import view.game.BoardPanel;
  * <p> Certaines cellules ont leurs propres classes graphiques.
  */
 public class CellGraphics extends JLabel {
-    private static final int CELL_DIAMETER = 65;
+    // PAINT
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
     // - la couleur intérieure -> COLOR_RANGE
     // - l'icône/image -> ICON_RANGE
+    private static final int CELL_DIAMETER = 45;
     private static final int COLOR_RANGE = 3;
+    private static final Rectangle COLOR_RANGE_DIM = new Rectangle();
+
     private static final int ICON_RANGE = 8;
+    private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 
     private final BoardPanel boardPanel;
     private final Controller controller;
@@ -38,8 +44,19 @@ public class CellGraphics extends JLabel {
         this.cellID = cellID;
         this.xPos = xPos;
         this.yPos = yPos;
-        update();
         setVisible(true);
+    }
+
+    public static final void updatePaintVariables(final double widthRatio, final double heightRatio) {
+        COLOR_RANGE_DIM.x = (int) (COLOR_RANGE * widthRatio);
+        COLOR_RANGE_DIM.y = (int) (COLOR_RANGE * heightRatio);
+        COLOR_RANGE_DIM.width = (int) Math.ceil((CELL_DIAMETER - COLOR_RANGE * 2) * widthRatio);
+        COLOR_RANGE_DIM.height = (int) Math.ceil((CELL_DIAMETER - COLOR_RANGE * 2) * heightRatio);
+
+        ICON_RANGE_DIM.x = (int) (ICON_RANGE * widthRatio);
+        ICON_RANGE_DIM.y = (int) (ICON_RANGE * heightRatio);
+        ICON_RANGE_DIM.width = (int) Math.ceil((CELL_DIAMETER - ICON_RANGE * 2) * widthRatio);
+        ICON_RANGE_DIM.height  = (int) Math.ceil((CELL_DIAMETER - ICON_RANGE * 2) * heightRatio);
     }
 
     public final void update() {
@@ -48,23 +65,20 @@ public class CellGraphics extends JLabel {
     }
 
     private void updateSize() {
-        final double zoom = boardPanel.getZoom();
-        setSize((int) (CELL_DIAMETER * zoom), (int) (CELL_DIAMETER * zoom));
+        setSize((int) (CELL_DIAMETER * boardPanel.getWidthRatio()),
+            (int) (CELL_DIAMETER * boardPanel.getHeightRatio()));
     }
 
 
     private void updateLocation() {
-        final int camWidth = boardPanel.getCameraWidth();
-        final int cellCamX = xPos - boardPanel.getCameraX() + camWidth / 2;
-        final double screenRatioX = 1.0 * boardPanel.getWidth() / camWidth;
-        final int centerOffsetX = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxWidth() / camWidth;
-        final int finalX = (int) (cellCamX * screenRatioX) - centerOffsetX;
+        final Dimension size = getSize();
+        final int cellCamX = xPos - boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
+        final int centerOffsetX = size.width / 2;
+        final int finalX = (int) (cellCamX * boardPanel.getWidthRatio()) - centerOffsetX;
 
-        final int camHeight = boardPanel.getCameraHeight();
-        final int cellCamY = (yPos - boardPanel.getCameraY() + camHeight / 2);
-        final double screenRatioY = 1.0 * boardPanel.getHeight() / camHeight;
-        final int centerOffsetY = CELL_DIAMETER / 2 * BoardPanel.getCameraMaxHeight() / camHeight;
-        final int finalY = (int) (cellCamY * screenRatioY) - centerOffsetY;
+        final int cellCamY = (yPos - boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
+        final int centerOffsetY = size.height / 2;
+        final int finalY = (int) (cellCamY * boardPanel.getHeightRatio()) - centerOffsetY;
 
         setLocation(finalX, finalY);
     }
@@ -77,19 +91,14 @@ public class CellGraphics extends JLabel {
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        final double zoom = boardPanel.getZoom();
-
         // Coutour
         g2d.fillOval(0, 0, getWidth(), getHeight());
         // Couleur intérieure
         g2d.setColor(Color.WHITE);
-        final int startInside = (int) (COLOR_RANGE * zoom);
-        final int endInside = (int) Math.ceil(((CELL_DIAMETER - COLOR_RANGE * 2) * zoom));
-        g2d.fillOval(startInside, startInside, endInside, endInside);
+        g2d.fillOval(COLOR_RANGE_DIM.x, COLOR_RANGE_DIM.y, COLOR_RANGE_DIM.width, COLOR_RANGE_DIM.height);
         // icône
-        final int startIcon = (int) (ICON_RANGE * zoom);
-        final int endIcon = (int) Math.ceil((CELL_DIAMETER - ICON_RANGE * 2) * zoom);
-        g2d.drawImage(loadCellImage(), startIcon, startIcon, endIcon, endIcon, this);
+        g2d.drawImage(loadCellImage(), ICON_RANGE_DIM.x, ICON_RANGE_DIM.y,
+            ICON_RANGE_DIM.width, ICON_RANGE_DIM.height, this);
         // id cellule
         g2d.setColor(new Color(663399));
         g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici = 12)
@@ -104,6 +113,14 @@ public class CellGraphics extends JLabel {
 
     public static int getCellDiameter() {
         return CELL_DIAMETER;
+    }
+
+    public static Rectangle getColorRangeDim() {
+        return COLOR_RANGE_DIM;
+    }
+
+    public static Rectangle getIconRangeDim() {
+        return ICON_RANGE_DIM;
     }
 
     public static int getColorRange() {

@@ -50,8 +50,8 @@
 			"id" : 100,
 			"type" : "START",
 			"lapGain" : 300,
-			"xPos" : 300,
-			"yPos" : 300
+			"xPos" : 1680,
+			"yPos" : 1111
 		}
     ]
 }
