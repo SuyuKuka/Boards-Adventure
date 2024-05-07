@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
+import javax.swing.SwingConstants;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -386,63 +389,126 @@ public final class MenuPanel extends CorePanel {
     // #region manualBook 7
 
     private JPanel createManualBook() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
-        panel.setOpaque(true);
-        panel.setBackground(Color.ORANGE);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 5, 5);
+        panel.setOpaque(false);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.ORANGE);
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 4));
+
+        // HAUT, CHANGER FONTS
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("  Manuel", SwingConstants.CENTER);
+        titleLabel.setFont(Resources.getFont("RifficFree", 22));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(Color.ORANGE);
+
+        JButton closeButton = SwingFactory.createImageButton(this, "notready", 4, 4, false);
+        // MouseListener ici
+
+        titlePanel.add(closeButton, BorderLayout.EAST);
+        int titleHeight = (int) (panel.getHeight() * 0.05);
+        titlePanel.setPreferredSize(new Dimension(panel.getWidth(), titleHeight));
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        // BAS, CHANGER FONTS
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2));
+        contentPanel.setBackground(Color.ORANGE);
+
+        JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        JButton howToPlayButton = new JButton("Prise en main du jeu");
+        howToPlayButton.setBackground(Color.YELLOW);
+        howToPlayButton.setFont(Resources.getFont("RifficFree", 20));
+        JButton gameFlowButton = new JButton("Déroulement de la partie");
+        gameFlowButton.setBackground(Color.YELLOW);
+        gameFlowButton.setFont(Resources.getFont("RifficFree", 20));
+        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
+        mapSpecialtiesButton.setBackground(Color.YELLOW);
+        mapSpecialtiesButton.setFont(Resources.getFont("RifficFree", 20));
+        navPanel.add(howToPlayButton, BorderLayout.NORTH);
+        navPanel.add(gameFlowButton, BorderLayout.CENTER);
+        navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
+
+        int navPanelWidth = (int) (contentPanel.getWidth() * 0.3);      // Soucis pour 30%
+        navPanel.setPreferredSize(new Dimension(navPanelWidth, contentPanel.getHeight()));
+        contentPanel.add(navPanel, BorderLayout.WEST);
 
         JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
         explanationTextArea.setLineWrap(true);
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
         explanationTextArea.setBackground(Color.CYAN);
-        //explanationTextArea.setFont(Resources.loadFonts(14f, "RifficFree.ttf")); // CHANGER LA MANIERE POUR FONTS ?
-
+        explanationTextArea.setFont(Resources.getFont("RifficFree", 16));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
-        panel.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel navPanel = new JPanel(new GridLayout(3, 1));
-        JButton howToPlayButton = new JButton("Prise en main du jeu");
-        howToPlayButton.setBackground(Color.YELLOW);
-        //howToPlayButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
-        JButton gameFlowButton = new JButton("Déroulement de la partie");
-        gameFlowButton.setBackground(Color.YELLOW);
-        //gameFlowButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
-        JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
-        mapSpecialtiesButton.setBackground(Color.YELLOW);
-        //mapSpecialtiesButton.setFont(Resources.loadFonts(16f, "RifficFree.ttf"));
+        closeButton.addMouseListener(new MouseAdapter() {   // Déplacement du mouseListener du bouton close afin de bien actualiser la fenêtre au début /EDIT: ENFAIT CA MARCHE PAS MDRRRRR
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                scrollPane.setViewportView(explanationTextArea);
+                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
+            }
+        });
 
+        int scrollPaneWidth = (int) (contentPanel.getWidth() * 0.7);    // Soucis pour 70%
+        scrollPane.setPreferredSize(new Dimension(scrollPaneWidth, contentPanel.getHeight()));
+        scrollPane.setViewportBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        scrollPane.setBackground(Color.CYAN);
+        contentPanel.add(scrollPane, BorderLayout.EAST);
+
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        panel.add(mainPanel);
+
+        // LISTENERS, voir adaption texte/rapport au resize
         howToPlayButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                scrollPane.setViewportView(explanationTextArea);
                 explanationTextArea.setText("     - PRISE EN MAIN DU LOGICIEL -\n\n Sur le menu du jeu, vous pouvez modifier les réglages sonores en cliquant sur \"Options\" ou vous pouvez vous lancer directement dans une partie en appuyant sur \"Jouer\".\nUne fois dans ce menu, vous pouvez choisir de rejoindre une partie déjà créée ou d'en être l'hôte. Vous pourrez alors configurer la partie comme cela vous convient le mieux !");
             }
         });
         gameFlowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("           > Comment se déroule une partie de Board's Adventure ? <\n\n 1 - Début de tour: Faites constat des évènements qui prennent effet avant votre tour. \n\n 2 - Lancer de dé: Sélectionnez et lancez le dé que vous allez jouer à ce tour. Différents types de dés peuvent être obtenus au cours de la partie.\n\n 3 - Déplacement: Déplacez votre pion à la hauteur du résultat, et choisissez quelle direction emprunter si le chemin vous l'impose. \n\n 4 - Action: L'effet de la case sur laquelle vous atterrissez prend effet. Laissez la chance décider de votre sort avec les évènements, ou faites l'acquisition des propriétés du plateau afin d'affirmer votre monopole sur les autres.");
+                scrollPane.setViewportView(explanationTextArea);
+                explanationTextArea.setText("   Comment se déroule une partie de Board's Adventure ?\n\n 1 - Début de tour: Faites constat des évènements qui prennent effet avant votre tour. \n\n 2 - Lancer de dé: Sélectionnez et lancez le dé que vous allez jouer à ce tour. Différents types de dés peuvent être obtenus au cours de la partie.\n\n 3 - Déplacement: Déplacez votre pion à la hauteur du résultat, et choisissez quelle direction emprunter si le chemin vous l'impose. \n\n 4 - Action: L'effet de la case sur laquelle vous atterrissez prend effet. Laissez la chance décider de votre sort avec les évènements, ou faites l'acquisition des propriétés du plateau afin d'affirmer votre monopole sur les autres.");
             }
         });
         mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
+                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
+                JPanel mapPanel = new JPanel(new GridLayout(8, 1));
+
+                JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.", 10);
+                gainCase.setBackground(Color.CYAN);
+                mapPanel.add(gainCase);  // gain
+                JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.", 10);
+                lossCase.setBackground(Color.CYAN);
+                mapPanel.add(lossCase);  // loss
+                JPanel dangerCase = createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
+                dangerCase.setBackground(Color.CYAN);
+                mapPanel.add(dangerCase);    // danger
+                JPanel intersectionCase = createCaseExplanationPanel("intersection", "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
+                intersectionCase.setBackground(Color.CYAN);
+                mapPanel.add(intersectionCase);    // intersection
+                JPanel kingdomCase = createCaseExplanationPanel("kingdom", "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
+                kingdomCase.setBackground(Color.CYAN);
+                mapPanel.add(kingdomCase);    // kingdom
+                JPanel propertyCase = createCaseExplanationPanel("property", "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
+                propertyCase.setBackground(Color.CYAN);
+                mapPanel.add(propertyCase);    // property
+                JPanel shopCase = createCaseExplanationPanel("shop", "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.", 10);
+                shopCase.setBackground(Color.CYAN);
+                mapPanel.add(shopCase);    // shop
+                JPanel voidCase = createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.", 10);
+                voidCase.setBackground(Color.CYAN);
+                mapPanel.add(voidCase);    // void
+
+                JViewport viewport = scrollPane.getViewport();
+                viewport.setView(mapPanel);
+                
             }
         });
-
-        navPanel.add(howToPlayButton);
-        navPanel.add(gameFlowButton);
-        navPanel.add(mapSpecialtiesButton);
-        panel.add(navPanel, BorderLayout.WEST);
-
-        JButton backButton = createSwitchStateButton("back", MenuState.MAINMENU, 40, 10); // nécessaire avec l'event click ?
-        backButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {    // Ferme bien le manuel avec l'event (le rend non-visible)
-                getPanels().get(MANUALBOOK_INDEX).setVisible(false);
-            }
-        });
-        panel.add(backButton, BorderLayout.SOUTH);
 
         panel.addMouseListener(new MouseAdapter() {
             @Override
@@ -459,47 +525,52 @@ public final class MenuPanel extends CorePanel {
         return panel;
     }
 
+    private JPanel createCaseExplanationPanel(String img, String description, int imageSize) {
+        BufferedImage caseImage = loadImage(img);
+        caseImage = resizeImage(caseImage, imageSize, imageSize);
 
-    /*ANCIEN MANUEL
-        private JPanel createHelpManual() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(frame.getContentPaneWidth() / 8, frame.getContentPaneHeight() / 8,
-            frame.getContentPaneWidth() - frame.getContentPaneWidth() / 4,
-            frame.getContentPaneHeight() - frame.getContentPaneHeight() / 4);
-        panel.setBackground(Color.ORANGE);
-
-        explanationTextArea.setFont(Resources.loadFont(14f, "RifficFree.ttf"));
-
-        JScrollPane scrollPane = new JScrollPane(explanationTextArea);
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n ");
-
-                ADAPTER AUX CASES DISPOS DU JEU (x nb de cases), BREVE EXPLICATION ET IMAGE SI POSSIBLE
-                //JPanel mapPanel = new JPanel(new GridLayout(x, 1));
-                
-                //mapPanel.add(createCaseExplanationPanel("event_case_icon.png", "Case événement"));
-                //mapPanel.add(createCaseExplanationPanel("property_case_icon.png", "Case propriété"));
-                //mapPanel.add(createCaseExplanationPanel("bonus_case_icon.png", "Case bonus"));
-                //mapPanel.add(createCaseExplanationPanel("kingdom_case_icon.png", "Case 'kingdom'"));
-                //mapPanel.add(createCaseExplanationPanel("intersection_case_icon.png", "Case intersection"));
-
-                //explanationTextArea.setVisible(false); // Cache texte ?
-                //panel.add(mapPanel, BorderLayout.CENTER); // Ajouter le panneau des icônes à la place du texte
-            }
-        });
-        return panel;
+        // Création du JPanel avec un GridBagLayout
+        JPanel casePanel = new JPanel(new GridBagLayout());
+        // Création des contraintes pour le placement des composants
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 3, 5, 3);
+    
+        // Ajout de l'image de la case
+        JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
+        casePanel.add(iconLabel, gbc);
+        // Changement des contraintes pour positionner le texte en dessous de l'image
+        gbc.gridx++;
+        gbc.anchor = GridBagConstraints.WEST;
+        // Ajout du texte de description
+        JLabel descriptionLabel = new JLabel(description);
+        casePanel.add(descriptionLabel, gbc);
+    
+        return casePanel;
     }
-     * 
-     */
 
+    // VOIR COMMENT MODIFIER POUR AJUSTER CORRECTEMENT IMG DEFENSE
+    private static BufferedImage loadImage(String filename) {
+        try {
+            return ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        graphics2D.dispose();
+        return resizedImage;
+    }
 
 
     // #endregion
-
     // private JPanel createJoin() {
     //     add(createBackground("background_menu"), Integer.valueOf(0));
     //     JPanel panel = SwingFactory.createPanel(getFrame(), 14);
