@@ -87,4 +87,8 @@ public final class PlayerGraphics extends JLabel {
         return yPos;
     }
 
+    public Image getPlayerImage() {
+        return playerImage;
+    }
+
 }

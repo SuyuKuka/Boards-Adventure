@@ -21,7 +21,7 @@ public final class DataPanel extends JPanel {
     private final GamePanel gamePanel;
     private final Controller controller;
 
-    private final JLabel turn = new JLabel();
+    private final JLabel remainingTurns = new JLabel();
 
     private final ArrayList<PlayerScore> playerScoreList = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public final class DataPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.weighty = 0.10;
-        add(createTurnsPanel(), gbc); // tours restants
+        add(createRemainingTurnsPanel(), gbc); // tours restants
         gbc.gridy = 1;
         gbc.weighty = 0.40;
         add(createScoreboardPanel(), gbc); // scoreboard
@@ -51,16 +51,22 @@ public final class DataPanel extends JPanel {
         gbc.weighty = 0.50;
         add(createInfoPanel(), gbc); // info de l'objet sélectionné, sinon vide
     }
+    // #region gameState
+    public void endTurn() {
+        remainingTurns.setText(controller.getCurrentTurn() + " / " + controller.getTotalTurns());
+    }
+
+    // #endregion
 
     // #region turn
 
-    private JPanel createTurnsPanel() {
+    private JPanel createRemainingTurnsPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        turn.setText("text");
-        turn.setHorizontalAlignment(JLabel.CENTER);
-        turn.setVerticalAlignment(JLabel.CENTER);
-        panel.add(turn);
+        remainingTurns.setText(controller.getCurrentTurn() + " / " + controller.getTotalTurns());
+        remainingTurns.setHorizontalAlignment(JLabel.CENTER);
+        remainingTurns.setVerticalAlignment(JLabel.CENTER);
+        panel.add(remainingTurns);
         return panel;
     }
 

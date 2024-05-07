@@ -123,6 +123,7 @@ public final class GamePanel extends JLayeredManager {
 
     public void endTurn() {
         boardPanel.endTurn();
+        dataPanel.endTurn();
     }
 
     public void gameEnd() {
@@ -157,6 +158,10 @@ public final class GamePanel extends JLayeredManager {
 
     public ArrayList<PlayerGraphics> getPlayerGraphicsList() {
         return playerGraphicsList;
+    }
+
+    public PlayerGraphics getPlayerGraphics(final int playerID) {
+        return playerGraphicsList.get(playerID);
     }
 
     public void setPlayerGraphicsList(final ArrayList<PlayerGraphics> playerGraphicsList) {

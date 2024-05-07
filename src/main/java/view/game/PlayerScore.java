@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,27 +20,27 @@ public final class PlayerScore extends JPanel {
     private final Controller controller;
 
     private final int playerId;
-    private final JLabel rank = SwingFactory.createJLabel();
-    private Image rankImage;
-    private final JLabel skin = SwingFactory.createJLabel();
+    private final JLabel rankLabel = SwingFactory.createJLabel();
+    private final Image rankImage;
+    private final JLabel skinLabel = SwingFactory.createJLabel();
     private final Image skinImage;
 
     private final JPanel playerInfoPanel = new JPanel();
-    private final JLabel pseudo = SwingFactory.createJLabel();
-    private final JLabel money = SwingFactory.createJLabel();
-    private final JLabel points = SwingFactory.createJLabel();
-    private final JLabel property = SwingFactory.createJLabel();
-    private final JLabel items = SwingFactory.createJLabel();
+    private final JLabel pseudoLabel = SwingFactory.createJLabel();
+    private final JLabel moneyLabel = SwingFactory.createJLabel();
+    private final JLabel pointsLabel = SwingFactory.createJLabel();
+    private final JLabel propertyLabel = SwingFactory.createJLabel();
+    private final JLabel itemsLabel = SwingFactory.createJLabel();
 
-    private JButton tradeButton;
+    private final JPanel buttonsPanel = new JPanel();
+    private final JButton tradeButton = new JButton();
 
     public PlayerScore(final GamePanel gamePanel, final int playerId) {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         this.playerId = playerId;
-        this.skinImage = Resources.getImage("");
         this.rankImage = Resources.getImage("placeholder");
-
+        this.skinImage = gamePanel.getPlayerGraphics(playerId).getPlayerImage();
         initComp();
         setBackground(Color.BLACK);
         updateComp();
@@ -48,29 +49,28 @@ public final class PlayerScore extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.weightx = 0.2;
-        add(rank, gbc);
+        add(rankLabel, gbc);
         gbc.weightx = 0.2;
-        add(skin, gbc);
+        add(skinLabel, gbc);
         gbc.weightx = 0.5;
         add(playerInfoPanel, gbc);
-        add(pseudo, gbc);
-        add(money, gbc);
-        add(points, gbc);
-        add(property, gbc);
-        add(items, gbc);
+        add(pseudoLabel, gbc);
+        add(moneyLabel, gbc);
+        add(pointsLabel, gbc);
+        add(propertyLabel, gbc);
+        add(itemsLabel, gbc);
         gbc.weightx = 0.1;
-        add(tradeButton, gbc);
+        add(buttonsPanel, gbc);
     }
 
     public void initComp() {
-        rank.setText(String.valueOf(controller.getPlayer(playerId).getRank()));
-        skin.setText(controller.getPlayer(playerId).getSkin());
-        pseudo.setText(controller.getPlayer(playerId).getUsername());
-        money.setText(String.valueOf(controller.getPlayer(playerId).getMoney()));
-        points.setText(String.valueOf(controller.getPlayer(playerId).getGamePoint()));
-        property.setText(String.valueOf(controller.getPlayer(playerId).getProperties().size()));
-        items.setText(String.valueOf(controller.getPlayer(playerId).getShopItem().length));
-        this.tradeButton = new JButton();
+        rankLabel.setIcon(new ImageIcon(rankImage));
+        skinLabel.setIcon(new ImageIcon(skinImage));
+        pseudoLabel.setText(controller.getPlayer(playerId).getUsername());
+        moneyLabel.setText(String.valueOf(controller.getPlayer(playerId).getMoney()));
+        pointsLabel.setText(String.valueOf(controller.getPlayer(playerId).getGamePoint()));
+        propertyLabel.setText(String.valueOf(controller.getPlayer(playerId).getProperties().size()));
+        itemsLabel.setText(String.valueOf(controller.getPlayer(playerId).getShopItem().length));
     }
 
     public void updateComp() {
@@ -82,23 +82,23 @@ public final class PlayerScore extends JPanel {
     }
 
     private void updateRank() {
-        rank.setText(String.valueOf(controller.getCurrentPlayer().getRank()));
+        rankLabel.setText(String.valueOf(controller.getCurrentPlayer().getRank()));
     }
 
     private void updateMoney() {
-        money.setText(String.valueOf(controller.getCurrentPlayer().getMoney()));
+        moneyLabel.setText(String.valueOf(controller.getCurrentPlayer().getMoney()));
     }
 
     private void updatePoints() {
-        points.setText(String.valueOf(controller.getCurrentPlayer().getGamePoint()));
+        pointsLabel.setText(String.valueOf(controller.getCurrentPlayer().getGamePoint()));
     }
 
     private void updateProperty() {
-        property.setText(String.valueOf(controller.getCurrentPlayer().getProperties().size()));
+        propertyLabel.setText(String.valueOf(controller.getCurrentPlayer().getProperties().size()));
     }
 
     private void updateItems() {
-        items.setText(String.valueOf(controller.getCurrentPlayer().getShopItem().length));
+        itemsLabel.setText(String.valueOf(controller.getCurrentPlayer().getShopItem().length));
     }
 
 }

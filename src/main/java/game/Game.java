@@ -73,7 +73,7 @@ public final class Game {
         gameSettings.put("turns", 45);
         final ArrayList<Team> teams = new ArrayList<>();
         final Team team1 = new Team("team1");
-        team1.addPlayer(new HumanPlayer("human1", team1, null));
+        team1.addPlayer(new HumanPlayer("human1", "class1", team1, null));
         teams.add(team1);
         return new Model(gameMap, gameSettings, teams);
     }
@@ -92,7 +92,7 @@ public final class Game {
     private ArrayList<Team> createTeams(final ArrayList<HashMap<String, String>> playersConfig) {
         final ArrayList<Team> teams = new ArrayList<>();
         final Team team1 = new Team("team1");
-        team1.addPlayer(new HumanPlayer("human1", team1, null));
+        team1.addPlayer(new HumanPlayer("human1", "class1", team1, null));
         return teams;
     }
 

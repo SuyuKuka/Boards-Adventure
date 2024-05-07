@@ -21,7 +21,7 @@ public abstract class Player {
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
     private final Item[] shopItem = new Item[3];
-    private String skin = "skin";
+    private final String className;
 
     private final ArrayList<Property> properties = new ArrayList<>();
     private int money = 500;
@@ -34,9 +34,10 @@ public abstract class Player {
 
     private int diceRollValue = 0;
 
-    public Player(final String username, final Team team, final Item startItem) {
+    public Player(final String username, final String className, final Team team, final Item startItem) {
         this.playerID = playerIDIterator;
         playerIDIterator++;
+        this.className = className;
         this.username = username;
         this.team = team;
         this.startItem = startItem;
@@ -131,11 +132,6 @@ public abstract class Player {
     public final Item[] getShopItem() {
         return shopItem;
     }
-
-    public final String getSkin() {
-        return skin;
-    }
-
 
     public final void setPosition(final int position) {
         this.position = position;
