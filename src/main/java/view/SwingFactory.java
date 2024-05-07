@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -153,6 +154,35 @@ public class SwingFactory {
         panel.setVisible(true);
         return panel;
     }
+
+    public static JPanel createGifPanel(final Component parent, final String img,
+    final int widthPer, final int heightPer) {
+    final JPanel panel = new JPanel(new BorderLayout());
+    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    panel.setOpaque(false);
+    final Dimension size = new Dimension(parent.getWidth() * widthPer / 100, parent.getHeight() * heightPer / 100);
+    panel.setMaximumSize(size);
+    panel.setPreferredSize(size);
+    final JLabel label = new JLabel(new ImageIcon(Resources.getGif(img).getImage()
+        .getScaledInstance(size.width, size.height, Image.SCALE_FAST)));
+    label.setVerticalAlignment(JLabel.CENTER);
+    label.setHorizontalAlignment(JLabel.CENTER);
+    panel.add(label, BorderLayout.CENTER);
+    parent.addComponentListener(new ComponentAdapter() {
+        @Override
+        public void componentResized(final ComponentEvent e) {
+            final Dimension size = new Dimension((int) (parent.getWidth() * widthPer / 100),
+                (int) (parent.getHeight() * heightPer / 100));
+            panel.setMaximumSize(size);
+            panel.setPreferredSize(size);
+            label.setIcon(new ImageIcon(Resources.getGif(img).getImage()
+                .getScaledInstance(size.width, size.height, Image.SCALE_FAST)));
+        }
+    });
+    panel.setVisible(true);
+    return panel;
+}
+
 
     public static JPanel createGamePanelCells(final Component parent,
     final int widthPer, final int heightPer) {

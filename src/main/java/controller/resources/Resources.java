@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -45,24 +46,29 @@ public final class Resources {
     private static final float DEFAULT_FONT_SIZE = 12;
     private static final String PATH = "src/main/resources/";
 
-    private static HashMap<String, Font> fonts = new HashMap<>();
-    private static HashMap<String, Image> commonImages = new HashMap<>();
-    private static HashMap<String, Image> modeImages = new HashMap<>();
+    private static final HashMap<String, Font> FONTS = new HashMap<>();
+    private static final HashMap<String, Image> COMMON_IMAGES = new HashMap<>();
+    private static final HashMap<String, Image> MODE_IMAGES = new HashMap<>();
+    private static final HashMap<String, ImageIcon> MODE_GIFS = new HashMap<>();
 
     /**
      * Charge les ressources communes au jeu et menu de l'application.
      */
     public static void loadCommonResources() {
-        loadImages(new File(PATH + "images/"), commonImages, false);
-        loadFonts(new File(PATH + "fonts/"), fonts);
+        loadImages(new File(PATH + "images/"), COMMON_IMAGES, false);
+        loadFonts(new File(PATH + "fonts/"), FONTS);
     }
 
     /**
      * Charge les ressources du menu.
      */
     public static void loadMenuResources() {
-        modeImages.clear();
-        loadImages(new File(PATH + "images/menu/"), modeImages, true);
+        MODE_IMAGES.clear();
+        MODE_GIFS.clear();
+        final File menuFolder = new File(PATH + "images/menu/");
+        loadImages(menuFolder, MODE_IMAGES, true);
+        loadGifs(menuFolder, MODE_GIFS, true);
+        System.out.println(MODE_GIFS.keySet());
     }
 
     /**
@@ -70,9 +76,14 @@ public final class Resources {
      * @param mapName
      */
     public static void loadGameResources(final String mapName) {
-        modeImages.clear();
-        loadImages(new File(PATH + "images/game/"), modeImages, true);
-        loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
+        MODE_IMAGES.clear();
+        MODE_GIFS.clear();
+        final File gameFolder = new File(PATH + "images/game/");
+        loadImages(gameFolder, MODE_IMAGES, true);
+        loadGifs(gameFolder, MODE_GIFS, true);
+        final File mapFolder = new File(PATH + "maps/" + mapName);
+        loadImages(mapFolder, MODE_IMAGES, true);
+        loadGifs(mapFolder, MODE_GIFS, true);
     }
 
     // region gameMap
@@ -160,6 +171,23 @@ public final class Resources {
         }
     }
 
+    public static void loadGifs(final File folder, final HashMap<String, ImageIcon> hashMap, final boolean recursive) {
+        try {
+            for (File file : folder.listFiles()) {
+                if (recursive && file.isDirectory()) {
+                    loadGifs(file, hashMap, recursive);
+                } else {
+                    if (file.getName().endsWith(".gif")) {
+                        addGif(file, hashMap);
+                    }
+                }
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("Resource directory not found.");
+        }
+    }
+
     private static String removeExtension(String str) {
         if (str == null || str.isEmpty()) {
           return str;
@@ -174,6 +202,10 @@ public final class Resources {
         } catch (IOException e) {
             System.out.println("File not found.");
         }
+    }
+
+    private static void addGif(final File file, final HashMap<String, ImageIcon> hashMap) {
+        hashMap.put(removeExtension(file.getName()), new ImageIcon(file.getPath()));
     }
 
     // endregion
@@ -194,7 +226,7 @@ public final class Resources {
     }
 
     public static Font getFont(final String font, final float size) {
-        return fonts.get(font).deriveFont(Font.BOLD, size);
+        return FONTS.get(font).deriveFont(Font.BOLD, size);
     }
 
     // endregion
@@ -202,12 +234,19 @@ public final class Resources {
     // region getter/setters
 
     public static Image getImage(final String key) {
-        if (modeImages.containsKey(key)) {
-            return modeImages.get(key);
-        } else if (commonImages.containsKey(key)) {
-            return commonImages.get(key);
+        if (MODE_IMAGES.containsKey(key)) {
+            return MODE_IMAGES.get(key);
+        } else if (COMMON_IMAGES.containsKey(key)) {
+            return COMMON_IMAGES.get(key);
         }
-        return commonImages.get("placeholder32_32");
+        return COMMON_IMAGES.get("placeholder32_32");
+    }
+
+    public static ImageIcon getGif(final String key) {
+        if (MODE_GIFS.containsKey(key)) {
+            return MODE_GIFS.get(key);
+        }
+        return null;
     }
 
     // endregion

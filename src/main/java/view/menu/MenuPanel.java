@@ -131,7 +131,7 @@ public final class MenuPanel extends CorePanel {
     // #region background 0
 
     private JPanel createBackground() {
-        final JPanel panel = SwingFactory.createImagePanel(this, "background", 100, 100);
+        final JPanel panel = SwingFactory.createGifPanel(this, "backgroundA", 100, 100);
         panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
         panel.setVisible(true);
         return panel;
