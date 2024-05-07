@@ -97,7 +97,6 @@ public final class Controller {
     // region gameState
 
     private void gameStart() {
-        System.out.println("gameSTART !!!!!");
         prevGameState = GameState.GAME_START;
         gamePanel.gameStart();
     }
@@ -167,11 +166,11 @@ public final class Controller {
     }
 
     public void playerGainMoney() {
-        getCurrentPlayer().getTeam().incrementMoney(getGainedMoney());
+        getCurrentPlayer().incrementMoney(getGainedMoney());
     }
 
     public void playerLossMoney() {
-        getCurrentPlayer().getTeam().incrementMoney(-getLossMoney());
+        getCurrentPlayer().incrementMoney(-getLossMoney());
     }
 
     public void playerBuyProperty() {
@@ -243,7 +242,7 @@ public final class Controller {
     }
 
     public int getCurrentMoney() {
-        return getCurrentPlayer().getTeam().getMoney();
+        return getCurrentPlayer().getMoney();
     }
 
     public int getGainedMoney() {
@@ -255,7 +254,7 @@ public final class Controller {
     }
 
     public int getGamePoint() {
-        return getCurrentPlayer().getTeam().getGamePoint();
+        return getCurrentPlayer().getGamePoint();
     }
 
     public int getPropertyPrice() {

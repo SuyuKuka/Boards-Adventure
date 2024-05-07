@@ -1,53 +1,26 @@
 package model.config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import model.config.cells.Property;
+import model.config.players.Player;
 
 public final class Team {
 
-    private int teamID;
-    private String teamName;
+    private static int teamIDIterator = 0;
 
-    private int gamePoint = 0;
-    private HashMap<Integer, ArrayList<Property>> properties = new HashMap<>();
-    private int money = 500;
-    private int rank = 1;
+    private final int teamID;
+    private final String teamName;
+    private final ArrayList<Player> players;
 
-    public Team(final int teamID, final String teamName) {
-        this.teamID = teamID;
+    public Team(final String teamName) {
+        this.teamID = teamIDIterator;
+        teamIDIterator++;
         this.teamName = teamName;
+        this.players = new ArrayList<>();
     }
 
-    public void addProperty(final Property property) {
-        final int propertyGroup = property.getGroup();
-        if (!properties.containsKey(propertyGroup)) {
-            properties.put(propertyGroup, new ArrayList<>());
-        }
-        properties.get(propertyGroup).add(property);
-    }
-
-    public void removeProperty(final Property property) {
-        final int propertyGroup = property.getGroup();
-        final ArrayList<Property> groupPropertiesArray = properties.get(propertyGroup);
-        if (groupPropertiesArray.size() == 1) {
-            properties.remove(propertyGroup);
-        } else {
-            groupPropertiesArray.remove(property);
-        }
-    }
-
-    public boolean hasEnoughMoney(final int price) {
-        return this.money >= price;
-    }
-
-    public void incrementGamePoint(final int increment) {
-        this.gamePoint += increment;
-    }
-
-    public void incrementMoney(final int increment) {
-        this.money += increment;
+    public void addPlayer(final Player player) {
+        players.add(player);
     }
 
     // region getters/setters
@@ -56,25 +29,16 @@ public final class Team {
         return teamID;
     }
 
-    public int getRank() {
-        return rank;
-    }
-
-
-    public int getMoney() {
-        return money;
-    }
-
-    public HashMap<Integer, ArrayList<Property>> getProperties() {
-        return properties;
-    }
-
     public String getTeamName() {
         return teamName;
     }
 
-    public int getGamePoint() {
-        return gamePoint;
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public void resetTeamIDIterator() {
+        teamIDIterator = 0;
     }
 
     // endregion

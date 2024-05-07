@@ -97,7 +97,7 @@ public final class GamePanel extends JLayeredManager {
     //#region gameState
 
     public void gameStart() {
-        boardPanel.gameStart();
+        startSingleActionTimer(50, action -> boardPanel.gameStart());
     }
 
     public void newTurn() {

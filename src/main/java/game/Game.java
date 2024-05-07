@@ -12,7 +12,6 @@ import model.Model;
 import model.config.GameMap;
 import model.config.Team;
 import model.config.players.HumanPlayer;
-import model.config.players.Player;
 import view.View;
 
 /**
@@ -72,12 +71,11 @@ public final class Game {
         final GameMap gameMap = Resources.loadGameMap(mapName);
         final HashMap<String, Integer> gameSettings = new HashMap<>();
         gameSettings.put("turns", 45);
-        final ArrayList<Player> players = new ArrayList<>();
-        players.add(new HumanPlayer(0, "human1", new Team(1, "team1")));
-        // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
-        // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
-        // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
-        return new Model(gameMap, gameSettings, players);
+        final ArrayList<Team> teams = new ArrayList<>();
+        final Team team1 = new Team("team1");
+        team1.addPlayer(new HumanPlayer("human1", team1, null));
+        teams.add(team1);
+        return new Model(gameMap, gameSettings, teams);
     }
 
     /**
@@ -88,13 +86,14 @@ public final class Game {
      */
     public void createModel(final String mapName, final HashMap<String, Integer> gameSettings,
         final ArrayList<HashMap<String, String>> playersConfig) {
-        model = new Model(Resources.loadGameMap(mapName), gameSettings, createPlayers(playersConfig));
+        model = new Model(Resources.loadGameMap(mapName), gameSettings, createTeams(playersConfig));
     }
 
-    private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
-        final ArrayList<Player> players = new ArrayList<>();
-        players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
-        return players;
+    private ArrayList<Team> createTeams(final ArrayList<HashMap<String, String>> playersConfig) {
+        final ArrayList<Team> teams = new ArrayList<>();
+        final Team team1 = new Team("team1");
+        team1.addPlayer(new HumanPlayer("human1", team1, null));
+        return teams;
     }
 
     public void setMode(final Mode mode) {

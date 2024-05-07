@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import game.GameState;
 import model.config.GameMap;
+import model.config.Team;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
 import model.config.players.Player;
@@ -25,6 +26,7 @@ public final class Model {
     private Player currentLeader = null;
     private Player currentPlayer = null;
 
+    private final ArrayList<Team> teams;
     private final ArrayList<Player> players;
     private int playerListIterator = 0;
 
@@ -32,12 +34,14 @@ public final class Model {
      * Constructeur du GameState.
      * @param gameMap
      * @param gameSettings
-     * @param players
+     * @param teams
      */
-    public Model(final GameMap gameMap, final HashMap<String, Integer> gameSettings, final ArrayList<Player> players) {
+    public Model(final GameMap gameMap, final HashMap<String, Integer> gameSettings, final ArrayList<Team> teams) {
         this.gameMap = gameMap;
         this.totalTurns = gameSettings.get("turns");
-        this.players = players;
+        this.teams = teams;
+        this.players = new ArrayList<>();
+        this.teams.forEach(team -> team.getPlayers().forEach(player -> players.add(player)));
         for (Player player : players) {
             player.setPosition(gameMap.getStartCell().getId());
         }

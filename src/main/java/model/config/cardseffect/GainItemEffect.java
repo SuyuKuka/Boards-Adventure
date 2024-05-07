@@ -20,7 +20,8 @@ public final class GainItemEffect extends CardEffect {
         Random rand = new Random();
         Item item = model.getGameMap().getShopItems().get(rand.nextInt(model.getGameMap().getShopItems().size()));
         if (player.hasShopItem()) {
-            player.tooMuchShopItem(item);
+            // player.tooMuchShopItem(item);
+            System.out.println("tooMuchItem");
         } else {
             player.addShopItem(item);
         }

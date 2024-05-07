@@ -63,12 +63,12 @@ public final class PlayerScore extends JPanel {
     }
 
     public void initComp() {
-        rank.setText(String.valueOf(controller.getPlayer(playerId).getTeam().getRank()));
+        rank.setText(String.valueOf(controller.getPlayer(playerId).getRank()));
         skin.setText(controller.getPlayer(playerId).getSkin());
         pseudo.setText(controller.getPlayer(playerId).getUsername());
-        money.setText(String.valueOf(controller.getPlayer(playerId).getTeam().getMoney()));
-        points.setText(String.valueOf(controller.getPlayer(playerId).getTeam().getGamePoint()));
-        property.setText(String.valueOf(controller.getPlayer(playerId).getTeam().getProperties().size()));
+        money.setText(String.valueOf(controller.getPlayer(playerId).getMoney()));
+        points.setText(String.valueOf(controller.getPlayer(playerId).getGamePoint()));
+        property.setText(String.valueOf(controller.getPlayer(playerId).getProperties().size()));
         items.setText(String.valueOf(controller.getPlayer(playerId).getShopItem().length));
         this.tradeButton = new JButton();
     }
@@ -82,19 +82,19 @@ public final class PlayerScore extends JPanel {
     }
 
     private void updateRank() {
-        rank.setText(String.valueOf(controller.getCurrentPlayer().getTeam().getRank()));
+        rank.setText(String.valueOf(controller.getCurrentPlayer().getRank()));
     }
 
     private void updateMoney() {
-        money.setText(String.valueOf(controller.getCurrentPlayer().getTeam().getMoney()));
+        money.setText(String.valueOf(controller.getCurrentPlayer().getMoney()));
     }
 
     private void updatePoints() {
-        points.setText(String.valueOf(controller.getCurrentPlayer().getTeam().getGamePoint()));
+        points.setText(String.valueOf(controller.getCurrentPlayer().getGamePoint()));
     }
 
     private void updateProperty() {
-        property.setText(String.valueOf(controller.getCurrentPlayer().getTeam().getProperties().size()));
+        property.setText(String.valueOf(controller.getCurrentPlayer().getProperties().size()));
     }
 
     private void updateItems() {

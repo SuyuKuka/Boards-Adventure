@@ -15,7 +15,7 @@ public final class Gain extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.getTeam().incrementMoney(gain);
+        player.incrementMoney(gain);
     }
 
     public int getGain() {

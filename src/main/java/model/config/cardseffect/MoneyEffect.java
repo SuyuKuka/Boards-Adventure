@@ -23,7 +23,7 @@ public final class MoneyEffect extends CardEffect {
      */
     @Override
     public void applyEffect(Player player, Model model) {
-        player.getTeam().incrementMoney(amount);
+        player.incrementMoney(amount);
     }
 
     @Override

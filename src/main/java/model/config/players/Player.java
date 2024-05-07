@@ -8,9 +8,12 @@ import model.config.GameMap;
 import model.config.Team;
 import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
+import model.config.cells.Property;
 import model.config.items.Item;
 
 public abstract class Player {
+
+    private static int playerIDIterator = 0;
 
     private final int playerID;
     private final String username;
@@ -20,6 +23,10 @@ public abstract class Player {
     private final Item[] shopItem = new Item[3];
     private String skin = "skin";
 
+    private final ArrayList<Property> properties = new ArrayList<>();
+    private int money = 500;
+    private int gamePoint = 0;
+    private int rank = 1;
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position = 0;
@@ -27,8 +34,9 @@ public abstract class Player {
 
     private int diceRollValue = 0;
 
-    public Player(final int playerID, final String username, final Team team, final Item startItem) {
-        this.playerID = playerID;
+    public Player(final String username, final Team team, final Item startItem) {
+        this.playerID = playerIDIterator;
+        playerIDIterator++;
         this.username = username;
         this.team = team;
         this.startItem = startItem;
@@ -38,11 +46,14 @@ public abstract class Player {
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 7; // TODO test
     }
 
-    public final void tooMuchShopItem(Item newItem) {
-        // Il doit choisir entre le nouveau item ou son item actuel
+    public final void addProperty(final Property property) {
+        properties.add(property);
+    }
+
+    public final void removeProperty(final Property property) {
+        properties.remove(property);
     }
 
     // endregion
@@ -61,13 +72,25 @@ public abstract class Player {
         mapLap += increment;
     }
 
-    public final Cell getPlayerCell(final GameMap gameMap) {
-        return gameMap.getCell(position);
+    public final void incrementGamePoint(final int increment) {
+        this.gamePoint += increment;
+    }
+
+    public final void incrementMoney(final int increment) {
+        this.money += increment;
     }
 
     // endregion
 
     // region getters/setters
+
+    public final boolean hasEnoughMoney(final int price) {
+        return this.money >= price;
+    }
+
+    public final Cell getPlayerCell(final GameMap gameMap) {
+        return gameMap.getCell(position);
+    }
 
     public final void setDiceRollValue(final int diceRollValue) {
         this.diceRollValue = diceRollValue;
@@ -85,8 +108,16 @@ public abstract class Player {
         return username;
     }
 
+    public final ArrayList<Property> getProperties() {
+        return properties;
+    }
+
     public final void setJailTurn(final int jailTurn) {
         this.jailTurn = jailTurn;
+    }
+
+    public final int getRank() {
+        return rank;
     }
 
     public final int getJailTurn() {
@@ -134,6 +165,18 @@ public abstract class Player {
         return playerID;
     }
 
+    public final int getMoney() {
+        return money;
+    }
+
+    public final int getGamePoint() {
+        return gamePoint;
+    }
+
+    public final ArrayList<CardEffect> getCards() {
+        return cards;
+    }
+
     public final void addShopItem(final Item item) {
         for (int i = 0; i < shopItem.length; i++) {
             if (shopItem[i] == null) {
@@ -144,6 +187,10 @@ public abstract class Player {
 
     public final boolean hasShopItem() {
         return shopItem != null;
+    }
+
+    public final void resetPlayerIDIterator() {
+        playerIDIterator = 0;
     }
 
     // endregion
