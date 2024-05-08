@@ -25,6 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
@@ -42,6 +43,7 @@ import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import view.JLayeredManager;
 import view.SwingFactory;
+import view.View;
 
 public final class BoardPanel extends JLayeredManager {
     // LAYERS
@@ -96,6 +98,10 @@ public final class BoardPanel extends JLayeredManager {
             }
             @Override
             public void mouseReleased(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    cameraPan = null;
+                    getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
@@ -125,6 +131,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseDragged(final MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e) && cameraPan != null) {
+                    getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR));
                     final double deltaX = (e.getX() - cameraPan.x) / getWidthRatio();
                     final double deltaY = (e.getY() - cameraPan.y) / getHeightRatio();
                     updateCameraPosition(zoom, cameraX - deltaX, cameraY - deltaY);
@@ -752,5 +759,9 @@ public final class BoardPanel extends JLayeredManager {
 
     public static int getInteraction() {
         return INTERACTION;
+    }
+
+    public View getFrame() {
+        return getGamePanel().getFrame();
     }
 }

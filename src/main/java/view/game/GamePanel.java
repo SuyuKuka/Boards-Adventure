@@ -17,13 +17,14 @@ import view.View;
 import view.game.cellsgraphics.CellGraphics;
 
 public final class GamePanel extends JLayeredManager {
+
+    private final View frame;
+    private final Controller controller;
+
     // LAYERS
     private static final int MAIN_PANEL = 0;
     private static final int OVERLAY_PANEL = 1;
     private static final int PAUSE_GAME = 2;
-
-    private final View frame;
-    private final Controller controller;
 
     private BoardPanel boardPanel;
     private ActionPanel actionPanel;

@@ -1,13 +1,17 @@
 package view.game.cellsgraphics;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 
 import controller.Controller;
@@ -44,6 +48,33 @@ public class CellGraphics extends JLabel {
         this.cellID = cellID;
         this.xPos = xPos;
         this.yPos = yPos;
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+                boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(final MouseEvent e) {
+                boardPanel.getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
+            }
+
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        });
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(final MouseEvent e) {
+                boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
+            }
+        });
         setVisible(true);
     }
 
