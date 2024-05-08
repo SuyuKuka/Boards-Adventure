@@ -72,11 +72,11 @@ public class CellGraphics extends JLabel {
 
     private void updateLocation() {
         final Dimension size = getSize();
-        final int cellCamX = xPos - boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
+        final int cellCamX = xPos - (int) boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
         final int centerOffsetX = size.width / 2;
         final int finalX = (int) (cellCamX * boardPanel.getWidthRatio()) - centerOffsetX;
 
-        final int cellCamY = (yPos - boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
+        final int cellCamY = (yPos - (int) boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
         final int centerOffsetY = size.height / 2;
         final int finalY = (int) (cellCamY * boardPanel.getHeightRatio()) - centerOffsetY;
 

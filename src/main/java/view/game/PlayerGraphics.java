@@ -55,11 +55,11 @@ public final class PlayerGraphics extends JLabel {
 
     private void updatePosition() {
         final Dimension size = getSize();
-        final int playerCamX = xPos - boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
+        final int playerCamX = xPos - (int) boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
         final int centerOffsetX = size.width / 2;
         final int finalX = (int) (playerCamX * boardPanel.getWidthRatio()) - centerOffsetX;
 
-        final int playerCamY = (yPos - boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
+        final int playerCamY = (yPos - (int) boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
         final int centerOffsetY = size.height / 2;
         final int finalY = (int) (playerCamY * boardPanel.getHeightRatio()) - centerOffsetY;
 

@@ -66,8 +66,8 @@ public final class BoardPanel extends JLayeredManager {
     private double zoom = 1;
     private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
     private int cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
-    private int cameraX;
-    private int cameraY;
+    private double cameraX;
+    private double cameraY;
     private Point cameraPan = null;
 
     private Image boardImage;
@@ -125,9 +125,9 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseDragged(final MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e) && cameraPan != null) {
-                    int deltaX = e.getX() - cameraPan.x;
-                    int deltaY = e.getY() - cameraPan.y;
-                    updateCameraPosition(zoom, cameraX + deltaX, cameraY + deltaY);
+                    final double deltaX = (e.getX() - cameraPan.x) / getWidthRatio();
+                    final double deltaY = (e.getY() - cameraPan.y) / getHeightRatio();
+                    updateCameraPosition(zoom, cameraX - deltaX, cameraY - deltaY);
                     cameraPan = e.getPoint();
                     redraw();
                 }
@@ -157,7 +157,7 @@ public final class BoardPanel extends JLayeredManager {
         repaint();
     }
 
-    public void updateCameraPosition(final double nextZoom, final int nextCameraX, final int nextCameraY) {
+    public void updateCameraPosition(final double nextZoom, final double nextCameraX, final double nextCameraY) {
         zoom = nextZoom;
         cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
         cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
@@ -266,10 +266,10 @@ public final class BoardPanel extends JLayeredManager {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 final int halfWidth = cameraWidth / 2;
                 final int halfHeight = cameraHeight / 2;
-                final int sx1 = cameraX - halfWidth;
-                final int sy1 = cameraY - halfHeight;
-                final int sx2 = cameraX + halfWidth;
-                final int sy2 = cameraY + halfHeight;
+                final int sx1 = (int) (cameraX - halfWidth);
+                final int sy1 = (int) (cameraY - halfHeight);
+                final int sx2 = (int) (cameraX + halfWidth);
+                final int sy2 = (int) (cameraY + halfHeight);
                 g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
             }
         };
@@ -714,11 +714,11 @@ public final class BoardPanel extends JLayeredManager {
         return zoom;
     }
 
-    public int getCameraX() {
+    public double getCameraX() {
         return cameraX;
     }
 
-    public int getCameraY() {
+    public double getCameraY() {
         return cameraY;
     }
 

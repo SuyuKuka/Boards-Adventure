@@ -63,7 +63,6 @@ public final class DataPanel extends JPanel {
                 turnsPanel.setPreferredSize(new Dimension(width, turnsPanelHeight));
                 cardGraphicsPanel.setPreferredSize(new Dimension(width, cardGraphicsPanelHeight));
                 scoreBoard.setPreferredSize(new Dimension(width, height - turnsPanelHeight - cardGraphicsPanelHeight));
-                System.out.println(cardGraphics.getBounds() + " " + cardGraphics.getSize());
                 revalidate();
                 repaint();
             }
