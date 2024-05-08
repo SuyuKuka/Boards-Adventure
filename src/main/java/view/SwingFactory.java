@@ -286,7 +286,8 @@ public class SwingFactory {
 
     public static JButton createTextButton(final Component parent, final String text,
         final int widthPer, final int heightPer, final boolean resize) {
-        final Image image = Resources.getImage("selection");
+        final Image image = Resources.getImage("emptysword_small");
+        // final Image image = Resources.getImage("blanksword_small");
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
         final JButton button = new JButton();
         button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
@@ -294,7 +295,7 @@ public class SwingFactory {
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        // button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); //Casser
 
         button.setText(text);
         button.setForeground(Color.BLACK);
@@ -304,7 +305,7 @@ public class SwingFactory {
             @Override
             public void mouseEntered(MouseEvent e) {
                 button.setIcon(new ImageIcon(image.getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                    (int) size.getWidth() / 2, (int) size.getHeight() / 2, Image.SCALE_SMOOTH)));
             }
 
             @Override
@@ -377,7 +378,6 @@ public class SwingFactory {
     public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
         final int size) {
         final JLabel label = new JLabel(text);
-        label.setVerticalAlignment(JLabel.CENTER);
         label.setForeground(foregroundColor);
         label.setFont(Resources.getFont(fontName, size));
         return label;
@@ -456,7 +456,7 @@ public class SwingFactory {
     // }
 
     public static JSlider createJSlider() {
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0) {
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 100) {
             @Override
             public void updateUI() {
                 setUI(new BasicSliderUI(this) {

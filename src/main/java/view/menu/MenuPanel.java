@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -27,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.Timer;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -44,6 +47,7 @@ import view.View;
 public final class MenuPanel extends CorePanel {
 
     private static final int BACKGROUND_INDEX = 0;
+    private static final int ANIMATION_BACKGROUND = 1;
     private static final int MANUALICON_INDEX = 6;
     private static final int MANUALBOOK_INDEX = 7;
 
@@ -71,6 +75,10 @@ public final class MenuPanel extends CorePanel {
 
     private InetAddress ip;
     private int port = 55000;
+
+    private JPanel background = null;
+    private final int slideSpeed = 5; // Vitesse de l'animation
+    private final int slideTargetX = 300; // Position finale du déplacement
 
     public MenuPanel(final View frame) {
         super(frame);
@@ -133,10 +141,10 @@ public final class MenuPanel extends CorePanel {
     // #region background 0
 
     private JPanel createBackground() {
-        final JPanel panel = SwingFactory.createGifPanel(this, "ab", 100, 100);
-        panel.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-        panel.setVisible(true);
-        return panel;
+        background = SwingFactory.createGifPanel(this, "backgroundMoving", 100, 100);
+        background.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        background.setVisible(true);
+        return background;
     }
 
     // #endregion
@@ -144,7 +152,7 @@ public final class MenuPanel extends CorePanel {
     // #region mainmenu 1
 
     private JPanel createMainMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
 
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
@@ -172,29 +180,32 @@ public final class MenuPanel extends CorePanel {
     // #region settings 2
 
     private JPanel createSettingsMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 10, 15, 0, 15);
-        return panel;
-    }
+        final JPanel panel = SwingFactory.createContainerPanel(this, 45, 0, 0, 6);
 
-    private JPanel createSettings(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 70, 60);
-
-        final int widthMargin = getFrame().getWidth() / 20;
-        final int heightMargin = getFrame().getHeight() / 20;
         // Musique
-        final JPanel musicPanel = SwingFactory.createBoxLayoutPanel();
-        musicPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel musique = SwingFactory.createTextLabel("Musique : -", "Komigo3D", Color.BLACK, 20);
+        final JPanel musicPanel = new JPanel();
+        musicPanel.setLayout(new BoxLayout(musicPanel, BoxLayout.X_AXIS));
+        musicPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        musicPanel.setOpaque(false);
+        musicPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        final JLabel musique = SwingFactory.createTextLabel("Musique : - ", "NoitaBlackletter", Color.BLACK, 64);
         final JSlider musicSlider = SwingFactory.createMusicSlider();
+        final JLabel plusMusic = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, 64);
         musicPanel.add(musique);
         musicPanel.add(musicSlider);
+        musicPanel.add(plusMusic);
         // Son
-        final JPanel soundPanel = SwingFactory.createBoxLayoutPanel();
-        soundPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel sound = SwingFactory.createTextLabel("Son : -", "Komigo3D", Color.BLACK, 20);
+        final JPanel soundPanel = new JPanel();
+        soundPanel.setLayout(new BoxLayout(soundPanel, BoxLayout.X_AXIS));
+        soundPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        soundPanel.setOpaque(false);
+        soundPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        final JLabel sound = SwingFactory.createTextLabel("Son : - ", "NoitaBlackletter", Color.BLACK, 64);
         final JSlider soundSlider = SwingFactory.createSoundSlider();
+        final JLabel plusSound = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, 64);
         soundPanel.add(sound);
         soundPanel.add(soundSlider);
+        soundPanel.add(plusSound);
 
         panel.add(musicPanel);
         panel.add(soundPanel);
@@ -204,22 +215,70 @@ public final class MenuPanel extends CorePanel {
                 panel.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
             }
         });
-        panel.setVisible(true);
+        final JButton back = SwingFactory.createTextButton(panel, "Rebrousser chemin", 20, 10, true);
+        createSwitchStateButton(back, MenuState.MAINMENU);
+        panel.add(back);
         return panel;
     }
+    // #endregion
+
+    // #region animation
+
+    private void animationPanel() {
+        background = null;
+        background = SwingFactory.createImagePanel(this, "test", 100, 100);
+        background.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+
+        background.repaint();
+        background.revalidate();
+        System.out.println("test");
+        revalidate();
+        repaint();
+
+        // JPanel animate = SwingFactory.createGifPanel(background, "moving", 100, 100);
+        // slidePanelToLeft(animate);
+        // background.add(animate);
+
+    }
+
+    private void slidePanelToLeft(final JPanel panel) {
+        Timer timer = new Timer(10, new ActionListener() {
+            private int currentX = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentX -= slideSpeed;
+                if (currentX <= -slideTargetX) {
+                    ((Timer) e.getSource()).stop();
+                } else {
+                    panel.setLocation(currentX, panel.getY());
+                    panel.revalidate();
+                }
+            }
+        });
+        timer.start();
+    }
+
+
 
     // #endregion
 
     // #region createjoin 3
 
     private JPanel createCreateJoinMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
 
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
         final JButton create = SwingFactory.createTextButton(panel, "Créer une nouvelle aventure", 15, 8, true);
         createSwitchStateButton(create, MenuState.GAMELOBBY);
         panel.add(create);
+        create.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                animationPanel();
+            }
+        });
 
         final JButton join = SwingFactory.createTextButton(panel, "Rejoindre une escouade", 20, 10, true);
         createSwitchStateButton(join, MenuState.JOINCODE);
