@@ -36,11 +36,11 @@ public final class GamePanel extends JLayeredManager {
 
     public GamePanel(final View frame, final Controller controller) {
         super();
+        this.frame = frame;
+        this.controller = controller;
         setBounds(0, 0, frame.getWidth(), frame.getHeight());
         setMinimumSize(frame.getMinimumSize());
         setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
-        this.frame = frame;
-        this.controller = controller;
         initPanels();
         addComp(createMainPanel(), MAIN_PANEL);
         addComp(overlayPanel, OVERLAY_PANEL);

@@ -64,11 +64,11 @@ public abstract class JLayeredManager extends JLayeredPane {
 
     @Override
     public final int getWidth() {
-        return (int) getPreferredSize().getWidth();
+        return getPreferredSize().width;
     }
 
     @Override
     public final int getHeight() {
-        return (int) getPreferredSize().getHeight();
+        return getPreferredSize().height;
     }
 }
