@@ -53,17 +53,19 @@ public class CellGraphics extends JLabel {
             public void mouseEntered(final MouseEvent e) {
                 boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
-
             @Override
             public void mouseExited(final MouseEvent e) {
                 boardPanel.getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
-
             @Override
             public void mousePressed(final MouseEvent e) {
-                boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
+                final int button = e.getButton();
+                if (button == MouseEvent.BUTTON3) {
+                    boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
+                } else if (button == MouseEvent.BUTTON1) {
+                    System.out.println("clique gauche cellule !!!");
+                }
             }
-
             @Override
             public void mouseReleased(final MouseEvent e) {
                 boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));

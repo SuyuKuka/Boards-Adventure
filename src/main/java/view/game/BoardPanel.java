@@ -98,11 +98,12 @@ public final class BoardPanel extends JLayeredManager {
             }
             @Override
             public void mouseReleased(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                final int button = e.getButton();
+                if (button == MouseEvent.BUTTON3) {
                     cameraPan = null;
                     getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
-                if (e.getButton() == MouseEvent.BUTTON2) {
+                if (button == MouseEvent.BUTTON2) {
                     final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
                     redraw();
