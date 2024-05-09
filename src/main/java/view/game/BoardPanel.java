@@ -81,7 +81,7 @@ public final class BoardPanel extends JLayeredManager {
         boardImage = Resources.getImage("board");
         this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
         specialCellsGraphics = new ArrayList<>();
-        this.playerGraphicsList = controller.loadPlayerGraphics(this);
+        this.playerGraphicsList = controller.loadPlayerGraphics(this, cellsGraphics);
         gamePanel.setPlayerGraphicsList(playerGraphicsList);
         gamePanel.setCellsGraphics(cellsGraphics);
         final PlayerGraphics currentPlayerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
@@ -257,7 +257,8 @@ public final class BoardPanel extends JLayeredManager {
 
     private void updateCurrentPlayerGraphicsPosition() {
         final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
-        playerGraphics.updateCoordinates();
+        final CellGraphics cell = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
+        playerGraphics.updateCoordinates(cell.getXPos(), cell.getYPos());
         playerGraphics.update();
     }
 

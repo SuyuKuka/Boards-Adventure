@@ -42,8 +42,6 @@ public final class View extends JFrame {
     public void initNewMenuPanel() {
         corePanel = new MenuPanel(this);
         final Container container = getContentPane();
-        corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
-        corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
         for (Component comp : corePanel.getLayersMap().values()) {
             comp.setBounds(0, 0, container.getWidth(), container.getHeight());
             comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
@@ -66,13 +64,6 @@ public final class View extends JFrame {
 
     public GamePanel initNewGamePanel(final Controller controller) {
         corePanel = new GamePanel(this, controller);
-        final Container container = getContentPane();
-        corePanel.setBounds(0, 0, container.getWidth(), container.getHeight());
-        corePanel.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
-        for (Component comp : corePanel.getLayersMap().values()) {
-            comp.setBounds(0, 0, container.getWidth(), container.getHeight());
-            comp.setPreferredSize(new Dimension(container.getWidth(), container.getHeight()));
-        }
         add(corePanel);
         addComponentListener(new ComponentAdapter() {
             @Override

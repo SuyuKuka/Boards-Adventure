@@ -18,7 +18,7 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
                     boardPanel.removeComp(BoardPanel.getInteraction());
                     final Controller controller = boardPanel.getController();
                     controller.setPlayerPosition(cellID);
@@ -31,7 +31,6 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
 
     @Override
     public void paintComponent(final Graphics g) {
-        super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 

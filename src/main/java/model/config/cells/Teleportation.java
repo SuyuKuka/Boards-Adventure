@@ -16,7 +16,6 @@ public final class Teleportation extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         player.setPosition(idTargetCell);
-        System.out.println("TELEPORTATION A LA CASE " + idTargetCell);
         return;
     }
 

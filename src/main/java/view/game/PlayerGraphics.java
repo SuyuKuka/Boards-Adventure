@@ -1,6 +1,5 @@
 package view.game;
 
-import java.util.HashMap;
 import java.awt.Dimension;
 import java.awt.Image;
 
@@ -13,11 +12,8 @@ import view.game.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
 
-    private static final int PLAYER_DIAMETER = CellGraphics.getCellDiameter() / 2;
-
     private final BoardPanel boardPanel;
     private final Controller controller;
-    private final HashMap<Integer, CellGraphics> cellsGraphics;
 
     private final int playerID;
     private int xPos;
@@ -26,14 +22,12 @@ public final class PlayerGraphics extends JLabel {
     private Image playerImage;
 
 
-    public PlayerGraphics(final int playerID, final BoardPanel boardPanel) {
+    public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         this.boardPanel = boardPanel;
         this.controller = boardPanel.getController();
         this.playerID = playerID;
-        this.cellsGraphics = boardPanel.getCellsGraphics();
-        final CellGraphics cellGraphics = cellsGraphics.get(controller.getPlayer(playerID).getPosition());
-        xPos = cellGraphics.getXPos();
-        yPos = cellGraphics.getYPos();
+        this.xPos = xPos;
+        this.yPos = yPos;
         playerImage = Resources.getImage("j" + playerID);
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
@@ -66,10 +60,9 @@ public final class PlayerGraphics extends JLabel {
         setLocation(finalX, finalY);
     }
 
-    public void updateCoordinates() {
-        final CellGraphics cellGraphics = cellsGraphics.get(controller.getPlayer(playerID).getPosition());
-        xPos = cellGraphics.getXPos();
-        yPos = cellGraphics.getYPos();
+    public void updateCoordinates(final int nextXPos, final int nextYPos) {
+        xPos = nextXPos;
+        yPos = nextYPos;
     }
 
     public int getPlayerID() {

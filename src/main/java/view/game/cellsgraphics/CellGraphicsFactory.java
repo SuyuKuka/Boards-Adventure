@@ -18,7 +18,7 @@ public final class CellGraphicsFactory {
             default:
                 break;
         }
-        return new CellGraphics(boardPanel, cellID, xPos, yPos);
+        return new DefaultCellGraphics(boardPanel, cellID, xPos, yPos);
     }
 
     public static CellGraphics createIntersectionChoice(final BoardPanel boardPanel, final CellGraphics cellTarget) {

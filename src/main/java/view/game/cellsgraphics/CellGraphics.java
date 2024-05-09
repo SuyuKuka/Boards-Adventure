@@ -1,13 +1,10 @@
 package view.game.cellsgraphics;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,11 +16,10 @@ import controller.resources.Resources;
 import view.game.BoardPanel;
 
 /**
- * Classe qui s'occupe de la vue des {@link model.config.cells}. <p>
- * Par défaut, les cellules utilisent cette classe pour être affichée (de forme circulaire).
- * <p> Certaines cellules ont leurs propres classes graphiques.
+ * Classe ABSTRAIRE qui s'occupe de la vue des {@link model.config.cells}. <p>
+ * Par défaut, les cellules du jeu sont invoquées par la classe {@link DefaultCellGraphics}.
  */
-public class CellGraphics extends JLabel {
+public abstract class CellGraphics extends JLabel {
     // PAINT
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
@@ -56,15 +52,6 @@ public class CellGraphics extends JLabel {
             @Override
             public void mouseExited(final MouseEvent e) {
                 boardPanel.getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                final int button = e.getButton();
-                if (button == MouseEvent.BUTTON3) {
-                    boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
-                } else if (button == MouseEvent.BUTTON1) {
-                    System.out.println("clique gauche cellule !!!");
-                }
             }
             @Override
             public void mouseReleased(final MouseEvent e) {
@@ -116,27 +103,7 @@ public class CellGraphics extends JLabel {
         setLocation(finalX, finalY);
     }
 
-    /**
-     * Méthode qui peint les cellules.
-     */
-    @Override
-    public void paintComponent(final Graphics g) {
-        super.paintComponent(g);
-        final Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // Coutour
-        g2d.fillOval(0, 0, getWidth(), getHeight());
-        // Couleur intérieure
-        g2d.setColor(Color.WHITE);
-        g2d.fillOval(COLOR_RANGE_DIM.x, COLOR_RANGE_DIM.y, COLOR_RANGE_DIM.width, COLOR_RANGE_DIM.height);
-        // icône
-        g2d.drawImage(loadCellImage(), ICON_RANGE_DIM.x, ICON_RANGE_DIM.y,
-            ICON_RANGE_DIM.width, ICON_RANGE_DIM.height, this);
-        // id cellule
-        g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici = 12)
-        g2d.drawString(String.valueOf(cellID), getWidth() / 4, getHeight() / 2);
-    }
+    public abstract void paintComponent(Graphics g);
 
     // region getters/setters
 

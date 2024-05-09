@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JComponent;
 
@@ -8,6 +9,7 @@ import view.View;
 import view.game.BoardPanel;
 import view.game.GamePanel;
 import view.game.PlayerGraphics;
+import view.game.cellsgraphics.CellGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -42,10 +44,13 @@ public final class Controller {
         gamePanel = view.initNewGamePanel(this);
     }
 
-    public ArrayList<PlayerGraphics> loadPlayerGraphics(final BoardPanel boardPanel) {
+    public ArrayList<PlayerGraphics> loadPlayerGraphics(final BoardPanel boardPanel,
+        final HashMap<Integer, CellGraphics> cellGraphicsList) {
         final ArrayList<PlayerGraphics> playerGraphicsList = new ArrayList<>();
         model.getPlayers().forEach((player) -> {
-            playerGraphicsList.add(new PlayerGraphics(player.getPlayerID(), boardPanel));
+            final CellGraphics cell = cellGraphicsList.get(player.getPosition());
+            playerGraphicsList.add(new PlayerGraphics(player.getPlayerID(), boardPanel,
+                cell.getXPos(), cell.getYPos()));
         });
         return playerGraphicsList;
     }

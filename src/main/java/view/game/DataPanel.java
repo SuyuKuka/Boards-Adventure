@@ -31,16 +31,16 @@ public final class DataPanel extends JPanel {
     private final GamePanel gamePanel;
     private final Controller controller;
 
-    // Tours restants (NORTH)
-    private static final int NORTH_PANEL_HEIGHT_PER = 10;
-    private final JPanel turnsPanel;
+    // Tours restants (NORTH) 10% H
+    private static final int TURNS_PANEL_HEIGHT_PER = 10;
+    private final JPanel turnsPanel = new JPanel();
     private JLabel remainingTurns;
-    // Scoreboard (CENTER)
-    private final JPanel scoreBoard;
+    // Scoreboard (CENTER) 100% - 10% - 60% H
+    private final JPanel scoreBoardPanel = new JPanel();
     private final ArrayList<PlayerScore> playerScoreList = new ArrayList<>();
-    // CardGraphics (SOUTH)
-    private static final int SOUTH_PANEL_HEIGHT_PER = 60;
-    private final JPanel cardGraphicsPanel;
+    // CardGraphics (SOUTH) 60% H
+    private static final int CARD_PANEL_HEIGHT_PER = 60;
+    private final JPanel cardGraphicsPanel = new JPanel();
     private CardGraphics cardGraphics;
 
     public DataPanel(final GamePanel gamePanel) {
@@ -50,25 +50,9 @@ public final class DataPanel extends JPanel {
         setPreferredSize(new Dimension(gamePanel.getWidth() * WIDTH_PER / 100,
             gamePanel.getHeight() * HEIGHT_PER / 100));
         setLayout(new BorderLayout());
-        turnsPanel = createRemainingTurnsPanel();
-        cardGraphicsPanel = createCardGraphicsPanel();
-        scoreBoard = createScoreboardPanel(); // taille de scoreboard dépend des 2 autres
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                final int height = getHeight();
-                final int width = getWidth();
-                final int turnsPanelHeight = height * NORTH_PANEL_HEIGHT_PER / 100;
-                final int cardGraphicsPanelHeight = height * SOUTH_PANEL_HEIGHT_PER / 100;
-                turnsPanel.setPreferredSize(new Dimension(width, turnsPanelHeight));
-                cardGraphicsPanel.setPreferredSize(new Dimension(width, cardGraphicsPanelHeight));
-                scoreBoard.setPreferredSize(new Dimension(width, height - turnsPanelHeight - cardGraphicsPanelHeight));
-                revalidate();
-                repaint();
-            }
-        });
+        initComp();
         add(turnsPanel, BorderLayout.NORTH);
-        add(scoreBoard, BorderLayout.CENTER);
+        add(scoreBoardPanel, BorderLayout.CENTER);
         add(cardGraphicsPanel, BorderLayout.SOUTH);
         setVisible(true);
     }
@@ -79,50 +63,81 @@ public final class DataPanel extends JPanel {
 
     // #endregion
 
+    private void initComp() {
+        final int width = getWidth();
+        final int height = getHeight();
+        final int turnsPanelHeight = height * TURNS_PANEL_HEIGHT_PER / 100;
+        final int cardPanelHeight = height * CARD_PANEL_HEIGHT_PER / 100;
+        turnsPanel.setPreferredSize(new Dimension(width, turnsPanelHeight));
+        scoreBoardPanel.setPreferredSize(new Dimension(width, height - turnsPanelHeight - cardPanelHeight));
+        cardGraphicsPanel.setPreferredSize(new Dimension(width, cardPanelHeight));
+        initRemainingTurnsPanel();
+        initScoreboardPanel();
+        initCardGraphicsPanel();
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final int width = getWidth();
+                final int height = getHeight();
+                final int turnsPanelHeight = height * TURNS_PANEL_HEIGHT_PER / 100;
+                final int cardPanelHeight = height * CARD_PANEL_HEIGHT_PER / 100;
+                turnsPanel.setPreferredSize(new Dimension(width, turnsPanelHeight));
+                scoreBoardPanel.setPreferredSize(new Dimension(width, height - turnsPanelHeight - cardPanelHeight));
+                cardGraphicsPanel.setPreferredSize(new Dimension(width, cardPanelHeight));
+            }
+        });
+    }
+
     // #region turns
 
-    private JPanel createRemainingTurnsPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(getWidth(), getHeight() * NORTH_PANEL_HEIGHT_PER / 100));
-        panel.setBackground(Color.GRAY);
-        panel.setOpaque(true);
+    private void initRemainingTurnsPanel() {
+        turnsPanel.setBackground(Color.GRAY);
+        turnsPanel.setOpaque(true);
         remainingTurns = new JLabel();
         remainingTurns.setText(controller.getCurrentTurn() + " / " + controller.getTotalTurns());
         remainingTurns.setHorizontalAlignment(JLabel.CENTER);
         remainingTurns.setVerticalAlignment(JLabel.CENTER);
-        panel.add(remainingTurns);
-        return panel;
+        turnsPanel.add(remainingTurns);
+        turnsPanel.setVisible(true);
     }
 
     // #endregion
 
     // #region scoreboard
 
-    private JPanel createScoreboardPanel() {
-        final JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(getWidth(), getHeight() - turnsPanel.getHeight()
-            - cardGraphicsPanel.getHeight()));
+    private void initScoreboardPanel() {
         final int playersNb = controller.getPlayers().size();
-        panel.setLayout(new GridLayout(playersNb >= 4 ? playersNb : 4, 1));
-        panel.setBackground(Color.GREEN);
+        scoreBoardPanel.setLayout(new GridLayout(playersNb >= 4 ? playersNb : 4, 1));
+        scoreBoardPanel.setBackground(Color.GREEN);
 
         gamePanel.getPlayerGraphicsList().forEach((playerGraphics) -> {
-            final PlayerScore playerScore = new PlayerScore(gamePanel, playerGraphics.getPlayerID());
+            final PlayerScore playerScore = new PlayerScore(this, scoreBoardPanel, playerGraphics.getPlayerID());
             playerScoreList.add(playerScore);
-            panel.add(playerScore);
+            scoreBoardPanel.add(playerScore);
         });
-
-        return panel;
+        scoreBoardPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final int playerNb = playerScoreList.size() < 4 ? 4 : playerScoreList.size();
+                final int height = scoreBoardPanel.getHeight() / playerNb;
+                final int width = scoreBoardPanel.getWidth();
+                playerScoreList.forEach(playerScore -> {
+                    playerScore.setPreferredSize(new Dimension(width, height));
+                });
+                revalidate();
+                repaint();
+            }
+        });
+        scoreBoardPanel.setVisible(true);
     }
 
     // #endregion
 
     // #region cardGraphics
 
-    private JPanel createCardGraphicsPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(getWidth(), getHeight() * SOUTH_PANEL_HEIGHT_PER / 100));
-        panel.addComponentListener(new ComponentAdapter() {
+    private void initCardGraphicsPanel() {
+        cardGraphicsPanel.setLayout(new BorderLayout());
+        cardGraphicsPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 if (cardGraphics != null) {
@@ -130,12 +145,16 @@ public final class DataPanel extends JPanel {
                 }
             }
         });
-        cardGraphics = CardGraphicsFactory.createEmptyCardGraphics(this, panel);
-        panel.add(cardGraphics, BorderLayout.CENTER);
-        return panel;
+        cardGraphics = CardGraphicsFactory.createEmptyCardGraphics(this, cardGraphicsPanel);
+        cardGraphicsPanel.add(cardGraphics, BorderLayout.CENTER);
+        cardGraphicsPanel.setVisible(true);
     }
 
     // #endregion
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
 
     @Override
     public int getWidth() {
