@@ -24,9 +24,17 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextPane;
+import javax.swing.SizeRequirements;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
+import javax.swing.text.Element;
+import javax.swing.text.ParagraphView;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
+import javax.swing.text.html.InlineView;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -286,27 +294,25 @@ public class SwingFactory {
     }
 
     public static JButton createTextButton(final Component parent, final String text,
-        final int widthPer, final int heightPer, final boolean resize) {
+        final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
         final Image image = Resources.getImage("emptysword_small");
-        // final Image image = Resources.getImage("blanksword_small");
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
         final JButton button = new JButton();
-        button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+        button.setPreferredSize(new Dimension((int) size.getWidth() + 20, (int) size.getHeight())); //ne fonctionne pas
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
-        // button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); //Casser
 
         button.setText(text);
         button.setForeground(Color.BLACK);
-        button.setFont(Resources.getFont("NoitaBlackletter", 64));
+        button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
         button.setHorizontalTextPosition(JButton.LEFT);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 button.setIcon(new ImageIcon(image.getScaledInstance(
-                    (int) size.getWidth() / 2, (int) size.getHeight() / 2, Image.SCALE_SMOOTH)));
+                    (int) size.getWidth() / 2, (int) size.getHeight() / 2, Image.SCALE_DEFAULT)));
             }
 
             @Override
@@ -547,6 +553,57 @@ public class SwingFactory {
             }
         });
         return soundSlider;
+    }
+
+    public static JTextPane createTextPane() {
+        final JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setEditorKit(new HTMLEditorKit() {
+            @Override
+            public ViewFactory getViewFactory() {
+                return new HTMLFactory() {
+                    public javax.swing.text.View create(final Element e) {
+                        javax.swing.text.View v = super.create(e);
+                        if (v instanceof InlineView) {
+                            return new InlineView(e) {
+                                public int getBreakWeight(int axis, float pos, float len) {
+                                    return GoodBreakWeight;
+                                }
+                                public javax.swing.text.View breakView(int axis, int p0, float pos, float len) {
+                                    if (axis == javax.swing.text.View.X_AXIS) {
+                                        checkPainter();
+                                        int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+                                        if (p0 == getStartOffset() && p1 == getEndOffset()) {
+                                            return this;
+                                        }
+                                        return createFragment(p0, p1);
+                                    }
+                                    return this;
+                                }
+                            };
+                        } else if (v instanceof ParagraphView) {
+                            return new ParagraphView(e) {
+                                protected SizeRequirements calculateMinorAxisRequirements(int axis,
+                                    SizeRequirements r) {
+                                    if (r == null) {
+                                        r = new SizeRequirements();
+                                    }
+                                    float pref = layoutPool.getPreferredSpan(axis);
+                                    float min = layoutPool.getMinimumSpan(axis);
+                                    r.minimum = (int) min;
+                                    r.preferred = Math.max(r.minimum, (int) pref);
+                                    r.maximum = Integer.MAX_VALUE;
+                                    r.alignment = 0.5f;
+                                  return r;
+                                }
+                            };
+                        }
+                      return v;
+                    }
+                };
+            }
+        });
+        return textPane;
     }
 
     public static Timer createTimer() {
