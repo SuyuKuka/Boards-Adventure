@@ -77,8 +77,7 @@ public final class MenuPanel extends CorePanel {
     private int port = 55000;
 
     private JPanel background = null;
-    private final int slideSpeed = 5; // Vitesse de l'animation
-    private final int slideTargetX = 300; // Position finale du déplacement
+    private boolean animation = false;
 
     public MenuPanel(final View frame) {
         super(frame);
@@ -222,47 +221,6 @@ public final class MenuPanel extends CorePanel {
     }
     // #endregion
 
-    // #region animation
-
-    private void animationPanel() {
-        background = null;
-        background = SwingFactory.createImagePanel(this, "test", 100, 100);
-        background.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
-
-        background.repaint();
-        background.revalidate();
-        System.out.println("test");
-        revalidate();
-        repaint();
-
-        // JPanel animate = SwingFactory.createGifPanel(background, "moving", 100, 100);
-        // slidePanelToLeft(animate);
-        // background.add(animate);
-
-    }
-
-    private void slidePanelToLeft(final JPanel panel) {
-        Timer timer = new Timer(10, new ActionListener() {
-            private int currentX = 0;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                currentX -= slideSpeed;
-                if (currentX <= -slideTargetX) {
-                    ((Timer) e.getSource()).stop();
-                } else {
-                    panel.setLocation(currentX, panel.getY());
-                    panel.revalidate();
-                }
-            }
-        });
-        timer.start();
-    }
-
-
-
-    // #endregion
-
     // #region createjoin 3
 
     private JPanel createCreateJoinMenu() {
@@ -271,18 +229,22 @@ public final class MenuPanel extends CorePanel {
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
         final JButton create = SwingFactory.createTextButton(panel, "Créer une nouvelle aventure", 15, 8, true);
-        createSwitchStateButton(create, MenuState.GAMELOBBY);
         panel.add(create);
         create.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                animationPanel();
+                animation(create, panel, MenuState.GAMELOBBY);
             }
         });
 
         final JButton join = SwingFactory.createTextButton(panel, "Rejoindre une escouade", 20, 10, true);
-        createSwitchStateButton(join, MenuState.JOINCODE);
         panel.add(join);
+        join.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                animation(join, panel, MenuState.JOINCODE);
+            }
+        });
 
         final JButton back = SwingFactory.createTextButton(panel, "Rebrousser chemin", 20, 10, true);
         createSwitchStateButton(back, MenuState.MAINMENU);
@@ -290,20 +252,61 @@ public final class MenuPanel extends CorePanel {
         return panel;
     }
 
+    private void animation(JButton button, JPanel panel, MenuState state) {
+        if (!animation) {
+            animation = true;
+            changeBackgroundGif("good");
+
+            Timer timer = new Timer(2900, f -> {
+                createSwitchStateButton(button, state);
+                changeBackgroundImg("blackscreen");
+                panel.removeAll();
+                panel.revalidate();
+            });
+            timer.start();
+            timer.setRepeats(false);
+
+            Timer tmp = new Timer(3200, f -> {
+                changeBackgroundImg("sign");
+            });
+            tmp.start();
+            tmp.setRepeats(false);
+        }
+    }
+
+    // #endregion
+
+    // #region animation
+
+    private void changeBackgroundGif(String gif) {
+        removePanel(BACKGROUND_INDEX);
+
+        JPanel animate = SwingFactory.createGifPanel(this, gif, 100, 100); //1min22 //good
+        animate.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        background.add(animate);
+        addPanel(background, BACKGROUND_INDEX);
+    }
+
+    private void changeBackgroundImg(String img) {
+        removePanel(BACKGROUND_INDEX);
+
+        JPanel animate = SwingFactory.createImagePanel(this, img, 100, 100);
+        animate.setBounds(0, 0, getFrame().getWidth(), getFrame().getHeight());
+        background.add(animate);
+        addPanel(background, BACKGROUND_INDEX);
+    }
+
+
     // #endregion
 
     // #region joincode 4
 
     private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 30, 20, 10, 20);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        J
         return panel;
     }
 
-    private JPanel createJoinCode(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 60, 30);
-        // TODO CODE ONLINE
-        return panel;
-    }
     // #endregion
 
     // #region gamelobby 5
