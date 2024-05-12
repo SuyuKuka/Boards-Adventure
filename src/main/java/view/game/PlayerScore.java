@@ -1,6 +1,8 @@
 package view.game;
 
 import java.awt.Image;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -37,7 +39,7 @@ public final class PlayerScore extends JPanel {
         this.gamePanel = gamePanel;
         this.playerId = playerId;
         setSize(width, height);
-        setOpaque(false);
+        setBackground(Color.decode(gamePanel.getController().getPlayer(playerId).getHexTeamColor()));
         this.rankImage = Resources.getImage("1st");
         this.classImage = Resources.getImage(gamePanel.getController().getCurrentPlayer().getClassName());
 
@@ -86,12 +88,14 @@ public final class PlayerScore extends JPanel {
 
     private JPanel createNameMoneyPanel(final int width, final int height) {
         final JPanel panel = new JPanel();
+        panel.setOpaque(false);
         return panel;
     }
 
 
     private JPanel createPointsPropertyPanel(final int width, final int height) {
         final JPanel panel = new JPanel();
+        panel.setOpaque(false);
         return panel;
     }
 
@@ -103,6 +107,11 @@ public final class PlayerScore extends JPanel {
     private JComboBox<Object> createComboBox(final int width, final int height) {
         final JComboBox<Object> comboBox = new JComboBox<>();
         return comboBox;
+    }
+
+    @Override
+    protected void paintComponent(final Graphics g) {
+        super.paintComponent(g);
     }
 
 

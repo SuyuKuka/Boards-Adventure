@@ -95,7 +95,7 @@ public final class Game {
         player1.put("type", "human");
         player1.put("name", "human1");
         player1.put("className", "");
-        player1.put("teamColor", "#f54242");
+        player1.put("teamColor", "#0b03fc");
         player1.put("itemName", "HOE");
         playersConfig.add(player1);
     }

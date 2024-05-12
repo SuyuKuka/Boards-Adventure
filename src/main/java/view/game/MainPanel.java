@@ -34,18 +34,17 @@ public final class MainPanel extends JPanel {
         setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
 
-        dataPanel = new DataPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.8));
-        add(dataPanel, gbc);
-
         boardPanel = new BoardPanel(gamePanel,  cellsGraphics, jCells, playersGraphics,
             (int) (dim.width * 0.8), (int) (dim.height * 0.8));
+        dataPanel = new DataPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.8));
+        chatPanel = new ChatPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.2));
+        actionPanel = new ActionPanel(gamePanel, (int) (dim.width * 0.8), (int) (dim.height * 0.2));
+
+        add(dataPanel, gbc);
         add(boardPanel, gbc);
 
         gbc.gridy = 1;
-        chatPanel = new ChatPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.2));
         add(chatPanel, gbc);
-
-        actionPanel = new ActionPanel(gamePanel, (int) (dim.width * 0.8), (int) (dim.height * 0.2));
         add(actionPanel, gbc);
 
         addComponentListener(new ComponentAdapter() {
