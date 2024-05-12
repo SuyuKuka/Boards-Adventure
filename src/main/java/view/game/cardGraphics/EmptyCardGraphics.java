@@ -8,10 +8,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
-import javax.swing.JPanel;
-
 import controller.resources.Resources;
-import view.game.DataPanel;
+import view.game.GamePanel;
 
 public final class EmptyCardGraphics extends CardGraphics {
 
@@ -20,8 +18,8 @@ public final class EmptyCardGraphics extends CardGraphics {
     private static final int DEFAULT_FONT_SIZE = 24;
     private final Font font;
 
-    public EmptyCardGraphics(final DataPanel dataPanel, final JPanel parent) {
-        super(dataPanel, parent);
+    public EmptyCardGraphics(final GamePanel gamePanel, final int width, final int height) {
+        super(gamePanel, width, height);
         this.font = Resources.getFont("NoitaBlackletter-Regular", DEFAULT_FONT_SIZE);
     }
 

@@ -15,7 +15,8 @@ import view.game.BoardPanel;
 
 public final class DefaultCellGraphics extends CellGraphics {
 
-    public DefaultCellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+    public DefaultCellGraphics(final BoardPanel boardPanel,
+            final int cellID, final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
         addMouseListener(new MouseAdapter() {
             @Override
@@ -42,7 +43,7 @@ public final class DefaultCellGraphics extends CellGraphics {
         g2d.fillOval(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height);
         // icône
         final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
-        g2d.drawImage(loadCellImage(), iconRangeDim.x, iconRangeDim.y,
+        g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
             iconRangeDim.width, iconRangeDim.height, this);
         // id cellule
         g2d.setColor(new Color(663399));

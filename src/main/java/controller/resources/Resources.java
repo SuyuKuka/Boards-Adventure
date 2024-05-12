@@ -16,16 +16,10 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import model.config.GameMap;
 import model.config.cardseffect.CardEffect;
 import model.config.cardseffect.CardEffectFactory;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
-import model.config.items.Item;
-import model.config.items.ItemFactory;
-import view.game.BoardPanel;
-import view.game.cellsgraphics.CellGraphics;
-import view.game.cellsgraphics.CellGraphicsFactory;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.
@@ -66,86 +60,84 @@ public final class Resources {
     }
 
     /**
-     * Charge les ressources du jeu et de la map choisie.
+     * Charge les ressources du jeu et de la map choisie. <p>
+     * Les ressources du jeu comprend : les images, les cellules, les items et les cartes.
      * @param mapName
+     * @param cells
+     * @param cardEffects
+     * @param startItems
+     * @param shopItems
+     * @return {@link JSONArray} associé au cellules.
      */
-    public static void loadGameResources(final String mapName) {
+    public static JSONArray loadGameResources(final String mapName, final HashMap<Integer, Cell> cells,
+            final ArrayList<CardEffect> cardEffects, final HashMap<String, HashMap<String, String>> startItems,
+            final HashMap<String, HashMap<String, String>> shopItems) {
+        // IMAGES
         modeImages.clear();
         loadImages(new File(PATH + "images/game/"), modeImages, true);
         loadImages(new File(PATH + "maps/" + mapName), modeImages, true);
-    }
-
-    // region gameMap
-
-    public static GameMap loadGameMap(final String mapName) {
         try {
             final File file = new File(PATH + "maps/" + mapName + "/config.json");
             final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-            final ArrayList<CardEffect> cardEffects = loadCardEffects(configJObject.getJSONArray("cards_effect"));
-            final HashMap<Integer, Cell> cells = loadCells(configJObject.getJSONArray("cells"));
-            final ArrayList<Item> shopItems = loadShopItems(configJObject.getJSONArray("shop_items"));
-            return new GameMap(mapName, cardEffects, cells, shopItems);
+            final JSONArray jCells = configJObject.getJSONArray("cells");
+            loadCells(cells, jCells);
+            loadCardEffects(cardEffects, configJObject.getJSONArray("cards_effect"));
+            loadAvailableStartItems(startItems, configJObject.getJSONArray("start_items"));
+            loadAvailableShopItems(shopItems, configJObject.getJSONArray("shop_items"));
+            return jCells;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static ArrayList<CardEffect> loadCardEffects(final JSONArray jCardEffect) {
-        final ArrayList<CardEffect> cardEffects = new ArrayList<>();
-        for (int i = 0; i < jCardEffect.length(); i++) {
-            cardEffects.addAll(CardEffectFactory.createCardEffect(jCardEffect.getJSONObject(i)));
-        }
-        return cardEffects;
-    }
+    // region MODEL
 
-    private static HashMap<Integer, Cell> loadCells(final JSONArray jCells) {
-        final HashMap<Integer, Cell> cells = new HashMap<>();
+    private static void loadCells(final HashMap<Integer, Cell> cellsMap, final JSONArray jCells) {
         for (int i = 0; i < jCells.length(); i++) {
             final JSONObject jCell = jCells.getJSONObject(i);
-            cells.put(jCell.getInt("id"), CellFactory.createCell(jCell));
+            cellsMap.put(jCell.getInt("id"), CellFactory.createCell(jCell));
         }
-        return cells;
     }
 
-    private static ArrayList<Item> loadShopItems(final JSONArray jShopItems) {
-        final ArrayList<Item> shopItems = new ArrayList<>();
+    private static void loadCardEffects(final ArrayList<CardEffect> cardEffects, final JSONArray jCardsEffect) {
+        for (int i = 0; i < jCardsEffect.length(); i++) {
+            cardEffects.addAll(CardEffectFactory.createCardEffect(jCardsEffect.getJSONObject(i)));
+        }
+    }
+
+    private static void loadAvailableStartItems(final HashMap<String, HashMap<String, String>> startItems,
+            final JSONArray jStartItems) {
+        for (int i = 0; i < jStartItems.length(); i++) {
+            final JSONObject jStartItem = jStartItems.getJSONObject(i);
+            final HashMap<String, String> itemConfig = new HashMap<>();
+            final String itemName = jStartItem.getString("name");
+            itemConfig.put("name", itemName);
+            itemConfig.put("turnCooldown", jStartItem.getString("turnCooldown"));
+            startItems.put(itemName, itemConfig);
+        }
+    }
+
+    private static void loadAvailableShopItems(final HashMap<String, HashMap<String, String>> shopItems,
+            final JSONArray jShopItems) {
         for (int i = 0; i < jShopItems.length(); i++) {
-            shopItems.add(ItemFactory.createItem(jShopItems.getJSONObject(i), true));
+            final JSONObject jStartItem = jShopItems.getJSONObject(i);
+            final HashMap<String, String> itemConfig = new HashMap<>();
+            final String itemName = jStartItem.getString("name");
+            itemConfig.put("name", itemName);
+            itemConfig.put("buyPrice", jStartItem.getString("buyPrice"));
+            shopItems.put(itemName, itemConfig);
         }
-        return shopItems;
-    }
-
-    // endregion
-
-    // region gameMapGraphics
-
-    public static HashMap<Integer, CellGraphics> loadCellsGraphics(final BoardPanel boardPanel, final String mapName) {
-        try {
-            final File file = new File(PATH + "maps/" + mapName + "/config.json");
-            final JSONArray jCellsArray = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8))
-                .getJSONArray("cells");
-            final HashMap<Integer, CellGraphics> cellsGraphics = new HashMap<>();
-            for (int i = 0; i < jCellsArray.length(); i++) {
-                final JSONObject jCell = jCellsArray.getJSONObject(i);
-                cellsGraphics.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(boardPanel, jCell));
-            }
-            return cellsGraphics;
-        } catch (Exception e) {
-            System.out.println("Resource/maps directory not found.");
-            e.printStackTrace();
-        }
-        return null;
     }
 
     // endregion
 
     // region images
 
-    public static void loadImages(final File folder, final HashMap<String, Image> hashMap, final boolean recursive) {
+    private static void loadImages(final File folder, final HashMap<String, Image> hashMap, final boolean recursive) {
         try {
             for (File file : folder.listFiles()) {
-                if (recursive && file.isDirectory()) {
+                if (file.isDirectory() && recursive) {
                     loadImages(file, hashMap, recursive);
                 } else {
                     final String fileName = file.getName();
@@ -180,7 +172,7 @@ public final class Resources {
 
     // region font
 
-    public static void loadFonts(final File folder, final HashMap<String, Font> hashMap) {
+    private static void loadFonts(final File folder, final HashMap<String, Font> hashMap) {
         try {
             for (File file : folder.listFiles()) {
                 hashMap.put(removeExtension(file.getName()),

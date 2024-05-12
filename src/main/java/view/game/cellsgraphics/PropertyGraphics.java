@@ -15,6 +15,7 @@ import java.awt.Color;
 import view.game.BoardPanel;
 
 public final class PropertyGraphics extends CellGraphics {
+
     private static final ArrayList<Color> COLORS = new ArrayList<>();
 
     static {
@@ -31,7 +32,7 @@ public final class PropertyGraphics extends CellGraphics {
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
 
-    public PropertyGraphics(BoardPanel boardPanel, int cellID, int xPos, int yPos) {
+    public PropertyGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
     }
 
@@ -41,22 +42,23 @@ public final class PropertyGraphics extends CellGraphics {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         final int cellID = getCellID();
-        final Property cell = (Property) getController().getCell(cellID);
+        final Property cell = (Property) getBoardPanel().getController().getCell(cellID);
+
         // Contour
-        g2d.setColor(COLORS.get(cell.getGroup() - 1));
+        g2d.setColor(COLORS.get(cell.getGroup()));
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
         // Couleur intérieure
         if (cell.getOwner() == null) {
             g2d.setColor(Color.WHITE);
         } else {
-            g2d.setColor(COLORS.get(cell.getOwner().getTeam().getTeamID()));
+            g2d.setColor(Color.decode(cell.getOwner().getHexTeamColor()));
         }
         final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
         g2d.fillRoundRect(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height,
             ARC_WIDTH, ARC_HEIGHT);
         // icône
         final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
-        g2d.drawImage(loadCellImage(), iconRangeDim.x, iconRangeDim.y, iconRangeDim.width, iconRangeDim.height, this);
+        g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y, iconRangeDim.width, iconRangeDim.height, this);
         // id cellule
         g2d.setColor(new Color(663399));
         g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici =12)

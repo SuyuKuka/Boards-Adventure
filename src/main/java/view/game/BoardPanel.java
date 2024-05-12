@@ -12,11 +12,11 @@ import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
-import java.util.HashMap;
 
 import javax.swing.Timer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
@@ -39,6 +39,9 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import model.config.cells.CellType;
 import model.config.cells.Intersection;
 import view.JLayeredManager;
@@ -46,18 +49,24 @@ import view.SwingFactory;
 import view.View;
 
 public final class BoardPanel extends JLayeredManager {
-    // LAYERS
+
+    private final GamePanel gamePanel;
+    private final Controller controller;
+
+    // NUMERO DES COUCHES
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
     private static final int PLAYERS = 2;
     private static final int INTERACTION = 3;
 
-    private final GamePanel gamePanel;
-    private final Controller controller;
+    // COUCHES
+    private final JPanel backgroundPanel;
+    private final JPanel cellsPanel;
+    private final JPanel playersPanel;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final ArrayList<CellGraphics> specialCellsGraphics;
-    private final ArrayList<PlayerGraphics> playerGraphicsList;
+    private final ArrayList<PlayerGraphics> playersGraphics;
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
@@ -72,23 +81,60 @@ public final class BoardPanel extends JLayeredManager {
     private double cameraY;
     private Point cameraPan = null;
 
-    private Image boardImage;
+    private final Image boardImage;
 
-    public BoardPanel(final GamePanel gamePanel) {
-        super();
+    public BoardPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
+            final JSONArray jCells, final ArrayList<PlayerGraphics> playersGraphics,
+            final int width, final int height) {
+        super(width, height);
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
-        boardImage = Resources.getImage("board");
-        this.cellsGraphics = Resources.loadCellsGraphics(this, controller.getMapName());
+        this.boardImage = Resources.getImage("board");
+        setOpaque(true);
+        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(width, height));
+
+        this.cellsGraphics = loadCellsGraphics(cellsGraphics, jCells);
         specialCellsGraphics = new ArrayList<>();
-        this.playerGraphicsList = controller.loadPlayerGraphics(this, cellsGraphics);
-        gamePanel.setPlayerGraphicsList(playerGraphicsList);
-        gamePanel.setCellsGraphics(cellsGraphics);
-        final PlayerGraphics currentPlayerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
+        this.playersGraphics = loadPlayerGraphics(playersGraphics);
+
+        final PlayerGraphics currentPlayerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         updateCameraPosition(zoom, currentPlayerGraphics.getXPos(), currentPlayerGraphics.getYPos());
-        addComp(createBackground(), BACKGROUND);
-        addComp(createCellsGraphics(), CELLS);
-        addComp(createPlayersGraphics(), PLAYERS);
+
+        backgroundPanel = createBackgroundPanel();
+        cellsPanel = createCellsPanel();
+        playersPanel = createPlayersPanel();
+
+        addComp(backgroundPanel, BACKGROUND);
+        addComp(cellsPanel, CELLS);
+        addComp(playersPanel, PLAYERS);
+        redraw();
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = getSize();
+                for (final Component comp : getLayersMap().values()) {
+                    comp.setSize(dim);
+                }
+                redraw();
+                revalidate();
+                repaint();
+            }
+        });
+
+        addMouseListeners();
+
+        setVisible(true);
+    }
+    //#region MouseListeners
+    private void addMouseListeners() {
+        addMouseListener();
+        addMouseWheelListener();
+        addMouseMotionListener();
+    }
+
+    private void addMouseListener() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
@@ -104,13 +150,17 @@ public final class BoardPanel extends JLayeredManager {
                     getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
                 if (button == MouseEvent.BUTTON2) {
-                    final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
+                    final PlayerGraphics playerGraphics =
+                        gamePanel.getPlayerGraphics(gamePanel.getController().getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
                     redraw();
                     cameraPan = null;
                 }
             }
         });
+    }
+
+    private void addMouseWheelListener() {
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
@@ -128,6 +178,9 @@ public final class BoardPanel extends JLayeredManager {
                 }
             }
         });
+    }
+
+    private void addMouseMotionListener() {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(final MouseEvent e) {
@@ -141,18 +194,31 @@ public final class BoardPanel extends JLayeredManager {
                 }
             }
         });
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                final Dimension size = getSize();
-                for (Component comp : getLayersMap().values()) {
-                    comp.setBounds(0, 0, size.width, size.height);
-                }
-            }
-        });
-        setVisible(true);
     }
-    // #region camera
+    //#endregion MouseListeners
+
+    //#region Loading entities
+
+    private HashMap<Integer, CellGraphics> loadCellsGraphics(final HashMap<Integer, CellGraphics> cells,
+            final JSONArray jCells) {
+        for (int i = 0; i < jCells.length(); i++) {
+            final JSONObject jCell = jCells.getJSONObject(i);
+            cells.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(this, jCell));
+        }
+        return cells;
+    }
+
+    private ArrayList<PlayerGraphics> loadPlayerGraphics(final ArrayList<PlayerGraphics> players) {
+        gamePanel.getController().getPlayers().forEach((player) -> {
+            final CellGraphics cell = gamePanel.getCellGraphics(controller.getStartCell().getId());
+            players.add(new PlayerGraphics(player.getID(), this, cell.getXPos(), cell.getYPos()));
+        });
+        return players;
+    }
+
+    //#endregion Loading entities
+
+    //#region Camera
 
     public void redraw() {
         CellGraphics.updatePaintVariables(getWidthRatio(), getHeightRatio());
@@ -160,7 +226,7 @@ public final class BoardPanel extends JLayeredManager {
             cellGraphics.update();
         }
         specialCellsGraphics.forEach(specialCellGraphics -> specialCellGraphics.update());
-        playerGraphicsList.forEach(playerGraphics -> playerGraphics.update());
+        gamePanel.getPlayersGraphics().forEach(playerGraphics -> playerGraphics.update());
         revalidate();
         repaint();
     }
@@ -183,9 +249,9 @@ public final class BoardPanel extends JLayeredManager {
         }
     }
 
-    //#endregion camera
+    //#endregion Camera
 
-    //#region gameState
+    //#region GameState
     public void gameStart() {
         addComp(createGameStartBanner(), INTERACTION);
         gamePanel.startSingleActionTimer(1500, action -> {
@@ -256,7 +322,7 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     private void updateCurrentPlayerGraphicsPosition() {
-        final PlayerGraphics playerGraphics = playerGraphicsList.get(controller.getCurrentPlayerID());
+        final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         final CellGraphics cell = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         playerGraphics.updateCoordinates(cell.getXPos(), cell.getYPos());
         playerGraphics.update();
@@ -266,7 +332,7 @@ public final class BoardPanel extends JLayeredManager {
 
     // #region Background 0
 
-    private JPanel createBackground() {
+    private JPanel createBackgroundPanel() {
         final JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(final Graphics g) {
@@ -282,6 +348,8 @@ public final class BoardPanel extends JLayeredManager {
                 g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), sx1, sy1, sx2, sy2, this);
             }
         };
+        panel.setSize(getSize());
+        panel.setVisible(true);
         return panel;
     }
 
@@ -289,12 +357,14 @@ public final class BoardPanel extends JLayeredManager {
 
     // #region CellsGraphics 1
 
-    private JPanel createCellsGraphics() {
+    private JPanel createCellsPanel() {
         final JPanel panel = new JPanel(null);
+        panel.setSize(getSize());
         panel.setOpaque(false);
         for (Integer key : cellsGraphics.keySet()) {
             panel.add(cellsGraphics.get(key));
         }
+        panel.setVisible(true);
         return panel;
     }
 
@@ -302,10 +372,11 @@ public final class BoardPanel extends JLayeredManager {
 
     // #region PlayersGraphics 2
 
-    private JPanel createPlayersGraphics() {
+    private JPanel createPlayersPanel() {
         final JPanel panel = new JPanel(null);
+        panel.setSize(getSize());
         panel.setOpaque(false);
-        playerGraphicsList.forEach((playerGraphics) -> {
+        playersGraphics.forEach((playerGraphics) -> {
             panel.add(playerGraphics);
         });
         panel.setVisible(true);
@@ -350,7 +421,7 @@ public final class BoardPanel extends JLayeredManager {
         };
         panel.setOpaque(false);
         panel.setBounds(0, 0, getWidth(), getHeight());
-        final String labelString = "Tour de " + controller.getCurrentPlayer().getUsername();
+        final String labelString = "Tour de " + controller.getCurrentPlayer().getName();
         final JLabel label = SwingFactory.createJLabel();
         label.setText(labelString);
         panel.add(label, BorderLayout.CENTER);
@@ -693,14 +764,6 @@ public final class BoardPanel extends JLayeredManager {
 
     // #endregion INTERACTION
 
-    public Controller getController() {
-        return controller;
-    }
-
-    public GamePanel getGamePanel() {
-        return gamePanel;
-    }
-
     public int getPanelWidth() {
         final Rectangle bounds = getBounds();
         return bounds.width - bounds.x;
@@ -711,12 +774,12 @@ public final class BoardPanel extends JLayeredManager {
         return bounds.height - bounds.y;
     }
 
-    public HashMap<Integer, CellGraphics> getCellsGraphics() {
-        return cellsGraphics;
+    public View getFrame() {
+        return gamePanel.getFrame();
     }
 
-    public ArrayList<PlayerGraphics> getPlayerGraphicsList() {
-        return playerGraphicsList;
+    public Controller getController() {
+        return gamePanel.getController();
     }
 
     public double getZoom() {
@@ -732,11 +795,11 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public double getWidthRatio() {
-        return 1.0 * getWidth() / cameraWidth;
+        return getPreferredSize().getWidth() / cameraWidth;
     }
 
     public double getHeightRatio() {
-        return 1.0 * getHeight() / cameraHeight;
+        return getPreferredSize().getHeight() / cameraHeight;
     }
 
     public int getCameraHeight() {
@@ -763,7 +826,4 @@ public final class BoardPanel extends JLayeredManager {
         return INTERACTION;
     }
 
-    public View getFrame() {
-        return getGamePanel().getFrame();
-    }
 }

@@ -8,13 +8,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import controller.Controller;
 import controller.resources.Resources;
-import view.game.DataPanel;
+import view.game.GamePanel;
 
 public abstract class CardGraphics extends JLabel {
+
 
     // CardGraphics Border
     private final Image cardBackground = Resources.getImage("cardGraphicsFrame");
@@ -22,15 +21,12 @@ public abstract class CardGraphics extends JLabel {
     private static final int BORDER_HEIGHT = 96;
     private static final Rectangle BOUNDS_AREA = new Rectangle();
 
-    private final DataPanel dataPanel;
-    private final Controller controller;
+    private final GamePanel gamePanel;
 
-    private final JPanel cellGraphicsPanel;
-
-    public CardGraphics(final DataPanel dataPanel, final JPanel cellGraphicsPanel) {
-        this.dataPanel = dataPanel;
-        this.controller = dataPanel.getController();
-        this.cellGraphicsPanel = cellGraphicsPanel;
+    public CardGraphics(final GamePanel gamePanel, final int width, final int height) {
+        this.gamePanel = gamePanel;
+        setPreferredSize(new Dimension(0, 0));
+        setSize(width, height);
         updatePaintArea();
         setVisible(true);
     }
@@ -49,7 +45,7 @@ public abstract class CardGraphics extends JLabel {
     }
 
     public final void updatePaintArea() {
-        final Dimension parentSize = cellGraphicsPanel.getPreferredSize();
+        final Dimension parentSize = getSize();
         final int borderWidth = (int) (1.0 * parentSize.width / cardBackground.getWidth(this) * BORDER_WIDTH);
         final int borderHeight = (int) (1.0 * parentSize.height / cardBackground.getHeight(this) * BORDER_HEIGHT);
         BOUNDS_AREA.x = borderWidth + 1;

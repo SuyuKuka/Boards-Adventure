@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.util.HashMap;
 
 import javax.swing.JLayeredPane;
@@ -10,6 +11,10 @@ public abstract class JLayeredManager extends JLayeredPane {
 
     /** Panels qui compose le {@link JLayeredPane}. Lorsqu'il est resized, les panels aussi le sont. */
     private final HashMap<Integer, Component> layersMap = new HashMap<>();
+
+    public JLayeredManager(final int width, final int height) {
+        setPreferredSize(new Dimension(width, height));
+    }
 
     /**
      * Ajoute le {@link Component} à la couche layerIndex si possible avec la contrainte.
@@ -60,6 +65,10 @@ public abstract class JLayeredManager extends JLayeredPane {
 
     public final Component getLayerComp(final int index) {
         return layersMap.get(index);
+    }
+
+    public final Dimension getDimension() {
+        return getPreferredSize();
     }
 
     @Override

@@ -1,15 +1,13 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.JComponent;
 
+import org.json.JSONArray;
+
 import view.View;
-import view.game.BoardPanel;
 import view.game.GamePanel;
-import view.game.PlayerGraphics;
-import view.game.cellsgraphics.CellGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -18,6 +16,7 @@ import model.config.cells.CellType;
 import model.config.cells.Gain;
 import model.config.cells.Loss;
 import model.config.cells.Property;
+import model.config.cells.Start;
 import model.config.players.Player;
 
 /**
@@ -32,27 +31,16 @@ public final class Controller {
     // Model
     private final Model model;
     // View
-    private final GamePanel gamePanel;
+    private GamePanel gamePanel;
 
     // Jeu
     private Cell currentCell;
 
-    public Controller(final Game game, final Model model, final View view) {
+    public Controller(final Game game, final Model model, final View view, final JSONArray jCells) {
         this.game = game;
         this.prevGameState = null;
         this.model = model;
-        gamePanel = view.initNewGamePanel(this);
-    }
-
-    public ArrayList<PlayerGraphics> loadPlayerGraphics(final BoardPanel boardPanel,
-        final HashMap<Integer, CellGraphics> cellGraphicsList) {
-        final ArrayList<PlayerGraphics> playerGraphicsList = new ArrayList<>();
-        model.getPlayers().forEach((player) -> {
-            final CellGraphics cell = cellGraphicsList.get(player.getPosition());
-            playerGraphicsList.add(new PlayerGraphics(player.getPlayerID(), boardPanel,
-                cell.getXPos(), cell.getYPos()));
-        });
-        return playerGraphicsList;
+        gamePanel = view.initNewGamePanel(this, jCells);
     }
 
     public void gameUpdate() {
@@ -195,20 +183,28 @@ public final class Controller {
 
     // region model getters/setters
 
+    public CellType getCellType(final String cellType) {
+        return CellType.valueOf(cellType);
+    }
+
     public Cell getCell(final int cellID) {
         return model.getGameMap().getCell(cellID);
     }
 
+    public int getCurrentPlayerPosition() {
+        return getCurrentPlayer().getPosition();
+    }
+
     public Cell getCurrentPlayerCell() {
-        return model.getGameMap().getCell(getCurrentPlayer().getPosition());
+        return model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
     public CellType getCurrentPlayerCellType() {
-        return model.getGameMap().getCell(getCurrentPlayer().getPosition()).getCellType();
+        return model.getGameMap().getCell(getCurrentPlayerPosition()).getCellType();
     }
 
     public void setCurrentCell() {
-        this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
+        this.currentCell = model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
     public Cell getCurrentCell() {
@@ -219,6 +215,10 @@ public final class Controller {
         //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
         //return ((Card) currentCell).getCardEffect().toString();
         return "carte !!";
+    }
+
+    public Start getStartCell() {
+        return model.getGameMap().getStartCell();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -243,7 +243,7 @@ public final class Controller {
     }
 
     public int getCurrentPlayerID() {
-        return model.getCurrentPlayer().getPlayerID();
+        return model.getCurrentPlayer().getID();
     }
 
     public int getCurrentMoney() {
@@ -268,6 +268,10 @@ public final class Controller {
 
     public int getRentPrice() { // diviser par 5 pour 20%, + ou - ?
         return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState()) / 5;
+    }
+
+    public String getMapName() {
+        return model.getGameMap().getMapName();
     }
 
     public boolean playerIsAtHome() {
@@ -301,11 +305,11 @@ public final class Controller {
 
     // endregion
 
-    // region getters/setters
-
-    public String getMapName() {
-        return model.getGameMap().getMapName();
+    public void setGamePanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
+
+    // region getters/setters
 
     // endregion
 }

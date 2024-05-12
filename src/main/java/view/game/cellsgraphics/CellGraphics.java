@@ -11,8 +11,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 
-import controller.Controller;
 import controller.resources.Resources;
+import view.View;
 import view.game.BoardPanel;
 
 /**
@@ -33,29 +33,31 @@ public abstract class CellGraphics extends JLabel {
     private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 
     private final BoardPanel boardPanel;
-    private final Controller controller;
     private final int cellID;
+    private final Image cellImage;
     private final int xPos;
     private final int yPos;
 
     public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         this.boardPanel = boardPanel;
-        this.controller = boardPanel.getController();
         this.cellID = cellID;
+        this.cellImage = Resources.getImage(boardPanel.getController()
+            .getCell(cellID).getCellType().name().toLowerCase());
         this.xPos = xPos;
         this.yPos = yPos;
+        final View frame = boardPanel.getFrame();
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(final MouseEvent e) {
-                boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
+                frame.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
             @Override
             public void mouseExited(final MouseEvent e) {
-                boardPanel.getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
             @Override
             public void mouseReleased(final MouseEvent e) {
-                boardPanel.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
+                frame.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
         });
         addMouseMotionListener(new MouseAdapter() {
@@ -131,16 +133,12 @@ public abstract class CellGraphics extends JLabel {
         return ICON_RANGE;
     }
 
-    public final Controller getController() {
-        return controller;
-    }
-
     public final int getCellID() {
         return cellID;
     }
 
-    public final Image loadCellImage() {
-        return Resources.getImage(controller.getCell(cellID).getCellType().name().toLowerCase());
+    public final Image getCellImage() {
+        return cellImage;
     }
 
     public final int getXPos() {

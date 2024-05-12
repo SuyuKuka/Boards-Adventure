@@ -9,6 +9,7 @@ import model.config.cells.Cell;
 import model.config.cells.CellType;
 import model.config.cells.Start;
 import model.config.items.Item;
+import model.config.items.ItemFactory;
 
 /**
  * Classe qui contient toutes les données "logiques" d'une map sous forme de fichier "config.json"
@@ -21,24 +22,28 @@ public final class GameMap {
 
     private final String mapName;
 
-    /** Liste des items des shops de la map disponibles. */
-    private final ArrayList<Item> shopItems;
-    /** Liste des cartes disponibles pour cette map. */
     private final ArrayList<CardEffect> cardEffects;
-    /** Liste des cellules du jeu. */
+    private int cardEffectsCounter;
+
     private final HashMap<Integer, Cell> cells;
     private final Start startCell;
 
-    private int cardEffectsCounter;
+    private final HashMap<String, HashMap<String, String>> availableStartItems;
+    private final HashMap<String, HashMap<String, String>> availableShopItems;
 
     public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
-        final ArrayList<Item> shopItems) {
+            final HashMap<String, HashMap<String, String>> availableStartItems,
+            final HashMap<String, HashMap<String, String>> availableShopItems) {
         this.mapName = mapName;
+
         this.cardEffects = cardEffects;
-        this.cells = cells;
-        this.shopItems = shopItems;
         cardEffectsCounter = countCardEffectsQuantity();
-        startCell = findStartCell();
+
+        this.cells = cells;
+        this.startCell = findStartCell();
+
+        this.availableStartItems = availableStartItems;
+        this.availableShopItems = availableShopItems;
     }
 
     private int countCardEffectsQuantity() {
@@ -77,14 +82,6 @@ public final class GameMap {
         return cardEffect;
     }
 
-    public Start getStartCell() {
-        return startCell;
-    }
-
-    public int getLapGain() {
-        return startCell.getLapGain();
-    }
-
     public String getMapName() {
         return mapName;
     }
@@ -97,8 +94,34 @@ public final class GameMap {
         return cardEffects;
     }
 
-    public ArrayList<Item> getShopItems() {
-        return shopItems;
+    public Item generateItem(final String itemName, final boolean isShopItem) {
+        if (isShopItem) {
+            return ItemFactory.createItem(availableShopItems.get(itemName), true);
+        } else {
+            return ItemFactory.createItem(availableStartItems.get(itemName), false);
+        }
+    }
+
+    public Item generateRandomItem(final boolean isShopItem) {
+        if (isShopItem) {
+            final int rand = new Random().nextInt(availableShopItems.size());
+            return generateItem((String) availableShopItems.keySet().toArray()[rand], true);
+        } else {
+            final int rand = new Random().nextInt(availableStartItems.size());
+            return generateItem((String) availableStartItems.keySet().toArray()[rand], false);
+        }
+    }
+
+    public boolean hasAvailableShopItem() {
+        return availableShopItems.size() > 0;
+    }
+
+    public boolean hasAvailableStartItem() {
+        return availableStartItems.size() > 0;
+    }
+
+    public Start getStartCell() {
+        return startCell;
     }
 
 }

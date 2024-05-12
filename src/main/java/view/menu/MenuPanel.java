@@ -31,8 +31,6 @@ import javax.swing.JTextArea;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
-import game.Game;
-import game.Mode;
 import view.JLayeredManager;
 import view.SwingFactory;
 import view.View;
@@ -51,7 +49,7 @@ public final class MenuPanel extends JLayeredManager {
     private MenuState menuState;
 
     private final View frame;
-    private final HashMap<String, Integer> gameConfig;
+    private final HashMap<String, String> gameConfig;
     private final ArrayList<HashMap<String, String>> playersConfig;
 
     private int soundSliderVolume;
@@ -72,20 +70,31 @@ public final class MenuPanel extends JLayeredManager {
     private int port = 55000;
 
     public MenuPanel(final View frame) {
-        super();
+        super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         final Container contentPane = frame.getContentPane();
         setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
         setMinimumSize(contentPane.getMinimumSize());
         setPreferredSize(contentPane.getSize());
         this.frame = frame;
         gameConfig = new HashMap<>();
-        gameConfig.put("turns", 45);
+        gameConfig.put("turns", "45");
         playersConfig = new ArrayList<>();
         Audio.playMusic("MenuTheme.wav");
         initDefaultValues();
         createPanels();
         changeState(MenuState.MAINMENU);
         setVisible(true);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = getSize();
+                setPreferredSize(dim);
+                for (Component comp : getLayersMap().values()) {
+                    comp.setPreferredSize(dim);
+                    comp.setSize(dim);
+                }
+            }
+        });
     }
 
     private void initDefaultValues() {
@@ -277,10 +286,7 @@ public final class MenuPanel extends JLayeredManager {
             @Override
             public void mouseReleased(MouseEvent e) {
                 Audio.stopMusic();
-                final Game game = frame.getGame();
-                game.createModel("map4", gameConfig, playersConfig);
-                game.setMode(Mode.GAME);
-                game.initGame();
+                frame.getGame().startGame(gameConfig, playersConfig);
             }
         });
         buttonsPanel.add(startGame);
@@ -487,7 +493,6 @@ public final class MenuPanel extends JLayeredManager {
 
                 ADAPTER AUX CASES DISPOS DU JEU (x nb de cases), BREVE EXPLICATION ET IMAGE SI POSSIBLE
                 //JPanel mapPanel = new JPanel(new GridLayout(x, 1));
-                
                 //mapPanel.add(createCaseExplanationPanel("event_case_icon.png", "Case événement"));
                 //mapPanel.add(createCaseExplanationPanel("property_case_icon.png", "Case propriété"));
                 //mapPanel.add(createCaseExplanationPanel("bonus_case_icon.png", "Case bonus"));

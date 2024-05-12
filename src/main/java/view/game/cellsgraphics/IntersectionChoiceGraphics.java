@@ -18,9 +18,9 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                final Controller controller = boardPanel.getController();
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     boardPanel.removeComp(BoardPanel.getInteraction());
-                    final Controller controller = boardPanel.getController();
                     controller.setPlayerPosition(cellID);
                     controller.gameUpdate();
                 }

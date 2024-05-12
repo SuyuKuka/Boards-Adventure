@@ -4,8 +4,7 @@ import static game.Game.RAND;
 
 import java.util.ArrayList;
 
-import model.config.GameMap;
-import model.config.Team;
+import model.Model;
 import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
 import model.config.cells.Property;
@@ -13,14 +12,15 @@ import model.config.items.Item;
 
 public abstract class Player {
 
+    private static final int MAX_ITEM_SHOP = 3;
     private static int playerIDIterator = 0;
 
-    private final int playerID;
-    private final String username;
-    private final Team team;
+    private final int id;
+    private final String name;
+    private final String hexTeamColor;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
-    private final Item[] shopItem = new Item[3];
+    private final Item[] shopItem = new Item[MAX_ITEM_SHOP];
     private final String className;
 
     private final ArrayList<Property> properties = new ArrayList<>();
@@ -29,18 +29,20 @@ public abstract class Player {
     private int rank = 1;
     private int jailTurn = 0;
     private int mapLap = 0;
-    private int position = 0;
+    private int position;
     private int previousPosition = 0;
 
     private int diceRollValue = 0;
 
-    public Player(final String username, final String className, final Team team, final Item startItem) {
-        this.playerID = playerIDIterator;
+    public Player(final String name, final String className, final String hexTeamColor,
+            final Item startItem, final int startPos) {
+        this.id = playerIDIterator;
         playerIDIterator++;
         this.className = className;
-        this.username = username;
-        this.team = team;
+        this.name = name;
+        this.hexTeamColor = hexTeamColor;
         this.startItem = startItem;
+        this.position = startPos;
     }
 
     // region model methods
@@ -89,8 +91,8 @@ public abstract class Player {
         return this.money >= price;
     }
 
-    public final Cell getPlayerCell(final GameMap gameMap) {
-        return gameMap.getCell(position);
+    public final Cell getPlayerCell(final Model model) {
+        return model.getGameMap().getCell(position);
     }
 
     public final void setDiceRollValue(final int diceRollValue) {
@@ -101,12 +103,12 @@ public abstract class Player {
         return diceRollValue;
     }
 
-    public final Team getTeam() {
-        return team;
+    public final String getHexTeamColor() {
+        return hexTeamColor;
     }
 
-    public final String getUsername() {
-        return username;
+    public final String getName() {
+        return name;
     }
 
     public final ArrayList<Property> getProperties() {
@@ -133,6 +135,10 @@ public abstract class Player {
         return shopItem;
     }
 
+    public final String getClassName() {
+        return className;
+    }
+
     public final void setPosition(final int position) {
         this.position = position;
     }
@@ -157,8 +163,8 @@ public abstract class Player {
         return jailTurn > 0;
     }
 
-    public final int getPlayerID() {
-        return playerID;
+    public final int getID() {
+        return id;
     }
 
     public final int getMoney() {
@@ -185,8 +191,12 @@ public abstract class Player {
         return shopItem != null;
     }
 
-    public final void resetPlayerIDIterator() {
+    public static final void resetPlayerIDIterator() {
         playerIDIterator = 0;
+    }
+
+    public static int getMaxItemShop() {
+        return MAX_ITEM_SHOP;
     }
 
     // endregion
