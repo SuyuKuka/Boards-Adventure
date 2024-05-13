@@ -1,11 +1,15 @@
 package view.game;
 
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -73,16 +77,35 @@ public final class PlayerScore extends JPanel {
         tradeButton = new JButton();
         playerBox = createComboBox((int) (width * gbc.weightx), height);
 
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = getSize();
+                rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance((int) (dim.width * 0.1),
+                    dim.height, Image.SCALE_FAST)));
+                classLabel.setIcon(new ImageIcon(classImage.getScaledInstance((int) (dim.width * 0.1),
+                    dim.height, Image.SCALE_FAST)));
+                revalidate();
+                repaint();
+            }
+        });
+
         setVisible(true);
     }
 
     private JLabel createRankLabel(final int width, final int height) {
         final JLabel label = new JLabel();
+        label.setPreferredSize(new Dimension(0, 0));
+        label.setSize(width, height);
+        label.setIcon(new ImageIcon(rankImage.getScaledInstance(width, height, Image.SCALE_FAST)));
         return label;
     }
 
     private JLabel createClassLabel(final int width, final int height) {
         final JLabel label = new JLabel();
+        label.setPreferredSize(new Dimension(0, 0));
+        label.setSize(width, height);
+        label.setIcon(new ImageIcon(classImage.getScaledInstance(width, height, Image.SCALE_FAST)));
         return label;
     }
 
