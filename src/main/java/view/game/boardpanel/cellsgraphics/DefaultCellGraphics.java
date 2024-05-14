@@ -1,4 +1,4 @@
-package view.game.cellsgraphics;
+package view.game.boardpanel.cellsgraphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 import controller.resources.Resources;
-import view.game.BoardPanel;
+import view.game.boardpanel.BoardPanel;
 
 public final class DefaultCellGraphics extends CellGraphics {
 

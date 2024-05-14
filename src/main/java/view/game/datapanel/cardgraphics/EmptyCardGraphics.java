@@ -1,4 +1,4 @@
-package view.game.cardGraphics;
+package view.game.datapanel.cardgraphics;
 
 import java.awt.Font;
 import java.awt.FontMetrics;

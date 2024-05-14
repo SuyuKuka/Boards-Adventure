@@ -16,7 +16,8 @@ import org.json.JSONArray;
 import controller.Controller;
 import view.JLayeredManager;
 import view.View;
-import view.game.cellsgraphics.CellGraphics;
+import view.game.boardpanel.PlayerGraphics;
+import view.game.boardpanel.cellsgraphics.CellGraphics;
 
 /**
  * Classe mère de la {@link View} EN JEU.

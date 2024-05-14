@@ -1,9 +1,10 @@
-package view.game;
+package view.game.boardpanel;
 
 import controller.Controller;
 import controller.resources.Resources;
-import view.game.cellsgraphics.CellGraphics;
-import view.game.cellsgraphics.CellGraphicsFactory;
+import view.game.GamePanel;
+import view.game.boardpanel.cellsgraphics.CellGraphics;
+import view.game.boardpanel.cellsgraphics.CellGraphicsFactory;
 
 import java.awt.Image;
 import java.awt.Point;

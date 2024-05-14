@@ -74,7 +74,8 @@ public final class Game {
         final GameMap gameMap = new GameMap(mapName, cardEffects, cells, startItems, shopItems);
         final ArrayList<Player> players = createPlayers(playersConfig, gameMap);
         model = new Model(gameMap, players, mapConfig);
-        controller = new Controller(this, model, view, jCells);
+        controller = new Controller(this, model);
+        controller.setGamePanel(view.initNewGamePanel(controller, jCells));
         controller.gameUpdate();
     }
 

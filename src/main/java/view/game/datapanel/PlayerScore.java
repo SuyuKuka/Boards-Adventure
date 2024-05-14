@@ -1,4 +1,4 @@
-package view.game;
+package view.game.datapanel;
 
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.resources.Resources;
+import view.game.GamePanel;
 
 public final class PlayerScore extends JPanel {
 
@@ -51,7 +52,7 @@ public final class PlayerScore extends JPanel {
         final GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
 
-        gbc.weightx = 0.1;
+        gbc.weightx = 0.15;
         gbc.weighty = 1;
         rankLabel = createRankLabel((int) (width * gbc.weightx), height);
         add(rankLabel, gbc);
@@ -59,7 +60,7 @@ public final class PlayerScore extends JPanel {
         classLabel = createClassLabel((int) (width * gbc.weightx), height);
         add(classLabel, gbc);
 
-        gbc.weightx = 0.4;
+        gbc.weightx = 0.3;
         nameLabel = new JLabel();
         moneyLabel = new JLabel();
         final JPanel panel1 = createNameMoneyPanel((int) (width * gbc.weightx), height);

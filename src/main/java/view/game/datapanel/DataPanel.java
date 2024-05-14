@@ -1,4 +1,4 @@
-package view.game;
+package view.game.datapanel;
 
 import java.util.ArrayList;
 
@@ -15,8 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Controller;
-import view.game.cardGraphics.CardGraphics;
-import view.game.cardGraphics.CardGraphicsFactory;
+import view.game.GamePanel;
+import view.game.datapanel.cardgraphics.CardGraphics;
+import view.game.datapanel.cardgraphics.CardGraphicsFactory;
 
 /**
  * {@link DataPanel} est une classe qui extends {@link JPanel} et occupe de la partie gauche de {@link GamePanel}.

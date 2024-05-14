@@ -13,7 +13,10 @@ import javax.swing.JPanel;
 
 import org.json.JSONArray;
 
-import view.game.cellsgraphics.CellGraphics;
+import view.game.boardpanel.BoardPanel;
+import view.game.boardpanel.PlayerGraphics;
+import view.game.boardpanel.cellsgraphics.CellGraphics;
+import view.game.datapanel.DataPanel;
 
 public final class MainPanel extends JPanel {
 

@@ -1,4 +1,4 @@
-package view.game;
+package view.game.boardpanel;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 
 import controller.Controller;
 import controller.resources.Resources;
-import view.game.cellsgraphics.CellGraphics;
+import view.game.boardpanel.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends JLabel {
 

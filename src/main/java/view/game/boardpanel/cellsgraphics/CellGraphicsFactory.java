@@ -1,9 +1,9 @@
-package view.game.cellsgraphics;
+package view.game.boardpanel.cellsgraphics;
 
 import org.json.JSONObject;
 
 import model.config.cells.CellType;
-import view.game.BoardPanel;
+import view.game.boardpanel.BoardPanel;
 
 public final class CellGraphicsFactory {
     public static CellGraphics createCellGraphics(final BoardPanel boardPanel, final JSONObject jObject) {

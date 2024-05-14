@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-import org.json.JSONArray;
-
-import view.View;
 import view.game.GamePanel;
 import game.Game;
 import game.GameState;
@@ -36,11 +33,10 @@ public final class Controller {
     // Jeu
     private Cell currentCell;
 
-    public Controller(final Game game, final Model model, final View view, final JSONArray jCells) {
+    public Controller(final Game game, final Model model) {
         this.game = game;
         this.prevGameState = null;
         this.model = model;
-        gamePanel = view.initNewGamePanel(this, jCells);
     }
 
     public void gameUpdate() {
@@ -305,7 +301,7 @@ public final class Controller {
 
     // endregion
 
-    public void setGamePanel(GamePanel gamePanel) {
+    public void setGamePanel(final GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 

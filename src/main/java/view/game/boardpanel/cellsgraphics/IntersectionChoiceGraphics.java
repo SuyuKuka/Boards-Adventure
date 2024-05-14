@@ -1,4 +1,4 @@
-package view.game.cellsgraphics;
+package view.game.boardpanel.cellsgraphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,7 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import controller.Controller;
-import view.game.BoardPanel;
+import view.game.boardpanel.BoardPanel;
 
 public final class IntersectionChoiceGraphics extends CellGraphics {
 

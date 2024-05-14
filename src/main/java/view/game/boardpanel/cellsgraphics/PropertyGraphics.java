@@ -1,9 +1,10 @@
-package view.game.cellsgraphics;
+package view.game.boardpanel.cellsgraphics;
 
 import java.util.ArrayList;
 
 import controller.resources.Resources;
 import model.config.cells.Property;
+import view.game.boardpanel.BoardPanel;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,8 +12,6 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import java.awt.Color;
-
-import view.game.BoardPanel;
 
 public final class PropertyGraphics extends CellGraphics {
 

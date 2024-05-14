@@ -1,4 +1,4 @@
-package view.game.cellsgraphics;
+package view.game.boardpanel.cellsgraphics;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 
 import controller.resources.Resources;
 import view.View;
-import view.game.BoardPanel;
+import view.game.boardpanel.BoardPanel;
 
 /**
  * Classe ABSTRAIRE qui s'occupe de la vue des {@link model.config.cells}. <p>
