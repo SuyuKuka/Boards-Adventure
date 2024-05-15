@@ -19,6 +19,8 @@ public final class ItemFactory {
                 return new LittleDice(itemName, isShopItem, value);
             case SACRED_BOOK:
                 return new SacredBook(itemName,isShopItem,value);
+            case BIG_DICE:
+                return new BigDice(itemName,isShopItem,value);
             default:
                 break;
         }
