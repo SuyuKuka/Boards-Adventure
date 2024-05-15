@@ -85,7 +85,7 @@ public final class BoardPanel extends JLayeredManager {
     private final Image boardImage;
 
     public BoardPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
-            final JSONArray jCells, final ArrayList<PlayerGraphics> playersGraphics,
+            final ArrayList<PlayerGraphics> playersGraphics, final JSONObject mapConfig,
             final int width, final int height) {
         super(width, height);
         this.gamePanel = gamePanel;
@@ -95,7 +95,8 @@ public final class BoardPanel extends JLayeredManager {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(width, height));
 
-        this.cellsGraphics = loadCellsGraphics(cellsGraphics, jCells);
+        CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
+        this.cellsGraphics = loadCellsGraphics(cellsGraphics, mapConfig.getJSONArray("cells"));
         specialCellsGraphics = new ArrayList<>();
         this.playersGraphics = loadPlayerGraphics(playersGraphics);
 
@@ -609,13 +610,13 @@ public final class BoardPanel extends JLayeredManager {
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
+                removeComp(INTERACTION);
                 if (!controller.propertyHasOwner()) {
                     controller.playerBuyProperty();
                 } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
                     controller.playerUpgradeProperty();
                 }
                 controller.gameUpdate();
-                // removePanel(INTERACTION);
                 revalidate();
             }
         });
@@ -625,8 +626,8 @@ public final class BoardPanel extends JLayeredManager {
         no.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
+                removeComp(INTERACTION);
                 controller.gameUpdate();
-                // removePanel(INTERACTION);
                 revalidate();
             }
         });
@@ -690,7 +691,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.gameUpdate();
-                // removePanel(INTERACTION);
+                removeComp(INTERACTION);
                 revalidate();
             }
         });
@@ -727,10 +728,9 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.playShowCard();
-                // removePanel(INTERACTION);
+                removeComp(INTERACTION);
+                controller.gameUpdate();
                 revalidate();
-                String test = controller.getCardEffect();
-
             }
         });
         background.add(open);
@@ -754,7 +754,7 @@ public final class BoardPanel extends JLayeredManager {
             if (remainingSeconds[0] > 0) {
                 closeLabel.setText("Fermeture automatique dans " + remainingSeconds[0] + "s");
             } else {
-                // removePanel(INTERACTION);
+                removeComp(INTERACTION);
                 panel.revalidate();
                 controller.gameUpdate();
                 ((Timer) e.getSource()).stop();

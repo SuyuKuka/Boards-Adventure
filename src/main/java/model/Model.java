@@ -87,7 +87,6 @@ public final class Model {
     }
 
     public void endTurn() {
-        currentPlayer.setDiceRollValue(-1); // TODO test
         playerPlayIterator = (playerPlayIterator + 1) % players.size();
         if (playerPlayIterator == 0) {
             currentTurn++;

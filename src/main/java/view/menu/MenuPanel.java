@@ -424,14 +424,15 @@ public final class MenuPanel extends JLayeredManager {
         desc.setText("Bonjour, binevenueafiajgag egfaenigopjnpgqz .G\n Aogjpjzqpogjqg .gfeapigja ");
         Font font;
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/NoitaBlackletter.ttf")).deriveFont(40f);
+            font = Font.createFont(Font.TRUETYPE_FONT,
+            new File("src/main/resources/fonts/NoitaBlackletter.ttf")).deriveFont(40f);
             desc.setFont(font);
         } catch (FontFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         JScrollPane tmp = new JScrollPane(desc, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -469,11 +470,12 @@ public final class MenuPanel extends JLayeredManager {
         JPanel turnsPanel = SwingFactory.createTransparentPanel(parent, 40, 10);
         turnsPanel.setLayout(new BoxLayout(turnsPanel, BoxLayout.X_AXIS));
         turnsPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 0, 0));
-        JLabel turns = SwingFactory.createTextLabel("Nombre de tours :", "NoitaBlackletter", Color.BLACK, defaultFont / 2);
+        JLabel turns = SwingFactory.createTextLabel("Nombre de tours :",
+        "NoitaBlackletter", Color.BLACK, defaultFont / 2);
 
         ButtonGroup group = new ButtonGroup();
         JRadioButton turnsBox1 = createRadioButton("25", group, true);
-        JRadioButton turnsBox2 = createRadioButton("35", group,false);
+        JRadioButton turnsBox2 = createRadioButton("35", group, false);
         JRadioButton turnsBox3 = createRadioButton("45", group, false);
         turnsPanel.add(turns);
         turnsPanel.add(turnsBox1);
@@ -707,7 +709,8 @@ public final class MenuPanel extends JLayeredManager {
         navPanel.setPreferredSize(new Dimension(navPanelWidth, contentPanel.getHeight()));
         contentPanel.add(navPanel, BorderLayout.WEST);
 
-        JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
+        JTextArea explanationTextArea = new JTextArea(
+        "   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
         explanationTextArea.setLineWrap(true);
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
@@ -715,7 +718,7 @@ public final class MenuPanel extends JLayeredManager {
         explanationTextArea.setFont(Resources.getFont("RifficFree", 16));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
 
-        closeButton.addMouseListener(new MouseAdapter() {   // Déplacement du mouseListener du bouton close afin de bien actualiser la fenêtre au début /EDIT: ENFAIT CA MARCHE PAS MDRRRRR
+        closeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 scrollPane.setViewportView(explanationTextArea);
@@ -752,29 +755,37 @@ public final class MenuPanel extends JLayeredManager {
             public void mousePressed(MouseEvent e) {
                 explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
                 JPanel mapPanel = new JPanel(new GridLayout(8, 1));
-
                 JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.", 10);
                 gainCase.setBackground(Color.CYAN);
                 mapPanel.add(gainCase);  // gain
                 JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.", 10);
                 lossCase.setBackground(Color.CYAN);
                 mapPanel.add(lossCase);  // loss
-                JPanel dangerCase = createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
+                JPanel dangerCase =
+                createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
                 dangerCase.setBackground(Color.CYAN);
                 mapPanel.add(dangerCase);    // danger
-                JPanel intersectionCase = createCaseExplanationPanel("intersection", "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
+                JPanel intersectionCase =
+                createCaseExplanationPanel("intersection",
+                "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
                 intersectionCase.setBackground(Color.CYAN);
                 mapPanel.add(intersectionCase);    // intersection
-                JPanel kingdomCase = createCaseExplanationPanel("kingdom", "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
+                JPanel kingdomCase =
+                createCaseExplanationPanel("kingdom",
+                "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
                 kingdomCase.setBackground(Color.CYAN);
                 mapPanel.add(kingdomCase);    // kingdom
-                JPanel propertyCase = createCaseExplanationPanel("property", "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
+                JPanel propertyCase =
+                createCaseExplanationPanel("property",
+                "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
                 propertyCase.setBackground(Color.CYAN);
                 mapPanel.add(propertyCase);    // property
-                JPanel shopCase = createCaseExplanationPanel("shop", "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.", 10);
+                JPanel shopCase = createCaseExplanationPanel("shop",
+                "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.", 10);
                 shopCase.setBackground(Color.CYAN);
                 mapPanel.add(shopCase);    // shop
-                JPanel voidCase = createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.", 10);
+                JPanel voidCase =
+                createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.", 10);
                 voidCase.setBackground(Color.CYAN);
                 mapPanel.add(voidCase);    // void
 
