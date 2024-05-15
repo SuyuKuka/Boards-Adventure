@@ -3,7 +3,6 @@ package controller.resources;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.awt.Image;
@@ -16,8 +15,6 @@ import javax.swing.ImageIcon;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
-import model.config.cardseffect.CardEffect;
-import model.config.cells.Cell;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.
@@ -60,39 +57,6 @@ public final class Resources {
         final File menuFolder = new File(PATH + "images/menu/");
         loadImages(menuFolder, MODE_IMAGES, true);
         loadGifs(menuFolder, MODE_GIFS, true);
-        System.out.println(MODE_GIFS.keySet());
-    }
-
-    /**
-     * Charge les ressources du jeu et de la map choisie. <p>
-     * Les ressources du jeu comprend : les images, les cellules, les items et les cartes.
-     * @param mapName
-     * @param cells
-     * @param cardEffects
-     * @param startItems
-     * @param shopItems
-     * @return {@link JSONObject} le fichier.
-     */
-    public static JSONObject loadGameResources(final String mapName, final HashMap<Integer, Cell> cells,
-            final ArrayList<CardEffect> cardEffects, final HashMap<String, HashMap<String, String>> startItems,
-            final HashMap<String, HashMap<String, String>> shopItems) {
-        // IMAGES
-        MODE_IMAGES.clear();
-        MODE_GIFS.clear();
-        final File gameFolder = new File(PATH + "images/game/");
-        loadImages(gameFolder, MODE_IMAGES, true);
-        loadGifs(gameFolder, MODE_GIFS, true);
-        final File mapFolder = new File(PATH + "maps/" + mapName);
-        loadImages(mapFolder, MODE_IMAGES, true);
-        loadGifs(mapFolder, MODE_GIFS, true);
-        try {
-            final File file = new File(PATH + "maps/" + mapName + "/config.json");
-            final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-            return configJObject;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**

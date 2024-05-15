@@ -84,8 +84,7 @@ public final class BoardPanel extends JLayeredManager {
 
     private final Image boardImage;
 
-    public BoardPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
-            final ArrayList<PlayerGraphics> playersGraphics, final JSONObject mapConfig,
+    public BoardPanel(final GamePanel gamePanel, final JSONObject mapConfig,
             final int width, final int height) {
         super(width, height);
         this.gamePanel = gamePanel;
@@ -96,9 +95,11 @@ public final class BoardPanel extends JLayeredManager {
         setPreferredSize(new Dimension(width, height));
 
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
-        this.cellsGraphics = loadCellsGraphics(cellsGraphics, mapConfig.getJSONArray("cells"));
+        this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
+        gamePanel.setCellsGraphics(cellsGraphics);
         specialCellsGraphics = new ArrayList<>();
-        this.playersGraphics = loadPlayerGraphics(playersGraphics);
+        this.playersGraphics = loadPlayerGraphics();
+        gamePanel.setPlayersGraphics(playersGraphics);
 
         final PlayerGraphics currentPlayerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         updateCameraPosition(zoom, currentPlayerGraphics.getXPos(), currentPlayerGraphics.getYPos());
@@ -201,8 +202,8 @@ public final class BoardPanel extends JLayeredManager {
 
     //#region Loading entities
 
-    private HashMap<Integer, CellGraphics> loadCellsGraphics(final HashMap<Integer, CellGraphics> cells,
-            final JSONArray jCells) {
+    private HashMap<Integer, CellGraphics> loadCellsGraphics(final JSONArray jCells) {
+        final HashMap<Integer, CellGraphics> cells = new HashMap<>();
         for (int i = 0; i < jCells.length(); i++) {
             final JSONObject jCell = jCells.getJSONObject(i);
             cells.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(this, jCell));
@@ -210,9 +211,10 @@ public final class BoardPanel extends JLayeredManager {
         return cells;
     }
 
-    private ArrayList<PlayerGraphics> loadPlayerGraphics(final ArrayList<PlayerGraphics> players) {
+    private ArrayList<PlayerGraphics> loadPlayerGraphics() {
+        final ArrayList<PlayerGraphics> players = new ArrayList<>();
         gamePanel.getController().getPlayers().forEach((player) -> {
-            final CellGraphics cell = gamePanel.getCellGraphics(controller.getStartCell().getId());
+            final CellGraphics cell = cellsGraphics.get(controller.getStartCell().getId());
             players.add(new PlayerGraphics(player.getID(), this, cell.getXPos(), cell.getYPos()));
         });
         return players;

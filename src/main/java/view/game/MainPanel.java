@@ -6,16 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
 import view.game.boardpanel.BoardPanel;
-import view.game.boardpanel.PlayerGraphics;
-import view.game.boardpanel.cellsgraphics.CellGraphics;
 import view.game.datapanel.DataPanel;
 
 public final class MainPanel extends JPanel {
@@ -27,8 +23,7 @@ public final class MainPanel extends JPanel {
     private final ChatPanel chatPanel;
     private final ActionPanel actionPanel;
 
-    public MainPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
-            final ArrayList<PlayerGraphics> playersGraphics, final JSONObject mapConfig) {
+    public MainPanel(final GamePanel gamePanel, final JSONObject mapConfig) {
         this.gamePanel = gamePanel;
         final Dimension dim = gamePanel.getPreferredSize();
         setBounds(0, 0, dim.width, dim.height);
@@ -37,8 +32,7 @@ public final class MainPanel extends JPanel {
         setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
 
-        boardPanel = new BoardPanel(gamePanel,  cellsGraphics, playersGraphics, mapConfig,
-            (int) (dim.width * 0.8), (int) (dim.height * 0.8));
+        boardPanel = new BoardPanel(gamePanel, mapConfig, (int) (dim.width * 0.8), (int) (dim.height * 0.8));
         dataPanel = new DataPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.8));
         chatPanel = new ChatPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.2));
         actionPanel = new ActionPanel(gamePanel, (int) (dim.width * 0.8), (int) (dim.height * 0.2));

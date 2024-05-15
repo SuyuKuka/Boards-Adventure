@@ -306,7 +306,7 @@ public final class MenuPanel extends JLayeredManager {
             timer.start();
             timer.setRepeats(false);
 
-            Timer tmp = new Timer(3200, f -> {  
+            Timer tmp = new Timer(3200, f -> {
                 changeBackgroundImg("sign");
                 changeState(state);
                 animation = false;
@@ -322,7 +322,6 @@ public final class MenuPanel extends JLayeredManager {
 
      private JPanel createJoinCodeMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 0);
-        
         return panel;
     }
 

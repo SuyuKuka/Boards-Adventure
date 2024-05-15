@@ -83,13 +83,7 @@ public final class ActionPanel extends JPanel {
         final JPanel panel = new JPanel(new GridLayout(2, 1));
         panel.setPreferredSize(new Dimension(width, height));
         panel.setBackground(Color.PINK);
-        Object[] items =
-            {
-                new ImageIcon(Resources.getImage("j0"))
-                // TODO ICI LES ITEMS GRAPHICS
-
-            };
-        otherActionBox = new JComboBox<Object>(items);
+        otherActionBox = new JComboBox<Object>(gamePanel.getItemsGraphics().values().toArray());
         rollDiceButton = new JButton();
         rollDiceButton.setIcon(new ImageIcon(Resources.getImage("dice1")));
 

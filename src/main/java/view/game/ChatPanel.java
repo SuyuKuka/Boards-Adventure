@@ -52,8 +52,6 @@ public final class ChatPanel extends JPanel {
         final JPanel panel = new JPanel(new BorderLayout());
         final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textPane.setPreferredSize(new Dimension(0, 0));
-        scrollPane.setPreferredSize(new Dimension(0, 0));
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
     }
@@ -62,8 +60,6 @@ public final class ChatPanel extends JPanel {
         final JPanel panel = new JPanel(new BorderLayout());
         final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textPane.setPreferredSize(new Dimension(0, 0));
-        scrollPane.setPreferredSize(new Dimension(0, 0));
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(createTextField(textPane), BorderLayout.SOUTH);
         return panel;
