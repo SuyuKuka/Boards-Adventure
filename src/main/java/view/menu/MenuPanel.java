@@ -322,7 +322,6 @@ public final class MenuPanel extends JLayeredManager {
 
      private JPanel createJoinCodeMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 0);
-        
         return panel;
     }
 
