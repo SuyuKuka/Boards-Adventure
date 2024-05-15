@@ -32,19 +32,19 @@
 		{
 			"type" : "LOSE_PROPERTY_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "SWAP_POSITION_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "GAIN_ITEM_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "LOSE_ITEM_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "GAIN_GAMEPOINT_EFFECT",
 			"quantity" : 2

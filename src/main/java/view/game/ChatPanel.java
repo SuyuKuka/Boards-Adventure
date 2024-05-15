@@ -48,8 +48,8 @@ public final class ChatPanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
 
-        discussionTextPane = createTextPane();
         logTextPane = createTextPane();
+        discussionTextPane = createTextPane();
 
         add(createTabPanel(discussionTextPane, logTextPane), BorderLayout.CENTER);
 
@@ -194,7 +194,7 @@ public final class ChatPanel extends JPanel {
         return textField;
     }
 
-    public void addDiscussionText(final int playerID, final String text) {
+    private void addDiscussionText(final int playerID, final String text) {
         final Document doc = discussionTextPane.getDocument();
         try {
             StyleConstants.setForeground(DISCUSSION_SAT, Color.decode(controller.getPlayer(playerID).getHexTeamColor()));
@@ -204,7 +204,7 @@ public final class ChatPanel extends JPanel {
         }
     }
 
-    public void addLogText(final String text, final boolean sayLogType) {
+    private void addLogText(final String text, final boolean sayLogType) {
         final Document doc = logTextPane.getDocument();
         try {
             if (sayLogType) {

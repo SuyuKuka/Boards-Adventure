@@ -66,8 +66,8 @@ public final class BoardPanel extends JLayeredManager {
     private final JPanel playersPanel;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
-    private final ArrayList<CellGraphics> specialCellsGraphics;
     private final ArrayList<PlayerGraphics> playersGraphics;
+    private final ArrayList<EntityGraphics> entitiesGraphics;
 
     // CAMERA ET ZOOM
     private static final int WIDE_ANGLE_SAFETY = 3;
@@ -100,7 +100,7 @@ public final class BoardPanel extends JLayeredManager {
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
         gamePanel.setCellsGraphics(cellsGraphics);
-        specialCellsGraphics = new ArrayList<>();
+        entitiesGraphics = new ArrayList<>();
         this.playersGraphics = loadPlayerGraphics();
         gamePanel.setPlayersGraphics(playersGraphics);
 
@@ -244,7 +244,7 @@ public final class BoardPanel extends JLayeredManager {
         for (CellGraphics cellGraphics : cellsGraphics.values()) {
             cellGraphics.update();
         }
-        specialCellsGraphics.forEach(specialCellGraphics -> specialCellGraphics.update());
+        entitiesGraphics.forEach(entityGraphics -> entityGraphics.update());
         gamePanel.getPlayersGraphics().forEach(playerGraphics -> playerGraphics.update());
         revalidate();
         repaint();
@@ -499,7 +499,7 @@ public final class BoardPanel extends JLayeredManager {
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         intersectIDs.forEach(cellID -> {
             final CellGraphics cell = CellGraphicsFactory.createIntersectionChoice(this, cellsGraphics.get(cellID));
-            specialCellsGraphics.add(cell);
+            entitiesGraphics.add(cell);
             panel.add(cell);
         });
         panel.setVisible(true);

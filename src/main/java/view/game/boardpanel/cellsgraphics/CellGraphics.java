@@ -1,7 +1,6 @@
 package view.game.boardpanel.cellsgraphics;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -9,17 +8,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
-import javax.swing.JLabel;
 
 import controller.resources.Resources;
 import view.View;
 import view.game.boardpanel.BoardPanel;
+import view.game.boardpanel.EntityGraphics;
 
 /**
  * Classe ABSTRAIRE qui s'occupe de la vue des {@link model.config.cells}. <p>
  * Par défaut, les cellules du jeu sont invoquées par la classe {@link DefaultCellGraphics}.
  */
-public abstract class CellGraphics extends JLabel {
+public abstract class CellGraphics extends EntityGraphics {
     // PAINT
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
@@ -37,16 +36,13 @@ public abstract class CellGraphics extends JLabel {
     private final BoardPanel boardPanel;
     private final int cellID;
     private final Image cellImage;
-    private final int xPos;
-    private final int yPos;
 
     public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+        super(boardPanel, xPos, yPos);
         this.boardPanel = boardPanel;
         this.cellID = cellID;
         this.cellImage = Resources.getImage(boardPanel.getController()
             .getCell(cellID).getCellType().name().toLowerCase());
-        this.xPos = xPos;
-        this.yPos = yPos;
         final View frame = boardPanel.getFrame();
         addMouseListener(new MouseAdapter() {
             @Override
@@ -83,27 +79,9 @@ public abstract class CellGraphics extends JLabel {
         ICON_RANGE_DIM.height  = (int) Math.ceil((cellDiameter - iconRange * 2) * heightRatio);
     }
 
-    public final void update() {
-        updateSize();
-        updateLocation();
-    }
-
-    private void updateSize() {
+    public final void updateSize() {
         setSize((int) (cellDiameter * boardPanel.getWidthRatio()),
             (int) (cellDiameter * boardPanel.getHeightRatio()));
-    }
-
-    private void updateLocation() {
-        final Dimension size = getSize();
-        final int cellCamX = xPos - (int) boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
-        final int centerOffsetX = size.width / 2;
-        final int finalX = (int) (cellCamX * boardPanel.getWidthRatio()) - centerOffsetX;
-
-        final int cellCamY = (yPos - (int) boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
-        final int centerOffsetY = size.height / 2;
-        final int finalY = (int) (cellCamY * boardPanel.getHeightRatio()) - centerOffsetY;
-
-        setLocation(finalX, finalY);
     }
 
     public abstract void paintComponent(Graphics g);
@@ -127,9 +105,6 @@ public abstract class CellGraphics extends JLabel {
 
     // region getters/setters
 
-    public final BoardPanel getBoardPanel() {
-        return boardPanel;
-    }
 
     public static int getCellDiameter() {
         return cellDiameter;
@@ -157,14 +132,6 @@ public abstract class CellGraphics extends JLabel {
 
     public final Image getCellImage() {
         return cellImage;
-    }
-
-    public final int getXPos() {
-        return xPos;
-    }
-
-    public final int getYPos() {
-        return yPos;
     }
 
     // endregion
