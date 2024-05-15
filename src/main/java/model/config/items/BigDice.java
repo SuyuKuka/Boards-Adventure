@@ -10,7 +10,7 @@ public final class BigDice extends Item {
 
     @Override
     public void playItemEffect(final Model model) {
-        model.getCurrentPlayer.diceRollValue=RAND.nextInt(10)+1;
-        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
+        model.getCurrentPlayer().diceRollValue=RAND.nextInt(10)+1;
+        model.getCurrentPlayer().getStartItem().resetTurnCooldown();
     }
 }

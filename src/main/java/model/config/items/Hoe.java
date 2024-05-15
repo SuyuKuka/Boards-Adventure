@@ -10,8 +10,8 @@ public final class Hoe extends Item {
 
     @Override
     public void playItemEffect(Model model) {
-        model.getCurrentPlayer.incrementMoney(150);
-        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
+        model.getCurrentPlayer().incrementMoney(150);
+        model.getCurrentPlayer().getStartItem().resetTurnCooldown();
     }
 
 }
