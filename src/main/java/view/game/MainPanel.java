@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import view.game.boardpanel.BoardPanel;
 import view.game.boardpanel.PlayerGraphics;
@@ -28,7 +28,7 @@ public final class MainPanel extends JPanel {
     private final ActionPanel actionPanel;
 
     public MainPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
-            final JSONArray jCells, final ArrayList<PlayerGraphics> playersGraphics) {
+            final ArrayList<PlayerGraphics> playersGraphics, final JSONObject mapConfig) {
         this.gamePanel = gamePanel;
         final Dimension dim = gamePanel.getPreferredSize();
         setBounds(0, 0, dim.width, dim.height);
@@ -37,7 +37,7 @@ public final class MainPanel extends JPanel {
         setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
 
-        boardPanel = new BoardPanel(gamePanel,  cellsGraphics, jCells, playersGraphics,
+        boardPanel = new BoardPanel(gamePanel,  cellsGraphics, playersGraphics, mapConfig,
             (int) (dim.width * 0.8), (int) (dim.height * 0.8));
         dataPanel = new DataPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.8));
         chatPanel = new ChatPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.2));

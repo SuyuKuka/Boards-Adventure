@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import model.config.cardseffect.CardEffect;
+import model.config.cardseffect.CardEffectFactory;
 import model.config.cells.Cell;
+import model.config.cells.CellFactory;
 import model.config.cells.CellType;
 import model.config.cells.Start;
 import model.config.items.Item;
@@ -31,19 +36,17 @@ public final class GameMap {
     private final HashMap<String, HashMap<String, String>> availableStartItems;
     private final HashMap<String, HashMap<String, String>> availableShopItems;
 
-    public GameMap(final String mapName, final ArrayList<CardEffect> cardEffects, final HashMap<Integer, Cell> cells,
-            final HashMap<String, HashMap<String, String>> availableStartItems,
-            final HashMap<String, HashMap<String, String>> availableShopItems) {
+    public GameMap(final String mapName, final JSONObject mapConfig) {
         this.mapName = mapName;
 
-        this.cardEffects = cardEffects;
+        this.cardEffects = loadCardEffects(mapConfig.getJSONArray("cards_effect"));
         cardEffectsCounter = countCardEffectsQuantity();
 
-        this.cells = cells;
+        this.cells = loadCells(mapConfig.getJSONArray("cells"));
         this.startCell = findStartCell();
 
-        this.availableStartItems = availableStartItems;
-        this.availableShopItems = availableShopItems;
+        this.availableStartItems = loadAvailableStartItems(mapConfig.getJSONArray("start_items"));
+        this.availableShopItems = loadAvailableShopItems(mapConfig.getJSONArray("shop_items"));
     }
 
     private int countCardEffectsQuantity() {
@@ -123,5 +126,52 @@ public final class GameMap {
     public Start getStartCell() {
         return startCell;
     }
+
+    //#region
+
+        public static HashMap<Integer, Cell> loadCells(final JSONArray jCells) {
+        final HashMap<Integer, Cell> cells = new HashMap<>();
+        for (int i = 0; i < jCells.length(); i++) {
+            final JSONObject jCell = jCells.getJSONObject(i);
+            cells.put(jCell.getInt("id"), CellFactory.createCell(jCell));
+        }
+        return cells;
+    }
+
+    public static ArrayList<CardEffect> loadCardEffects(final JSONArray jCardsEffect) {
+        final ArrayList<CardEffect> cards = new ArrayList<>();
+        for (int i = 0; i < jCardsEffect.length(); i++) {
+            cards.addAll(CardEffectFactory.createCardEffect(jCardsEffect.getJSONObject(i)));
+        }
+        return cards;
+    }
+
+    public static HashMap<String, HashMap<String, String>> loadAvailableStartItems(final JSONArray jStartItems) {
+        final HashMap<String, HashMap<String, String>> startItems = new HashMap<>();
+        for (int i = 0; i < jStartItems.length(); i++) {
+            final JSONObject jStartItem = jStartItems.getJSONObject(i);
+            final HashMap<String, String> itemConfig = new HashMap<>();
+            final String itemName = jStartItem.getString("name");
+            itemConfig.put("name", itemName);
+            itemConfig.put("turnCooldown", jStartItem.getString("turnCooldown"));
+            startItems.put(itemName, itemConfig);
+        }
+        return startItems;
+    }
+
+    public static HashMap<String, HashMap<String, String>> loadAvailableShopItems(final JSONArray jShopItems) {
+        final HashMap<String, HashMap<String, String>> shopItems = new HashMap<>();
+        for (int i = 0; i < jShopItems.length(); i++) {
+            final JSONObject jStartItem = jShopItems.getJSONObject(i);
+            final HashMap<String, String> itemConfig = new HashMap<>();
+            final String itemName = jStartItem.getString("name");
+            itemConfig.put("name", itemName);
+            itemConfig.put("buyPrice", jStartItem.getString("buyPrice"));
+            shopItems.put(itemName, itemConfig);
+        }
+        return shopItems;
+    }
+
+    //#endregion
 
 }
