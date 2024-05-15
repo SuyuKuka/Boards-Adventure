@@ -31,7 +31,6 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private static final boolean TEST_MODE = true;
     private Mode mode = Mode.MENU;
 
     private View view;

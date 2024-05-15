@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -29,15 +30,22 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -53,20 +61,23 @@ import view.View;
 public final class MenuPanel extends JLayeredManager {
 
     private static final int BACKGROUND_INDEX = 0;
-    private static final int MANUALICON_INDEX = 6;
-    private static final int MANUALBOOK_INDEX = 7;
+    private static final int MANUALICON_INDEX = 7;
+    private static final int MANUALBOOK_INDEX = 8;
 
     private MenuState menuState;
 
     private final View frame;
-    private final HashMap<String, String> gameConfig;
-    private final ArrayList<HashMap<String, String>> playersConfig;
+    private HashMap<String, String> gameConfig;
+    private ArrayList<HashMap<String, String>> playersConfig;
 
     private int soundSliderVolume;
     private int songSliderVolume;
 
     private String map;
     private JPanel rightSidePanel;
+
+    private int height;
+    private int width;
 
     private boolean host = false;
     private boolean resizing = false;
@@ -78,6 +89,11 @@ public final class MenuPanel extends JLayeredManager {
 
     private InetAddress ip;
     private int port = 55000;
+
+    private JPanel background = null;
+    private boolean animation = false;
+
+    private int defaultFont = 64;
 
     public MenuPanel(final View frame) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
@@ -103,14 +119,16 @@ public final class MenuPanel extends JLayeredManager {
                     comp.setPreferredSize(dim);
                     comp.setSize(dim);
                 }
+                revalidate();
+                repaint();
             }
         });
     }
 
     private void initDefaultValues() {
         menuState = null;
-        songSliderVolume = 50;
-        soundSliderVolume = 50;
+        songSliderVolume = 100;
+        soundSliderVolume = 100;
         map = "map4";
         try {
             ip = InetAddress.getLocalHost();
@@ -122,10 +140,11 @@ public final class MenuPanel extends JLayeredManager {
     private void createPanels() {
         addComp(createBackground(), BACKGROUND_INDEX);
         addComp(createMainMenu(), MenuState.MAINMENU.getLayerIndex());
-        addComp(createSettingsMenu(), MenuState.SETTINGSMENU.getLayerIndex());
-        addComp(createCreateJoinMenu(), MenuState.CREATEJOIN.getLayerIndex());
-        addComp(createJoinCodeMenu(), MenuState.JOINCODE.getLayerIndex());
-        addComp(createGameLobbyMenu(), MenuState.GAMELOBBY.getLayerIndex());
+        addComp(createSettingsMenu(), MenuState.SETTINGS.getLayerIndex());
+        addComp(createCreateJoinMenu(), MenuState.SELECTMOD.getLayerIndex());
+        addComp(createJoinCodeMenu(), MenuState.JOINGAME.getLayerIndex());
+        addComp(createGameLobbyMenu(), MenuState.MAPCONFIG.getLayerIndex());
+        addComp(createSelectionCharacterMenu(), MenuState.CHARACTER.getLayerIndex());
         addComp(createManualIcon(), MANUALICON_INDEX);
         addComp(createManualBook(), MANUALBOOK_INDEX);
     }
@@ -133,6 +152,8 @@ public final class MenuPanel extends JLayeredManager {
     public void changeState(final MenuState newMenuState) {
         if (menuState != null) {
             getLayerComp(menuState.getLayerIndex()).setVisible(false);
+            System.out.println("menuState : " + menuState);
+            System.out.println("newMenuState : " + newMenuState);
         }
         this.menuState = newMenuState;
         final JPanel newStatePanel = (JPanel) getLayerComp(menuState.getLayerIndex());
@@ -141,26 +162,25 @@ public final class MenuPanel extends JLayeredManager {
         revalidate();
     }
 
-    private JButton createSwitchStateButton(final String img, final MenuState newMenuState,
-        final int widthPer, final int heightPer) {
-        final JButton button = SwingFactory.createImageButton(this, img, widthPer, heightPer, false);
+    private void createSwitchStateButton(final JButton button, final MenuState newMenuState) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                Audio.playSound("button.wav");
                 changeState(newMenuState);
             }
         });
-        return button;
     }
 
     // #region background 0
 
     private JPanel createBackground() {
-        final JPanel panel = SwingFactory.createImagePanel(this, "background", 100, 100);
-        panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        panel.setVisible(true);
-        return panel;
+        background = SwingFactory.createGifPanel(this, "backgroundMoving", 100, 100);
+        background.setVisible(true);
+        background.revalidate();
+        background.repaint();
+        revalidate();
+        repaint();
+        return background;
     }
 
     // #endregion
@@ -168,15 +188,17 @@ public final class MenuPanel extends JLayeredManager {
     // #region mainmenu 1
 
     private JPanel createMainMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 10, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
 
-        panel.add(SwingFactory.createImageLabel(panel, "logo", 90, 15, false));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 10));
-        panel.add(createSwitchStateButton("play", MenuState.CREATEJOIN, 60, 10));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        panel.add(createSwitchStateButton("settings", MenuState.SETTINGSMENU, 60, 10));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 5));
-        final JButton leaveGame = SwingFactory.createImageButton(this, "quit", 60, 10, false);
+        panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
+
+        final JButton play = SwingFactory.createTextButton(panel, "Commencer une aventure", 20, 10, 64, true);
+        createSwitchStateButton(play, MenuState.SELECTMOD);
+        panel.add(play);
+        final JButton options = SwingFactory.createTextButton(panel, "Préparer l'expédition", 20, 10, 64, true);
+        createSwitchStateButton(options, MenuState.SETTINGS);
+        panel.add(options);
+        final JButton leaveGame = SwingFactory.createTextButton(panel, "Retourner au foyer", 20, 10, 64, true);
         leaveGame.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -194,32 +216,35 @@ public final class MenuPanel extends JLayeredManager {
     // #region settings 2
 
     private JPanel createSettingsMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 10, 15, 0, 15);
-        panel.add(createSettings(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 10));
-        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
-        return panel;
-    }
-
-    private JPanel createSettings(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 70, 60);
+        final JPanel panel = SwingFactory.createContainerPanel(this, 45, 0, 0, 6);
 
         final int widthMargin = frame.getWidth() / 20;
         final int heightMargin = frame.getHeight() / 20;
         // Musique
-        final JPanel musicPanel = SwingFactory.createBoxLayoutPanel();
-        musicPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel musique = SwingFactory.createTextLabel("Musique : -", "Komigo3D", Color.BLACK, 20);
+        final JPanel musicPanel = new JPanel();
+        musicPanel.setLayout(new BoxLayout(musicPanel, BoxLayout.X_AXIS));
+        musicPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        musicPanel.setOpaque(false);
+        musicPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        final JLabel musique = SwingFactory.createTextLabel("Musique : - ", "NoitaBlackletter",
+            Color.BLACK, defaultFont);
         final JSlider musicSlider = SwingFactory.createMusicSlider();
+        final JLabel plusMusic = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, defaultFont);
         musicPanel.add(musique);
         musicPanel.add(musicSlider);
+        musicPanel.add(plusMusic);
         // Son
-        final JPanel soundPanel = SwingFactory.createBoxLayoutPanel();
-        soundPanel.setBorder(BorderFactory.createEmptyBorder(heightMargin, widthMargin, heightMargin, widthMargin));
-        final JLabel sound = SwingFactory.createTextLabel("Son : -", "Komigo3D", Color.BLACK, 20);
+        final JPanel soundPanel = new JPanel();
+        soundPanel.setLayout(new BoxLayout(soundPanel, BoxLayout.X_AXIS));
+        soundPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        soundPanel.setOpaque(false);
+        soundPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        final JLabel sound = SwingFactory.createTextLabel("Son : - ", "NoitaBlackletter", Color.BLACK, defaultFont);
         final JSlider soundSlider = SwingFactory.createSoundSlider();
+        final JLabel plusSound = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, defaultFont);
         soundPanel.add(sound);
         soundPanel.add(soundSlider);
+        soundPanel.add(plusSound);
 
         panel.add(musicPanel);
         panel.add(soundPanel);
@@ -229,119 +254,153 @@ public final class MenuPanel extends JLayeredManager {
                 panel.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
             }
         });
-        panel.setVisible(true);
+        final JButton back = SwingFactory.createTextButton(panel, "Rebrousser chemin", 20, 10, 64, true);
+        createSwitchStateButton(back, MenuState.MAINMENU);
+        panel.add(back);
         return panel;
     }
-
     // #endregion
 
     // #region createjoin 3
 
     private JPanel createCreateJoinMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
-        panel.add(createCreateJoin(panel));
-        panel.add(createSwitchStateButton("back", MenuState.MAINMENU, 40, 10));
-        panel.setVisible(false);
-        return panel;
-    }
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
 
-    private JPanel createCreateJoin(final Component parent) {
-        final JPanel panel = SwingFactory.createContainerPanel(parent, 40, 0, 30, 0);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setVisible(true);
-        panel.setOpaque(false);
-        final JButton createButton = createSwitchStateButton("host", MenuState.GAMELOBBY, 40, 10);
-        final JButton joinButton = createSwitchStateButton("join", MenuState.JOINCODE, 40, 10);
-        panel.add(createButton);
-        panel.add(joinButton);
-        return panel;
-    }
+        panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
-    // #endregion
+        final JButton create = SwingFactory.createTextButton(panel, "Créer une nouvelle aventure", 15, 8, 64, true);
+        panel.add(create);
 
-    // #region joincode 4
+        final JButton join = SwingFactory.createTextButton(panel, "Rejoindre une escouade", 20, 10, 64, true);
+        panel.add(join);
 
-    private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 30, 20, 10, 20);
-        panel.add(createJoinCode(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 20));
-        panel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-        return panel;
-    }
+        final JButton back = SwingFactory.createTextButton(panel, "Rebrousser chemin", 20, 10, 64, true);
+        createSwitchStateButton(back, MenuState.MAINMENU);
+        panel.add(back);
 
-    private JPanel createJoinCode(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 60, 30);
-        // TODO CODE ONLINE
-        return panel;
-    }
-    // #endregion
-
-    // #region gamelobby 5
-
-    private JPanel createGameLobbyMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 0, 5);
-        final JPanel buttonsPanel = SwingFactory.createTransparentPanel(panel, 100, 11);
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, (int) (panel.getWidth() * 0.2), 0));
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                final FlowLayout layout = (FlowLayout) buttonsPanel.getLayout();
-                layout.setHgap((int) (panel.getWidth() * 0.2));
-            }
-        });
-
-        buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-        final JButton startGame = SwingFactory.createImageButton(this, "play", 40, 10, false);
-        startGame.addMouseListener(new MouseAdapter() {
+        create.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                Audio.stopMusic();
-                // frame.getGame().startGame(gameConfig, playersConfig);
-                frame.getGame().startTempGame();
+                animation(create, panel, MenuState.MAPCONFIG);
             }
         });
-        buttonsPanel.add(startGame);
 
+        join.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                animation(join, panel, MenuState.JOINGAME);
+            }
+        });
+        return panel;
+    }
+
+    private void animation(JButton button, JPanel panel, MenuState state) {
+        if (!animation) {
+            animation = true;
+            changeBackgroundGif("good");
+
+            Timer timer = new Timer(2900, f -> {
+                changeBackgroundImg("blackscreen");
+            });
+            timer.start();
+            timer.setRepeats(false);
+
+            Timer tmp = new Timer(3200, f -> {  
+                changeBackgroundImg("sign");
+                changeState(state);
+                animation = false;
+            });
+            tmp.start();
+            tmp.setRepeats(false);
+        }
+    }
+
+    // #endregion
+
+    // #region animation
+
+    // private JPanel createGameLobbyMenu() {
+    //     final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 0, 5);
+    //     final JPanel buttonsPanel = SwingFactory.createTransparentPanel(panel, 100, 11);
+    //     buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, (int) (panel.getWidth() * 0.2), 0));
+    //     panel.addComponentListener(new ComponentAdapter() {
+    //         @Override
+    //         public void componentResized(ComponentEvent e) {
+    //             final FlowLayout layout = (FlowLayout) buttonsPanel.getLayout();
+    //             layout.setHgap((int) (panel.getWidth() * 0.2));
+    //         }
+    //     });
+
+    //     buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
+    //     final JButton startGame = SwingFactory.createImageButton(this, "play", 40, 10, false);
+    //     startGame.addMouseListener(new MouseAdapter() {
+    //         @Override
+    //         public void mouseReleased(MouseEvent e) {
+    //             Audio.stopMusic();
+    //             // frame.getGame().startGame(gameConfig, playersConfig);
+    //             frame.getGame().startTempGame();
+    //         }
+    //     });
+    //     buttonsPanel.add(startGame);
+    // }
+
+    private void changeBackgroundGif(String gif) {
+        removeComp(BACKGROUND_INDEX);
+
+        JPanel animate = SwingFactory.createGifPanel(this, gif, 100, 100);
+        animate.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        background.add(animate);
+        addComp(background, BACKGROUND_INDEX);
+    }
+
+    private void changeBackgroundImg(String img) {
+        removeComp(BACKGROUND_INDEX);
+
+        JPanel animate = SwingFactory.createImagePanel(this, img, 100, 100);
+        animate.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        background.add(animate);
+        addComp(background, BACKGROUND_INDEX);
+    }
+
+
+    // #endregion
+
+    // #region gamelobby 4
+
+    private JPanel createGameLobbyMenu() {
+        final JPanel panel = SwingFactory.createContainerPanel(this, 2, 0, 0, 0);
         panel.add(createLobbyCode(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
         panel.add(createGameLobby(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 2));
-        panel.add(buttonsPanel);
+        panel.add(createBackButton(panel));
         return panel;
     }
 
     private JPanel createLobbyCode(final Component parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        final int defaultSize = 20;
         final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress() + ":" + port,
-            "RifficFree", new Color(175, 0, 0), defaultSize);
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                lobbyCode.setFont(getFont().deriveFont(Font.BOLD, defaultSize + frame.getHeight() / 50));
-                lobbyCode.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
-            }
-        });
+            "NoitaBlackletter", Color.BLACK, defaultFont / 2);
         lobbyCode.setVerticalAlignment(JLabel.CENTER);
         panel.add(lobbyCode);
         return panel;
     }
 
     private JPanel createGameLobby(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "frame", 90, 75);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "sign", 100, 85);
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         panel.setSize(panel.getPreferredSize());
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
+        panel.add(SwingFactory.createTransparentPanel(parent, 2, 0));
         panel.add(createMapSection(panel));
-        panel.add(SwingFactory.createImageLabel(panel, "border", 5, 80, true));
         panel.add(createGameSettings(panel));
         return panel;
     }
 
     private JPanel createMapSection(final JPanel parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 100);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 50, 90);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         panel.add(createMapSelection(parent));
         panel.add(createMapDescription(parent));
         return panel;
@@ -349,28 +408,246 @@ public final class MenuPanel extends JLayeredManager {
 
     private JPanel createMapSelection(final JPanel parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 50);
-        panel.setOpaque(false);
-        panel.setBackground(Color.BLACK);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // TODO selection de map
+        JPanel center = SwingFactory.createTransparentPanel(parent, 1, 50);
+        panel.add(center);
+        JButton left = SwingFactory.createImageButton(parent, "left", 5, 10, false);
+        panel.add(left);
+        JLabel mapLabel = SwingFactory.createImageLabel(parent, "test", 90, 60, false);
+        panel.add(mapLabel);
+        JButton right = SwingFactory.createImageButton(parent, "right", 5, 10, false);
+        panel.add(right);
         return panel;
     }
 
     private JPanel createMapDescription(final JPanel parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 50);
-        panel.setOpaque(false);
-        panel.setBackground(Color.ORANGE);
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setLayout(new BorderLayout());
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JTextPane desc = SwingFactory.createTextPane();
+        desc.setOpaque(false);
+        desc.setEditable(true);
+        desc.setForeground(Color.BLACK);
+        desc.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
+        desc.setFont(Resources.getFont("NoitaBlackletter", 32));
+        desc.setText("Bonjour, binevenueafiajgag egfaenigopjnpgqz .G\n Aogjpjzqpogjqg .gfeapigja ");
+        Font font;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/NoitaBlackletter.ttf")).deriveFont(40f);
+            desc.setFont(font);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        JScrollPane tmp = new JScrollPane(desc, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        panel.add(tmp);
+
         return panel;
     }
 
     private JPanel createGameSettings(final Component parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 50, 90);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.add(createTitleMap(parent));
+        panel.add(SwingFactory.createTransparentPanel(parent, 40, 10));
+        panel.add(createMapConfig(parent));
+        return panel;
+    }
+
+    private JPanel createTitleMap(final Component parent) {
+        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 40, 25);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalGlue());
+
+        JLabel title = SwingFactory.createTextLabel("Royaume Médieval", "NoitaBlackletter", Color.BLACK, defaultFont);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(title);
+        panel.add(Box.createVerticalGlue());
+        return panel;
+    }
+
+    private JPanel createMapConfig(final Component parent) {
+        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 40, 65);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JPanel turnsPanel = SwingFactory.createTransparentPanel(parent, 40, 10);
+        turnsPanel.setLayout(new BoxLayout(turnsPanel, BoxLayout.X_AXIS));
+        turnsPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 0, 0));
+        JLabel turns = SwingFactory.createTextLabel("Nombre de tours :", "NoitaBlackletter", Color.BLACK, defaultFont / 2);
+
+        ButtonGroup group = new ButtonGroup();
+        JRadioButton turnsBox1 = createRadioButton("25", group, true);
+        JRadioButton turnsBox2 = createRadioButton("35", group,false);
+        JRadioButton turnsBox3 = createRadioButton("45", group, false);
+        turnsPanel.add(turns);
+        turnsPanel.add(turnsBox1);
+        turnsPanel.add(turnsBox2);
+        turnsPanel.add(turnsBox3);
+
+        panel.add(turnsPanel);
+        return panel;
+    }
+
+    private JRadioButton createRadioButton(String text, ButtonGroup group, boolean selected) {
+        JRadioButton radioButton = new JRadioButton(text, selected);
+        radioButton.setOpaque(false);
+        radioButton.setForeground(Color.BLACK);
+        radioButton.setBorderPainted(false);
+        radioButton.setContentAreaFilled(false);
+        radioButton.setFocusPainted(false);
+        radioButton.setFont(Resources.getFont("NoitaBlackletter", 32));
+        group.add(radioButton);
+        return radioButton;
+    }
+
+    public JPanel createBackButton(final JPanel parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 10);
-        panel.setOpaque(false);
-        panel.setBackground(Color.ORANGE);
+        panel.setLayout(new BorderLayout());
+        //temporaire
+        final JButton back = new JButton("Retourner à la base");
+        back.setBorderPainted(false);
+        back.setOpaque(false);
+        back.setContentAreaFilled(false);
+        back.setFocusPainted(false);
+        back.setForeground(Color.BLACK);
+        back.setAlignmentX(Component.LEFT_ALIGNMENT);
+        back.setFont(Resources.getFont("NoitaBlackletter", 64));
+        back.setHorizontalTextPosition(JButton.LEFT);
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                removeComp(BACKGROUND_INDEX);
+                addComp(createBackground(), BACKGROUND_INDEX);
+            }
+        });
+        createSwitchStateButton(back, MenuState.SELECTMOD);
+        panel.add(back, BorderLayout.WEST);
+
+        JButton selectCharacter = new JButton("Selectionner cette aventure");
+        selectCharacter.setBorderPainted(false);
+        selectCharacter.setOpaque(false);
+        selectCharacter.setContentAreaFilled(false);
+        selectCharacter.setFocusPainted(false);
+        selectCharacter.setForeground(Color.BLACK);
+        selectCharacter.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        selectCharacter.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 100));
+        selectCharacter.setFont(Resources.getFont("NoitaBlackletter", 64));
+        selectCharacter.setHorizontalTextPosition(JButton.LEFT);
+        selectCharacter.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                changeBackgroundImg("village");
+            }
+        });
+        createSwitchStateButton(selectCharacter, MenuState.CHARACTER);
+        panel.add(selectCharacter, BorderLayout.EAST);
         return panel;
     }
 
     // #endregion
 
-    // #region manualIcon 6
+    // #region joincode 5
+
+    private JPanel createJoinCodeMenu() {
+        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        
+        return panel;
+    }
+
+    // #endregion
+
+    //#region character 6
+
+    private JPanel createSelectionCharacterMenu() {
+        final JPanel panel = SwingFactory.createContainerPanel(this, 18, 0, 0, 0);
+        panel.add(createConfigCharacter(panel));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 70));
+        panel.add(createImageCharacter(panel));
+        panel.add(SwingFactory.createTransparentPanel(panel, 100, 30));
+        return panel;
+    }
+
+    private JPanel createConfigCharacter(final JPanel parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 80);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel tmp = SwingFactory.createTransparentPanel(parent, 200, 30);
+        panel.setSize(new Dimension(200, 50));
+        JTextArea pseudo = new JTextArea("Joueur " + (playersConfig.size() + 1));
+        pseudo.setForeground(Color.BLACK);
+        pseudo.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+        pseudo.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+        pseudo.setFont(Resources.getFont("NoitaBlackletter", 32));
+        pseudo.setPreferredSize(new Dimension(200, 50));
+        tmp.add(pseudo);
+        panel.add(tmp);
+
+        JPanel skin = selectCharacter(parent);
+        panel.add(skin);
+
+        panel.add(SwingFactory.createTransparentPanel(parent, 100, 10));
+
+        JPanel item = selectItem(parent);
+        panel.add(item);
+        return panel;
+    }
+
+    public JPanel selectCharacter(final JPanel parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 20);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        JPanel center = SwingFactory.createTransparentPanel(parent, 35, 0);
+        panel.add(center);
+
+        JButton left = SwingFactory.createImageButton(parent, "left", 5, 10, false);
+        left.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
+        panel.add(left);
+        JLabel character = SwingFactory.createImageLabel(parent, "frame-1", 28, 28, false);
+        panel.add(character);
+        JButton right = SwingFactory.createImageButton(parent, "right", 5, 10, false);
+        right.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
+        panel.add(right);
+        return panel;
+    }
+
+    public JPanel selectItem(final JPanel parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 25);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        JPanel center = SwingFactory.createTransparentPanel(parent, 40, 0);
+        panel.add(center);
+
+        JButton left = SwingFactory.createImageButton(parent, "left", 5, 5, false);
+        panel.add(left);
+        JLabel character = SwingFactory.createImageLabel(parent, "sword", 20, 10, false);
+        panel.add(character);
+        JButton right = SwingFactory.createImageButton(parent, "right", 5, 5, false);
+        panel.add(right);
+        return panel;
+    }
+
+    public JPanel createImageCharacter(final JPanel parent) {
+        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 100);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JLabel character = SwingFactory.createImageLabel(parent, "frame-2", 20, 17, false);
+        panel.add(character);
+        return panel;
+    }
+
+    //#endregion
+
+    // #region manualIcon 7
     private JPanel createManualIcon() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 93, 0, 0, 95);
         panel.add(createBook());
@@ -407,7 +684,7 @@ public final class MenuPanel extends JLayeredManager {
 
     // #endregion
 
-    // #region manualBook 7
+    // #region manualBook 8
 
     private JPanel createManualBook() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 5, 5);
@@ -527,7 +804,7 @@ public final class MenuPanel extends JLayeredManager {
 
                 JViewport viewport = scrollPane.getViewport();
                 viewport.setView(mapPanel);
-                
+
             }
         });
 
@@ -558,7 +835,7 @@ public final class MenuPanel extends JLayeredManager {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 3, 5, 3);
-    
+
         // Ajout de l'image de la case
         JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
         casePanel.add(iconLabel, gbc);
@@ -568,7 +845,7 @@ public final class MenuPanel extends JLayeredManager {
         // Ajout du texte de description
         JLabel descriptionLabel = new JLabel(description);
         casePanel.add(descriptionLabel, gbc);
-    
+
         return casePanel;
     }
 
@@ -590,644 +867,4 @@ public final class MenuPanel extends JLayeredManager {
         return resizedImage;
     }
 
-
-    // #endregion
-    // private JPanel createJoin() {
-    //     add(createBackground("background_menu"), Integer.valueOf(0));
-    //     JPanel panel = SwingFactory.createPanel(frame, 14);
-    //     JPanel buttonPanel = SwingFactory.createBoxLayoutPanel();
-    //     buttonPanel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 3, 0, 0, 0));
-    //     JButton hostButton = SwingFactory.createImageButton("host", frame, MenuState.CREATEJOIN, this);
-
-    //     JButton joinButton = SwingFactory.createImageButton("join", frame, MenuState.GAMELOBBY, this);
-    //     buttonPanel.add(hostButton, BorderLayout.CENTER);
-    //     buttonPanel.add(joinButton, BorderLayout.SOUTH);
-
-    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JButton backButton = SwingFactory.createImageButton("back", frame, MenuState.MAINMENU, this);
-
-    //     JButton manual = createManuelButton();
-    //     botPanel.add(backButton, BorderLayout.WEST);
-    //     botPanel.add(manual, BorderLayout.EAST);
-
-    //     panel.add(buttonPanel, BorderLayout.CENTER);
-    //     panel.add(botPanel, BorderLayout.SOUTH);
-    //     return panel;
-    // }
-
-    // private JPanel createLobby() {
-    //     try {
-    //         ip = InetAddress.getLocalHost();
-    //     } catch (UnknownHostException e1) {
-    //         e1.printStackTrace();
-    //     }
-    //     JPanel panel = SwingFactory.createPanel(frame, 0);
-
-    //     JPanel lobbyNamePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.LEFT);
-
-    //     JLabel invitationLabel = SwingFactory.createLabel("Code d'invitation : ", 12, "RifficFree");
-    //     lobbyNamePanel.add(invitationLabel);
-
-    //     JLabel codeLabel = SwingFactory.createLabel(ip.getHostAddress() + ":" + port, 12, "RifficFree");
-    //     codeLabel.setForeground(new Color(175, 0, 0));
-    //     lobbyNamePanel.add(codeLabel);
-
-    //     JPanel lobbyPanel = SwingFactory.createImagePanel("frame", 20, 0, getWidth() - 40, getHeight());
-    //     lobbyPanel.setLayout(new GridLayout(1, 2));
-    //     lobbyPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
-
-    //     JPanel leftPanel = createLeftSide();
-
-    //     rightSidePanel = createRightSide();
-
-    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JButton backButton = SwingFactory.createImageButton("back", frame, MenuState.CREATEJOIN, this);
-    //     backButton.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             nbPlayers = 0;
-    //             players.clear();
-    //             configGame.clear();
-    //             configPlayer.clear();
-    //         }
-    //     });
-
-    //     JButton startButton = SwingFactory.createImageButton("play", frame, null, this);
-    //     startButton.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             System.out.println(select);
-    //             controller.startGame(Resources.loadGameMapsGraphics("map4"), gameConfig, playersConfig);
-    //             System.out.println(gameConfig);
-    //             System.out.println(playersConfig);
-    //             System.out.println("START GAME");
-    //             System.out.println("NOMBRE DE JOUEUR " + players.size());
-    //         }
-    //     });
-
-    //     botPanel.add(backButton, BorderLayout.WEST);
-    //     botPanel.add(startButton, BorderLayout.CENTER);
-
-    //     lobbyPanel.add(leftPanel, BorderLayout.WEST);
-    //     lobbyPanel.add(rightSidePanel, BorderLayout.EAST);
-
-    //     panel.add(lobbyNamePanel, BorderLayout.NORTH);
-    //     panel.add(lobbyPanel, BorderLayout.CENTER);
-    //     panel.add(botPanel, BorderLayout.SOUTH);
-    //     return panel;
-    // }
-
-    // private JPanel createLeftSide() {
-    //     JPanel leftSidePanel = SwingFactory.createPanel(frame, 0);
-
-    //     JPanel namePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-
-    //     JLabel nameLabel = new JLabel("Royaume de Teranor");
-    //     nameLabel.setFont(Resources.loadFont(30f, "RifficFree"));
-    //     namePanel.add(nameLabel, BorderLayout.CENTER);
-
-    //     JPanel mapSelectionPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JLabel mapSelect = SwingFactory.createImageLabel("preview" + String.valueOf(select));
-    //     mapSelect.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     mapSelect.setPreferredSize(new Dimension(200, 250));
-
-    //     JTextArea descMap = new JTextArea();
-    //     descMap.setOpaque(false);
-
-    //     JButton leftSelectButton = SwingFactory.createImageButton("select_left", frame, null, this);
-    //     if (host) {
-    //         leftSelectButton.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 if (select > 1) {
-    //                     select--;
-    //                 } else {
-    //                     select = nbMaps;
-    //                 }
-    //                 mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
-    //                 changeContent(nameLabel, descMap);
-    //             }
-    //         });
-    //     } else {
-    //         leftSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     leftSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-
-    //     JButton rightSelectButton = SwingFactory.createImageButton("select_right", frame, null, this);
-    //     rightSelectButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-    //     if (host) {
-    //         rightSelectButton.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 if (select < nbMaps) {
-    //                     select++;
-    //                 } else {
-    //                     select = 1;
-    //                 }
-    //                 mapSelect.setIcon(new ImageIcon(Resources.getMenuImage("preview" + String.valueOf(select))));
-    //                 changeContent(nameLabel, descMap);
-    //             }
-    //         });
-    //     } else {
-    //         rightSelectButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     mapSelectionPanel.add(leftSelectButton, BorderLayout.WEST);
-    //     mapSelectionPanel.add(mapSelect, BorderLayout.CENTER);
-    //     mapSelectionPanel.add(rightSelectButton, BorderLayout.EAST);
-
-    //     JPanel descPanel = SwingFactory.createBorderLayoutPanel();
-    //     descMap.setEditable(false);
-    //     descMap.setLineWrap(true);
-    //     descMap.setWrapStyleWord(true);
-    //     descMap.setPreferredSize(new Dimension(200, 100));
-    //     descMap.setFont(Resources.loadFont(12f, "RifficFree"));
-    //     descMap.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 35));
-    //     descPanel.add(descMap);
-
-    //     leftSidePanel.add(namePanel, BorderLayout.NORTH);
-    //     leftSidePanel.add(mapSelectionPanel, BorderLayout.CENTER);
-    //     leftSidePanel.add(descPanel, BorderLayout.SOUTH);
-    //     changeContent(nameLabel, descMap);
-    //     return leftSidePanel;
-    // }
-
-    // private JPanel createRightSide() {
-    //     rightSidePanel = SwingFactory.createPanel(frame, 0);
-
-    //     JPanel configPanel = createConfig();
-
-    //     JPanel midPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     //TODO
-    //     JLabel gameMode = new JLabel("Mode de jeu : 1v1");
-    //     gameMode.setFont(Resources.loadFont(16, "RifficFree"));
-    //     gameMode.setForeground(Color.BLACK);
-
-    //     JPanel buttonPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JPanel playerList = SwingFactory.createBoxLayoutPanel();
-    //     playerList.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-    //     for (int i = 0; i < nbPlayers; i++) {
-    //         JPanel reloadPlayer;
-    //         if (players.size() == 0) {
-    //             nbPlayers++;
-    //             reloadPlayer = createPlayerList(nbPlayers, configPlayer);
-    //         } else {
-    //             rightSidePanel.removeAll();
-    //             reloadPlayer = createPlayerList(i, players.get(i));
-    //         }
-    //         playerList.add(reloadPlayer);
-    //         playerList.setName("playerList");
-    //         repaint();
-    //         revalidate();
-    //     }
-    //     resizing = false;
-    //     if (players.size() == 0) {
-    //         nbPlayers++;
-    //         playerList.add(createPlayerList(nbPlayers, configPlayer));
-    //         playerList.setName("playerList");
-    //     }
-    //     JLabel playerButton = SwingFactory.createImageLabel("player");
-    //     if (host) {
-    //         playerButton.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 if (nbPlayers < 4) {
-    //                     nbPlayers++;
-    //                     JPanel newPlayer = createPlayerList(nbPlayers, configPlayer);
-    //                     playerList.add(newPlayer);
-    //                     playerList.setName("playerList");
-    //                     repaint();
-    //                     revalidate();
-    //                 }
-    //             }
-    //         });
-    //     } else {
-    //         playerButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-
-    //     JLabel botButton = SwingFactory.createImageLabel("bot");
-    //     if (host) {
-    //         botButton.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 System.out.println("Adding new bot...");
-    //             }
-    //         });
-    //     } else {
-    //         botButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     botButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-
-    //     JLabel randButton = SwingFactory.createImageLabel("random");
-    //     if (host) {
-    //         randButton.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 System.out.println("Randomizing team...");
-    //             }
-    //         });
-    //     } else {
-    //         randButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     buttonPanel.add(playerButton, BorderLayout.WEST);
-    //     buttonPanel.add(botButton, BorderLayout.CENTER);
-    //     buttonPanel.add(randButton, BorderLayout.EAST);
-    //     midPanel.add(gameMode, BorderLayout.WEST);
-    //     midPanel.add(buttonPanel, BorderLayout.EAST);
-
-    //     rightSidePanel.add(configPanel, BorderLayout.NORTH);
-    //     rightSidePanel.add(midPanel, BorderLayout.CENTER);
-    //     rightSidePanel.add(playerList, BorderLayout.SOUTH);
-    //     return rightSidePanel;
-    // }
-
-    // private JPanel createConfig() {
-    //     if (!resizing) {
-    //         initConfig();
-    //     }
-    //     JPanel panel = SwingFactory.createBorderLayoutPanel();
-
-    //     JPanel titlePanel = createTitlePanel();
-    //     panel.add(titlePanel, BorderLayout.NORTH);
-
-    //     JPanel optionsPanel = SwingFactory.createBoxLayoutPanel();
-    //     optionsPanel.add(createOptionPanel("Nombre de tour :", new String[]{"30", "40", "50"}, "round"));
-    //     optionsPanel.add(createOptionPanel("Double dé :", new String[]{"Activé", "Désactivé"}, "dice"));
-    //     optionsPanel.add(createOptionPanel("Objet de départ :", new String[]{"Activé", "Désactivé"}, "item"));
-    //     optionsPanel.add(createOptionPanel("Plusieurs gagnants :", new String[]{"Activé", "Désactivé"}, "multiWin"));
-    //     panel.add(optionsPanel, BorderLayout.WEST);
-    //     return panel;
-    // }
-
-    // private JPanel createTitlePanel() {
-    //     JPanel titlePanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-    //     JLabel title = SwingFactory.createLabel("Paramètre de la partie", 22, "RifficFree");
-    //     titlePanel.add(title);
-    //     return titlePanel;
-    // }
-
-    // private JPanel createOptionPanel(final String labelName, final String[] buttonLabels, final String groupName) {
-    //     int size = 16;
-    //     int tmp = 0;
-    //     JPanel optionPanel = SwingFactory.createNormalPanel();
-
-    //     JLabel optionLabel = SwingFactory.createLabel(labelName, size, "RifficFree");
-    //     optionPanel.add(optionLabel);
-
-    //     ButtonGroup optionGroup = new ButtonGroup();
-    //     for (String buttonLabel : buttonLabels) {
-    //         AbstractButton button;
-    //         if (buttonLabels.length > 2) {
-    //             button = SwingFactory.createRadioButton(buttonLabel, size, configGame, groupName);
-    //             if (tmp == 1) {
-    //                 tmp = 0;
-    //             }
-    //         } else {
-    //             button = SwingFactory.createJCheckBox(buttonLabel, size, configGame, groupName);
-    //             if (tmp == 2) {
-    //                 tmp = 0;
-    //             }
-    //         }
-    //         button.setForeground(Color.black);
-    //         if (!host) {
-    //             button.setEnabled(false);
-    //         }
-    //         if (tmp == 0) {
-    //             button.setSelected(true);
-    //         }
-    //         tmp++;
-    //         optionGroup.add(button);
-    //         optionPanel.add(button);
-    //     }
-    //     return optionPanel;
-    // }
-
-    // private void initConfig() {
-    //     configGame.put("map", 1);
-    //     configGame.put("round", 30);
-    //     configGame.put("dice", 1);
-    //     configGame.put("item", 1);
-    //     configGame.put("multiWin", 1);
-    // }
-
-    // private JPanel createPlayerList(final int y, final HashMap<String, String> config) {
-    //     if (!resizing) {
-    //         initPlayers();
-    //     }
-    //     int playerId = Integer.valueOf(config.get("id"));
-
-    //     JPanel panel = new JPanel(new GridBagLayout());
-    //     panel.setOpaque(false);
-    //     panel.setName("panel_" + playerId);
-    //     if (playerId == 1) {
-    //         panel.setBorder(BorderFactory.createMatteBorder(2, 2, 1, 2, Color.black));
-    //     } else if (playerId == 2 || playerId == 3) {
-    //         panel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, Color.black));
-    //     } else if (playerId == 4) {
-    //         panel.setBorder(BorderFactory.createMatteBorder(1, 2, 2, 2, Color.black));
-    //     }
-
-    //     GridBagConstraints gbc = new GridBagConstraints();
-    //     gbc.anchor = GridBagConstraints.WEST;
-    //     gbc.fill = GridBagConstraints.HORIZONTAL;
-    //     gbc.insets = new Insets(0, 5, 0, 5);
-    //     gbc.gridy = y;
-    //     gbc.weightx = 1;
-    //     gbc.weighty = 1;
-
-    //     JLabel manageLabel = new JLabel();
-    //     if (host && playerId == 1) {
-    //         manageLabel = SwingFactory.createImageLabel("crown");
-    //         manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //         gbc.gridx = 0;
-    //         panel.add(manageLabel, gbc);
-    //     } else if (host && playerId != 1) {
-    //         manageLabel = SwingFactory.createImageLabel("remove");
-    //         manageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
-    //         manageLabel.addMouseListener(new MouseAdapter() {
-    //             @Override
-    //             public void mouseClicked(final MouseEvent e) {
-    //                 if (playerId > 1) {
-    //                     int playerId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-    //                     players.remove(playerId - 1);
-    //                     nbPlayers--;
-    //                     updatePlayerIds(playerId, ((JLabel) e.getSource()));
-
-    //                     rightSidePanel.revalidate();
-    //                     rightSidePanel.repaint();
-    //                 }
-    //             }
-    //         });
-    //     } else {
-    //         manageLabel = SwingFactory.createImageLabel("nothing");
-    //         manageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     manageLabel.setName("manageLabel_" + playerId);
-    //     gbc.gridx = 0;
-    //     panel.add(manageLabel, gbc);
-
-    //     JLabel pseudoLabel = SwingFactory.createLabel(config.get("pseudo"), 12, "RifficFree");
-    //     gbc.gridx = 1;
-    //     panel.add(pseudoLabel, gbc);
-
-    //     JPanel objectPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JLabel leftSelection = SwingFactory.createImageLabel("object_left");
-    //     leftSelection.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             if (object > 1) {
-    //                 object--;
-    //             } else {
-    //                 object = 4;
-    //             }
-    //             int newItem = changeItem();
-    //             int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-    //             players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
-    //         }
-    //     });
-    //     leftSelection.setName("leftSeletion_" + playerId);
-
-    //     JPanel objectContent = SwingFactory.createBorderLayoutPanel();
-    //     objectContent.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, -20));
-
-    //     JLabel objectImageLabel = SwingFactory.createImageLabel("sword");
-    //     objectImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-    //     objectImageLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-    //     JLabel objectNameLabel = SwingFactory.createLabel(config.get("item"), 12, "RifficFree");
-    //     objectContent.add(objectImageLabel, BorderLayout.WEST);
-    //     objectContent.add(objectNameLabel, BorderLayout.CENTER);
-
-    //     JLabel rightSelection = SwingFactory.createImageLabel("object_right");
-    //     rightSelection.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             if (object < 4) {
-    //                 object++;
-    //             } else {
-    //                 object = 1;
-    //             }
-    //             int newItem = changeItem();
-    //             int playerClickedId = Integer.parseInt(((JLabel) e.getSource()).getName().split("_")[1]);
-    //             players.get(playerClickedId - 1).replace("item", String.valueOf(newItem));
-    //         }
-    //     });
-    //     rightSelection.setName("leftSeletion_" + playerId);
-    //     objectPanel.add(leftSelection, BorderLayout.WEST);
-    //     objectPanel.add(objectContent, BorderLayout.CENTER);
-    //     objectPanel.add(rightSelection, BorderLayout.EAST);
-    //     gbc.gridx = 2;
-    //     panel.add(objectPanel, gbc);
-
-    //     JLabel status;
-    //     if (host) {
-    //         status = SwingFactory.createImageLabel("ready");
-    //     } else {
-    //         status = SwingFactory.createImageLabel("notready");
-    //     }
-    //     status.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     gbc.gridx = 3;
-    //     panel.add(status, gbc);
-
-    //     JLabel changeTeam;
-    //     if (host) {
-    //         changeTeam = SwingFactory.createImageLabel("switch");
-    //     } else {
-    //         changeTeam = SwingFactory.createImageLabel("nothing");
-    //         changeTeam.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    //     }
-    //     gbc.gridx = 4;
-    //     gbc.gridwidth = GridBagConstraints.REMAINDER;
-    //     panel.add(changeTeam, gbc);
-    //     if (!resizing) {
-    //         players.add(configPlayer);
-    //     }
-    //     return panel;
-    // }
-
-    // private void initPlayers() {
-    //     configPlayer.put("id", String.valueOf(nbPlayers));
-    //     int playerId = Integer.valueOf(configPlayer.get("id"));
-    //     if (host && playerId == 1) {
-    //         configPlayer.put("manage", "crown");
-    //     } else if (host && playerId != 1) {
-    //         configPlayer.put("manage", "remove");
-    //     } else {
-    //         configPlayer.put("manage", "nothing");
-    //     }
-    //     configPlayer.put("pseudo", "Joueur" + playerId);
-    //     configPlayer.put("item", "EPEE DE TEST");
-    //     if (host) {
-    //         configPlayer.put("status", "ready");
-    //     } else {
-    //         configPlayer.put("status", "notready");
-    //     }
-    //     configPlayer.put("team", "1");
-    // }
-
-    // private void updatePlayerIds(final int removedPlayerId, final JLabel removePlayerLabel) {
-    //     //Change les données des joueurs en hauts
-    //     for (Map<String, String> player : players) {
-    //         int playerId = Integer.parseInt(player.get("id"));
-    //         if (playerId > removedPlayerId) {
-    //             player.put("id", String.valueOf(playerId - 1));
-    //         }
-    //     }
-    //     //Change le nom des panels et labels
-    //     for (Component comp : rightSidePanel.getComponents()) {
-    //         if (comp.getName() != null) {
-    //             for (Component comp2 : ((JPanel) comp).getComponents()) {
-    //                 if (comp2.getName().equals("panel_" + removedPlayerId)) {
-    //                     ((JPanel) comp).remove(comp2);
-    //                 }
-    //                 if (removedPlayerId < Integer.parseInt(comp2.getName().split("_")[1])) {
-    //                     comp2.setName("panel_" + (Integer.parseInt(comp2.getName().split("_")[1]) - 1));
-    //                     for (Component comp3 : ((JPanel) comp2).getComponents()) {
-    //                         if (comp3.getName() != null) {
-    //                             comp3.setName("manageLabel_" + (Integer.parseInt(comp3.getName()
-    //                                  .split("_")[1]) - 1));
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // private JPanel createWaitingLobby() {
-    //     add(createBackground("background_lobby"), Integer.valueOf(0));
-    //     JPanel panel = SwingFactory.createImagePanel("frame2", 100, 100, getWidth() - 200, getHeight() - 200);
-    //     panel.setLayout(new BorderLayout());
-    //     panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-
-    //     JPanel codePanel = SwingFactory.createBoxLayoutPanel();
-    //     codePanel.setBorder(BorderFactory.createEmptyBorder(frame.getHeight() / 4, 0, 0, 0));
-
-    //     JLabel codeLabel = SwingFactory.createLabel(
-    //          "Veuillez saisir votre code d'invitation :", 24, "RifficFree");
-    //     codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-    //     JPanel textFieldPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-    //     textFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-
-    //     JTextField codeField = new JTextField();
-    //     codeField.setHorizontalAlignment(JTextField.CENTER);
-    //     codeField.setPreferredSize(new Dimension(400, 30));
-    //     codeField.setFont(Resources.loadFont(16, "RifficFree"));
-    //     codeField.setText("Saisir ici");
-    //     codeField.setForeground(Color.lightGray);
-    //     codeField.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mousePressed(final MouseEvent e) {
-    //             if (codeField.getText().contains("")) {
-    //                 codeField.setText("");
-    //                 codeField.setForeground(Color.BLACK);
-    //             }
-    //         }
-    //     });
-    //     textFieldPanel.add(codeField);
-
-    //     JPanel buttonPanel = SwingFactory.createFlowLayoutPanel(FlowLayout.CENTER);
-
-    //     JButton joinButton = SwingFactory.createImageButton("join", frame, MenuState.GAMELOBBY, this);
-    //     joinButton.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             //Verification de l'ip + port via une fonction ou autre
-    //             code = codeField.getText();
-    //         }
-    //     });
-    //     buttonPanel.add(joinButton);
-    //     codePanel.add(codeLabel);
-    //     codePanel.add(textFieldPanel);
-    //     codePanel.add(buttonPanel);
-
-    //     JPanel botPanel = SwingFactory.createBorderLayoutPanel();
-
-    //     JButton backButton = SwingFactory.createImageButton("back", frame, MenuState.CREATEJOIN, this);
-
-    //     JButton manual = createManuelButton();
-    //     botPanel.add(backButton, BorderLayout.WEST);
-    //     botPanel.add(manual, BorderLayout.EAST);
-
-    //     panel.add(codePanel, BorderLayout.CENTER);
-    //     panel.add(botPanel, BorderLayout.SOUTH);
-    //     return panel;
-    // }
-
-    // private JButton createManuelButton() {
-    //     JButton manual = SwingFactory.createImageButton("manual_close", frame, null, this);
-    //     manual.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseEntered(final MouseEvent e) {
-    //             manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_bright")));
-    //         }
-
-    //         @Override
-    //         public void mouseExited(final MouseEvent e) {
-    //             manual.setIcon(new ImageIcon(Resources.getMenuImage("manual_close")));
-    //         }
-
-    //         @Override
-    //         public void mouseClicked(final MouseEvent e) {
-    //             add(createHelpManual(), Integer.valueOf(2));
-    //         }
-    //     });
-    //     return manual;
-    // }
-
-    // private void changeContent(final JLabel nameMap, final JTextArea textArea) {
-    //     switch (select) {
-    //         case 1:
-    //             nameMap.setText("Royaume de Teranor");
-    //             nameMap.setForeground(new Color(120, 60, 0));
-    //             textArea.setText("Royaume mediaval incroyable");
-    //             textArea.setForeground(new Color(120, 60, 0));
-    //             break;
-    //         case 2:
-    //             nameMap.setText("Stellaria");
-    //             nameMap.setForeground(new Color(0, 0, 100));
-    //             textArea.setText("Map escape avec un alien qui fait peur :c");
-    //             textArea.setForeground(new Color(0, 0, 100));
-    //             break;
-    //         case 3:
-    //             nameMap.setText("Frostoria");
-    //             nameMap.setForeground(new Color(136, 248, 248));
-    //             textArea.setText("Brrrr il fait giga froid ici");
-    //             textArea.setForeground(new Color(136, 248, 248));
-    //             break;
-    //         case 4:
-    //             nameMap.setText("Terre du Crepuscule");
-    //             nameMap.setForeground(new Color(180, 0, 0));
-    //             textArea.setText("C'est l'heure du du duel !");
-    //             textArea.setForeground(new Color(180, 0, 0));
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-
-    // private int changeItem() {
-    //     //replacer les chiffres des return par leurs objets
-    //     switch (object) {
-    //         case 1:
-    //             return 1;
-    //         case 2:
-    //             return 2;
-    //         case 3:
-    //             return 3;
-    //         case 4:
-    //             return 4;
-    //         case 5:
-    //             return 5;
-    //         default:
-    //             return 1;
-    //     }
-    // }
-    
 }

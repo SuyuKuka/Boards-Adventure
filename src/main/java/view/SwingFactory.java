@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -23,9 +24,17 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextPane;
+import javax.swing.SizeRequirements;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
+import javax.swing.text.Element;
+import javax.swing.text.ParagraphView;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
+import javax.swing.text.html.InlineView;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -154,6 +163,36 @@ public class SwingFactory {
         return panel;
     }
 
+    public static JPanel createGifPanel(final Component parent, final String img,
+    final int widthPer, final int heightPer) {
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.setOpaque(false);
+        final Dimension size = new Dimension(parent.getWidth() * widthPer / 100, parent.getHeight() * heightPer / 100);
+        panel.setMaximumSize(size);
+        panel.setPreferredSize(size);
+        final ImageIcon gif = new ImageIcon(Resources.getGif(img).getImage()
+        .getScaledInstance(size.width, size.height, Image.SCALE_FAST));
+        final JLabel label = new JLabel(gif);
+        label.setVerticalAlignment(JLabel.CENTER);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(label, BorderLayout.CENTER);
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension size = new Dimension((int) (parent.getWidth() * widthPer / 100),
+                    (int) (parent.getHeight() * heightPer / 100));
+                panel.setMaximumSize(size);
+                panel.setPreferredSize(size);
+                label.setIcon(new ImageIcon(Resources.getGif(img).getImage()
+                    .getScaledInstance(size.width, size.height, Image.SCALE_FAST)));
+            }
+        });
+        panel.setVisible(true);
+        return panel;
+    }
+
+
     public static JPanel createGamePanelCells(final Component parent,
     final int widthPer, final int heightPer) {
         final JPanel panel = new JPanel();
@@ -254,6 +293,51 @@ public class SwingFactory {
         return button;
     }
 
+    public static JButton createTextButton(final Component parent, final String text,
+        final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
+        final Image image = Resources.getImage("emptysword_small");
+        final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
+        final JButton button = new JButton();
+        button.setPreferredSize(new Dimension((int) size.getWidth() + 20, (int) size.getHeight())); //ne fonctionne pas
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+
+        button.setText(text);
+        button.setForeground(Color.BLACK);
+        button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
+        button.setHorizontalTextPosition(JButton.LEFT);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setIcon(new ImageIcon(image.getScaledInstance(
+                    (int) size.getWidth() / 2, (int) size.getHeight() / 2, Image.SCALE_DEFAULT)));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setIcon(null);
+                parent.revalidate();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Audio.playSound("button.wav");
+                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        });
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // System.out.println(size);
+                final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
+                button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+            }
+        });
+        return button;
+    }
+
     // public static JPanel createNormalPanel() {
     //     JPanel panel = new JPanel();
     //     panel.setOpaque(false);
@@ -314,7 +398,6 @@ public class SwingFactory {
     public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
         final int size) {
         final JLabel label = new JLabel(text);
-        label.setVerticalAlignment(JLabel.CENTER);
         label.setForeground(foregroundColor);
         label.setFont(Resources.getFont(fontName, size));
         return label;
@@ -393,7 +476,7 @@ public class SwingFactory {
     // }
 
     public static JSlider createJSlider() {
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0) {
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 100) {
             @Override
             public void updateUI() {
                 setUI(new BasicSliderUI(this) {
@@ -483,6 +566,57 @@ public class SwingFactory {
             }
         });
         return soundSlider;
+    }
+
+    public static JTextPane createTextPane() {
+        final JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setEditorKit(new HTMLEditorKit() {
+            @Override
+            public ViewFactory getViewFactory() {
+                return new HTMLFactory() {
+                    public javax.swing.text.View create(final Element e) {
+                        javax.swing.text.View v = super.create(e);
+                        if (v instanceof InlineView) {
+                            return new InlineView(e) {
+                                public int getBreakWeight(int axis, float pos, float len) {
+                                    return GoodBreakWeight;
+                                }
+                                public javax.swing.text.View breakView(int axis, int p0, float pos, float len) {
+                                    if (axis == javax.swing.text.View.X_AXIS) {
+                                        checkPainter();
+                                        int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+                                        if (p0 == getStartOffset() && p1 == getEndOffset()) {
+                                            return this;
+                                        }
+                                        return createFragment(p0, p1);
+                                    }
+                                    return this;
+                                }
+                            };
+                        } else if (v instanceof ParagraphView) {
+                            return new ParagraphView(e) {
+                                protected SizeRequirements calculateMinorAxisRequirements(int axis,
+                                    SizeRequirements r) {
+                                    if (r == null) {
+                                        r = new SizeRequirements();
+                                    }
+                                    float pref = layoutPool.getPreferredSpan(axis);
+                                    float min = layoutPool.getMinimumSpan(axis);
+                                    r.minimum = (int) min;
+                                    r.preferred = Math.max(r.minimum, (int) pref);
+                                    r.maximum = Integer.MAX_VALUE;
+                                    r.alignment = 0.5f;
+                                  return r;
+                                }
+                            };
+                        }
+                      return v;
+                    }
+                };
+            }
+        });
+        return textPane;
     }
 
     public static Timer createTimer() {

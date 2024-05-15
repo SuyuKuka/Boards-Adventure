@@ -77,7 +77,7 @@ public final class Audio {
     }
 
     public static int getSoundSliderValue() {
-        return (int) soundVolume * 50;
+        return (int) soundVolume * 100;
     }
 
     public static void setMusicVolume(final float volume) {
@@ -89,6 +89,6 @@ public final class Audio {
     }
 
     public static int getMusicSliderValue() {
-        return (int) musicVolume * 50;
+        return (int) musicVolume * 100;
     }
 }

@@ -17,6 +17,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import controller.resources.Resources;
+
 public final class ActionPanel extends JPanel {
 
 
@@ -53,7 +55,7 @@ public final class ActionPanel extends JPanel {
     }
 
     public void playerAction() {
-        rollDiceButton.setIcon(new ImageIcon("src/main/resources/images/game/rolling_dice.gif"));
+        rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
         rollDiceButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
@@ -83,16 +85,13 @@ public final class ActionPanel extends JPanel {
         panel.setBackground(Color.PINK);
         Object[] items =
             {
-                // new ImageIcon("src/main/resources/maps/map4/j1.png"),
-                new ImageIcon("src/main/resources/maps/map4/j0.png"),
-                new ImageIcon("src/main/resources/maps/map4/j1.png"),
-                new ImageIcon("src/main/resources/maps/map4/j2.png"),
-                new ImageIcon("src/main/resources/maps/map4/j3.png")
+                new ImageIcon(Resources.getImage("j0"))
+                // TODO ICI LES ITEMS GRAPHICS
 
             };
         otherActionBox = new JComboBox<Object>(items);
         rollDiceButton = new JButton();
-        rollDiceButton.setIcon(new ImageIcon("src/main/resources/images/game/dice1.png"));
+        rollDiceButton.setIcon(new ImageIcon(Resources.getImage("dice1")));
 
         DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
         listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
