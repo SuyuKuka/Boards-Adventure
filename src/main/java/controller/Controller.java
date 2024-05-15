@@ -110,6 +110,7 @@ public final class Controller {
     public void rollDice() {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
+        gamePanel.rollDice();
         gameUpdate();
     }
 
@@ -236,6 +237,10 @@ public final class Controller {
 
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
+    }
+
+    public String getCurrentPlayerName() {
+        return getCurrentPlayer().getName();
     }
 
     public int getCurrentPlayerID() {

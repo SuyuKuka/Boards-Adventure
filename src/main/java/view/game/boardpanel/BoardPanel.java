@@ -70,6 +70,7 @@ public final class BoardPanel extends JLayeredManager {
     private final ArrayList<PlayerGraphics> playersGraphics;
 
     // CAMERA ET ZOOM
+    private static final int WIDE_ANGLE_SAFETY = 3;
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 480;
     private static final double MIN_ZOOM = 0.5;
@@ -81,6 +82,8 @@ public final class BoardPanel extends JLayeredManager {
     private double cameraX;
     private double cameraY;
     private Point cameraPan = null;
+    private int wideAngleAccumulator = 0;
+    private boolean wideAngle = false;
 
     private final Image boardImage;
 
@@ -141,18 +144,18 @@ public final class BoardPanel extends JLayeredManager {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON3 && !wideAngle) {
                     cameraPan = e.getPoint();
                 }
             }
             @Override
             public void mouseReleased(final MouseEvent e) {
                 final int button = e.getButton();
-                if (button == MouseEvent.BUTTON3) {
+                if (button == MouseEvent.BUTTON3 && !wideAngle) {
                     cameraPan = null;
                     getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
-                if (button == MouseEvent.BUTTON2) {
+                if (button == MouseEvent.BUTTON2 && cameraPan == null) {
                     final PlayerGraphics playerGraphics =
                         gamePanel.getPlayerGraphics(gamePanel.getController().getCurrentPlayerID());
                     updateCameraPosition(1, playerGraphics.getXPos(), playerGraphics.getYPos());
@@ -169,12 +172,24 @@ public final class BoardPanel extends JLayeredManager {
             public void mouseWheelMoved(final MouseWheelEvent e) {
                 if (!e.isControlDown()) {
                     if (e.getWheelRotation() < 0) {
+                        // molette haut/zoom
+                        if (wideAngle) {
+                            wideAngle = false;
+                        }
                         if (zoom <= MAX_ZOOM - 0.1) {
                             updateCameraPosition(zoom + 0.1, cameraX, cameraY);
                         }
                     } else {
+                        // molette bas/dezoom
                         if (zoom >= MIN_ZOOM + 0.1) {
                             updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                        } else if (!wideAngle && cameraPan == null) {
+                            if (wideAngleAccumulator < WIDE_ANGLE_SAFETY) {
+                                wideAngleAccumulator++;
+                            } else {
+                                wideAngle = true;
+                                updateWideAngleCamera();
+                            }
                         }
                     }
                     redraw();
@@ -241,6 +256,17 @@ public final class BoardPanel extends JLayeredManager {
         cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
         cameraX = nextCameraX;
         cameraY = nextCameraY;
+        repositionCamera();
+    }
+
+    private void updateWideAngleCamera() {
+        cameraWidth = boardImage.getWidth(null);
+        cameraHeight = boardImage.getHeight(null);
+        cameraX = cameraWidth / 2;
+        cameraY = cameraHeight / 2;
+    }
+
+    private void repositionCamera() {
         if (cameraX < cameraWidth / 2) {
             cameraX = cameraWidth / 2;
         } else if (cameraX > boardImage.getWidth(null) - cameraWidth / 2) {
@@ -323,6 +349,10 @@ public final class BoardPanel extends JLayeredManager {
             removeComp(INTERACTION);
             controller.gameUpdate();
         });
+    }
+
+    public void gameEnd() {
+        System.out.println("gameend !!");
     }
 
     private void updateCurrentPlayerGraphicsPosition() {

@@ -116,6 +116,10 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.playerAction();
     }
 
+    public void rollDice() {
+        mainPanel.rollDice();
+    }
+
     public void playerMove() {
         mainPanel.playerMove();
     }

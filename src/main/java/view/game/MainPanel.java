@@ -66,18 +66,25 @@ public final class MainPanel extends JPanel {
 
     public void gameStart() {
         boardPanel.gameStart();
+        chatPanel.gameStart();
     }
 
     public void newTurn() {
         boardPanel.newTurn();
+        chatPanel.newTurn();
     }
 
     public void inJail() {
         boardPanel.inJail();
+        chatPanel.inJail();
     }
 
     public void playerAction() {
         actionPanel.playerAction();
+    }
+
+    public void rollDice() {
+        chatPanel.rollDice();
     }
 
     public void playerMove() {
@@ -86,17 +93,19 @@ public final class MainPanel extends JPanel {
 
     public void playerArrived() {
         boardPanel.playerArrived();
+        chatPanel.playerArrived();
     }
 
 
     public void endTurn() {
         boardPanel.endTurn();
         dataPanel.endTurn();
+        chatPanel.endTurn();
     }
 
     public void gameEnd() {
-        // afficher un panel avec les points de chaque joueurs et bouton revenir au menu.
-        return;
+        boardPanel.gameEnd();
+        chatPanel.gameEnd();
     }
 
     public GamePanel getGamePanel() {

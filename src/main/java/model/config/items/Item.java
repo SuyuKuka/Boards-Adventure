@@ -50,6 +50,4 @@ public abstract class Item {
 
     // #endregion
 
-    public abstract Item getCopy();
-
 }
