@@ -10,7 +10,9 @@ public abstract class Item {
     // Shop Item
     private final int buyPrice;
     // Starter Item
-    private final int turnCooldown;
+    private int turnCooldown;
+    
+    private final int baseCooldown;
 
     public Item(final ItemName itemName, final boolean isShopItem, final int value) {
         this.itemName = itemName;
@@ -20,7 +22,8 @@ public abstract class Item {
             turnCooldown = -1;
         } else {
             buyPrice = -1;
-            turnCooldown = value;
+            turnCooldown = 0;
+            baseCooldown = value;
         }
     }
 
@@ -47,6 +50,15 @@ public abstract class Item {
     public final int getTurnCooldown() {
         return turnCooldown;
     }
+
+    public final int getBaseCooldown() {
+        return baseCooldown;
+    }
+
+    public void resetTurnCooldown(){
+        turnCooldown=baseCooldown;
+    }
+
 
     // #endregion
 

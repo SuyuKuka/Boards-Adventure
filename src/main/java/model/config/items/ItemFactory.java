@@ -17,6 +17,8 @@ public final class ItemFactory {
                 return new Hoe(itemName, isShopItem, value);
             case LITTLE_DICE:
                 return new LittleDice(itemName, isShopItem, value);
+            case SACRED_BOOK:
+                return new SacredBook(itemName,isShopItem,value);
             default:
                 break;
         }

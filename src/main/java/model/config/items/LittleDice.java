@@ -10,12 +10,7 @@ public final class LittleDice extends Item {
 
     @Override
     public void playItemEffect(final Model model) {
-        throw new UnsupportedOperationException("Unimplemented method 'playItemEffect'");
+        model.getCurrentPlayer.diceRollValue=RAND.nextInt(3)+1;
+        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
     }
-
-    @Override
-    public Item getCopy() {
-        throw new UnsupportedOperationException("Unimplemented method 'getCopy'");
-    }
-
 }

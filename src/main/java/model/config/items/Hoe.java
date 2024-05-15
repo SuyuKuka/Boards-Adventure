@@ -10,12 +10,8 @@ public final class Hoe extends Item {
 
     @Override
     public void playItemEffect(Model model) {
-        throw new UnsupportedOperationException("Unimplemented method 'playItemEffect'");
-    }
-
-    @Override
-    public Item getCopy() {
-        throw new UnsupportedOperationException("Unimplemented method 'getCopy'");
+        model.getCurrentPlayer.incrementMoney(150);
+        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
     }
 
 }
