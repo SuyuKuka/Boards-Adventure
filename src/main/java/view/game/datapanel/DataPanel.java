@@ -96,7 +96,6 @@ public final class DataPanel extends JPanel {
         final int playersNb = gamePanel.getController().getPlayers().size();
         final int scoreboardLines = playersNb >= 4 ? playersNb : 4;
         panel.setLayout(new GridLayout(scoreboardLines, 1));
-        panel.setBackground(Color.GREEN);
 
         gamePanel.getPlayersGraphics().forEach((playerGraphics) -> {
             final PlayerScore playerScore = new PlayerScore(gamePanel, width, height / scoreboardLines,

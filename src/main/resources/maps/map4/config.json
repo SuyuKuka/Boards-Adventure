@@ -1,5 +1,6 @@
 {
 	"cell_diameter" : 45,
+	"itemShopNb" : 3,
 	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE",

@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONObject;
+
 import game.GameState;
 import model.config.GameMap;
 import model.config.Team;
@@ -30,10 +32,12 @@ public final class Model {
     private Player currentPlayer = null;
 
 
-    public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> mapConfig) {
+    public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> gameConfig,
+        final JSONObject mapConfig) {
         Player.resetPlayerIDIterator();
+        Player.setItemShopNb(mapConfig.optInt("itemShopNb", 1));
         this.gameMap = gameMap;
-        this.totalTurns = Integer.valueOf(mapConfig.get("totalTurns"));
+        this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
         currentPlayer = players.get(playerPlayIterator);

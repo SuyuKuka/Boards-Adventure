@@ -72,7 +72,7 @@ public final class Game {
 
         final GameMap gameMap = new GameMap(mapName, mapConfig);
         final ArrayList<Player> players = createPlayers(playersConfig, gameMap);
-        model = new Model(gameMap, players, gameConfig);
+        model = new Model(gameMap, players, gameConfig, mapConfig);
         controller = new Controller(this, model);
         controller.setGamePanel(view.initNewGamePanel(controller, mapConfig));
         controller.gameUpdate();
@@ -99,7 +99,7 @@ public final class Game {
         player1.put("type", "human");
         player1.put("name", "human1");
         player1.put("className", "boardClass");
-        player1.put("teamColor", "#0b03fc");
+        player1.put("teamColor", "#7ebbed");
         player1.put("itemName", "HOE");
         playersConfig.add(player1);
     }
