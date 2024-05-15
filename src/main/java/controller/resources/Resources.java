@@ -48,6 +48,7 @@ public final class Resources {
      */
     public static void loadCommonResources() {
         loadImages(new File(PATH + "images/"), commonImages, false);
+        loadImages(new File(PATH + "images/common"), commonImages, true);
         loadFonts(new File(PATH + "fonts/"), fonts);
     }
 

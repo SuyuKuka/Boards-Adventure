@@ -31,6 +31,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
+    private static final boolean TEST_MODE = true;
     private Mode mode = Mode.MENU;
 
     private View view;
@@ -58,6 +59,11 @@ public final class Game {
         view.initNewMenuPanel();
     }
 
+    /**
+     * Méthode qui lance le jeu avec les paramètres de la map et des joueurs donnés.
+     * @param mapConfig
+     * @param playersConfig
+     */
     public void startGame(final HashMap<String, String> mapConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         if (view.hasPanel()) {
@@ -79,7 +85,11 @@ public final class Game {
         controller.gameUpdate();
     }
 
-    private void startTempGame() {
+    /**
+     * Méthode qui lance le jeu avec des paramètres par défaut.
+     * Cette méthode ne doit jamais être call lors du produit final !!!
+     */
+    public void startTempGame() {
         final HashMap<String, String> mapConfig = new HashMap<>();
         final ArrayList<HashMap<String, String>> playersConfig = new ArrayList<>();
         initTempGameConfig(mapConfig, playersConfig);

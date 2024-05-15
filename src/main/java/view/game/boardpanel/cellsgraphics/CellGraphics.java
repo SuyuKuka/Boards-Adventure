@@ -26,8 +26,9 @@ public abstract class CellGraphics extends JLabel {
     // - la couleur intérieure -> COLOR_RANGE
     // - l'icône/image -> ICON_RANGE
     private static final int CELL_DIAMETER = 45; // si pair faire - 1
-    private static final double START_COLOR_PAINT_MULTIPLIER = 0.85; // (CELL_DIAMETER - CELL_DIAMETER * START_PAINT_MULT) / 2 = START PAINT si pair faire + 1
     private static final int COLOR_RANGE = 3;
+    // (CELL_DIAMETER - CELL_DIAMETER * START_PAINT_MULT) / 2 = START PAINT si pair faire + 1
+    private static final double START_COLOR_PAINT_MULTIPLIER = 0.85;
     private static final Rectangle COLOR_RANGE_DIM = new Rectangle();
 
     private static final double START_ICON_PAINT_MULTIPLIER = 0.65; // si pair faire + 1

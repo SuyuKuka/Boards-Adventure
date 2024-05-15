@@ -16,8 +16,8 @@ import view.menu.MenuPanel;
 
 public final class View extends JFrame {
 
-    private static final int MIN_WIDTH = 1366;
-    private static final int MIN_HEIGHT = 768;
+    private static final int MIN_WIDTH = 720;
+    private static final int MIN_HEIGHT = 480;
 
     private final Game game;
     private JLayeredManager modePanel;
