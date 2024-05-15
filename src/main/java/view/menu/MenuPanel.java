@@ -174,7 +174,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region background 0
 
     private JPanel createBackground() {
-        background = SwingFactory.createGifPanel(this, "backgroundMoving", 100, 100);
+        background = SwingFactory.createGifPanel(frame.getContentPane(), "backgroundMoving", 100, 100);
         background.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.setVisible(true);
         background.revalidate();
@@ -189,7 +189,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region mainmenu 1
 
     private JPanel createMainMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
 
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
@@ -217,7 +217,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region settings 2
 
     private JPanel createSettingsMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 45, 0, 0, 6);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 45, 0, 0, 6);
 
         final int widthMargin = frame.getWidth() / 20;
         final int heightMargin = frame.getHeight() / 20;
@@ -265,7 +265,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region createjoin 3
 
     private JPanel createCreateJoinMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
 
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
@@ -320,35 +320,10 @@ public final class MenuPanel extends JLayeredManager {
 
     // #region animation
 
-    // private JPanel createGameLobbyMenu() {
-    //     final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 0, 5);
-    //     final JPanel buttonsPanel = SwingFactory.createTransparentPanel(panel, 100, 11);
-    //     buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, (int) (panel.getWidth() * 0.2), 0));
-    //     panel.addComponentListener(new ComponentAdapter() {
-    //         @Override
-    //         public void componentResized(ComponentEvent e) {
-    //             final FlowLayout layout = (FlowLayout) buttonsPanel.getLayout();
-    //             layout.setHgap((int) (panel.getWidth() * 0.2));
-    //         }
-    //     });
-
-    //     buttonsPanel.add(createSwitchStateButton("back", MenuState.CREATEJOIN, 40, 10));
-    //     final JButton startGame = SwingFactory.createImageButton(this, "play", 40, 10, false);
-    //     startGame.addMouseListener(new MouseAdapter() {
-    //         @Override
-    //         public void mouseReleased(MouseEvent e) {
-    //             Audio.stopMusic();
-    //             // frame.getGame().startGame(gameConfig, playersConfig);
-    //             frame.getGame().startTempGame();
-    //         }
-    //     });
-    //     buttonsPanel.add(startGame);
-    // }
-
     private void changeBackgroundGif(String gif) {
         removeComp(BACKGROUND_INDEX);
 
-        JPanel animate = SwingFactory.createGifPanel(this, gif, 100, 100);
+        JPanel animate = SwingFactory.createGifPanel(frame.getContentPane(), gif, 100, 100);
         animate.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.add(animate);
         addComp(background, BACKGROUND_INDEX);
@@ -357,7 +332,7 @@ public final class MenuPanel extends JLayeredManager {
     private void changeBackgroundImg(String img) {
         removeComp(BACKGROUND_INDEX);
 
-        JPanel animate = SwingFactory.createImagePanel(this, img, 100, 100);
+        JPanel animate = SwingFactory.createImagePanel(frame.getContentPane(), img, 100, 100);
         animate.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.add(animate);
         addComp(background, BACKGROUND_INDEX);
@@ -369,7 +344,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region gamelobby 4
 
     private JPanel createGameLobbyMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 2, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 2, 0, 0, 0);
         panel.add(createLobbyCode(panel));
         panel.add(createGameLobby(panel));
         panel.add(createBackButton(panel));
@@ -560,7 +535,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region joincode 5
 
     private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 0);
         
         return panel;
     }
@@ -570,7 +545,7 @@ public final class MenuPanel extends JLayeredManager {
     //#region character 6
 
     private JPanel createSelectionCharacterMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 18, 0, 0, 0);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 18, 0, 0, 0);
         panel.add(createConfigCharacter(panel));
         panel.add(SwingFactory.createTransparentPanel(panel, 100, 70));
         panel.add(createImageCharacter(panel));
@@ -650,14 +625,14 @@ public final class MenuPanel extends JLayeredManager {
 
     // #region manualIcon 7
     private JPanel createManualIcon() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 93, 0, 0, 95);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 93, 0, 0, 95);
         panel.add(createBook());
         panel.setVisible(true);
         return panel;
     }
 
     private JButton createBook() {
-        final JButton button = SwingFactory.createImageButton(this, "manual_close", 3, 5, false);
+        final JButton button = SwingFactory.createImageButton(frame.getContentPane(), "manual_close", 3, 5, false);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -688,7 +663,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region manualBook 8
 
     private JPanel createManualBook() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 5, 5, 5, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 5, 5, 5, 5);
         panel.setOpaque(false);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -702,7 +677,7 @@ public final class MenuPanel extends JLayeredManager {
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setBackground(Color.ORANGE);
 
-        JButton closeButton = SwingFactory.createImageButton(this, "notready", 4, 4, false);
+        JButton closeButton = SwingFactory.createImageButton(frame.getContentPane(), "notready", 4, 4, false);
         // MouseListener ici
 
         titlePanel.add(closeButton, BorderLayout.EAST);
