@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import game.GameState;
 import model.config.GameMap;
+import model.config.Team;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
 import model.config.players.Player;
@@ -16,35 +17,46 @@ public final class Model {
 
     private final GameMap gameMap;
 
+    private final ArrayList<Player> players;
+    private final HashMap<String, Team> teams;
+    private int playerPlayIterator = 0;
+
     private final int totalTurns;
     private int currentTurn = 1;
 
-    /** Variable qui indique l'état actuel du jeu. {@link GameState}. */
     private GameState gameState = null;
 
     private Player currentLeader = null;
     private Player currentPlayer = null;
 
-    private final ArrayList<Player> players;
-    private int playerListIterator = 0;
 
-    /**
-     * Constructeur du GameState.
-     * @param gameMap
-     * @param gameSettings
-     * @param players
-     */
-    public Model(final GameMap gameMap, final HashMap<String, Integer> gameSettings, final ArrayList<Player> players) {
+    public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> mapConfig) {
+        Player.resetPlayerIDIterator();
         this.gameMap = gameMap;
-        this.totalTurns = gameSettings.get("turns");
+        this.totalTurns = Integer.valueOf(mapConfig.get("totalTurns"));
         this.players = players;
-        for (Player player : players) {
-            player.setPosition(gameMap.getStartCell().getId());
+        this.teams = createTeams();
+        currentPlayer = players.get(playerPlayIterator);
+    }
+
+    private HashMap<String, Team> createTeams() {
+        final HashMap<String, Team> teamsMap = new HashMap<>();
+        final HashMap<String, ArrayList<Integer>> teamIDs = new HashMap<>();
+        players.forEach(player -> {
+            final String hexTeamColor = player.getHexTeamColor();
+            if (!teamIDs.containsKey(hexTeamColor)) {
+                teamIDs.put(hexTeamColor, new ArrayList<>());
+            }
+            teamIDs.get(hexTeamColor).add(player.getID());
+        });
+        for (String hexTeamColor : teamIDs.keySet()) {
+            teamsMap.put(hexTeamColor, new Team(hexTeamColor, teamIDs.get(hexTeamColor)));
         }
+        return teamsMap;
     }
 
     public void newTurn() {
-        currentPlayer = players.get(playerListIterator);
+        currentPlayer = players.get(playerPlayIterator);
     }
 
     public void rollDice() {
@@ -54,10 +66,10 @@ public final class Model {
     // region playerMove
 
     public void playerMove() {
-        Cell playerCell = currentPlayer.getPlayerCell(gameMap);
+        Cell playerCell = currentPlayer.getPlayerCell(this);
         while (currentPlayer.getDiceRollValue() > 0) {
             currentPlayer.setPosition(playerCell.getNextCellID());
-            playerCell = currentPlayer.getPlayerCell(gameMap);
+            playerCell = currentPlayer.getPlayerCell(this);
             currentPlayer.incrementDiceRollValue(-1);
             if (playerCell instanceof Intersection) {
                 return;
@@ -75,8 +87,9 @@ public final class Model {
     }
 
     public void endTurn() {
-        playerListIterator = (playerListIterator + 1) % players.size();
-        if (playerListIterator == 0) {
+        currentPlayer.setDiceRollValue(-1); // TODO test
+        playerPlayIterator = (playerPlayIterator + 1) % players.size();
+        if (playerPlayIterator == 0) {
             currentTurn++;
         }
     }
@@ -97,10 +110,6 @@ public final class Model {
         return players;
     }
 
-    public GameMap getGameMap() {
-        return gameMap;
-    }
-
     public void setGameState(final GameState gameState) {
         this.gameState = gameState;
     }
@@ -118,7 +127,11 @@ public final class Model {
     }
 
     public Player getCurrentPlayer() {
-        return players.get(playerListIterator);
+        return players.get(playerPlayIterator);
+    }
+
+    public GameMap getGameMap() {
+        return gameMap;
     }
 
 }

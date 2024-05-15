@@ -1,11 +1,12 @@
 package model.config.players;
 
-import model.config.Team;
+import model.config.items.Item;
 
 public class HumanPlayer extends Player {
 
-    public HumanPlayer(final int playerID, final String username, final Team team) {
-        super(playerID, username, team, null);
+    public HumanPlayer(final String username, final String className, final String teamColor,
+            final Item startItem, final int startPos) {
+        super(username, className, teamColor, startItem, startPos);
     }
 
 }

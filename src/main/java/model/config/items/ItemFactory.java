@@ -1,11 +1,17 @@
 package model.config.items;
 
-import org.json.JSONObject;
+import java.util.HashMap;
 
 public final class ItemFactory {
-    public static Item createItem(final JSONObject jObject, final boolean isShopItem) {
-        final ItemName itemName = ItemName.valueOf(jObject.getString("name").toUpperCase());
-        final int value = isShopItem ? jObject.optInt("buyPrice", 1) : jObject.optInt("turnCooldown", 1);
+
+    public static Item createItem(final HashMap<String, String> itemConfig, final boolean isShopItem) {
+        final ItemName itemName = ItemName.valueOf(itemConfig.get("name").toUpperCase());
+        final int value;
+        if (isShopItem) {
+            value = Integer.valueOf(itemConfig.get("buyPrice"));
+        } else {
+            value = Integer.valueOf(itemConfig.get("turnCooldown"));
+        }
         switch (itemName) {
             case HOE:
                 return new Hoe(itemName, isShopItem, value);

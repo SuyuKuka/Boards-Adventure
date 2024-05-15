@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-import view.View;
 import view.game.GamePanel;
-
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -15,6 +13,7 @@ import model.config.cells.CellType;
 import model.config.cells.Gain;
 import model.config.cells.Loss;
 import model.config.cells.Property;
+import model.config.cells.Start;
 import model.config.players.Player;
 
 /**
@@ -29,16 +28,15 @@ public final class Controller {
     // Model
     private final Model model;
     // View
-    private final GamePanel gamePanel;
+    private GamePanel gamePanel;
 
     // Jeu
     private Cell currentCell;
 
-    public Controller(final Game game, final Model model, final View view) {
+    public Controller(final Game game, final Model model) {
         this.game = game;
         this.prevGameState = null;
         this.model = model;
-        gamePanel = view.initNewGamePanel(this);
     }
 
     public void gameUpdate() {
@@ -112,7 +110,6 @@ public final class Controller {
     public void rollDice() {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
-        gamePanel.rollDice();
         gameUpdate();
     }
 
@@ -158,11 +155,11 @@ public final class Controller {
     }
 
     public void playerGainMoney() {
-        getCurrentPlayer().getTeam().incrementMoney(getGainedMoney());
+        getCurrentPlayer().incrementMoney(getGainedMoney());
     }
 
     public void playerLossMoney() {
-        getCurrentPlayer().getTeam().incrementMoney(-getLossMoney());
+        getCurrentPlayer().incrementMoney(-getLossMoney());
     }
 
     public void playerBuyProperty() {
@@ -182,20 +179,28 @@ public final class Controller {
 
     // region model getters/setters
 
+    public CellType getCellType(final String cellType) {
+        return CellType.valueOf(cellType);
+    }
+
     public Cell getCell(final int cellID) {
         return model.getGameMap().getCell(cellID);
     }
 
+    public int getCurrentPlayerPosition() {
+        return getCurrentPlayer().getPosition();
+    }
+
     public Cell getCurrentPlayerCell() {
-        return model.getGameMap().getCell(getCurrentPlayer().getPosition());
+        return model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
     public CellType getCurrentPlayerCellType() {
-        return model.getGameMap().getCell(getCurrentPlayer().getPosition()).getCellType();
+        return model.getGameMap().getCell(getCurrentPlayerPosition()).getCellType();
     }
 
     public void setCurrentCell() {
-        this.currentCell = model.getGameMap().getCell(getCurrentPlayer().getPosition());
+        this.currentCell = model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
     public Cell getCurrentCell() {
@@ -208,9 +213,18 @@ public final class Controller {
         return "carte !!";
     }
 
+    public Start getStartCell() {
+        return model.getGameMap().getStartCell();
+    }
+
     public ArrayList<Player> getPlayers() {
         return model.getPlayers();
     }
+
+    public Player getPlayer(final int playerId) {
+        return model.getPlayers().get(playerId);
+    }
+
 
     public int getTotalTurns() {
         return model.getTotalTurns();
@@ -224,8 +238,12 @@ public final class Controller {
         return model.getCurrentPlayer();
     }
 
+    public int getCurrentPlayerID() {
+        return model.getCurrentPlayer().getID();
+    }
+
     public int getCurrentMoney() {
-        return getCurrentPlayer().getTeam().getMoney();
+        return getCurrentPlayer().getMoney();
     }
 
     public int getGainedMoney() {
@@ -237,7 +255,7 @@ public final class Controller {
     }
 
     public int getGamePoint() {
-        return getCurrentPlayer().getTeam().getGamePoint();
+        return getCurrentPlayer().getGamePoint();
     }
 
     public int getPropertyPrice() {
@@ -246,6 +264,10 @@ public final class Controller {
 
     public int getRentPrice() { // diviser par 5 pour 20%, + ou - ?
         return ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState()) / 5;
+    }
+
+    public String getMapName() {
+        return model.getGameMap().getMapName();
     }
 
     public boolean playerIsAtHome() {
@@ -260,13 +282,30 @@ public final class Controller {
         gamePanel.remove(component);
     }
 
+    public void getCurrentPlayerRollDice() {
+        getCurrentPlayer().rollDice();
+    }
+
+    public int getCurrentPlayerRollDiceValue() {
+        return getCurrentPlayer().getDiceRollValue();
+    }
+
+    public boolean getRollDiceState() {
+        if (prevGameState == GameState.PLAYER_ACTION) {
+            return true;
+        }
+        System.out.println(prevGameState);
+        return false;
+    }
+
+
     // endregion
 
-    // region getters/setters
-
-    public String getMapName() {
-        return model.getGameMap().getMapName();
+    public void setGamePanel(final GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
+
+    // region getters/setters
 
     // endregion
 }

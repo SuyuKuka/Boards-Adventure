@@ -13,4 +13,9 @@ public final class LittleDice extends Item {
         throw new UnsupportedOperationException("Unimplemented method 'playItemEffect'");
     }
 
+    @Override
+    public Item getCopy() {
+        throw new UnsupportedOperationException("Unimplemented method 'getCopy'");
+    }
+
 }

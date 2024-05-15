@@ -1,7 +1,6 @@
 package model.config.cardseffect;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import model.Model;
@@ -24,11 +23,9 @@ public class LossPropertyEffect extends CardEffect {
      * @param  model   Le model qui contient toutes les informations du modeles
      */
     @Override
-    public void applyEffect(Player player, Model model) {
-        HashMap<Integer, ArrayList<Property>> tmp = player.getTeam().getProperties();
-        Random i = new Random();
-        ArrayList<Property> list = tmp.get(new ArrayList<>(tmp.keySet()).get(i.nextInt(tmp.keySet().size())));
-        list.remove(i.nextInt(list.size()));
+    public void applyEffect(final Player player, final Model model) {
+        final ArrayList<Property> properties = player.getProperties();
+        player.removeProperty(properties.get(new Random().nextInt(properties.size())));
     }
 
     @Override

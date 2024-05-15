@@ -30,7 +30,7 @@ public final class Kingdom extends Cell {
         //     System.out.println(player.getUsername() + " a donné " + tax + "$ au roi " + currentKing
         //         + " ! Longue vie au Roi !");
         // }
-        player.getTeam().incrementGamePoint(1);
+        player.incrementGamePoint(1);
     }
 
 }

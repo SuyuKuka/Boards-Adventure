@@ -6,11 +6,15 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
+import org.json.JSONArray;
+
 import controller.Controller;
 import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
-import model.config.Team;
+import model.config.cardseffect.CardEffect;
+import model.config.cells.Cell;
+import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
@@ -37,68 +41,85 @@ public final class Game {
         SwingUtilities.invokeLater(() -> {
             view = new View(this);
             Resources.loadCommonResources();
-            initGame();
+            if (mode == Mode.GAME) {
+                startTempGame();
+            } else {
+                startMenu();
+            }
         });
     }
 
-    public void initGame() {
+    public void startMenu() {
         if (view.hasPanel()) {
             view.removePanel();
         }
-        switch (mode) {
-            case MENU:
-                Resources.loadMenuResources();
-                view.initNewMenuPanel();
-                break;
-            case GAME:
-                if (model == null) {
-                    model = createTestModel("map4");
-                }
-                Resources.loadGameResources(model.getGameMap().getMapName());
-                controller = new Controller(this, model, view);
-                controller.gameUpdate();
-                break;
-            default:
-                break;
+        mode = Mode.MENU;
+        Resources.loadMenuResources();
+        view.initNewMenuPanel();
+    }
+
+    public void startGame(final HashMap<String, String> mapConfig,
+            final ArrayList<HashMap<String, String>> playersConfig) {
+        if (view.hasPanel()) {
+            view.removePanel();
         }
+        mode = Mode.GAME;
+        final String mapName = mapConfig.get("mapName");
+        final HashMap<Integer, Cell> cells = new HashMap<>();
+        final ArrayList<CardEffect> cardEffects = new ArrayList<>();
+        final HashMap<String, HashMap<String, String>> startItems = new HashMap<>();
+        final HashMap<String, HashMap<String, String>> shopItems = new HashMap<>();
+        final JSONArray jCells = Resources.loadGameResources(mapName, cells, cardEffects, startItems, shopItems);
+
+        final GameMap gameMap = new GameMap(mapName, cardEffects, cells, startItems, shopItems);
+        final ArrayList<Player> players = createPlayers(playersConfig, gameMap);
+        model = new Model(gameMap, players, mapConfig);
+        controller = new Controller(this, model);
+        controller.setGamePanel(view.initNewGamePanel(controller, jCells));
+        controller.gameUpdate();
     }
 
-    /**
-     * Crée un {@link Model} test si l'application a été lancée avec {@link #mode} = {@link Mode#GAME}.
-     * @param mapName
-     * @return {@link Model}.
-     */
-    private Model createTestModel(final String mapName) {
-        final GameMap gameMap = Resources.loadGameMap(mapName);
-        final HashMap<String, Integer> gameSettings = new HashMap<>();
-        gameSettings.put("turns", 45);
-        final ArrayList<Player> players = new ArrayList<>();
-        players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
-        // players.add(new ComputerPlayer(2, "comp1", new Team(2, "team2")));
-        // players.add(new HumanPlayer(3, "human2", new Team(3, "team3")));
-        // players.add(new ComputerPlayer(4, "comp2", new Team(4, "team4")));
-        return new Model(gameMap, gameSettings, players);
+    private void startTempGame() {
+        final HashMap<String, String> mapConfig = new HashMap<>();
+        final ArrayList<HashMap<String, String>> playersConfig = new ArrayList<>();
+        initTempGameConfig(mapConfig, playersConfig);
+        startGame(mapConfig, playersConfig);
     }
 
-    /**
-     * Crée un {@link Model} à partir du nom de la map, les paramètres du jeu et les paramètres des joueurs.
-     * @param mapName
-     * @param gameSettings
-     * @param playersConfig
-     */
-    public void createModel(final String mapName, final HashMap<String, Integer> gameSettings,
-        final ArrayList<HashMap<String, String>> playersConfig) {
-        model = new Model(Resources.loadGameMap(mapName), gameSettings, createPlayers(playersConfig));
+    private void initTempGameConfig(final HashMap<String, String> gameConfig,
+            final ArrayList<HashMap<String, String>> playersConfig) {
+        // gameconfig
+        gameConfig.put("mapName", "map4");
+        gameConfig.put("totalTurns", "45");
+        // playersconfig
+        final HashMap<String, String> player1 = new HashMap<>();
+        player1.put("type", "human");
+        player1.put("name", "human1");
+        player1.put("className", "boardClass");
+        player1.put("teamColor", "#0b03fc");
+        player1.put("itemName", "HOE");
+        playersConfig.add(player1);
     }
 
-    private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig) {
-        final ArrayList<Player> players = new ArrayList<>();
-        players.add(new HumanPlayer(1, "human1", new Team(1, "team1")));
-        return players;
-    }
-
-    public void setMode(final Mode mode) {
-        this.mode = mode;
+    private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig,
+            final GameMap gameMap) {
+        final ArrayList<Player> playersList = new ArrayList<>();
+        playersConfig.forEach(playerConfig -> {
+            final String name = playerConfig.get("name");
+            final boolean isHuman = playerConfig.get("type") == "human";
+            final String className = playerConfig.get("className");
+            final String teamColor = playerConfig.get("teamColor");
+            final String itemName = playerConfig.get("itemName");
+            final int startPos = gameMap.getStartCell().getId();
+            if (isHuman) {
+                playersList.add(new HumanPlayer(name, className, teamColor,
+                    gameMap.generateItem(itemName, false), startPos));
+            } else {
+                playersList.add(new ComputerPlayer(name, className, teamColor,
+                    gameMap.generateItem(itemName, false), startPos));
+            }
+        });
+        return playersList;
     }
 
     public Mode getMode() {

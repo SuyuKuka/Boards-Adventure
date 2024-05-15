@@ -22,38 +22,38 @@ public final class Property extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         if (owner == null) {
-            if (player.getTeam().getMoney() < buyPrices.get(0)) {
+            if (player.getMoney() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
                 + buyPrices.get(0) + "$).");
             }
         } else if (isAtHome(player)) {
             if (propertyState + 1 > buyPrices.size()) {
                 System.out.println("Votre propriété est déjà au max.");
-            } else if (player.getTeam().getMoney() < buyPrices.get(propertyState + 1)) {
+            } else if (player.getMoney() < buyPrices.get(propertyState + 1)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
                 + buyPrices.get(propertyState + 1) + "$).");
             }
         } else {
             final int price = buyPrices.get(propertyState - 1);
-            if (player.getTeam().getMoney() < price) {
+            if (player.getMoney() < price) {
                 //model.removePlayer(player);
                 System.out.println(player + " a pas assez d'argents.");
             } else {
-                player.getTeam().incrementMoney(-price);
-                owner.getTeam().incrementMoney(price);
+                player.incrementMoney(-price);
+                owner.incrementMoney(price);
             }
         }
     }
 
     public void buy(final Player player) {
         owner = player;
-        player.getTeam().addProperty(this);
-        player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+        player.addProperty(this);
+        player.incrementMoney(-buyPrices.get(propertyState));
         propertyState++;
     }
 
     public void upgrade(final Player player) {
-        player.getTeam().incrementMoney(-buyPrices.get(propertyState));
+        player.incrementMoney(-buyPrices.get(propertyState));
         propertyState++;
     }
 

@@ -14,7 +14,7 @@ public final class GainGamePointEffect extends CardEffect {
 
     @Override
     public void applyEffect(Player player, Model model) {
-        player.getTeam().incrementGamePoint(1);
+        player.incrementGamePoint(1);
     }
 
     @Override

@@ -304,6 +304,13 @@ public class SwingFactory {
     //     return panel;
     // }
 
+    public static JLabel createJLabel() {
+        final JLabel label = new JLabel();
+        label.setVerticalAlignment(JLabel.CENTER);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        return label;
+    }
+
     public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
         final int size) {
         final JLabel label = new JLabel(text);
