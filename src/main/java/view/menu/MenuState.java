@@ -3,10 +3,11 @@ package view.menu;
 public enum MenuState {
     // BACKGROUND(0)
     MAINMENU(1),
-    SETTINGSMENU(2),
-    CREATEJOIN(3),
-    JOINCODE(4),
-    GAMELOBBY(5);
+    SETTINGS(2),
+    SELECTMOD(3),
+    JOINGAME(4),
+    MAPCONFIG(5),
+    CHARACTER(6);
     // MANUALICON(6)
     // MANUALBOOK(7)
 

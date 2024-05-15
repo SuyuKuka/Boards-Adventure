@@ -320,6 +320,12 @@ public class SwingFactory {
                 button.setIcon(null);
                 parent.revalidate();
             }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Audio.playSound("button.wav");
+                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
         });
         parent.addComponentListener(new ComponentAdapter() {
             @Override
