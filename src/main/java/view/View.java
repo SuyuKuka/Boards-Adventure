@@ -7,7 +7,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import controller.Controller;
 import game.Game;
@@ -44,8 +44,8 @@ public final class View extends JFrame {
         setVisible(true);
     }
 
-    public GamePanel initNewGamePanel(final Controller controller, final JSONArray jCells) {
-        modePanel = new GamePanel(this, controller, jCells);
+    public GamePanel initNewGamePanel(final Controller controller, final JSONObject mapConfig) {
+        modePanel = new GamePanel(this, controller, mapConfig);
         add(modePanel, BorderLayout.CENTER);
         setVisible(true);
         return (GamePanel) modePanel;

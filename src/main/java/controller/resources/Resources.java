@@ -14,13 +14,10 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.config.cardseffect.CardEffect;
-import model.config.cardseffect.CardEffectFactory;
 import model.config.cells.Cell;
-import model.config.cells.CellFactory;
 
 /**
  * La classe {@link Resources} contient toutes les ressources du jeu.
@@ -74,9 +71,9 @@ public final class Resources {
      * @param cardEffects
      * @param startItems
      * @param shopItems
-     * @return {@link JSONArray} associé au cellules.
+     * @return {@link JSONObject} le fichier.
      */
-    public static JSONArray loadGameResources(final String mapName, final HashMap<Integer, Cell> cells,
+    public static JSONObject loadGameResources(final String mapName, final HashMap<Integer, Cell> cells,
             final ArrayList<CardEffect> cardEffects, final HashMap<String, HashMap<String, String>> startItems,
             final HashMap<String, HashMap<String, String>> shopItems) {
         // IMAGES
@@ -91,12 +88,30 @@ public final class Resources {
         try {
             final File file = new File(PATH + "maps/" + mapName + "/config.json");
             final JSONObject configJObject = new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-            final JSONArray jCells = configJObject.getJSONArray("cells");
-            loadCells(cells, jCells);
-            loadCardEffects(cardEffects, configJObject.getJSONArray("cards_effect"));
-            loadAvailableStartItems(startItems, configJObject.getJSONArray("start_items"));
-            loadAvailableShopItems(shopItems, configJObject.getJSONArray("shop_items"));
-            return jCells;
+            return configJObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Charge les ressources du jeu et renvoie la config du jeu.
+     * @param mapName
+     * @return {@link JSONObject} associé au fichier config.json du jeu.
+     */
+    public static JSONObject loadGameResources(final String mapName) {
+        MODE_IMAGES.clear();
+        MODE_GIFS.clear();
+        final File gameFolder = new File(PATH + "images/game/");
+        loadImages(gameFolder, MODE_IMAGES, true);
+        loadGifs(gameFolder, MODE_GIFS, true);
+        final File mapFolder = new File(PATH + "maps/" + mapName);
+        loadImages(mapFolder, MODE_IMAGES, true);
+        loadGifs(mapFolder, MODE_GIFS, true);
+        try {
+            final File file = new File(mapFolder, "config.json");
+            return new JSONObject(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,43 +119,6 @@ public final class Resources {
     }
 
     // region MODEL
-
-    private static void loadCells(final HashMap<Integer, Cell> cellsMap, final JSONArray jCells) {
-        for (int i = 0; i < jCells.length(); i++) {
-            final JSONObject jCell = jCells.getJSONObject(i);
-            cellsMap.put(jCell.getInt("id"), CellFactory.createCell(jCell));
-        }
-    }
-
-    private static void loadCardEffects(final ArrayList<CardEffect> cardEffects, final JSONArray jCardsEffect) {
-        for (int i = 0; i < jCardsEffect.length(); i++) {
-            cardEffects.addAll(CardEffectFactory.createCardEffect(jCardsEffect.getJSONObject(i)));
-        }
-    }
-
-    private static void loadAvailableStartItems(final HashMap<String, HashMap<String, String>> startItems,
-            final JSONArray jStartItems) {
-        for (int i = 0; i < jStartItems.length(); i++) {
-            final JSONObject jStartItem = jStartItems.getJSONObject(i);
-            final HashMap<String, String> itemConfig = new HashMap<>();
-            final String itemName = jStartItem.getString("name");
-            itemConfig.put("name", itemName);
-            itemConfig.put("turnCooldown", jStartItem.getString("turnCooldown"));
-            startItems.put(itemName, itemConfig);
-        }
-    }
-
-    private static void loadAvailableShopItems(final HashMap<String, HashMap<String, String>> shopItems,
-            final JSONArray jShopItems) {
-        for (int i = 0; i < jShopItems.length(); i++) {
-            final JSONObject jStartItem = jShopItems.getJSONObject(i);
-            final HashMap<String, String> itemConfig = new HashMap<>();
-            final String itemName = jStartItem.getString("name");
-            itemConfig.put("name", itemName);
-            itemConfig.put("buyPrice", jStartItem.getString("buyPrice"));
-            shopItems.put(itemName, itemConfig);
-        }
-    }
 
     // endregion
 

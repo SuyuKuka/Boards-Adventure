@@ -19,27 +19,37 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 
-public final class ChatPanel extends JScrollPane {
+public final class ChatPanel extends JPanel {
 
     private final GamePanel gamePanel;
+
+    private final JTextPane globalTextPane;
+    private final JTextPane logTextPane;
 
     public ChatPanel(final GamePanel gamePanel, final int width, final int height) {
         this.gamePanel = gamePanel;
         setPreferredSize(new Dimension(width, height));
+        setLayout(new BorderLayout());
+
+        globalTextPane = createTextPane();
+        logTextPane = createTextPane();
+
+        add(createTabPanel(globalTextPane, logTextPane), BorderLayout.CENTER);
+
+        setVisible(true);
     }
 
     // #region Chat
 
-    private JTabbedPane createTabPanel() {
+    private JTabbedPane createTabPanel(final JTextPane globalPane, final JTextPane logPane) {
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Global", createChatPanel());
-        tabbedPane.add("Systeme", createLogPanel());
+        tabbedPane.add("Systeme", createLogPanel(logPane));
+        tabbedPane.add("Global", createChatPanel(globalPane));
         return tabbedPane;
     }
 
-    private JPanel createLogPanel() {
+    private JPanel createLogPanel(final JTextPane textPane) {
         final JPanel panel = new JPanel(new BorderLayout());
-        final JTextPane textPane = createTextPane();
         final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         textPane.setPreferredSize(new Dimension(0, 0));
@@ -48,9 +58,8 @@ public final class ChatPanel extends JScrollPane {
         return panel;
     }
 
-    private JPanel createChatPanel() {
+    private JPanel createChatPanel(final JTextPane textPane) {
         final JPanel panel = new JPanel(new BorderLayout());
-        final JTextPane textPane = createTextPane();
         final JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         textPane.setPreferredSize(new Dimension(0, 0));
@@ -140,6 +149,24 @@ public final class ChatPanel extends JScrollPane {
             }
         });
         return textField;
+    }
+
+    public void addPublicText(final String string) {
+        final Document doc = globalTextPane.getDocument();
+        try {
+            doc.insertString(doc.getLength(), string + "\n", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addLogText(final String string) {
+        final Document doc = logTextPane.getDocument();
+        try {
+            doc.insertString(doc.getLength(), string + "\n", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // #endregion

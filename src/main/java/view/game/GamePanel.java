@@ -11,7 +11,7 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import controller.Controller;
 import view.JLayeredManager;
@@ -45,7 +45,7 @@ public final class GamePanel extends JLayeredManager {
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final ArrayList<PlayerGraphics> playersGraphics;
 
-    public GamePanel(final View frame, final Controller controller, final JSONArray jCells) {
+    public GamePanel(final View frame, final Controller controller, final JSONObject mapConfig) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         this.frame = frame;
         this.controller = controller;
@@ -53,7 +53,7 @@ public final class GamePanel extends JLayeredManager {
         cellsGraphics = new HashMap<>();
         playersGraphics = new ArrayList<>();
 
-        mainPanel = new MainPanel(this, cellsGraphics, jCells, playersGraphics);
+        mainPanel = new MainPanel(this, cellsGraphics, playersGraphics, mapConfig);
         overlayPanel = createOverlayPanel();
         pausePanel = createPausePanel();
 
