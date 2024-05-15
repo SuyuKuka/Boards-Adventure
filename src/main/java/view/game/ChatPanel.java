@@ -28,18 +28,19 @@ public final class ChatPanel extends JPanel {
     private final GamePanel gamePanel;
     private final Controller controller;
 
-    // Texte global de chat entre joueurs
-    private static final SimpleAttributeSet DISCUSSION_SAT = new SimpleAttributeSet();
-    private final JTextPane discussionTextPane;
-
+    private static final SimpleAttributeSet SAT = new SimpleAttributeSet();
     // Logs du jeu
-    private static final SimpleAttributeSet LOG_SAT = new SimpleAttributeSet();
+    private static final Color LOG_COLOR = new Color(85, 149, 74);
     private final JTextPane logTextPane;
 
+    // Chat global entre les joueurs
+    private final JTextPane globalChatTextPane;
+
+    // Chat par équipe
+    private final JTextPane teamChatTextPane;
+
     static {
-        StyleConstants.setForeground(LOG_SAT, new Color(85, 149, 74));
-        StyleConstants.setFontSize(LOG_SAT, 14);
-        StyleConstants.setFontSize(DISCUSSION_SAT, 14);
+        StyleConstants.setFontSize(SAT, 14);
     }
 
     public ChatPanel(final GamePanel gamePanel, final int width, final int height) {
@@ -49,9 +50,10 @@ public final class ChatPanel extends JPanel {
         setLayout(new BorderLayout());
 
         logTextPane = createTextPane();
-        discussionTextPane = createTextPane();
+        globalChatTextPane = createTextPane();
+        teamChatTextPane = createTextPane();
 
-        add(createTabPanel(discussionTextPane, logTextPane), BorderLayout.CENTER);
+        add(createTabPanel(logTextPane, globalChatTextPane, teamChatTextPane), BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -63,7 +65,8 @@ public final class ChatPanel extends JPanel {
     }
 
     public void newTurn() {
-        addLogText("Début du tour " + controller.getCurrentTurn() + " de " + controller.getCurrentPlayerName() + ".\n", true);
+        addLogText("Début du tour " + controller.getCurrentTurn() + " de "
+            + controller.getCurrentPlayerName() + ".\n", true);
     }
 
     public void inJail() {
@@ -84,7 +87,8 @@ public final class ChatPanel extends JPanel {
 
 
     public void endTurn() {
-        addLogText("Fin du tour " + (controller.getCurrentTurn() - 1) + " de " + controller.getCurrentPlayerName() + ".\n", true);
+        addLogText("Fin du tour " + (controller.getCurrentTurn() - 1) + " de "
+            + controller.getCurrentPlayerName() + ".\n", true);
     }
 
     public void gameEnd() {
@@ -95,10 +99,11 @@ public final class ChatPanel extends JPanel {
 
     // #region Chat
 
-    private JTabbedPane createTabPanel(final JTextPane globalPane, final JTextPane logPane) {
+    private JTabbedPane createTabPanel(final JTextPane logPane, final JTextPane globalPane, final JTextPane teamPane) {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Systeme", createLogPanel(logPane));
         tabbedPane.add("Global", createChatPanel(globalPane));
+        tabbedPane.add("Equipe", createChatPanel(teamPane));
         return tabbedPane;
     }
 
@@ -186,7 +191,7 @@ public final class ChatPanel extends JPanel {
             @Override
             public void keyPressed(final KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
-                    addDiscussionText(0, textField.getText());
+                    addDiscussionText(textPane, controller.getCurrentPlayerID(), textField.getText());
                     textField.setText("");
                 }
             }
@@ -194,11 +199,12 @@ public final class ChatPanel extends JPanel {
         return textField;
     }
 
-    private void addDiscussionText(final int playerID, final String text) {
-        final Document doc = discussionTextPane.getDocument();
+    private void addDiscussionText(final JTextPane textPane, final int playerID, final String text) {
+        final Document doc = textPane.getDocument();
         try {
-            StyleConstants.setForeground(DISCUSSION_SAT, Color.decode(controller.getPlayer(playerID).getHexTeamColor()));
-            doc.insertString(doc.getLength(), "[" + controller.getPlayer(playerID).getName() + "] : " + text + "\n", DISCUSSION_SAT);
+            StyleConstants.setForeground(SAT, Color.decode(controller.getPlayer(playerID).getHexTeamColor()));
+            doc.insertString(doc.getLength(), "["
+                + controller.getPlayer(playerID).getName() + "] : " + text + "\n", SAT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,10 +213,11 @@ public final class ChatPanel extends JPanel {
     private void addLogText(final String text, final boolean sayLogType) {
         final Document doc = logTextPane.getDocument();
         try {
+            StyleConstants.setForeground(SAT, LOG_COLOR);
             if (sayLogType) {
-                doc.insertString(doc.getLength(), "[CONSOLE] : ", LOG_SAT);
+                doc.insertString(doc.getLength(), "[CONSOLE] : ", SAT);
             }
-            doc.insertString(doc.getLength(), text, LOG_SAT);
+            doc.insertString(doc.getLength(), text, SAT);
         } catch (Exception e) {
             e.printStackTrace();
         }
