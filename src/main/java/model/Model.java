@@ -33,7 +33,7 @@ public final class Model {
     public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> mapConfig) {
         Player.resetPlayerIDIterator();
         this.gameMap = gameMap;
-        this.totalTurns = Integer.valueOf(mapConfig.get("totalTurns"));
+        this.totalTurns = Integer.valueOf(mapConfig.get("turns"));
         this.players = players;
         this.teams = createTeams();
         currentPlayer = players.get(playerPlayIterator);

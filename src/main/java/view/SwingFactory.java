@@ -33,7 +33,6 @@ import javax.swing.text.Element;
 import javax.swing.text.ParagraphView;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 import javax.swing.text.html.InlineView;
 
 import controller.resources.Audio;
@@ -216,6 +215,7 @@ public class SwingFactory {
 
     public static JLabel createImageLabel(final Component parent, final String img,
         final int widthPer, final int heightPer, final boolean resize) {
+            System.out.println("temp");
         final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
         final JLabel label = new JLabel(new ImageIcon(image.getScaledInstance(
@@ -239,7 +239,7 @@ public class SwingFactory {
         return label;
     }
 
-    private static Dimension calcDimension(final Image image, final Component parent,
+    public static Dimension calcDimension(final Image image, final Component parent,
         final int widthPer, final int heightPer, final boolean resize) {
         if (resize) {
             return new Dimension((int) (parent.getWidth() * widthPer / 100),
@@ -268,18 +268,6 @@ public class SwingFactory {
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                parent.revalidate();
-            }
-        });
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         parent.addComponentListener(new ComponentAdapter() {
             @Override
