@@ -318,6 +318,16 @@ public final class MenuPanel extends JLayeredManager {
 
     // #endregion
 
+     // #region joincode 4
+
+     private JPanel createJoinCodeMenu() {
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 0);
+        
+        return panel;
+    }
+
+    // #endregion
+
     // #region animation
 
     private void changeBackgroundGif(String gif) {
@@ -341,7 +351,7 @@ public final class MenuPanel extends JLayeredManager {
 
     // #endregion
 
-    // #region gamelobby 4
+    // #region gamelobby 5
 
     private JPanel createGameLobbyMenu() {
         final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 2, 0, 0, 0);
@@ -527,16 +537,6 @@ public final class MenuPanel extends JLayeredManager {
         });
         createSwitchStateButton(selectCharacter, MenuState.CHARACTER);
         panel.add(selectCharacter, BorderLayout.EAST);
-        return panel;
-    }
-
-    // #endregion
-
-    // #region joincode 5
-
-    private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 0);
-        
         return panel;
     }
 
