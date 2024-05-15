@@ -175,6 +175,7 @@ public final class MenuPanel extends JLayeredManager {
 
     private JPanel createBackground() {
         background = SwingFactory.createGifPanel(this, "backgroundMoving", 100, 100);
+        background.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.setVisible(true);
         background.revalidate();
         background.repaint();
@@ -348,7 +349,7 @@ public final class MenuPanel extends JLayeredManager {
         removeComp(BACKGROUND_INDEX);
 
         JPanel animate = SwingFactory.createGifPanel(this, gif, 100, 100);
-        animate.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        animate.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.add(animate);
         addComp(background, BACKGROUND_INDEX);
     }
@@ -357,7 +358,7 @@ public final class MenuPanel extends JLayeredManager {
         removeComp(BACKGROUND_INDEX);
 
         JPanel animate = SwingFactory.createImagePanel(this, img, 100, 100);
-        animate.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        animate.setBounds(0, 0, frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         background.add(animate);
         addComp(background, BACKGROUND_INDEX);
     }
