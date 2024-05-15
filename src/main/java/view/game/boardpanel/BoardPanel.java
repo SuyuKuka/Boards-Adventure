@@ -85,7 +85,7 @@ public final class BoardPanel extends JLayeredManager {
     private final Image boardImage;
 
     public BoardPanel(final GamePanel gamePanel, final HashMap<Integer, CellGraphics> cellsGraphics,
-            final JSONArray jCells, final ArrayList<PlayerGraphics> playersGraphics,
+            final ArrayList<PlayerGraphics> playersGraphics, final JSONObject mapConfig,
             final int width, final int height) {
         super(width, height);
         this.gamePanel = gamePanel;
@@ -95,7 +95,8 @@ public final class BoardPanel extends JLayeredManager {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(width, height));
 
-        this.cellsGraphics = loadCellsGraphics(cellsGraphics, jCells);
+        CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
+        this.cellsGraphics = loadCellsGraphics(cellsGraphics, mapConfig.getJSONArray("cells"));
         specialCellsGraphics = new ArrayList<>();
         this.playersGraphics = loadPlayerGraphics(playersGraphics);
 

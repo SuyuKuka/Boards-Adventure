@@ -7,10 +7,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +38,6 @@ public final class PlayerScore extends JPanel {
     private final JLabel itemsLabel;
 
     private final JComboBox<Object> playerBox;
-    private final JButton tradeButton;
 
     public PlayerScore(final GamePanel gamePanel, final int width, final int height, final int playerId) {
         this.gamePanel = gamePanel;
@@ -60,31 +59,31 @@ public final class PlayerScore extends JPanel {
         classLabel = createClassLabel((int) (width * gbc.weightx), height);
         add(classLabel, gbc);
 
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.35;
         nameLabel = new JLabel();
         moneyLabel = new JLabel();
         final JPanel panel1 = createNameMoneyPanel((int) (width * gbc.weightx), height);
         add(panel1, gbc);
 
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.30;
         pointsLabel = new JLabel();
         propertyLabel = new JLabel();
         final JPanel panel2 = createPointsPropertyPanel((int) (width * gbc.weightx), height);
         add(panel2, gbc);
 
-        gbc.weightx = 0.1;
+        gbc.weightx = 0.05;
         itemsLabel = createItemsLabel((int) (width * gbc.weightx), height);
+        add(itemsLabel, gbc);
 
-        tradeButton = new JButton();
         playerBox = createComboBox((int) (width * gbc.weightx), height);
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
-                rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance((int) (dim.width * 0.1),
+                rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance((int) (dim.width * 0.15),
                     dim.height, Image.SCALE_FAST)));
-                classLabel.setIcon(new ImageIcon(classImage.getScaledInstance((int) (dim.width * 0.1),
+                classLabel.setIcon(new ImageIcon(classImage.getScaledInstance((int) (dim.width * 0.15),
                     dim.height, Image.SCALE_FAST)));
                 revalidate();
                 repaint();
@@ -96,6 +95,8 @@ public final class PlayerScore extends JPanel {
 
     private JLabel createRankLabel(final int width, final int height) {
         final JLabel label = new JLabel();
+        label.setOpaque(true);
+        label.setBackground(Color.BLACK);
         label.setPreferredSize(new Dimension(0, 0));
         label.setSize(width, height);
         label.setIcon(new ImageIcon(rankImage.getScaledInstance(width, height, Image.SCALE_FAST)));
@@ -104,6 +105,8 @@ public final class PlayerScore extends JPanel {
 
     private JLabel createClassLabel(final int width, final int height) {
         final JLabel label = new JLabel();
+        label.setOpaque(true);
+        label.setBackground(Color.WHITE);
         label.setPreferredSize(new Dimension(0, 0));
         label.setSize(width, height);
         label.setIcon(new ImageIcon(classImage.getScaledInstance(width, height, Image.SCALE_FAST)));
@@ -111,20 +114,30 @@ public final class PlayerScore extends JPanel {
     }
 
     private JPanel createNameMoneyPanel(final int width, final int height) {
-        final JPanel panel = new JPanel();
-        panel.setOpaque(false);
+        final JPanel panel = new JPanel(new GridLayout(2, 0));
+        panel.setPreferredSize(new Dimension(0, 0));
+        panel.setBackground(Color.ORANGE);
+        panel.add(nameLabel);
+        nameLabel.setText("TESTPSEUDO");
+        panel.add(moneyLabel);
+        moneyLabel.setText("0");
         return panel;
     }
 
 
     private JPanel createPointsPropertyPanel(final int width, final int height) {
         final JPanel panel = new JPanel();
-        panel.setOpaque(false);
+        panel.setPreferredSize(new Dimension(0, 0));
+        panel.setBackground(Color.CYAN);
         return panel;
     }
 
     private JLabel createItemsLabel(final int width, final int height) {
         final JLabel label = new JLabel();
+        label.setBackground(Color.BLUE);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(0, 0));
+        label.setSize(width, height);
         return label;
     }
 

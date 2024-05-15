@@ -23,16 +23,15 @@ public abstract class CellGraphics extends JLabel {
     // PAINT
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
-    // - la couleur intérieure -> COLOR_RANGE
-    // - l'icône/image -> ICON_RANGE
-    private static final int CELL_DIAMETER = 45; // si pair faire - 1
-    private static final int COLOR_RANGE = 3;
-    // (CELL_DIAMETER - CELL_DIAMETER * START_PAINT_MULT) / 2 = START PAINT si pair faire + 1
+    // - la couleur intérieure -> colorRange
+    // - l'icône/image -> iconRange
+    private static int cellDiameter;
     private static final double START_COLOR_PAINT_MULTIPLIER = 0.85;
+    private static int colorRange;
     private static final Rectangle COLOR_RANGE_DIM = new Rectangle();
 
-    private static final double START_ICON_PAINT_MULTIPLIER = 0.65; // si pair faire + 1
-    private static final int ICON_RANGE = 8;
+    private static final double START_ICON_PAINT_MULTIPLIER = 0.65;
+    private static int iconRange;
     private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 
     private final BoardPanel boardPanel;
@@ -73,15 +72,15 @@ public abstract class CellGraphics extends JLabel {
     }
 
     public static final void updatePaintVariables(final double widthRatio, final double heightRatio) {
-        COLOR_RANGE_DIM.x = (int) (COLOR_RANGE * widthRatio);
-        COLOR_RANGE_DIM.y = (int) (COLOR_RANGE * heightRatio);
-        COLOR_RANGE_DIM.width = (int) Math.ceil((CELL_DIAMETER - COLOR_RANGE * 2) * widthRatio);
-        COLOR_RANGE_DIM.height = (int) Math.ceil((CELL_DIAMETER - COLOR_RANGE * 2) * heightRatio);
+        COLOR_RANGE_DIM.x = (int) (colorRange * widthRatio);
+        COLOR_RANGE_DIM.y = (int) (colorRange * heightRatio);
+        COLOR_RANGE_DIM.width = (int) Math.ceil((cellDiameter - colorRange * 2) * widthRatio);
+        COLOR_RANGE_DIM.height = (int) Math.ceil((cellDiameter - colorRange * 2) * heightRatio);
 
-        ICON_RANGE_DIM.x = (int) (ICON_RANGE * widthRatio);
-        ICON_RANGE_DIM.y = (int) (ICON_RANGE * heightRatio);
-        ICON_RANGE_DIM.width = (int) Math.ceil((CELL_DIAMETER - ICON_RANGE * 2) * widthRatio);
-        ICON_RANGE_DIM.height  = (int) Math.ceil((CELL_DIAMETER - ICON_RANGE * 2) * heightRatio);
+        ICON_RANGE_DIM.x = (int) (iconRange * widthRatio);
+        ICON_RANGE_DIM.y = (int) (iconRange * heightRatio);
+        ICON_RANGE_DIM.width = (int) Math.ceil((cellDiameter - iconRange * 2) * widthRatio);
+        ICON_RANGE_DIM.height  = (int) Math.ceil((cellDiameter - iconRange * 2) * heightRatio);
     }
 
     public final void update() {
@@ -90,10 +89,9 @@ public abstract class CellGraphics extends JLabel {
     }
 
     private void updateSize() {
-        setSize((int) (CELL_DIAMETER * boardPanel.getWidthRatio()),
-            (int) (CELL_DIAMETER * boardPanel.getHeightRatio()));
+        setSize((int) (cellDiameter * boardPanel.getWidthRatio()),
+            (int) (cellDiameter * boardPanel.getHeightRatio()));
     }
-
 
     private void updateLocation() {
         final Dimension size = getSize();
@@ -110,6 +108,23 @@ public abstract class CellGraphics extends JLabel {
 
     public abstract void paintComponent(Graphics g);
 
+    public static void updateCellSize(final int cellDia) {
+        cellDiameter = cellDia;
+        if (cellDiameter % 2 == 0) {
+            cellDiameter--;
+        }
+        colorRange = (int) (cellDiameter * START_COLOR_PAINT_MULTIPLIER);
+        if (colorRange % 2 == 0) {
+            colorRange++;
+        }
+        colorRange = (cellDiameter - colorRange) / 2;
+        iconRange = (int) (cellDiameter * START_ICON_PAINT_MULTIPLIER);
+        if (iconRange % 2 == 0) {
+            iconRange++;
+        }
+        iconRange = (cellDiameter - iconRange) / 2;
+    }
+
     // region getters/setters
 
     public final BoardPanel getBoardPanel() {
@@ -117,7 +132,7 @@ public abstract class CellGraphics extends JLabel {
     }
 
     public static int getCellDiameter() {
-        return CELL_DIAMETER;
+        return cellDiameter;
     }
 
     public static Rectangle getColorRangeDim() {
@@ -129,11 +144,11 @@ public abstract class CellGraphics extends JLabel {
     }
 
     public static int getColorRange() {
-        return COLOR_RANGE;
+        return colorRange;
     }
 
     public static int getIconRange() {
-        return ICON_RANGE;
+        return iconRange;
     }
 
     public final int getCellID() {

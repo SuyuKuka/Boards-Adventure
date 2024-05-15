@@ -6,14 +6,12 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import controller.Controller;
 import controller.resources.Resources;
 import model.Model;
 import model.config.GameMap;
-import model.config.cardseffect.CardEffect;
-import model.config.cells.Cell;
 import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
@@ -31,7 +29,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private Mode mode = Mode.MENU;
+    private Mode mode = Mode.GAME;
 
     private View view;
     private Model model = null;
@@ -60,27 +58,23 @@ public final class Game {
 
     /**
      * Méthode qui lance le jeu avec les paramètres de la map et des joueurs donnés.
-     * @param mapConfig
+     * @param gameConfig
      * @param playersConfig
      */
-    public void startGame(final HashMap<String, String> mapConfig,
+    public void startGame(final HashMap<String, String> gameConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         if (view.hasPanel()) {
             view.removePanel();
         }
         mode = Mode.GAME;
-        final String mapName = mapConfig.get("mapName");
-        final HashMap<Integer, Cell> cells = new HashMap<>();
-        final ArrayList<CardEffect> cardEffects = new ArrayList<>();
-        final HashMap<String, HashMap<String, String>> startItems = new HashMap<>();
-        final HashMap<String, HashMap<String, String>> shopItems = new HashMap<>();
-        final JSONArray jCells = Resources.loadGameResources(mapName, cells, cardEffects, startItems, shopItems);
+        final String mapName = gameConfig.get("mapName");
+        final JSONObject mapConfig = Resources.loadGameResources(mapName);
 
-        final GameMap gameMap = new GameMap(mapName, cardEffects, cells, startItems, shopItems);
+        final GameMap gameMap = new GameMap(mapName, mapConfig);
         final ArrayList<Player> players = createPlayers(playersConfig, gameMap);
-        model = new Model(gameMap, players, mapConfig);
+        model = new Model(gameMap, players, gameConfig);
         controller = new Controller(this, model);
-        controller.setGamePanel(view.initNewGamePanel(controller, jCells));
+        controller.setGamePanel(view.initNewGamePanel(controller, mapConfig));
         controller.gameUpdate();
     }
 
