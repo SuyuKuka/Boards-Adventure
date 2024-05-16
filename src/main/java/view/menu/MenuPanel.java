@@ -674,11 +674,11 @@ public final class MenuPanel extends JLayeredManager {
         // HAUT, CHANGER FONTS
         JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("  Manuel", SwingConstants.CENTER);
-        titleLabel.setFont(Resources.getFont("RifficFree", 22));
+        titleLabel.setFont(Resources.getFont("NoitaBlackletter", 32));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setBackground(Color.ORANGE);
 
-        JButton closeButton = SwingFactory.createImageButton(frame.getContentPane(), "notready", 4, 4, false);
+        JButton closeButton = SwingFactory.createImageButton(frame.getContentPane(), "notready", 5, 5, false);
         // MouseListener ici
 
         titlePanel.add(closeButton, BorderLayout.EAST);
@@ -693,13 +693,13 @@ public final class MenuPanel extends JLayeredManager {
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
         JButton howToPlayButton = new JButton("Prise en main du jeu");
         howToPlayButton.setBackground(Color.YELLOW);
-        howToPlayButton.setFont(Resources.getFont("RifficFree", 20));
+        howToPlayButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         JButton gameFlowButton = new JButton("Déroulement de la partie");
         gameFlowButton.setBackground(Color.YELLOW);
-        gameFlowButton.setFont(Resources.getFont("RifficFree", 20));
+        gameFlowButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
         mapSpecialtiesButton.setBackground(Color.YELLOW);
-        mapSpecialtiesButton.setFont(Resources.getFont("RifficFree", 20));
+        mapSpecialtiesButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         navPanel.add(howToPlayButton, BorderLayout.NORTH);
         navPanel.add(gameFlowButton, BorderLayout.CENTER);
         navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
@@ -754,10 +754,12 @@ public final class MenuPanel extends JLayeredManager {
             public void mousePressed(MouseEvent e) {
                 explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
                 JPanel mapPanel = new JPanel(new GridLayout(8, 1));
-                JPanel gainCase = createCaseExplanationPanel("gain", "Bonus: Vous fait gagner X or.", 10);
+                JPanel gainCase = createCaseExplanationPanel(
+                    "gain", "Bonus: Vous fait gagner une certaine quantité d'or.", 10);
                 gainCase.setBackground(Color.CYAN);
                 mapPanel.add(gainCase);  // gain
-                JPanel lossCase = createCaseExplanationPanel("loss", "Malus: Vous fait perdre X or.", 10);
+                JPanel lossCase = createCaseExplanationPanel(
+                    "loss", "Malus: Vous fait perdre une certaine quantité d'or.", 10);
                 lossCase.setBackground(Color.CYAN);
                 mapPanel.add(lossCase);  // loss
                 JPanel dangerCase =
@@ -766,7 +768,7 @@ public final class MenuPanel extends JLayeredManager {
                 mapPanel.add(dangerCase);    // danger
                 JPanel intersectionCase =
                 createCaseExplanationPanel("intersection",
-                "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
+                "Intersection: Choissisez quel chemin emprunter afin de continuer votre route.", 10);
                 intersectionCase.setBackground(Color.CYAN);
                 mapPanel.add(intersectionCase);    // intersection
                 JPanel kingdomCase =
@@ -776,15 +778,16 @@ public final class MenuPanel extends JLayeredManager {
                 mapPanel.add(kingdomCase);    // kingdom
                 JPanel propertyCase =
                 createCaseExplanationPanel("property",
-                "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
+                "Propriété: Achetez une propriété afin de réclamer le contrôle de la case et gagner un revenu.", 10);
                 propertyCase.setBackground(Color.CYAN);
                 mapPanel.add(propertyCase);    // property
                 JPanel shopCase = createCaseExplanationPanel("shop",
-                "Boutique: Vous permet d'acheter des objets ou des dés spéciaux en échange de votre or.", 10);
+                "Boutique: Vous permet d'acheter des objets tels que des dés spéciaux en échange de votre or.", 10); //?
                 shopCase.setBackground(Color.CYAN);
                 mapPanel.add(shopCase);    // shop
                 JPanel voidCase =
-                createCaseExplanationPanel("void", "Vide: Une case vide, sur laquelle rien ne se passe.", 10);
+                createCaseExplanationPanel(
+                    "void", "Vide: Une case vide, sur laquelle rien ne se passe mis à part un repos bien mérité.", 10);
                 voidCase.setBackground(Color.CYAN);
                 mapPanel.add(voidCase);    // void
 
