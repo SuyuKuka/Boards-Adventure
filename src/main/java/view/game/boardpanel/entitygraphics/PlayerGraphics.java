@@ -14,7 +14,7 @@ public final class PlayerGraphics extends EntityGraphics {
     private final int playerID;
 
     private Image playerImage;
-
+    private int nextCellID = 0;
 
     public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
@@ -40,6 +40,14 @@ public final class PlayerGraphics extends EntityGraphics {
 
     public Image getPlayerImage() {
         return playerImage;
+    }
+
+    public int getNextCellID() {
+        return nextCellID;
+    }
+
+    public void setNextCellID(int nextCellID) {
+        this.nextCellID = nextCellID;
     }
 
 }

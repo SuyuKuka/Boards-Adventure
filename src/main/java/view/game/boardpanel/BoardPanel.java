@@ -54,6 +54,8 @@ import view.View;
 
 public final class BoardPanel extends JLayeredManager {
 
+    private static final int PLAYER_MOVEMENT_SPEED = 3;
+
     private final GamePanel gamePanel;
     private final Controller controller;
 
@@ -271,7 +273,7 @@ public final class BoardPanel extends JLayeredManager {
     //#region GameState
     public void gameStart() {
         addComp(createGameStartBanner(), INTERACTION);
-        gamePanel.startSingleActionTimer(1500, action -> {
+        SwingFactory.startSingleActionTimer(1500, action -> {
             removeComp(INTERACTION);
             controller.gameUpdate();
         });
@@ -279,7 +281,7 @@ public final class BoardPanel extends JLayeredManager {
 
     public void newTurn() {
         addComp(createNewTurnBanner(), INTERACTION);
-        gamePanel.startSingleActionTimer(1500, action -> {
+        SwingFactory.startSingleActionTimer(1500, action -> {
             removeComp(INTERACTION);
             controller.gameUpdate();
         });
@@ -287,19 +289,53 @@ public final class BoardPanel extends JLayeredManager {
 
     public void inJail() {
         addComp(createInJailBanner(), INTERACTION);
-        gamePanel.startSingleActionTimer(1500, action -> {
+        SwingFactory.startSingleActionTimer(1500, action -> {
             removeComp(INTERACTION);
             controller.gameUpdate();
         });
     }
 
-    public void playerMove() {
-        updateCurrentPlayerGraphicsPosition();
-        if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
-            showCellTypeInteraction();
-        } else {
-            controller.gameUpdate();
-        }
+    public void rollDice() {
+        System.out.println("affiche le dé qui spawn et qui donne la valeur");
+        controller.gameUpdate();
+    }
+
+    public void playerMove(final int startCellID) {
+        final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
+        final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
+        playerGraphics.setNextCellID(controller.getCell(startCellID).getNextCellID());
+        final Timer timer = new Timer(15, null);
+        timer.addActionListener(action -> {
+            CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
+            final double distanceX = nextCell.getXPos() - playerGraphics.getXPos();
+            final double distanceY = nextCell.getYPos() - playerGraphics.getYPos();
+            final int travelX = (int) (PLAYER_MOVEMENT_SPEED * distanceX / (distanceX + distanceY));
+            final int travelY = (int) (PLAYER_MOVEMENT_SPEED * distanceY / (distanceX + distanceY));
+
+            if (playerGraphics.getXPos() != nextCell.getXPos()) {
+                playerGraphics.setXPos((int) Math.abs(distanceX) <= travelX ? nextCell.getXPos()
+                    : playerGraphics.getXPos() - travelX);
+            }
+            if (playerGraphics.getYPos() != nextCell.getYPos()) {
+                playerGraphics.setYPos((int) Math.abs(distanceY) <= travelY ? nextCell.getYPos()
+                : playerGraphics.getYPos() - travelY);
+            }
+            redraw();
+            if (nextCell.getXPos() == playerGraphics.getXPos() && nextCell.getYPos() == playerGraphics.getYPos()) {
+                if (nextCell == cellTarget) {
+                    playerGraphics.setNextCellID(0);
+                    if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
+                        showCellTypeInteraction();
+                    } else {
+                        controller.gameUpdate();
+                    }
+                    timer.stop();
+                } else {
+                    playerGraphics.setNextCellID(controller.getCell(playerGraphics.getNextCellID()).getNextCellID());
+                }
+            }
+        });
+        timer.start();
     }
 
     private void showCellTypeInteraction() {
@@ -359,14 +395,14 @@ public final class BoardPanel extends JLayeredManager {
                 addComp(createCardPanel(), INTERACTION);
                 break;
             default:
-                gamePanel.startSingleActionTimer(500, e -> controller.gameUpdate());
+                SwingFactory.startSingleActionTimer(500, e -> controller.gameUpdate());
                 break;
         }
     }
 
     public void endTurn() {
         addComp(createEndTurnBanner(), INTERACTION);
-        gamePanel.startSingleActionTimer(1000, action -> {
+        SwingFactory.startSingleActionTimer(1000, action -> {
             removeComp(INTERACTION);
             controller.gameUpdate();
         });
@@ -380,7 +416,6 @@ public final class BoardPanel extends JLayeredManager {
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         final CellGraphics cell = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         playerGraphics.updateCoordinates(cell.getXPos(), cell.getYPos());
-        playerGraphics.update();
     }
 
     //#endregion gameState

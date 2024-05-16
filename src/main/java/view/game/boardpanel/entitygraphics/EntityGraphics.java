@@ -38,13 +38,22 @@ public abstract class EntityGraphics extends JLabel {
         setLocation(finalX, finalY);
     }
 
+    public final void updateCoordinates(final int nextXPos, final int nextYPos) {
+        xPos = nextXPos;
+        yPos = nextYPos;
+        update();
+    }
+
     public final BoardPanel getBoardPanel() {
         return boardPanel;
     }
 
-    public final void updateCoordinates(final int nextXPos, final int nextYPos) {
-        xPos = nextXPos;
-        yPos = nextYPos;
+    public final void setXPos(final int nextXPos) {
+        this.xPos = nextXPos;
+    }
+
+    public final void setYPos(final int nextYPos) {
+        this.yPos = nextYPos;
     }
 
     public final int getXPos() {

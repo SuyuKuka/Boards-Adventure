@@ -90,10 +90,11 @@ public final class MainPanel extends JPanel {
 
     public void rollDice() {
         actionPanel.rollDice();
+        boardPanel.rollDice();
     }
 
-    public void playerMove() {
-        boardPanel.playerMove();
+    public void playerMove(final int startCellID) {
+        boardPanel.playerMove(startCellID);
     }
 
     public void playerArrived() {

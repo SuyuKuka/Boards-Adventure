@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -107,8 +105,8 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.rollDice();
     }
 
-    public void playerMove() {
-        mainPanel.playerMove();
+    public void playerMove(final int startCellID) {
+        mainPanel.playerMove(startCellID);
     }
 
     public void playerArrived() {
@@ -122,17 +120,6 @@ public final class GamePanel extends JLayeredManager {
 
     public void gameEnd() {
         mainPanel.gameEnd();
-    }
-
-    /**
-     * Joue une action après un délai.
-     * @param delay délai en millisecondes.
-     * @param action action réalisée APRES le délai.
-     */
-    public void startSingleActionTimer(final int delay, final ActionListener action) {
-        final Timer timer = new Timer(delay, action);
-        timer.setRepeats(false);
-        timer.start();
     }
 
     //#endregion

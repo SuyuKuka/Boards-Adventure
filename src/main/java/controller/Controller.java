@@ -109,15 +109,15 @@ public final class Controller {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
         gamePanel.rollDice();
-        gameUpdate();
     }
 
     // endregion
 
     private void playerMove() {
         prevGameState = GameState.PLAYER_MOVE;
+        final int startCellID = getCurrentPlayerCell().getId();
         model.playerMove();
-        gamePanel.playerMove();
+        gamePanel.playerMove(startCellID);
     }
 
     private void playerArrived() {

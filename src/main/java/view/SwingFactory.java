@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -501,6 +503,17 @@ public class SwingFactory {
             }
         });
         return textPane;
+    }
+
+    /**
+     * Joue une action après un délai.
+     * @param delay délai en millisecondes.
+     * @param action action réalisée APRES le délai.
+     */
+    public static void startSingleActionTimer(final int delay, final ActionListener action) {
+        final Timer timer = new Timer(delay, action);
+        timer.setRepeats(false);
+        timer.start();
     }
 
     public static String getPath() {
