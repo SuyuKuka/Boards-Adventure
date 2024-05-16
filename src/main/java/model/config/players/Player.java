@@ -13,6 +13,7 @@ import model.config.items.Item;
 public abstract class Player {
 
     private static final int MAX_ITEM_SHOP = 3;
+    private static int itemShopNb;
     private static int playerIDIterator = 0;
 
     private final int id;
@@ -20,7 +21,7 @@ public abstract class Player {
     private final String hexTeamColor;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
-    private final Item[] shopItem = new Item[MAX_ITEM_SHOP];
+    private final Item[] shopItem;
     private final String className;
 
     private final ArrayList<Property> properties = new ArrayList<>();
@@ -40,6 +41,7 @@ public abstract class Player {
             final Item startItem, final int startPos) {
         this.id = playerIDIterator;
         playerIDIterator++;
+        shopItem = new Item[itemShopNb];
         this.className = className;
         this.name = name;
         this.hexTeamColor = hexTeamColor;
@@ -199,6 +201,18 @@ public abstract class Player {
 
     public static final void resetPlayerIDIterator() {
         playerIDIterator = 0;
+    }
+
+    public static void setItemShopNb(final int nbItems) {
+        if (nbItems > MAX_ITEM_SHOP) {
+            itemShopNb = MAX_ITEM_SHOP;
+        } else {
+            itemShopNb = nbItems;
+        }
+    }
+
+    public static int getItemShopNb() {
+        return itemShopNb;
     }
 
     public static int getMaxItemShop() {

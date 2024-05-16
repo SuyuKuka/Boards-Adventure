@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,7 +12,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.ParagraphView;
@@ -19,32 +21,89 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 
+import controller.Controller;
+
 public final class ChatPanel extends JPanel {
 
     private final GamePanel gamePanel;
+    private final Controller controller;
 
-    private final JTextPane globalTextPane;
+    private static final SimpleAttributeSet SAT = new SimpleAttributeSet();
+    // Logs du jeu
+    private static final Color LOG_COLOR = new Color(85, 149, 74);
     private final JTextPane logTextPane;
+
+    // Chat global entre les joueurs
+    private final JTextPane globalChatTextPane;
+
+    // Chat par équipe
+    private final JTextPane teamChatTextPane;
+
+    static {
+        StyleConstants.setFontSize(SAT, 14);
+    }
 
     public ChatPanel(final GamePanel gamePanel, final int width, final int height) {
         this.gamePanel = gamePanel;
+        this.controller = gamePanel.getController();
         setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
 
-        globalTextPane = createTextPane();
         logTextPane = createTextPane();
+        globalChatTextPane = createTextPane();
+        teamChatTextPane = createTextPane();
 
-        add(createTabPanel(globalTextPane, logTextPane), BorderLayout.CENTER);
+        add(createTabPanel(logTextPane, globalChatTextPane, teamChatTextPane), BorderLayout.CENTER);
 
         setVisible(true);
     }
 
+    //#region
+
+    public void gameStart() {
+        addLogText("Début du jeu !\n", true);
+    }
+
+    public void newTurn() {
+        addLogText("Début du tour " + controller.getCurrentTurn() + " de "
+            + controller.getCurrentPlayerName() + ".\n", true);
+    }
+
+    public void inJail() {
+        addLogText(controller.getCurrentPlayerName() + " est en prison. Il lui reste encore "
+            + controller.getCurrentPlayer().getJailTurn() + " tours pour essayer de s'échapper !\n", true);
+    }
+
+    public void rollDice() {
+        addLogText(controller.getCurrentPlayerName() + " à lancé ses dés et obtient un "
+            + controller.getCurrentPlayerRollDiceValue() + " !\n", true);
+    }
+
+    public void playerArrived() {
+        final String cellString = String.valueOf(controller.getCurrentPlayerCellType());
+        addLogText(controller.getCurrentPlayerName() + " tombe sur une case "
+            + cellString.substring(0, 1) + cellString.substring(1).toLowerCase() + " !\n", true);
+    }
+
+
+    public void endTurn() {
+        addLogText("Fin du tour " + (controller.getCurrentTurn() - 1) + " de "
+            + controller.getCurrentPlayerName() + ".\n", true);
+    }
+
+    public void gameEnd() {
+        addLogText("Fin du jeu, merci d'avoir joué !", true);
+    }
+
+    //#endregion
+
     // #region Chat
 
-    private JTabbedPane createTabPanel(final JTextPane globalPane, final JTextPane logPane) {
+    private JTabbedPane createTabPanel(final JTextPane logPane, final JTextPane globalPane, final JTextPane teamPane) {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Systeme", createLogPanel(logPane));
         tabbedPane.add("Global", createChatPanel(globalPane));
+        tabbedPane.add("Equipe", createChatPanel(teamPane));
         return tabbedPane;
     }
 
@@ -132,14 +191,7 @@ public final class ChatPanel extends JPanel {
             @Override
             public void keyPressed(final KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
-                    try {
-                        final Document doc = textPane.getDocument();
-                        doc.insertString(doc.getLength(),
-                            gamePanel.getController().getCurrentPlayer().getName() + ": ", null);
-                        doc.insertString(doc.getLength(), textField.getText() + "\n", null);
-                    } catch (BadLocationException bde) {
-                        bde.printStackTrace();
-                    }
+                    addDiscussionText(textPane, controller.getCurrentPlayerID(), textField.getText());
                     textField.setText("");
                 }
             }
@@ -147,19 +199,25 @@ public final class ChatPanel extends JPanel {
         return textField;
     }
 
-    public void addPublicText(final String string) {
-        final Document doc = globalTextPane.getDocument();
+    private void addDiscussionText(final JTextPane textPane, final int playerID, final String text) {
+        final Document doc = textPane.getDocument();
         try {
-            doc.insertString(doc.getLength(), string + "\n", null);
+            StyleConstants.setForeground(SAT, Color.decode(controller.getPlayer(playerID).getHexTeamColor()));
+            doc.insertString(doc.getLength(), "["
+                + controller.getPlayer(playerID).getName() + "] : " + text + "\n", SAT);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void addLogText(final String string) {
+    private void addLogText(final String text, final boolean sayLogType) {
         final Document doc = logTextPane.getDocument();
         try {
-            doc.insertString(doc.getLength(), string + "\n", null);
+            StyleConstants.setForeground(SAT, LOG_COLOR);
+            if (sayLogType) {
+                doc.insertString(doc.getLength(), "[CONSOLE] : ", SAT);
+            }
+            doc.insertString(doc.getLength(), text, SAT);
         } catch (Exception e) {
             e.printStackTrace();
         }

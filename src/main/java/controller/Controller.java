@@ -2,8 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
-
 import view.game.GamePanel;
 import game.Game;
 import game.GameState;
@@ -110,6 +108,7 @@ public final class Controller {
     public void rollDice() {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
+        gamePanel.rollDice();
         gameUpdate();
     }
 
@@ -242,6 +241,10 @@ public final class Controller {
         return model.getCurrentPlayer();
     }
 
+    public String getCurrentPlayerName() {
+        return getCurrentPlayer().getName();
+    }
+
     public int getCurrentPlayerID() {
         return model.getCurrentPlayer().getID();
     }
@@ -282,10 +285,6 @@ public final class Controller {
         return ((Property) currentCell).hasOwner();
     }
 
-    public void delete(final JComponent component) {
-        gamePanel.remove(component);
-    }
-
     public void getCurrentPlayerRollDice() {
         getCurrentPlayer().rollDice();
     }
@@ -300,6 +299,10 @@ public final class Controller {
         }
         System.out.println(prevGameState);
         return false;
+    }
+
+    public static int getPlayerItemShopNb() {
+        return Player.getItemShopNb();
     }
 
 

@@ -1,24 +1,31 @@
 package view.game.datapanel;
 
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import controller.Controller;
 import controller.resources.Resources;
 import view.game.GamePanel;
 
 public final class PlayerScore extends JPanel {
+
+    private static final Color START_ITEM_COLOR_ICON = new Color(173, 50, 31);
 
     private final GamePanel gamePanel;
     private final int playerId;
@@ -30,12 +37,14 @@ public final class PlayerScore extends JPanel {
     private final Image classImage;
 
     private final JLabel nameLabel;
-    private final JLabel moneyLabel;
+    private final String name;
+    private final JLabel coinsLabel;
 
     private final JLabel pointsLabel;
-    private final JLabel propertyLabel;
+    private final JLabel propertiesLabel;
 
-    private final JLabel itemsLabel;
+    private final JPanel itemsPanel;
+    private final ArrayList<JLabel> itemsLabel;
 
     private final JComboBox<Object> playerBox;
 
@@ -59,32 +68,42 @@ public final class PlayerScore extends JPanel {
         classLabel = createClassLabel((int) (width * gbc.weightx), height);
         add(classLabel, gbc);
 
-        gbc.weightx = 0.35;
+        gbc.weightx = 0.3;
         nameLabel = new JLabel();
-        moneyLabel = new JLabel();
-        final JPanel panel1 = createNameMoneyPanel((int) (width * gbc.weightx), height);
+        name = gamePanel.getController().getPlayer(playerId).getName();
+        coinsLabel = new JLabel();
+        final JPanel panel1 = createNameCoinsPanel((int) (width * gbc.weightx), height);
         add(panel1, gbc);
 
-        gbc.weightx = 0.30;
+        gbc.weightx = 0.2;
         pointsLabel = new JLabel();
-        propertyLabel = new JLabel();
-        final JPanel panel2 = createPointsPropertyPanel((int) (width * gbc.weightx), height);
+        propertiesLabel = new JLabel();
+        final JPanel panel2 = createPointsPropertiesPanel((int) (width * gbc.weightx), height);
         add(panel2, gbc);
 
-        gbc.weightx = 0.05;
-        itemsLabel = createItemsLabel((int) (width * gbc.weightx), height);
-        add(itemsLabel, gbc);
+        gbc.weightx = 0.15;
+        itemsLabel = new ArrayList<>();
+        itemsPanel = createItemsLabel((int) (width * gbc.weightx), height);
+        add(itemsPanel, gbc);
 
+        gbc.weightx = 0.05;
         playerBox = createComboBox((int) (width * gbc.weightx), height);
+        add(playerBox, gbc);
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
                 rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance((int) (dim.width * 0.15),
-                    dim.height, Image.SCALE_FAST)));
+                    dim.height, Image.SCALE_SMOOTH)));
                 classLabel.setIcon(new ImageIcon(classImage.getScaledInstance((int) (dim.width * 0.15),
-                    dim.height, Image.SCALE_FAST)));
+                    dim.height, Image.SCALE_SMOOTH)));
+                coinsLabel.setIcon(new ImageIcon(Resources.getImage("coins").getScaledInstance(
+                    (int) (dim.width * 0.35 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
+                pointsLabel.setIcon(new ImageIcon(Resources.getImage("points").getScaledInstance(
+                    (int) (dim.width * 0.25 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
+                propertiesLabel.setIcon(new ImageIcon(Resources.getImage("properties").getScaledInstance(
+                    (int) (dim.width * 0.25 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
                 revalidate();
                 repaint();
             }
@@ -95,54 +114,86 @@ public final class PlayerScore extends JPanel {
 
     private JLabel createRankLabel(final int width, final int height) {
         final JLabel label = new JLabel();
-        label.setOpaque(true);
-        label.setBackground(Color.BLACK);
         label.setPreferredSize(new Dimension(0, 0));
         label.setSize(width, height);
-        label.setIcon(new ImageIcon(rankImage.getScaledInstance(width, height, Image.SCALE_FAST)));
+        label.setIcon(new ImageIcon(rankImage.getScaledInstance(width, height, Image.SCALE_SMOOTH)));
         return label;
     }
 
     private JLabel createClassLabel(final int width, final int height) {
         final JLabel label = new JLabel();
-        label.setOpaque(true);
-        label.setBackground(Color.WHITE);
         label.setPreferredSize(new Dimension(0, 0));
         label.setSize(width, height);
-        label.setIcon(new ImageIcon(classImage.getScaledInstance(width, height, Image.SCALE_FAST)));
+        label.setIcon(new ImageIcon(classImage.getScaledInstance(width, height, Image.SCALE_SMOOTH)));
         return label;
     }
 
-    private JPanel createNameMoneyPanel(final int width, final int height) {
+    private JPanel createNameCoinsPanel(final int width, final int height) {
         final JPanel panel = new JPanel(new GridLayout(2, 0));
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         panel.setPreferredSize(new Dimension(0, 0));
-        panel.setBackground(Color.ORANGE);
+        nameLabel.setText(name);
+        nameLabel.setHorizontalAlignment(JLabel.CENTER);
         panel.add(nameLabel);
-        nameLabel.setText("TESTPSEUDO");
-        panel.add(moneyLabel);
-        moneyLabel.setText("0");
+        coinsLabel.setIcon(new ImageIcon(Resources.getImage("coins")
+        .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
+        coinsLabel.setText("101000");
+        panel.add(coinsLabel);
         return panel;
     }
 
 
-    private JPanel createPointsPropertyPanel(final int width, final int height) {
-        final JPanel panel = new JPanel();
+    private JPanel createPointsPropertiesPanel(final int width, final int height) {
+        final JPanel panel = new JPanel(new GridLayout(2, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         panel.setPreferredSize(new Dimension(0, 0));
-        panel.setBackground(Color.CYAN);
+        panel.setOpaque(false);
+        pointsLabel.setText("0");
+        pointsLabel.setIcon(new ImageIcon(Resources.getImage("points")
+            .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
+        panel.add(pointsLabel);
+        propertiesLabel.setText("0");
+        propertiesLabel.setIcon(new ImageIcon(Resources.getImage("properties")
+            .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
+        panel.add(propertiesLabel);
         return panel;
     }
 
-    private JLabel createItemsLabel(final int width, final int height) {
-        final JLabel label = new JLabel();
-        label.setBackground(Color.BLUE);
-        label.setOpaque(true);
-        label.setPreferredSize(new Dimension(0, 0));
-        label.setSize(width, height);
-        return label;
+    private JPanel createItemsLabel(final int width, final int height) {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        final int playerItemShopNb = Controller.getPlayerItemShopNb() + 1;
+        final int gridWidth = playerItemShopNb <= 2 ? 1 : 2;
+        panel.setLayout(new GridLayout(2, gridWidth));
+        for (int i = 0; i < playerItemShopNb; i++) {
+            final Color color = i == 0 ? START_ITEM_COLOR_ICON : Color.BLACK;
+            final JLabel label = new JLabel() {
+                @Override
+                protected void paintComponent(final Graphics g) {
+                    super.paintComponent(g);
+                    final Graphics2D g2d = (Graphics2D) g;
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    final Dimension size = getSize();
+                    final int paint = size.width > size.height ? (int) (size.height * 0.9) : (int) (size.width * 0.9);
+                    final int x1 = (size.width - paint) / 2;
+                    final int y1 = (size.height - paint) / 2;
+                    final int x2 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
+                    final int y2 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
+                    g2d.setColor(color);
+                    g2d.fillOval(x1, y1, x2, y2);
+                }
+            };
+            label.setPreferredSize(new Dimension(0, 0));
+            itemsLabel.add(label);
+            panel.add(label);
+        }
+        return panel;
     }
 
     private JComboBox<Object> createComboBox(final int width, final int height) {
         final JComboBox<Object> comboBox = new JComboBox<>();
+        comboBox.setPreferredSize(new Dimension(0, 0));
         return comboBox;
     }
 
