@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Controller;
+import model.config.players.Player;
 import view.game.GamePanel;
 import view.game.datapanel.cardgraphics.CardGraphics;
 import view.game.datapanel.cardgraphics.CardGraphicsFactory;
@@ -28,7 +29,7 @@ public final class DataPanel extends JPanel {
     private JLabel remainingTurns;
 
     private final JPanel scoreBoardPanel;
-    private final ArrayList<PlayerScore> playerScoreList = new ArrayList<>();
+    private final ArrayList<PlayerScore> playersScore = new ArrayList<>();
 
     private final JPanel cardGraphicsPanel;
     private CardGraphics cardGraphics;
@@ -73,6 +74,15 @@ public final class DataPanel extends JPanel {
 
         setVisible(true);
     }
+
+    //#region update
+    public void updatePlayerScoreText() {
+        final Player player = gamePanel.getController().getCurrentPlayer();
+        System.out.println(player.getName() + " " + player.getID());
+        playersScore.get(gamePanel.getController().getCurrentPlayerID()).updatePlayerScoreText();
+    }
+
+    //#endregion
     // #region gameState
     public void endTurn() {
         final Controller controller = gamePanel.getController();
@@ -112,7 +122,7 @@ public final class DataPanel extends JPanel {
         gamePanel.getPlayersGraphics().forEach((playerGraphics) -> {
             final PlayerScore playerScore = new PlayerScore(gamePanel, width, height / scoreboardLines,
                 playerGraphics.getPlayerID());
-            playerScoreList.add(playerScore);
+            playersScore.add(playerScore);
             panel.add(playerScore);
         });
         panel.setVisible(true);

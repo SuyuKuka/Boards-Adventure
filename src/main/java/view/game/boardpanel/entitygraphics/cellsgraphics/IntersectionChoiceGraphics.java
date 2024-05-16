@@ -1,4 +1,4 @@
-package view.game.boardpanel.cellsgraphics;
+package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,6 +21,7 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
                 final Controller controller = boardPanel.getController();
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     boardPanel.removeComp(BoardPanel.getInteraction());
+                    boardPanel.cleanIntersectionEntities();
                     controller.setPlayerPosition(cellID);
                     controller.gameUpdate();
                 }

@@ -28,6 +28,7 @@ public final class PlayerScore extends JPanel {
     private static final Color START_ITEM_COLOR_ICON = new Color(173, 50, 31);
 
     private final GamePanel gamePanel;
+    private final Controller controller;
     private final int playerId;
 
     private final JLabel rankLabel;
@@ -40,7 +41,7 @@ public final class PlayerScore extends JPanel {
     private final String name;
     private final JLabel coinsLabel;
 
-    private final JLabel pointsLabel;
+    private final JLabel gamePointsLabel;
     private final JLabel propertiesLabel;
 
     private final JPanel itemsPanel;
@@ -50,11 +51,12 @@ public final class PlayerScore extends JPanel {
 
     public PlayerScore(final GamePanel gamePanel, final int width, final int height, final int playerId) {
         this.gamePanel = gamePanel;
+        this.controller = gamePanel.getController();
         this.playerId = playerId;
         setSize(width, height);
-        setBackground(Color.decode(gamePanel.getController().getPlayer(playerId).getHexTeamColor()));
+        setBackground(Color.decode(controller.getPlayer(playerId).getHexTeamColor()));
         this.rankImage = Resources.getImage("1st");
-        this.classImage = Resources.getImage(gamePanel.getController().getCurrentPlayer().getClassName());
+        this.classImage = Resources.getImage(controller.getCurrentPlayer().getClassName());
 
         setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
@@ -70,13 +72,13 @@ public final class PlayerScore extends JPanel {
 
         gbc.weightx = 0.3;
         nameLabel = new JLabel();
-        name = gamePanel.getController().getPlayer(playerId).getName();
+        name = controller.getPlayer(playerId).getName();
         coinsLabel = new JLabel();
         final JPanel panel1 = createNameCoinsPanel((int) (width * gbc.weightx), height);
         add(panel1, gbc);
 
         gbc.weightx = 0.2;
-        pointsLabel = new JLabel();
+        gamePointsLabel = new JLabel();
         propertiesLabel = new JLabel();
         final JPanel panel2 = createPointsPropertiesPanel((int) (width * gbc.weightx), height);
         add(panel2, gbc);
@@ -90,6 +92,45 @@ public final class PlayerScore extends JPanel {
         playerBox = createComboBox((int) (width * gbc.weightx), height);
         add(playerBox, gbc);
 
+        addResizeListener();
+
+        setVisible(true);
+    }
+
+    //#region update
+
+    public void updateRankImage(final Image newRankImage) {
+        if (!rankImage.equals(newRankImage)) {
+            this.rankImage = newRankImage;
+            final Dimension dim = getSize();
+            rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance(
+                (int) (dim.width * 0.15), dim.height, Image.SCALE_SMOOTH)));
+        }
+    }
+
+    public void updatePlayerScoreText() {
+        updateCoinsText();
+        updatePropertiesText();
+        updateGamePointsText();
+    }
+
+    private void updateCoinsText() {
+        coinsLabel.setText(controller.getPlayer(playerId).getCoins() + "");
+    }
+
+    private void updatePropertiesText() {
+        propertiesLabel.setText(controller.getPlayer(playerId).getProperties().size() + "");
+    }
+
+    private void updateGamePointsText() {
+        gamePointsLabel.setText(controller.getPlayer(playerId).getGamePoint() + "");
+    }
+
+    //#endregion
+
+    //#region label/panel creation
+
+    private void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
@@ -100,7 +141,7 @@ public final class PlayerScore extends JPanel {
                     dim.height, Image.SCALE_SMOOTH)));
                 coinsLabel.setIcon(new ImageIcon(Resources.getImage("coins").getScaledInstance(
                     (int) (dim.width * 0.35 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
-                pointsLabel.setIcon(new ImageIcon(Resources.getImage("points").getScaledInstance(
+                gamePointsLabel.setIcon(new ImageIcon(Resources.getImage("points").getScaledInstance(
                     (int) (dim.width * 0.25 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
                 propertiesLabel.setIcon(new ImageIcon(Resources.getImage("properties").getScaledInstance(
                     (int) (dim.width * 0.25 * 0.2), (int) (dim.height / 2 * 0.8), Image.SCALE_SMOOTH)));
@@ -108,8 +149,6 @@ public final class PlayerScore extends JPanel {
                 repaint();
             }
         });
-
-        setVisible(true);
     }
 
     private JLabel createRankLabel(final int width, final int height) {
@@ -138,7 +177,7 @@ public final class PlayerScore extends JPanel {
         panel.add(nameLabel);
         coinsLabel.setIcon(new ImageIcon(Resources.getImage("coins")
         .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
-        coinsLabel.setText("101000");
+        coinsLabel.setText(controller.getPlayer(playerId).getCoins() + "");
         panel.add(coinsLabel);
         return panel;
     }
@@ -149,10 +188,10 @@ public final class PlayerScore extends JPanel {
         panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         panel.setPreferredSize(new Dimension(0, 0));
         panel.setOpaque(false);
-        pointsLabel.setText("0");
-        pointsLabel.setIcon(new ImageIcon(Resources.getImage("points")
+        gamePointsLabel.setText("0");
+        gamePointsLabel.setIcon(new ImageIcon(Resources.getImage("points")
             .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
-        panel.add(pointsLabel);
+        panel.add(gamePointsLabel);
         propertiesLabel.setText("0");
         propertiesLabel.setIcon(new ImageIcon(Resources.getImage("properties")
             .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
@@ -197,10 +236,16 @@ public final class PlayerScore extends JPanel {
         return comboBox;
     }
 
+    //#endregion label/panel creation
+
     @Override
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
+        if (controller.getCurrentPlayerID() != playerId) {
+            final Dimension dim = getSize();
+            g.setColor(new Color(0, 0, 0, 100));
+            g.fillRect(0, 0, dim.width, dim.height);
+        }
     }
-
 
 }

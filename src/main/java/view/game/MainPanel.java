@@ -63,6 +63,12 @@ public final class MainPanel extends JPanel {
         setVisible(true);
     }
 
+    //#region update
+
+    //#endregion
+
+    //#region gameState
+
     public void gameStart() {
         boardPanel.gameStart();
         actionPanel.gameStart();
@@ -107,7 +113,13 @@ public final class MainPanel extends JPanel {
         actionPanel.gameEnd();
     }
 
+    //#endregion gameState
+
     public GamePanel getGamePanel() {
         return gamePanel;
+    }
+
+    public DataPanel getDataPanel() {
+        return dataPanel;
     }
 }

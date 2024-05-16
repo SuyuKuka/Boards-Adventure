@@ -1,4 +1,4 @@
-package view.game.boardpanel.cellsgraphics;
+package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import org.json.JSONObject;
 

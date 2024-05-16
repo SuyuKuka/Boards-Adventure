@@ -11,7 +11,7 @@ public final class Hoe extends Item {
 
     @Override
     public void playItemEffect(final Player player, final Model model) {
-        player.incrementMoney(150);
+        player.incrementCoins(150);
         player.setStartItemCooldown(getTurnCooldown());
     }
 

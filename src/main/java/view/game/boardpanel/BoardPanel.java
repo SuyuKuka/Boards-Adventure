@@ -3,8 +3,11 @@ package view.game.boardpanel;
 import controller.Controller;
 import controller.resources.Resources;
 import view.game.GamePanel;
-import view.game.boardpanel.cellsgraphics.CellGraphics;
-import view.game.boardpanel.cellsgraphics.CellGraphicsFactory;
+import view.game.boardpanel.entitygraphics.EntityGraphics;
+import view.game.boardpanel.entitygraphics.PlayerGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphicsFactory;
+import view.game.boardpanel.entitygraphics.cellsgraphics.IntersectionChoiceGraphics;
 
 import java.awt.Image;
 import java.awt.Point;
@@ -58,16 +61,18 @@ public final class BoardPanel extends JLayeredManager {
     private static final int BACKGROUND = 0;
     private static final int CELLS = 1;
     private static final int PLAYERS = 2;
-    private static final int INTERACTION = 3;
+    private static final int ENTITIES = 3;
+    private static final int INTERACTION = 4;
 
     // COUCHES
     private final JPanel backgroundPanel;
     private final JPanel cellsPanel;
     private final JPanel playersPanel;
+    private final JPanel entitiesPanel;
 
     private final HashMap<Integer, CellGraphics> cellsGraphics;
     private final ArrayList<PlayerGraphics> playersGraphics;
-    private final ArrayList<EntityGraphics> entitiesGraphics;
+    private final ArrayList<EntityGraphics> entitiesGraphics = new ArrayList<>();
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
@@ -92,16 +97,11 @@ public final class BoardPanel extends JLayeredManager {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         this.boardImage = Resources.getImage("board");
+
         minZoom = initMinZoom();
-
-        setOpaque(true);
-        setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(width, height));
-
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
         gamePanel.setCellsGraphics(cellsGraphics);
-        entitiesGraphics = new ArrayList<>();
         this.playersGraphics = loadPlayerGraphics();
         gamePanel.setPlayersGraphics(playersGraphics);
 
@@ -111,10 +111,12 @@ public final class BoardPanel extends JLayeredManager {
         backgroundPanel = createBackgroundPanel();
         cellsPanel = createCellsPanel();
         playersPanel = createPlayersPanel();
+        entitiesPanel = createEntitiesPanel();
 
         addComp(backgroundPanel, BACKGROUND);
         addComp(cellsPanel, CELLS);
         addComp(playersPanel, PLAYERS);
+        addComp(entitiesPanel, ENTITIES);
         redraw();
 
         addComponentListener(new ComponentAdapter() {
@@ -135,6 +137,7 @@ public final class BoardPanel extends JLayeredManager {
         setVisible(true);
     }
     //#region MouseListeners
+
     private void addMouseListeners() {
         addMouseListener();
         addMouseWheelListener();
@@ -227,11 +230,9 @@ public final class BoardPanel extends JLayeredManager {
 
     private void redraw() {
         CellGraphics.updatePaintVariables(getWidthRatio(), getHeightRatio());
-        for (CellGraphics cellGraphics : cellsGraphics.values()) {
-            cellGraphics.update();
-        }
-        entitiesGraphics.forEach(entityGraphics -> entityGraphics.update());
-        gamePanel.getPlayersGraphics().forEach(playerGraphics -> playerGraphics.update());
+        updateCellsGraphics();
+        updatePlayersGraphics();
+        updateEntitiesGraphics();
         revalidate();
         repaint();
     }
@@ -294,11 +295,45 @@ public final class BoardPanel extends JLayeredManager {
 
     public void playerMove() {
         updateCurrentPlayerGraphicsPosition();
-        if (controller.getCurrentPlayerCellType() == CellType.INTERSECTION) {
-            addComp(createIntersectionPanel(), INTERACTION);
+        if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
+            showCellTypeInteraction();
         } else {
             controller.gameUpdate();
         }
+    }
+
+    private void showCellTypeInteraction() {
+        switch (controller.getCurrentPlayerCellType()) {
+            case INTERSECTION:
+                createIntersectionEntities();
+                break;
+            case GAIN:
+                createGainEntity();
+            case LOSS:
+                createLossEntity();
+            case PROPERTY:
+                addComp(createPropertyPanel(), INTERACTION);
+            case SHOP:
+                addComp(createShopPanel(), INTERACTION);
+            case CARD:
+                addComp(createCardPanel(), INTERACTION);
+            default:
+                break;
+        }
+    }
+
+    private void createGainEntity() {
+
+    }
+
+    private void createLossEntity() {
+
+    }
+
+    private void createIntersectionEntities() {
+        final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
+        intersectIDs.forEach(cellID ->
+            entitiesPanelAdd(CellGraphicsFactory.createIntersectionChoice(this, cellsGraphics.get(cellID))));
     }
 
     public void playerArrived() {
@@ -388,6 +423,12 @@ public final class BoardPanel extends JLayeredManager {
         return panel;
     }
 
+    private void updateCellsGraphics() {
+        for (CellGraphics cell : cellsGraphics.values()) {
+            cell.update();
+        }
+    }
+
     // #endregion
 
     // #region PlayersGraphics 2
@@ -403,9 +444,37 @@ public final class BoardPanel extends JLayeredManager {
         return panel;
     }
 
+    private void updatePlayersGraphics() {
+        playersGraphics.forEach(player -> player.update());
+    }
+
     // #endregion
 
-    // #region Interaction 3
+    // #region EntitiesGraphics 3
+
+    private JPanel createEntitiesPanel() {
+        final JPanel panel = new JPanel(null);
+        panel.setSize(getSize());
+        panel.setOpaque(false);
+        panel.setVisible(true);
+        return panel;
+    }
+
+    private void entitiesPanelAdd(final EntityGraphics entity) {
+        entitiesGraphics.add(entity);
+        entitiesPanel.add(entity);
+    }
+
+    private void entitiesPanelRemove(final EntityGraphics entity) {
+        entitiesGraphics.remove(entity);
+        entitiesPanel.remove(entity);
+    }
+
+    private void updateEntitiesGraphics() {
+        entitiesGraphics.forEach(entity -> entity.update());
+    }
+
+    // #region Interaction 4
 
     // #region Banner
 
@@ -492,6 +561,17 @@ public final class BoardPanel extends JLayeredManager {
         return panel;
     }
 
+    public void cleanIntersectionEntities() {
+        for (int i = entitiesGraphics.size() - 1; i >= 0; i--) {
+            final EntityGraphics entity = entitiesGraphics.get(i);
+            if (entity instanceof IntersectionChoiceGraphics) {
+                entitiesPanelRemove(entity);
+            }
+        }
+        revalidate();
+        repaint();
+    }
+
     // #endregion
 
     // #region Gain
@@ -506,7 +586,7 @@ public final class BoardPanel extends JLayeredManager {
         background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
 
         controller.setCurrentCell();
-        controller.playerGainMoney();
+        controller.playerGainCoins();
         int gain = controller.getGainedMoney();
 
         JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
@@ -674,7 +754,7 @@ public final class BoardPanel extends JLayeredManager {
 
         panel.add(rentTextPane);
 
-        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentMoney() + "$.\n",
+        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentPlayerCoins() + "$.\n",
         "RifficFree", Color.BLACK, 26);
         moneyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(moneyLabel);
@@ -867,6 +947,10 @@ public final class BoardPanel extends JLayeredManager {
 
     public static int getInteraction() {
         return INTERACTION;
+    }
+
+    public ArrayList<EntityGraphics> getEntitiesGraphics() {
+        return entitiesGraphics;
     }
 
     //#endregion

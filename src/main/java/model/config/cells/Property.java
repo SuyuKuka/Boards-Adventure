@@ -22,25 +22,25 @@ public final class Property extends Cell {
     @Override
     public void playCellEffect(final Player player, final Model model) {
         if (owner == null) {
-            if (player.getMoney() < buyPrices.get(0)) {
+            if (player.getCoins() < buyPrices.get(0)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
                 + buyPrices.get(0) + "$).");
             }
         } else if (isAtHome(player)) {
             if (propertyState + 1 > buyPrices.size()) {
                 System.out.println("Votre propriété est déjà au max.");
-            } else if (player.getMoney() < buyPrices.get(propertyState + 1)) {
+            } else if (player.getCoins() < buyPrices.get(propertyState + 1)) {
                 System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
                 + buyPrices.get(propertyState + 1) + "$).");
             }
         } else {
             final int price = buyPrices.get(propertyState - 1);
-            if (player.getMoney() < price) {
+            if (player.getCoins() < price) {
                 //model.removePlayer(player);
                 System.out.println(player + " a pas assez d'argents.");
             } else {
-                player.incrementMoney(-price);
-                owner.incrementMoney(price);
+                player.incrementCoins(-price);
+                owner.incrementCoins(price);
             }
         }
     }
@@ -48,12 +48,12 @@ public final class Property extends Cell {
     public void buy(final Player player) {
         owner = player;
         player.addProperty(this);
-        player.incrementMoney(-buyPrices.get(propertyState));
+        player.incrementCoins(-buyPrices.get(propertyState));
         propertyState++;
     }
 
     public void upgrade(final Player player) {
-        player.incrementMoney(-buyPrices.get(propertyState));
+        player.incrementCoins(-buyPrices.get(propertyState));
         propertyState++;
     }
 

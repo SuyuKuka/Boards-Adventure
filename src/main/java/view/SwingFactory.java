@@ -454,6 +454,7 @@ public class SwingFactory {
     public static JTextPane createTextPane() {
         final JTextPane textPane = new JTextPane();
         textPane.setEditable(false);
+        // @see https://stackoverflow.com/a/7036671 permet d'avoir du letter wrap dans le textPane
         textPane.setEditorKit(new HTMLEditorKit() {
             @Override
             public ViewFactory getViewFactory() {

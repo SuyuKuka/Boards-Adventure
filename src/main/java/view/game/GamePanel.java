@@ -19,8 +19,8 @@ import controller.Controller;
 import controller.resources.Resources;
 import view.JLayeredManager;
 import view.View;
-import view.game.boardpanel.PlayerGraphics;
-import view.game.boardpanel.cellsgraphics.CellGraphics;
+import view.game.boardpanel.entitygraphics.PlayerGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 
 /**
  * Classe mère de la {@link View} EN JEU.
@@ -62,8 +62,8 @@ public final class GamePanel extends JLayeredManager {
         pausePanel = createPausePanel();
 
         addComp(mainPanel, MAIN_PANEL);
-        // addComp(overlayPanel, OVERLAY_PANEL);
-        // addComp(pausePanel, PAUSE_PANEL);
+        addComp(overlayPanel, OVERLAY_PANEL);
+        addComp(pausePanel, PAUSE_PANEL);
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -81,20 +81,7 @@ public final class GamePanel extends JLayeredManager {
         setVisible(true);
     }
 
-    //#region Panels
-
-    private JPanel createOverlayPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(getBounds());
-        panel.setOpaque(false);
-        return panel;
-    }
-
-    private JPanel createPausePanel() {
-        final JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
-    }
+    //#region update
 
     //#endregion
 
@@ -128,9 +115,9 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.playerArrived();
     }
 
-
     public void endTurn() {
         mainPanel.endTurn();
+        repaint();
     }
 
     public void gameEnd() {
@@ -213,6 +200,23 @@ public final class GamePanel extends JLayeredManager {
 
     public ImageIcon getItemGraphics(final String itemName) {
         return itemsGraphics.get(itemName);
+    }
+
+    //#endregion
+
+    //#region Panels
+
+    private JPanel createOverlayPanel() {
+        final JPanel panel = new JPanel();
+        panel.setBounds(getBounds());
+        panel.setOpaque(false);
+        return panel;
+    }
+
+    private JPanel createPausePanel() {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        return panel;
     }
 
     //#endregion

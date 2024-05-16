@@ -1,4 +1,4 @@
-package view.game.boardpanel.cellsgraphics;
+package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 import controller.resources.Resources;
 import view.View;
 import view.game.boardpanel.BoardPanel;
-import view.game.boardpanel.EntityGraphics;
+import view.game.boardpanel.entitygraphics.EntityGraphics;
 
 /**
  * Classe ABSTRAIRE qui s'occupe de la vue des {@link model.config.cells}. <p>
@@ -33,13 +33,11 @@ public abstract class CellGraphics extends EntityGraphics {
     private static int iconRange;
     private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 
-    private final BoardPanel boardPanel;
     private final int cellID;
     private final Image cellImage;
 
     public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
-        this.boardPanel = boardPanel;
         this.cellID = cellID;
         this.cellImage = Resources.getImage(boardPanel.getController()
             .getCell(cellID).getCellType().name().toLowerCase());
@@ -80,6 +78,7 @@ public abstract class CellGraphics extends EntityGraphics {
     }
 
     public final void updateSize() {
+        final BoardPanel boardPanel = getBoardPanel();
         setSize((int) (cellDiameter * boardPanel.getWidthRatio()),
             (int) (cellDiameter * boardPanel.getHeightRatio()));
     }

@@ -153,12 +153,12 @@ public final class Controller {
         }
     }
 
-    public void playerGainMoney() {
-        getCurrentPlayer().incrementMoney(getGainedMoney());
+    public void playerGainCoins() {
+        getCurrentPlayer().incrementCoins(getGainedMoney());
     }
 
     public void playerLossMoney() {
-        getCurrentPlayer().incrementMoney(-getLossMoney());
+        getCurrentPlayer().incrementCoins(-getLossMoney());
     }
 
     public void playerBuyProperty() {
@@ -249,8 +249,8 @@ public final class Controller {
         return model.getCurrentPlayer().getID();
     }
 
-    public int getCurrentMoney() {
-        return getCurrentPlayer().getMoney();
+    public int getCurrentPlayerCoins() {
+        return getCurrentPlayer().getCoins();
     }
 
     public int getGainedMoney() {

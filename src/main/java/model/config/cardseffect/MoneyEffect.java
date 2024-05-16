@@ -22,8 +22,8 @@ public final class MoneyEffect extends CardEffect {
      * @param  model   Le model qui contient toutes les informations du modeles
      */
     @Override
-    public void applyEffect(Player player, Model model) {
-        player.incrementMoney(amount);
+    public void applyEffect(final Player player, final Model model) {
+        player.incrementCoins(amount);
     }
 
     @Override

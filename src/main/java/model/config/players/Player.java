@@ -25,7 +25,7 @@ public abstract class Player {
     private final String className;
 
     private final ArrayList<Property> properties = new ArrayList<>();
-    private int money = 500;
+    private int coins = 500;
     private int gamePoint = 0;
     private int rank = 1;
     private int jailTurn = 0;
@@ -83,16 +83,16 @@ public abstract class Player {
         this.gamePoint += increment;
     }
 
-    public final void incrementMoney(final int increment) {
-        this.money += increment;
+    public final void incrementCoins(final int increment) {
+        this.coins += increment;
     }
 
     // endregion
 
     // region getters/setters
 
-    public final boolean hasEnoughMoney(final int price) {
-        return this.money >= price;
+    public final boolean hasEnoughCoins(final int price) {
+        return this.coins >= price;
     }
 
     public final Cell getPlayerCell(final Model model) {
@@ -171,12 +171,12 @@ public abstract class Player {
         return id;
     }
 
-    public final int getMoney() {
-        return money;
+    public final int getCoins() {
+        return coins;
     }
 
-    public final void setMoney(final int money) {
-        this.money = money;
+    public final void setCoins(int coins) {
+        this.coins = coins;
     }
 
     public final int getGamePoint() {

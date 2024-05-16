@@ -88,7 +88,8 @@ public final class ChatPanel extends JPanel {
 
 
     public void endTurn() {
-        addLogText("Fin du tour " + (controller.getCurrentTurn() - 1) + " de "
+        int turn = controller.getCurrentTurn();
+        addLogText("Fin du tour " + turn + " de "
             + controller.getCurrentPlayerName() + ".\n", true);
     }
 
@@ -132,6 +133,7 @@ public final class ChatPanel extends JPanel {
     private JTextPane createTextPane() {
         final JTextPane textPane = new JTextPane();
         textPane.setEditable(false);
+        // @see https://stackoverflow.com/a/7036671 permet d'avoir du letter wrap dans le textPane
         textPane.setEditorKit(new HTMLEditorKit() {
             @Override
             public ViewFactory getViewFactory() {

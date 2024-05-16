@@ -1,4 +1,4 @@
-package view.game.boardpanel;
+package view.game.boardpanel.entitygraphics;
 
 import java.awt.Image;
 
@@ -6,11 +6,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import controller.resources.Resources;
-import view.game.boardpanel.cellsgraphics.CellGraphics;
+import view.game.boardpanel.BoardPanel;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 
 public final class PlayerGraphics extends EntityGraphics {
-
-    private final BoardPanel boardPanel;
 
     private final int playerID;
 
@@ -19,7 +18,6 @@ public final class PlayerGraphics extends EntityGraphics {
 
     public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
-        this.boardPanel = boardPanel;
         this.playerID = playerID;
         playerImage = Resources.getImage("j" + playerID);
         setHorizontalAlignment(JLabel.CENTER);
@@ -28,6 +26,7 @@ public final class PlayerGraphics extends EntityGraphics {
     }
 
     public void updateSize() {
+        final BoardPanel boardPanel = getBoardPanel();
         final int cellDiam = CellGraphics.getCellDiameter();
         final int sizeX = (int) (cellDiam * boardPanel.getWidthRatio()) / 2;
         final int sizeY = (int) (cellDiam * boardPanel.getHeightRatio()) / 2;

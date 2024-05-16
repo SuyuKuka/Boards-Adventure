@@ -1,8 +1,10 @@
-package view.game.boardpanel;
+package view.game.boardpanel.entitygraphics;
 
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+
+import view.game.boardpanel.BoardPanel;
 
 public abstract class EntityGraphics extends JLabel {
 
