@@ -92,7 +92,7 @@ public final class Game {
     private void initTempGameConfig(final HashMap<String, String> gameConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         // gameconfig
-        gameConfig.put("mapName", "map4");
+        gameConfig.put("mapName", "map4"); // map4, spaceship, villanova
         gameConfig.put("totalTurns", "45");
         // playersconfig
         // player1

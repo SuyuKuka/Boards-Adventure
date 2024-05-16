@@ -371,7 +371,7 @@ public final class MenuPanel extends JLayeredManager {
     }
 
     private JPanel createGameLobby(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "sign", 100, 85);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "sign", 100, 85); // SOURCE IMG
         panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         panel.setSize(panel.getPreferredSize());
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -383,7 +383,7 @@ public final class MenuPanel extends JLayeredManager {
     }
 
     private JPanel createMapSection(final JPanel parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 50, 90);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 50, 90); // SOURCE IMG
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         panel.add(createMapSelection(parent));
@@ -451,7 +451,7 @@ public final class MenuPanel extends JLayeredManager {
     }
 
     private JPanel createTitleMap(final Component parent) {
-        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 40, 25);
+        final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 40, 25); // SOURCE IMG?
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(Box.createVerticalGlue());
 
@@ -666,17 +666,19 @@ public final class MenuPanel extends JLayeredManager {
     private JPanel createManualBook() {
         final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 5, 5, 5, 5);
         panel.setOpaque(false);
+        panel.setBackground(new Color(205, 173, 142));
 
+        //SwingFactory.createImagePanel(mainPanel, "paper", 40, 65);
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(Color.ORANGE);
-        mainPanel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 4));
+        mainPanel.setBackground(new Color(205, 173, 142));
+        mainPanel.setBorder(BorderFactory.createLineBorder(new Color(205, 173, 142), 4));
 
         // HAUT, CHANGER FONTS
         JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("  Manuel", SwingConstants.CENTER);
         titleLabel.setFont(Resources.getFont("NoitaBlackletter", 32));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
-        titlePanel.setBackground(Color.ORANGE);
+        titlePanel.setBackground(new Color(205, 173, 142));
 
         JButton closeButton = SwingFactory.createImageButton(frame.getContentPane(), "notready", 5, 5, false);
         // MouseListener ici
@@ -688,17 +690,17 @@ public final class MenuPanel extends JLayeredManager {
 
         // BAS, CHANGER FONTS
         JPanel contentPanel = new JPanel(new GridLayout(1, 2));
-        contentPanel.setBackground(Color.ORANGE);
+        contentPanel.setBackground(new Color(230, 205, 175));
 
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
         JButton howToPlayButton = new JButton("Prise en main du jeu");
-        howToPlayButton.setBackground(Color.YELLOW);
+        howToPlayButton.setBackground(new Color(230, 205, 175));
         howToPlayButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         JButton gameFlowButton = new JButton("Déroulement de la partie");
-        gameFlowButton.setBackground(Color.YELLOW);
+        gameFlowButton.setBackground(new Color(230, 205, 175));
         gameFlowButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
-        mapSpecialtiesButton.setBackground(Color.YELLOW);
+        mapSpecialtiesButton.setBackground(new Color(230, 205, 175));
         mapSpecialtiesButton.setFont(Resources.getFont("NoitaBlackletter", 26));
         navPanel.add(howToPlayButton, BorderLayout.NORTH);
         navPanel.add(gameFlowButton, BorderLayout.CENTER);
@@ -708,14 +710,15 @@ public final class MenuPanel extends JLayeredManager {
         navPanel.setPreferredSize(new Dimension(navPanelWidth, contentPanel.getHeight()));
         contentPanel.add(navPanel, BorderLayout.WEST);
 
-        JTextArea explanationTextArea = new JTextArea(
-        "   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
+        JTextArea explanationTextArea = new JTextArea("   Bienvenue sur Board's Adventure !\n\n Si vous avez besoin d'informations sur les différents aspects de ce jeu, veuillez jeter un oeil aux rubriques d'aides correspondantes ci-contre.");
         explanationTextArea.setLineWrap(true);
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
-        explanationTextArea.setBackground(Color.CYAN);
+        explanationTextArea.setBackground(new Color(255, 240, 200));
         explanationTextArea.setFont(Resources.getFont("RifficFree", 16));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
+        // JScrollPane scrollPane = new JScrollPane(explanationTextArea); // avec opaque jouer sur calque?
+        //SwingFactory.createImagePanel(mainPanel, "paper", 40, 65);
 
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -728,7 +731,7 @@ public final class MenuPanel extends JLayeredManager {
         int scrollPaneWidth = (int) (contentPanel.getWidth() * 0.7);    // Soucis pour 70%
         scrollPane.setPreferredSize(new Dimension(scrollPaneWidth, contentPanel.getHeight()));
         scrollPane.setViewportBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        scrollPane.setBackground(Color.CYAN);
+        scrollPane.setBackground(new Color(230, 205, 175)); // ICI FONT DE LA PARTIE DROITE, new Color(205, 173, 142)
         contentPanel.add(scrollPane, BorderLayout.EAST);
 
         mainPanel.add(contentPanel, BorderLayout.CENTER);
@@ -756,39 +759,39 @@ public final class MenuPanel extends JLayeredManager {
                 JPanel mapPanel = new JPanel(new GridLayout(8, 1));
                 JPanel gainCase = createCaseExplanationPanel(
                     "gain", "Bonus: Vous fait gagner une certaine quantité d'or.", 10);
-                gainCase.setBackground(Color.CYAN);
+                gainCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(gainCase);  // gain
                 JPanel lossCase = createCaseExplanationPanel(
                     "loss", "Malus: Vous fait perdre une certaine quantité d'or.", 10);
-                lossCase.setBackground(Color.CYAN);
+                lossCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(lossCase);  // loss
                 JPanel dangerCase =
                 createCaseExplanationPanel("danger", "Danger: Un événement dangereux pourrait arriver oulala...", 10);
-                dangerCase.setBackground(Color.CYAN);
+                dangerCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(dangerCase);    // danger
                 JPanel intersectionCase =
                 createCaseExplanationPanel("intersection",
                 "Intersection: Choissisez quel chemin emprunter afin de continuer votre route.", 10);
-                intersectionCase.setBackground(Color.CYAN);
+                intersectionCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(intersectionCase);    // intersection
                 JPanel kingdomCase =
                 createCaseExplanationPanel("kingdom",
                 "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
-                kingdomCase.setBackground(Color.CYAN);
+                kingdomCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(kingdomCase);    // kingdom
                 JPanel propertyCase =
                 createCaseExplanationPanel("property",
                 "Propriété: Achetez une propriété afin de réclamer le contrôle de la case et gagner un revenu.", 10);
-                propertyCase.setBackground(Color.CYAN);
+                propertyCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(propertyCase);    // property
                 JPanel shopCase = createCaseExplanationPanel("shop",
                 "Boutique: Vous permet d'acheter des objets tels que des dés spéciaux en échange de votre or.", 10); //?
-                shopCase.setBackground(Color.CYAN);
+                shopCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(shopCase);    // shop
                 JPanel voidCase =
                 createCaseExplanationPanel(
                     "void", "Vide: Une case vide, sur laquelle rien ne se passe mis à part un repos bien mérité.", 10);
-                voidCase.setBackground(Color.CYAN);
+                voidCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(voidCase);    // void
 
                 JViewport viewport = scrollPane.getViewport();
@@ -833,6 +836,7 @@ public final class MenuPanel extends JLayeredManager {
         gbc.anchor = GridBagConstraints.WEST;
         // Ajout du texte de description
         JLabel descriptionLabel = new JLabel(description);
+        descriptionLabel.setFont(Resources.getFont("NoitaBlackletter", 18));
         casePanel.add(descriptionLabel, gbc);
 
         return casePanel;
