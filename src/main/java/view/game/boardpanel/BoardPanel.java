@@ -54,8 +54,6 @@ import view.View;
 
 public final class BoardPanel extends JLayeredManager {
 
-    private static final int PLAYER_MOVEMENT_SPEED = 3;
-
     private final GamePanel gamePanel;
     private final Controller controller;
 
@@ -301,29 +299,36 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void playerMove(final int startCellID) {
+        
+        final int playerMovementSpeed = 4;
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
-        playerGraphics.setNextCellID(controller.getCell(startCellID).getNextCellID());
-        final Timer timer = new Timer(15, null);
+        final Timer timer = new Timer(0, null);
         timer.addActionListener(action -> {
-            CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
-            final double distanceX = nextCell.getXPos() - playerGraphics.getXPos();
-            final double distanceY = nextCell.getYPos() - playerGraphics.getYPos();
-            final int travelX = (int) (PLAYER_MOVEMENT_SPEED * distanceX / (distanceX + distanceY));
-            final int travelY = (int) (PLAYER_MOVEMENT_SPEED * distanceY / (distanceX + distanceY));
+            final double xPos = playerGraphics.getDXPos();
+            final double yPos = playerGraphics.getDYPos();
 
-            if (playerGraphics.getXPos() != nextCell.getXPos()) {
-                playerGraphics.setXPos((int) Math.abs(distanceX) <= travelX ? nextCell.getXPos()
-                    : playerGraphics.getXPos() - travelX);
+            CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
+            final double cellXPos = nextCell.getXPos();
+            final double cellYPos = nextCell.getYPos();
+
+            final double distanceX = xPos - cellXPos;
+            final double distanceY = yPos - cellYPos;
+
+            final double distanceTot = Math.abs(distanceX) + Math.abs(distanceY);
+
+            final double travelX = playerMovementSpeed * (distanceX / distanceTot);
+            final double travelY = playerMovementSpeed * (distanceY / distanceTot);
+
+            if (xPos != cellXPos) {
+                playerGraphics.setXPos(Math.abs(distanceX) <= Math.abs(travelX) ? cellXPos : xPos - travelX);
             }
-            if (playerGraphics.getYPos() != nextCell.getYPos()) {
-                playerGraphics.setYPos((int) Math.abs(distanceY) <= travelY ? nextCell.getYPos()
-                : playerGraphics.getYPos() - travelY);
+            if (yPos != cellYPos) {
+                playerGraphics.setYPos(Math.abs(distanceY) <= Math.abs(travelY) ? cellYPos : yPos - travelY);
             }
             redraw();
-            if (nextCell.getXPos() == playerGraphics.getXPos() && nextCell.getYPos() == playerGraphics.getYPos()) {
+            if (xPos == cellXPos && yPos == cellYPos) {
                 if (nextCell == cellTarget) {
-                    playerGraphics.setNextCellID(0);
                     if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
                         showCellTypeInteraction();
                     } else {

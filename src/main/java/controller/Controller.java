@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import view.game.GamePanel;
+import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -202,6 +203,10 @@ public final class Controller {
         this.currentCell = model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
+    public Cell getPlayerCell(final int playerID) {
+        return getPlayer(playerID).getPlayerCell(model);
+    }
+
     public Cell getCurrentCell() {
         return currentCell;
     }
@@ -263,6 +268,10 @@ public final class Controller {
 
     public int getGamePoint() {
         return getCurrentPlayer().getGamePoint();
+    }
+
+    public PlayerGraphics getCurrentPlayerGraphics() {
+        return gamePanel.getPlayerGraphics(getCurrentPlayerID());
     }
 
     public int getPropertyPrice() {

@@ -13,7 +13,8 @@ import view.game.boardpanel.BoardPanel;
 
 public final class IntersectionChoiceGraphics extends CellGraphics {
 
-    public IntersectionChoiceGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+    public IntersectionChoiceGraphics(final BoardPanel boardPanel, final int cellID,
+            final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
         addMouseListener(new MouseAdapter() {
             @Override
@@ -22,7 +23,8 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     boardPanel.removeComp(BoardPanel.getInteraction());
                     boardPanel.cleanIntersectionEntities();
-                    controller.setPlayerPosition(cellID);
+                    controller.getCurrentPlayer().setPosition(cellID);
+                    controller.getCurrentPlayerGraphics().setNextCellID(cellID);
                     controller.gameUpdate();
                 }
             }

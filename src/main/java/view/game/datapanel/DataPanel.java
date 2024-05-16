@@ -43,8 +43,8 @@ public final class DataPanel extends JPanel {
         final int nbPlayers = gamePanel.getPlayersGraphics().size();
         final int scoreboardLines = nbPlayers < 4 ? 4 : nbPlayers;
 
-        final int height1 = (int) (height * 0.1);
-        int height2 = (int) (height * 0.3);
+        final int height1 = (int) (height * 0.05);
+        int height2 = (int) (height * 0.4);
         height2 -= height2 % scoreboardLines;
         final int height3 = height - height1 - height2;
         turnsPanel = createRemainingTurnsPanel(width, height1);
@@ -60,8 +60,8 @@ public final class DataPanel extends JPanel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
-                final int height1 = (int) (dim.height * 0.1);
-                int height2 = (int) (height * 0.3);
+                final int height1 = (int) (dim.height * 0.05);
+                int height2 = (int) (height * 0.4);
                 height2 -= height2 % scoreboardLines;
                 final int height3 = dim.height - height1 - height2;
                 turnsPanel.setPreferredSize(new Dimension(width, height1));

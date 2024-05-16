@@ -14,12 +14,13 @@ public final class PlayerGraphics extends EntityGraphics {
     private final int playerID;
 
     private Image playerImage;
-    private int nextCellID = 0;
+    private int nextCellID;
 
     public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
         this.playerID = playerID;
         playerImage = Resources.getImage("j" + playerID);
+        nextCellID = boardPanel.getController().getPlayerCell(playerID).getNextCellID();
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
         setVisible(true);
@@ -46,7 +47,7 @@ public final class PlayerGraphics extends EntityGraphics {
         return nextCellID;
     }
 
-    public void setNextCellID(int nextCellID) {
+    public void setNextCellID(final int nextCellID) {
         this.nextCellID = nextCellID;
     }
 

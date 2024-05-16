@@ -104,7 +104,6 @@ public abstract class CellGraphics extends EntityGraphics {
 
     // region getters/setters
 
-
     public static int getCellDiameter() {
         return cellDiameter;
     }
