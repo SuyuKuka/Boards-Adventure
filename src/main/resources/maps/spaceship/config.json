@@ -1,0 +1,374 @@
+{
+	"cell_diameter" : 45,
+	"shop_items" : [
+		{
+			"name" : "LITTLE_DICE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "HOE",
+			"buyPrice" : "1"
+		}
+	],
+	"start_items" : [
+		{
+			"name" : "LITTLE_DICE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "HOE",
+			"turnCooldown" : "2"
+		}
+	],
+	"cards_effect" : [
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellIDs" : [109, 400, 302, 511, 513, 520, 130, 502, 605, 126]
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"quantity-amount" : [[4, 100], [4, -100], [3, 200], [3, -200], [2, 300], [2, -300]]
+		},
+		{
+			"type" : "LOSE_PROPERTY_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "SWAP_POSITION_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "LOSE_ITEM_EFFECT",
+			"quantity" : 3
+		}, 
+		{
+			"type" : "GAIN_GAMEPOINT_EFFECT",
+			"quantity" : 2
+		}
+	],
+	"cells" : [
+		{
+			"id" : 100,
+			"type" : "START",
+			"lapGain" : 300,
+			"xPos" : 2435,
+			"yPos" : 317
+		},
+		{
+			"id" : 101,
+			"type" : "INTERSECTION",
+			"nextCellID" : [102, 200],
+			"xPos" : 2435,
+			"yPos" : 655
+		},
+		{
+			"id" : 102,
+			"type" : "VOID",
+			"xPos" : 2815,
+			"yPos" : 635
+		},
+		{
+			"id" : 103,
+			"type" : "PROPERTY",
+			"prices" : [100, 150, 200, 300],
+			"group" : 0,
+			"xPos" : 3075,
+			"yPos" : 760
+		},
+		{
+			"id" : 104,
+			"type" : "GAIN",
+			"gain" : 100,
+			"xPos" : 3390,
+			"yPos" : 900
+		},
+		{
+			"id" : 105,
+			"type" : "PROPERTY",
+			"prices" : [110, 160, 210, 315],
+			"group" : 0,
+			"xPos" : 3575,
+			"yPos" : 1045
+		},
+		{
+			"id" : 106,
+			"type" : "LOSS",
+			"loss" : 50,
+			"xPos" : 3755,
+			"yPos" : 1155
+		},
+		{
+			"id" : 107,
+			"type" : "PROPERTY",
+			"prices" : [125, 175, 225, 325],
+			"group" : 0,
+			"xPos" : 3925,
+			"yPos" : 1360
+		},
+		{
+			"id" : 108,
+			"type" : "GAIN",
+			"gain" : 100,
+			"xPos" : 4080,
+			"yPos" : 1785
+		},
+		{
+			"id" : 109,
+			"type" : "CARD",
+			"xPos" : 4395,
+			"yPos" : 1990
+		},
+		{
+			"id" : 110,
+			"type" : "GAIN",
+			"gain" : 150,
+			"xPos" : 4360,
+			"yPos" : 2290
+		},
+		{
+			"id" : 111,
+			"type" : "INTERSECTION",
+			"nextCellID" : [112, 300],
+			"xPos" : 4415,
+			"yPos" : 2600
+		},
+		{
+			"id" : 112,
+			"type" : "LOSS",
+			"loss" : 60,
+			"xPos" : 4370,
+			"yPos" : 2920
+		},
+		{
+			"id" : 113,
+			"type" : "PROPERTY",
+			"prices" : [125, 175, 225, 325],
+			"group" : 1,
+			"xPos" : 4415,
+			"yPos" : 3450
+		},
+		{
+			"id" : 114,
+			"type" : "CARD",
+			"xPos" : 4080,
+			"yPos" : 3850
+		},
+		{
+			"id" : 115,
+			"type" : "PROPERTY",
+			"prices" : [150, 200, 250, 350],
+			"group" : 1,
+			"xPos" : 3710,
+			"yPos" : 4245
+		},
+		{
+			"id" : 116,
+			"type" : "PROPERTY",
+			"prices" : [175, 225, 275, 375],
+			"group" : 1,
+			"xPos" : 3210,
+			"yPos" : 4500
+		},
+		{
+			"id" : 117,
+			"type" : "GAIN",
+			"gain" : 150,
+			"xPos" : 2685,
+			"yPos" : 4560
+		},
+		{
+			"id" : 118,
+			"type" : "SHOP",
+			"xPos" : 2435,
+			"yPos" : 4610
+		},
+		{
+			"id" : 119,
+			"type" : "DANGER",
+			"xPos" : 2185,
+			"yPos" : 4555
+		},
+		{
+			"id" : 120,
+			"type" : "PROPERTY",
+			"prices" : [200, 250, 300, 400],
+			"group" : 2,
+			"xPos" : 1620,
+			"yPos" : 4520
+		},
+		{
+			"id" : 121,
+			"type" : "PROPERTY",
+			"prices" : [210, 260, 315, 420],
+			"group" : 2,
+			"xPos" : 1145,
+			"yPos" : 4210
+		},
+		{
+			"id" : 122,
+			"type" : "LOSS",
+			"loss" : 125,
+			"xPos" : 760,
+			"yPos" : 3840
+		},
+		{
+			"id" : 123,
+			"type" : "PROPERTY",
+			"prices" : [220, 275, 325, 440],
+			"group" : 2,
+			"xPos" : 490,
+			"yPos" : 3400
+		},
+		{
+			"id" : 124,
+			"type" : "DANGER",
+			"xPos" : 510,
+			"yPos" : 2960
+		},
+		{
+			"id" : 125,
+			"type" : "SHOP",
+			"xPos" : 385,
+			"yPos" : 2620
+		},
+		{
+			"id" : 126,
+			"type" : "LOSS",
+			"loss" : 200,
+			"xPos" : 500,
+			"yPos" : 2280
+		},
+		{
+			"id" : 127,
+			"type" : "PROPERTY",
+			"prices" : [300, 350, 400, 445],
+			"group" : 3,
+			"xPos" : 405,
+			"yPos" : 1900
+		},
+		{
+			"id" : 128,
+			"type" : "DANGER",
+			"xPos" : 920,
+			"yPos" : 1610
+		},
+		{
+			"id" : 129,
+			"type" : "CARD",
+			"xPos" : 1135,
+			"yPos" : 880
+		},
+		{
+			"id" : 130,
+			"type" : "PROPERTY",
+			"prices" : [330, 375, 420, 500],
+			"group" : 3,
+			"xPos" : 1665,
+			"yPos" : 945
+		},
+		{
+			"id" : 131,
+			"type" : "LOSS",
+			"loss" : 220,
+			"xPos" : 1770,
+			"yPos" : 570
+		},
+		{
+			"id" : 132,
+			"type" : "GAIN",
+			"gain" : 350,
+			"nextCellID" : 100,
+			"xPos" : 2010,
+			"yPos" : 630
+		},
+		{
+			"id" : 200,
+			"type" : "VOID",
+			"xPos" : 2435,
+			"yPos" : 1150
+		},
+		{
+			"id" : 201,
+			"type" : "VOID",
+			"xPos" : 2435,
+			"yPos" : 1500
+		},
+		{
+			"id" : 202,
+			"type" : "VOID",
+			"nextCellID" : 900,
+			"xPos" : 2435,
+			"yPos" : 1855
+		},
+		{
+			"id" : 900,
+			"type" : "INTERSECTION",
+			"nextCellID" : [400, 500],
+			"xPos" : 2435,
+			"yPos" : 2625
+		},
+		{
+			"id" : 300,
+			"type" : "VOID",
+			"xPos" : 4025,
+			"yPos" : 2625
+		},
+		{
+			"id" : 301,
+			"type" : "VOID",
+			"xPos" : 3705,
+			"yPos" : 2625
+		},
+		{
+			"id" : 302,
+			"type" : "VOID",
+			"nextCellID" : 900,
+			"xPos" : 3190,
+			"yPos" : 2625
+		},
+		{
+			"id" : 400,
+			"type" : "VOID",
+			"xPos" : 2435,
+			"yPos" : 3350
+		},
+		{
+			"id" : 401,
+			"type" : "VOID",
+			"loss" : 50,
+			"xPos" : 2435,
+			"yPos" : 3710
+		},
+		{
+			"id" : 402,
+			"type" : "VOID",
+			"nextCellID" : 118,
+			"xPos" : 2435,
+			"yPos" : 4070
+		},	
+		{
+			"id" : 500,
+			"type" : "VOID",
+			"xPos" : 1685,
+			"yPos" : 2625
+		},
+		{
+			"id" : 501,
+			"type" : "GAIN",
+			"gain" : 100,
+			"xPos" : 1300,
+			"yPos" : 2625
+		},
+		{
+			"id" : 502,
+			"type" : "VOID",
+			"nextCellID" : 125,
+			"xPos" : 1040,
+			"yPos" : 2625
+		}
+	]
+}
