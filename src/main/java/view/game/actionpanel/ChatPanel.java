@@ -1,4 +1,4 @@
-package view.game;
+package view.game.actionpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,6 +22,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 
 import controller.Controller;
+import view.game.GamePanel;
 
 public final class ChatPanel extends JPanel {
 

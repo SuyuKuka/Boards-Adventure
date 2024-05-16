@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -38,26 +36,40 @@ public final class DataPanel extends JPanel {
     public DataPanel(final GamePanel gamePanel, final int width, final int height) {
         this.gamePanel = gamePanel;
         setPreferredSize(new Dimension(width, height));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setOpaque(false);
 
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
+        final int nbPlayers = gamePanel.getPlayersGraphics().size();
+        final int scoreboardLines = nbPlayers < 4 ? 4 : nbPlayers;
 
-        gbc.weighty = 0.1;
-        turnsPanel = createRemainingTurnsPanel(width, (int) (gbc.weighty * height));
-        add(turnsPanel, gbc);
+        final int height1 = (int) (height * 0.1);
+        int height2 = (int) (height * 0.3);
+        height2 -= height2 % scoreboardLines;
+        final int height3 = height - height1 - height2;
+        turnsPanel = createRemainingTurnsPanel(width, height1);
+        add(turnsPanel, BorderLayout.NORTH);
 
-        gbc.weighty = 0.3;
-        gbc.gridy = 1;
-        scoreBoardPanel = createScoreboardPanel(width, (int) (gbc.weighty * height));
-        add(scoreBoardPanel, gbc);
+        scoreBoardPanel = createScoreboardPanel(width, height2);
+        add(scoreBoardPanel, BorderLayout.CENTER);
 
-        gbc.weighty = 0.6;
-        gbc.gridy = 2;
-        cardGraphicsPanel = createCardGraphicsPanel(width, (int) (gbc.weighty * height));
-        add(cardGraphicsPanel, gbc);
+        cardGraphicsPanel = createCardGraphicsPanel(width, height3);
+        add(cardGraphicsPanel, BorderLayout.SOUTH);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = getSize();
+                final int height1 = (int) (dim.height * 0.1);
+                int height2 = (int) (height * 0.3);
+                height2 -= height2 % scoreboardLines;
+                final int height3 = dim.height - height1 - height2;
+                turnsPanel.setPreferredSize(new Dimension(width, height1));
+                scoreBoardPanel.setPreferredSize(new Dimension(width, height2));
+                cardGraphicsPanel.setPreferredSize(new Dimension(width, height3));
+                revalidate();
+                repaint();
+            }
+        });
 
         setVisible(true);
     }

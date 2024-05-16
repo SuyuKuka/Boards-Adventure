@@ -1,9 +1,8 @@
 package view.game;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -11,6 +10,7 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
+import view.game.actionpanel.ActionPanel;
 import view.game.boardpanel.BoardPanel;
 import view.game.datapanel.DataPanel;
 
@@ -20,7 +20,6 @@ public final class MainPanel extends JPanel {
 
     private final DataPanel dataPanel;
     private final BoardPanel boardPanel;
-    private final ChatPanel chatPanel;
     private final ActionPanel actionPanel;
 
     public MainPanel(final GamePanel gamePanel, final JSONObject mapConfig) {
@@ -29,33 +28,33 @@ public final class MainPanel extends JPanel {
         setBounds(0, 0, dim.width, dim.height);
         setSize(dim.width, dim.height);
         setBackground(Color.PINK);
-        setLayout(new GridBagLayout());
-        final GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(new BorderLayout());
 
-        boardPanel = new BoardPanel(gamePanel, mapConfig, (int) (dim.width * 0.8), (int) (dim.height * 0.8));
-        dataPanel = new DataPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.8));
-        chatPanel = new ChatPanel(gamePanel, (int) (dim.width * 0.2), (int) (dim.height * 0.2));
-        actionPanel = new ActionPanel(gamePanel, (int) (dim.width * 0.8), (int) (dim.height * 0.2));
+        final int width1 = (int) (dim.width * 0.2);
+        final int width2 = dim.width - width1;
+        final int height1 = (int) (dim.height * 0.8);
+        final int height2 = dim.height - height1;
 
-        add(dataPanel, gbc);
-        add(boardPanel, gbc);
+        boardPanel = new BoardPanel(gamePanel, mapConfig, width2, height1);
+        dataPanel = new DataPanel(gamePanel, width1, height1);
+        actionPanel = new ActionPanel(gamePanel, dim.width, height2);
 
-        gbc.gridy = 1;
-        add(chatPanel, gbc);
-        add(actionPanel, gbc);
+        add(dataPanel, BorderLayout.WEST);
+        add(boardPanel, BorderLayout.CENTER);
+
+        add(actionPanel, BorderLayout.SOUTH);
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 final Dimension dim = gamePanel.getPreferredSize();
-                final int gridwidth1 = (int) (dim.width * 0.2);
-                final int gridwidth2 = (int) (dim.width * 0.8);
-                final int gridheight1 = (int) (dim.height * 0.8);
-                final int gridheight2 = (int) (dim.height * 0.2);
-                dataPanel.setPreferredSize(new Dimension(gridwidth1, gridheight1));
-                boardPanel.setPreferredSize(new Dimension(gridwidth2, gridheight1));
-                chatPanel.setPreferredSize(new Dimension(gridwidth1, gridheight2));
-                actionPanel.setPreferredSize(new Dimension(gridwidth2, gridheight2));
+                final int width1 = (int) (dim.width * 0.2);
+                final int width2 = dim.width - width1;
+                final int height1 = (int) (dim.height * 0.8);
+                final int height2 = dim.height - height1;
+                boardPanel.setPreferredSize(new Dimension(width2, height1));
+                dataPanel.setPreferredSize(new Dimension(width1, height1));
+                actionPanel.setPreferredSize(new Dimension(dim.height, height2));
                 revalidate();
                 repaint();
             }
@@ -66,17 +65,17 @@ public final class MainPanel extends JPanel {
 
     public void gameStart() {
         boardPanel.gameStart();
-        chatPanel.gameStart();
+        actionPanel.gameStart();
     }
 
     public void newTurn() {
         boardPanel.newTurn();
-        chatPanel.newTurn();
+        actionPanel.newTurn();
     }
 
     public void inJail() {
         boardPanel.inJail();
-        chatPanel.inJail();
+        actionPanel.inJail();
     }
 
     public void playerAction() {
@@ -84,7 +83,7 @@ public final class MainPanel extends JPanel {
     }
 
     public void rollDice() {
-        chatPanel.rollDice();
+        actionPanel.rollDice();
     }
 
     public void playerMove() {
@@ -93,19 +92,19 @@ public final class MainPanel extends JPanel {
 
     public void playerArrived() {
         boardPanel.playerArrived();
-        chatPanel.playerArrived();
+        actionPanel.playerArrived();
     }
 
 
     public void endTurn() {
         boardPanel.endTurn();
         dataPanel.endTurn();
-        chatPanel.endTurn();
+        actionPanel.endTurn();
     }
 
     public void gameEnd() {
         boardPanel.gameEnd();
-        chatPanel.gameEnd();
+        actionPanel.gameEnd();
     }
 
     public GamePanel getGamePanel() {

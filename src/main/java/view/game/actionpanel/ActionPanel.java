@@ -1,14 +1,15 @@
-package view.game;
+package view.game.actionpanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.GridBagLayout;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
@@ -18,11 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import controller.resources.Resources;
+import view.game.GamePanel;
 
 public final class ActionPanel extends JPanel {
 
-
     private final GamePanel gamePanel;
+
+    private final ChatPanel chatPanel;
 
     private final JPanel inventoryPanel;
     private final JPanel buttonsPanel;
@@ -34,24 +37,56 @@ public final class ActionPanel extends JPanel {
     public ActionPanel(final GamePanel gamePanel, final int width, final int height) {
         this.gamePanel = gamePanel;
         setPreferredSize(new Dimension(width, height));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setOpaque(false);
 
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weighty = 1;
+        final int width1 = (int) (width * 0.2);
+        final int width2 = (int) (width * 0.3);
+        final int width3 = (int) (width * 0.1);
+        final int width4 = width - width1 - width2 - width3;
 
-        gbc.weightx = 0.4;
-        inventoryPanel = createInventoryPanel((int) (gbc.weightx * width), height);
-        add(inventoryPanel, gbc);
+        this.chatPanel = new ChatPanel(gamePanel, width1, height);
+        add(chatPanel, BorderLayout.WEST);
 
-        gbc.weightx = 0.2;
-        buttonsPanel = createButtonsPanel((int) (gbc.weightx * width), height);
-        add(buttonsPanel, gbc);
+        inventoryPanel = createInventoryPanel(width2, height);
+        add(inventoryPanel, BorderLayout.CENTER);
 
-        gbc.weightx = 0.4;
-        minimapPanel = createMinimapPanel((int) (gbc.weightx * width), height);
-        add(minimapPanel, gbc);
+        buttonsPanel = createButtonsPanel(width3, height);
+        minimapPanel = createMinimapPanel(width4, height);
+        final JPanel buttonsMinimapPanel = createButtonsMinimapPanel();
+        add(buttonsMinimapPanel, BorderLayout.EAST);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = getSize();
+                final int width1 = (int) (dim.width * 0.2);
+                final int width2 = (int) (dim.width * 0.3);
+                final int width3 = (int) (dim.width * 0.1);
+                final int width4 = dim.width - width1 - width2 - width3;
+                chatPanel.setPreferredSize(new Dimension(width1, dim.height));
+                inventoryPanel.setPreferredSize(new Dimension(width2, dim.height));
+                buttonsMinimapPanel.setPreferredSize(new Dimension(width3 + width4, dim.height));
+                buttonsPanel.setPreferredSize(new Dimension(width3, dim.height));
+                minimapPanel.setPreferredSize(new Dimension(width4, dim.height));
+                revalidate();
+                repaint();
+            }
+        });
+        setVisible(true);
+    }
+
+    //#region gamestate
+
+    public void gameStart() {
+        chatPanel.gameStart();
+    }
+
+    public void newTurn() {
+        chatPanel.newTurn();
+    }
+
+    public void inJail() {
+        chatPanel.inJail();
     }
 
     public void playerAction() {
@@ -64,6 +99,26 @@ public final class ActionPanel extends JPanel {
             }
         });
     }
+
+    public void rollDice() {
+        chatPanel.rollDice();
+    }
+
+    public void playerArrived() {
+        chatPanel.playerArrived();
+    }
+
+
+    public void endTurn() {
+        chatPanel.endTurn();
+    }
+
+    public void gameEnd() {
+        chatPanel.gameEnd();
+    }
+
+    //#endregion
+
 
     // #region Inventory
 
@@ -126,4 +181,13 @@ public final class ActionPanel extends JPanel {
     }
 
     //#endregion
+
+    private JPanel createButtonsMinimapPanel() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        panel.add(buttonsPanel, BorderLayout.WEST);
+        panel.add(minimapPanel, BorderLayout.CENTER);
+        panel.setVisible(true);
+        return panel;
+    }
 }

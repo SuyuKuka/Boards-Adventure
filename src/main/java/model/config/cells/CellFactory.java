@@ -10,7 +10,7 @@ public final class CellFactory {
     public static Cell createCell(final JSONObject jObject) {
         final CellType type = CellType.valueOf(jObject.getString("type").toUpperCase());
         final Integer id = jObject.getInt("id");
-        final boolean playerStop = jObject.optBoolean("playerStop", false);
+        final boolean playerStopBy = jObject.optBoolean("playerStopBy", false);
         final Integer nextCellID = jObject.optInt("nextCellID", id + 1);
         switch (type) {
             case PROPERTY: {
@@ -20,36 +20,36 @@ public final class CellFactory {
                     buyPrices.add(buyPricesJArray.getInt(i));
                 }
                 final int group = jObject.getInt("group");
-                return new Property(id, playerStop, type, nextCellID, buyPrices, group);
+                return new Property(id, playerStopBy, type, nextCellID, buyPrices, group);
             }
             case KINGDOM:
-                return new Kingdom(id, playerStop, type, nextCellID, jObject.optInt("throneCell", id));
+                return new Kingdom(id, playerStopBy, type, nextCellID, jObject.optInt("throneCell", id));
             case START:
-                return new Start(id, playerStop, type, nextCellID,  jObject.getInt("lapGain"));
+                return new Start(id, playerStopBy, type, nextCellID,  jObject.getInt("lapGain"));
             case CARD:
-                return new Card(id, playerStop, type, nextCellID);
+                return new Card(id, playerStopBy, type, nextCellID);
             case INTERSECTION: {
                 final JSONArray nextCellIDsJArray = jObject.getJSONArray("nextCellID");
                 final ArrayList<Integer> nextCellIDs = new ArrayList<>();
                 for (int i = 0; i < nextCellIDsJArray.length(); i++) {
                     nextCellIDs.add(nextCellIDsJArray.getInt(i));
                 }
-                return new Intersection(id, false, type, nextCellIDs);
+                return new Intersection(id, true, type, nextCellIDs);
             }
             case SHOP:
-                return new Shop(id, playerStop, type, nextCellID);
+                return new Shop(id, jObject.optBoolean("playerStopBy", true), type, nextCellID);
             case TELEPORTATION:
-                return new Teleportation(id, playerStop, type, nextCellID, jObject.getInt("targetCell"));
+                return new Teleportation(id, playerStopBy, type, nextCellID, jObject.getInt("targetCell"));
             case JAIL:
-                return new Jail(id, playerStop, type, nextCellID, jObject.optInt("targetCell", id));
+                return new Jail(id, playerStopBy, type, nextCellID, jObject.optInt("targetCell", id));
             case LOSS:
-                return new Loss(id, playerStop, type, nextCellID, jObject.getInt("loss"));
+                return new Loss(id, playerStopBy, type, nextCellID, jObject.getInt("loss"));
             case GAIN:
-                return new Gain(id, playerStop, type, nextCellID, jObject.getInt("gain"));
+                return new Gain(id, playerStopBy, type, nextCellID, jObject.getInt("gain"));
             case DANGER:
-                return new Danger(id, playerStop, type, nextCellID);
+                return new Danger(id, playerStopBy, type, nextCellID);
             case VOID:
-                return new Void(id, playerStop, type, nextCellID);
+                return new Void(id, playerStopBy, type, nextCellID);
             default:
                 break;
         }

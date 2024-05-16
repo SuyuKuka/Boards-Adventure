@@ -60,7 +60,7 @@ public final class Controller {
                 playerMove();
                 break;
             case PLAYER_MOVE:
-                if (getCurrentPlayer().getDiceRollValue() > 0 || getCurrentPlayerCell().shouldPlayerStop()) {
+                if (getCurrentPlayer().getDiceRollValue() > 0) {
                     playerMove();
                 } else {
                     playerArrived();

@@ -70,9 +70,9 @@ public final class BoardPanel extends JLayeredManager {
     private final ArrayList<EntityGraphics> entitiesGraphics;
 
     // CAMERA ET ZOOM
-    private static final int WIDE_ANGLE_SAFETY = 3;
-    private static final int CAMERA_MAX_WIDTH = 720; // 720 / 0.5 = 1440
-    private static final int CAMERA_MAX_HEIGHT = 480; // 480 / 0.5 = 960
+    private static final int CAMERA_MAX_WIDTH = 720;
+    private static final int CAMERA_MAX_HEIGHT = 480;
+    private static final double MIN_ALLOWED_ZOOM = 0.5;
     private final double minZoom;
     private final double maxZoom = 5;
 
@@ -82,7 +82,6 @@ public final class BoardPanel extends JLayeredManager {
     private double cameraX;
     private double cameraY;
     private Point cameraPan = null;
-    private int wideAngleAccumulator = 0;
     private boolean wideAngle = false;
 
     private final Image boardImage;
@@ -186,12 +185,8 @@ public final class BoardPanel extends JLayeredManager {
                         if (zoom >= minZoom + 0.1) {
                             updateCameraPosition(zoom - 0.1, cameraX, cameraY);
                         } else if (!wideAngle && cameraPan == null) {
-                            if (wideAngleAccumulator < WIDE_ANGLE_SAFETY) {
-                                wideAngleAccumulator++;
-                            } else {
-                                wideAngle = true;
-                                updateWideAngleCamera();
-                            }
+                            wideAngle = true;
+                            updateWideAngleCamera();
                         }
                     }
                     redraw();
@@ -217,42 +212,20 @@ public final class BoardPanel extends JLayeredManager {
     }
     //#endregion MouseListeners
 
-    //#region Loading entities
-
-    private HashMap<Integer, CellGraphics> loadCellsGraphics(final JSONArray jCells) {
-        final HashMap<Integer, CellGraphics> cells = new HashMap<>();
-        for (int i = 0; i < jCells.length(); i++) {
-            final JSONObject jCell = jCells.getJSONObject(i);
-            cells.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(this, jCell));
-        }
-        return cells;
-    }
-
-    private ArrayList<PlayerGraphics> loadPlayerGraphics() {
-        final ArrayList<PlayerGraphics> players = new ArrayList<>();
-        gamePanel.getController().getPlayers().forEach((player) -> {
-            final CellGraphics cell = cellsGraphics.get(controller.getStartCell().getId());
-            players.add(new PlayerGraphics(player.getID(), this, cell.getXPos(), cell.getYPos()));
-        });
-        return players;
-    }
-
-    //#endregion Loading entities
-
     //#region Camera
 
     private double initMinZoom() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i <= MIN_ALLOWED_ZOOM * 10; i++) {
             final double multiplierTest = (1 - (i + 1) * 0.1);
             if (CAMERA_MAX_HEIGHT / multiplierTest > boardImage.getHeight(null)
             || CAMERA_MAX_WIDTH / multiplierTest > boardImage.getWidth(null)) {
                 return (long) ((1 - i * 0.1) * 10) / 10.0;
             }
         }
-        return 0.5;
+        return MIN_ALLOWED_ZOOM;
     }
 
-    public void redraw() {
+    private void redraw() {
         CellGraphics.updatePaintVariables(getWidthRatio(), getHeightRatio());
         for (CellGraphics cellGraphics : cellsGraphics.values()) {
             cellGraphics.update();
@@ -263,7 +236,7 @@ public final class BoardPanel extends JLayeredManager {
         repaint();
     }
 
-    public void updateCameraPosition(final double nextZoom, final double nextCameraX, final double nextCameraY) {
+    private void updateCameraPosition(final double nextZoom, final double nextCameraX, final double nextCameraY) {
         zoom = nextZoom;
         cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
         cameraHeight = (int) (CAMERA_MAX_HEIGHT / zoom);
@@ -810,6 +783,30 @@ public final class BoardPanel extends JLayeredManager {
 
     // #endregion INTERACTION
 
+    //#region Loading entities
+
+    private HashMap<Integer, CellGraphics> loadCellsGraphics(final JSONArray jCells) {
+        final HashMap<Integer, CellGraphics> cells = new HashMap<>();
+        for (int i = 0; i < jCells.length(); i++) {
+            final JSONObject jCell = jCells.getJSONObject(i);
+            cells.put(jCell.getInt("id"), CellGraphicsFactory.createCellGraphics(this, jCell));
+        }
+        return cells;
+    }
+
+    private ArrayList<PlayerGraphics> loadPlayerGraphics() {
+        final ArrayList<PlayerGraphics> players = new ArrayList<>();
+        gamePanel.getController().getPlayers().forEach((player) -> {
+            final CellGraphics cell = cellsGraphics.get(controller.getStartCell().getId());
+            players.add(new PlayerGraphics(player.getID(), this, cell.getXPos(), cell.getYPos()));
+        });
+        return players;
+    }
+
+    //#endregion Loading entities
+
+    //#region getters/setters
+
     public int getPanelWidth() {
         final Rectangle bounds = getBounds();
         return bounds.width - bounds.x;
@@ -871,5 +868,7 @@ public final class BoardPanel extends JLayeredManager {
     public static int getInteraction() {
         return INTERACTION;
     }
+
+    //#endregion
 
 }

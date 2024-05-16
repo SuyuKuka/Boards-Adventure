@@ -9,7 +9,6 @@ import game.GameState;
 import model.config.GameMap;
 import model.config.Team;
 import model.config.cells.Cell;
-import model.config.cells.Intersection;
 import model.config.players.Player;
 
 /**
@@ -35,7 +34,7 @@ public final class Model {
     public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> gameConfig,
         final JSONObject mapConfig) {
         Player.resetPlayerIDIterator();
-        Player.setItemShopNb(mapConfig.optInt("itemShopNb", 1));
+        Player.setItemShopNb(mapConfig.optInt("item_shop_nb", 1));
         this.gameMap = gameMap;
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
@@ -75,10 +74,7 @@ public final class Model {
             currentPlayer.setPosition(playerCell.getNextCellID());
             playerCell = currentPlayer.getPlayerCell(this);
             currentPlayer.incrementDiceRollValue(-1);
-            if (playerCell instanceof Intersection) {
-                return;
-            } else if (playerCell.shouldPlayerStop()) {
-                currentPlayer.setDiceRollValue(0);
+            if (playerCell.shouldPlayerStopBy()) {
                 return;
             }
         }
