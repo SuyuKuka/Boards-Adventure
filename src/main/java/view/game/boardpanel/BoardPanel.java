@@ -70,10 +70,10 @@ public final class BoardPanel extends JLayeredManager {
     private final ArrayList<PlayerGraphics> playersGraphics;
 
     // CAMERA ET ZOOM
-    private static final int CAMERA_MAX_WIDTH = 720;
-    private static final int CAMERA_MAX_HEIGHT = 480;
-    private static final double MIN_ZOOM = 0.5;
-    private static final double MAX_ZOOM = 5;
+    private static final int CAMERA_MAX_WIDTH = 720; // 720 / 0.5 = 1440
+    private static final int CAMERA_MAX_HEIGHT = 480; // 480 / 0.5 = 960
+    private final double minZoom;
+    private final double maxZoom = 5;
 
     private double zoom = 1;
     private int cameraWidth = (int) (CAMERA_MAX_WIDTH / zoom);
@@ -90,9 +90,12 @@ public final class BoardPanel extends JLayeredManager {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
         this.boardImage = Resources.getImage("board");
+        minZoom = initMinZoom();
+
         setOpaque(true);
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(width, height));
+
 
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
@@ -169,11 +172,11 @@ public final class BoardPanel extends JLayeredManager {
             public void mouseWheelMoved(final MouseWheelEvent e) {
                 if (!e.isControlDown()) {
                     if (e.getWheelRotation() < 0) {
-                        if (zoom <= MAX_ZOOM - 0.1) {
+                        if (zoom <= maxZoom - 0.1) {
                             updateCameraPosition(zoom + 0.1, cameraX, cameraY);
                         }
                     } else {
-                        if (zoom >= MIN_ZOOM + 0.1) {
+                        if (zoom >= minZoom + 0.1) {
                             updateCameraPosition(zoom - 0.1, cameraX, cameraY);
                         }
                     }
@@ -223,6 +226,17 @@ public final class BoardPanel extends JLayeredManager {
     //#endregion Loading entities
 
     //#region Camera
+
+    private double initMinZoom() {
+        for (int i = 0; i < 6; i++) {
+            final double multiplierTest = (1 - (i + 1) * 0.1);
+            if (CAMERA_MAX_HEIGHT / multiplierTest > boardImage.getHeight(null)
+            || CAMERA_MAX_WIDTH / multiplierTest > boardImage.getWidth(null)) {
+                return (long) ((1 - i * 0.1) * 10) / 10.0;
+            }
+        }
+        return 0.5;
+    }
 
     public void redraw() {
         CellGraphics.updatePaintVariables(getWidthRatio(), getHeightRatio());

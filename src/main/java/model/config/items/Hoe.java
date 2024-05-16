@@ -1,6 +1,7 @@
 package model.config.items;
 
 import model.Model;
+import model.config.players.Player;
 
 public final class Hoe extends Item {
 
@@ -9,9 +10,14 @@ public final class Hoe extends Item {
     }
 
     @Override
-    public void playItemEffect(Model model) {
-        model.getCurrentPlayer.incrementMoney(150);
-        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
+    public void playItemEffect(final Player player, final Model model) {
+        player.incrementMoney(150);
+        player.setStartItemCooldown(getTurnCooldown());
+    }
+
+    @Override
+    public boolean canItemBeActivated(final Player player, final Model model) {
+        return true;
     }
 
 }

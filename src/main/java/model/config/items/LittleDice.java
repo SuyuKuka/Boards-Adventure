@@ -1,6 +1,9 @@
 package model.config.items;
 
+import java.util.Random;
+
 import model.Model;
+import model.config.players.Player;
 
 public final class LittleDice extends Item {
 
@@ -9,8 +12,14 @@ public final class LittleDice extends Item {
     }
 
     @Override
-    public void playItemEffect(final Model model) {
-        model.getCurrentPlayer.diceRollValue=RAND.nextInt(3)+1;
-        model.getCurrentPlayer.getStartItem.resetTurnCooldown;
+    public void playItemEffect(final Player player, final Model model) {
+        model.getCurrentPlayer().setDiceRollValue(new Random().nextInt(3) + 1);
+        player.setStartItemCooldown(getTurnCooldown());
     }
+
+    @Override
+    public boolean canItemBeActivated(final Player player, final Model model) {
+        return true;
+    }
+
 }

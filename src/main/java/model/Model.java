@@ -87,6 +87,7 @@ public final class Model {
     }
 
     public void endTurn() {
+        currentPlayer.decrementStartItemCooldown();
         playerPlayIterator = (playerPlayIterator + 1) % players.size();
         if (playerPlayIterator == 0) {
             currentTurn++;

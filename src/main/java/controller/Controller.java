@@ -207,6 +207,10 @@ public final class Controller {
         return currentCell;
     }
 
+    public boolean canPlayerUseStartItem(final int playerID) {
+        return getPlayer(playerID).canUseStartItem();
+    }
+
     public String getCardEffect() {
         //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
         //return ((Card) currentCell).getCardEffect().toString();

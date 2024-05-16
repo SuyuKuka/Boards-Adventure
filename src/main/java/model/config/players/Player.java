@@ -32,6 +32,8 @@ public abstract class Player {
     private int position;
     private int previousPosition = 0;
 
+    private int startItemCooldown = 0;
+
     private int diceRollValue = 0;
 
     public Player(final String name, final String className, final String hexTeamColor,
@@ -171,6 +173,10 @@ public abstract class Player {
         return money;
     }
 
+    public final void setMoney(final int money) {
+        this.money = money;
+    }
+
     public final int getGamePoint() {
         return gamePoint;
     }
@@ -197,6 +203,24 @@ public abstract class Player {
 
     public static int getMaxItemShop() {
         return MAX_ITEM_SHOP;
+    }
+
+    public final boolean canUseStartItem() {
+        return startItemCooldown == 0;
+    }
+
+    public final void setStartItemCooldown(final int startItemCooldown) {
+        this.startItemCooldown = startItemCooldown;
+    }
+
+    public final void decrementStartItemCooldown() {
+        if (startItemCooldown > 0) {
+            startItemCooldown--;
+        }
+    }
+
+    public final int getStartItemCooldown() {
+        return startItemCooldown;
     }
 
     // endregion

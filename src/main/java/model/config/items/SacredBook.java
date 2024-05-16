@@ -1,6 +1,9 @@
 package model.config.items;
 
 import model.Model;
+import model.config.cells.Cell;
+import model.config.cells.Property;
+import model.config.players.Player;
 
 public final class SacredBook extends Item {
 
@@ -9,21 +12,17 @@ public final class SacredBook extends Item {
     }
 
     @Override
-    public void playItemEffect(Model model) {
-        if(model.getCurrentPlayer.getStartItem().turnCooldown==0){
-            Player p = model.getCurrentPlayer;
-            if(model.getCurrentPlayerCelltype()==PROPERTY && !p.getCurrentCell().isAtHome(p)){
-                p.getCurrentCell().getOwner.removeProperty(p.getCurrentCell());
-                p.getCurrentCell().setOwner(null);
-                p.setMoney(p.getMoney/4);
-                p.getStartItem().resetTurnCooldown();
-            }
-            else {
-                System.out.println("Vous ne pouvez pas faire ça chez vous !");
-            }
-        }
-        else{
-            System.out.println("Votre objet est disponible dans "+model.getCurrentPlayer.getStartItem.getTurnCooldown()+" tours.");
-        }
+    public void playItemEffect(final Player player, final Model model) {
+        final Property property = (Property) player.getPlayerCell(model);
+        property.getOwner().removeProperty(property);
+        property.setOwner(null);
+        player.setMoney(player.getMoney() / 4);
+        player.setStartItemCooldown(getTurnCooldown());
+    }
+
+    @Override
+    public boolean canItemBeActivated(Player player, Model model) {
+        final Cell currentCell = player.getPlayerCell(model);
+        return currentCell instanceof Property && !((Property) currentCell).isAtHome(player);
     }
 }
