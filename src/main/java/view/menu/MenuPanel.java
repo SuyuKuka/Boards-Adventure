@@ -638,7 +638,6 @@ public final class MenuPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 Audio.playSound("button.wav");
-                System.out.println("sur manuel là");
                 getLayerComp(MANUALBOOK_INDEX).setVisible(true);
             }
 
@@ -668,12 +667,11 @@ public final class MenuPanel extends JLayeredManager {
         panel.setOpaque(false);
         panel.setBackground(new Color(205, 173, 142));
 
-        //SwingFactory.createImagePanel(mainPanel, "paper", 40, 65);
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(205, 173, 142));
         mainPanel.setBorder(BorderFactory.createLineBorder(new Color(205, 173, 142), 4));
 
-        // HAUT, CHANGER FONTS
+        // HAUT
         JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("  Manuel", SwingConstants.CENTER);
         titleLabel.setFont(Resources.getFont("NoitaBlackletter", 32));
@@ -681,14 +679,13 @@ public final class MenuPanel extends JLayeredManager {
         titlePanel.setBackground(new Color(205, 173, 142));
 
         JButton closeButton = SwingFactory.createImageButton(frame.getContentPane(), "notready", 5, 5, false);
-        // MouseListener ici
 
         titlePanel.add(closeButton, BorderLayout.EAST);
         int titleHeight = (int) (panel.getHeight() * 0.05);
         titlePanel.setPreferredSize(new Dimension(panel.getWidth(), titleHeight));
         mainPanel.add(titlePanel, BorderLayout.NORTH);
 
-        // BAS, CHANGER FONTS
+        // BAS
         JPanel contentPanel = new JPanel(new GridLayout(1, 2));
         contentPanel.setBackground(new Color(230, 205, 175));
 
@@ -706,7 +703,7 @@ public final class MenuPanel extends JLayeredManager {
         navPanel.add(gameFlowButton, BorderLayout.CENTER);
         navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
 
-        int navPanelWidth = (int) (contentPanel.getWidth() * 0.3);      // Soucis pour 30%
+        int navPanelWidth = (int) (contentPanel.getWidth() * 0.3);
         navPanel.setPreferredSize(new Dimension(navPanelWidth, contentPanel.getHeight()));
         contentPanel.add(navPanel, BorderLayout.WEST);
 
@@ -717,8 +714,6 @@ public final class MenuPanel extends JLayeredManager {
         explanationTextArea.setBackground(new Color(255, 240, 200));
         explanationTextArea.setFont(Resources.getFont("NoitaBlackletter", 20));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
-        // JScrollPane scrollPane = new JScrollPane(explanationTextArea); // avec opaque jouer sur calque?
-        //SwingFactory.createImagePanel(mainPanel, "paper", 40, 65);
 
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -728,16 +723,16 @@ public final class MenuPanel extends JLayeredManager {
             }
         });
 
-        int scrollPaneWidth = (int) (contentPanel.getWidth() * 0.7);    // Soucis pour 70%
+        int scrollPaneWidth = (int) (contentPanel.getWidth() * 0.7);
         scrollPane.setPreferredSize(new Dimension(scrollPaneWidth, contentPanel.getHeight()));
         scrollPane.setViewportBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        scrollPane.setBackground(new Color(230, 205, 175)); // ICI FONT DE LA PARTIE DROITE, new Color(205, 173, 142)
+        scrollPane.setBackground(new Color(230, 205, 175));
         contentPanel.add(scrollPane, BorderLayout.EAST);
 
         mainPanel.add(contentPanel, BorderLayout.CENTER);
         panel.add(mainPanel);
 
-        // LISTENERS, voir adaption texte/rapport au resize
+        // LISTENERS
         howToPlayButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -795,7 +790,7 @@ public final class MenuPanel extends JLayeredManager {
                 JPanel cardCase = createCaseExplanationPanel("cardResized",
                 "Carte: Faites parler votre chance et tirez une carte, ce qui pourrait vous avantager (ou non) au cours de votre périple.", 10);
                 cardCase.setBackground(new Color(255, 240, 200));
-                mapPanel.add(cardCase);
+                mapPanel.add(cardCase);     // card
                 JViewport viewport = scrollPane.getViewport();
                 viewport.setView(mapPanel);
 
@@ -811,55 +806,30 @@ public final class MenuPanel extends JLayeredManager {
             @Override
             public void mouseClicked(MouseEvent e) {
                 e.consume();
-                System.out.println("NAAN CLIQUE PAS ICI Y'A R");
             }
         });
         return panel;
     }
 
     private JPanel createCaseExplanationPanel(String img, String description, int imageSize) {
-        // BufferedImage caseImage = loadImage(img); // TODO Vraiment utile ?
-        // caseImage = resizeImage(caseImage, imageSize, imageSize);
-
-        // Création du JPanel avec un GridBagLayout
         JPanel casePanel = new JPanel(new GridBagLayout());
-        // Création des contraintes pour le placement des composants
+        // Contraintes de placement
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 3, 5, 3);
 
-        // Ajout de l'image de la case
         JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
         casePanel.add(iconLabel, gbc);
-        // Changement des contraintes pour positionner le texte en dessous de l'image
+        // Positionnement texte en dessous de l'image
         gbc.gridx++;
         gbc.anchor = GridBagConstraints.WEST;
-        // Ajout du texte de description
         JLabel descriptionLabel = new JLabel(description);
         descriptionLabel.setFont(Resources.getFont("NoitaBlackletter", 18));
         casePanel.add(descriptionLabel, gbc);
 
         return casePanel;
-    }
-
-    // VOIR COMMENT MODIFIER POUR AJUSTER CORRECTEMENT IMG DEFENSE
-    private static BufferedImage loadImage(String filename) {
-        try {
-            return ImageIO.read(new File(filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
-        graphics2D.dispose();
-        return resizedImage;
     }
 
 }
