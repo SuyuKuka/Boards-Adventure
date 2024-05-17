@@ -138,7 +138,7 @@
 		},
 		{
 			"id" : 112,
-			"type" : "LOSS",
+			"type" : "KINGDOM",
 			"loss" : 60,
 			"xPos" : 4370,
 			"yPos" : 2920
@@ -287,19 +287,19 @@
 		},
 		{
 			"id" : 200,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"xPos" : 2435,
 			"yPos" : 1150
 		},
 		{
 			"id" : 201,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"xPos" : 2435,
 			"yPos" : 1500
 		},
 		{
 			"id" : 202,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"nextCellID" : 900,
 			"xPos" : 2435,
 			"yPos" : 1855
@@ -332,40 +332,40 @@
 		},
 		{
 			"id" : 400,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"xPos" : 2435,
 			"yPos" : 3350
 		},
 		{
 			"id" : 401,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"loss" : 50,
 			"xPos" : 2435,
 			"yPos" : 3710
 		},
 		{
 			"id" : 402,
-			"type" : "SHOP",
+			"type" : "KINGDOM",
 			"nextCellID" : 118,
 			"xPos" : 2435,
 			"yPos" : 4070
 		},	
 		{
 			"id" : 500,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"xPos" : 1685,
 			"yPos" : 2625
 		},
 		{
 			"id" : 501,
-			"type" : "SHOP",
+			"type" : "KINGDOM",
 			"gain" : 100,
 			"xPos" : 1300,
 			"yPos" : 2625
 		},
 		{
 			"id" : 502,
-			"type" : "SHOP",
+			"type" : "VOID",
 			"nextCellID" : 125,
 			"xPos" : 1040,
 			"yPos" : 2625
