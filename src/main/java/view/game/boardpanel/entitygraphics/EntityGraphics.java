@@ -9,14 +9,8 @@ import view.game.boardpanel.BoardPanel;
 public abstract class EntityGraphics extends JLabel {
 
     private final BoardPanel boardPanel;
-    private double xPos;
-    private double yPos;
-
-    public EntityGraphics(final BoardPanel boardPanel, final double xPos, final double yPos) {
-        this.boardPanel = boardPanel;
-        this.xPos = xPos;
-        this.yPos = yPos;
-    }
+    private int xPos;
+    private int yPos;
 
     public EntityGraphics(final BoardPanel boardPanel, final int xPos, final int yPos) {
         this.boardPanel = boardPanel;
@@ -63,26 +57,10 @@ public abstract class EntityGraphics extends JLabel {
     }
 
     public final int getXPos() {
-        return (int) xPos;
-    }
-
-    public final int getYPos() {
-        return (int) yPos;
-    }
-
-    public final void setXPos(final double nextXPos) {
-        this.xPos = nextXPos;
-    }
-
-    public final void setYPos(final double nextYPos) {
-        this.yPos = nextYPos;
-    }
-
-    public final double getDXPos() {
         return xPos;
     }
 
-    public final double getDYPos() {
+    public final int getYPos() {
         return yPos;
     }
 

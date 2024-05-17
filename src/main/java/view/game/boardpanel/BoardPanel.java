@@ -303,25 +303,25 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void playerMove(final int startCellID) {
-        final int playerMovementSpeed = 4;
+        final int playerMovementSpeed = 4; // > 4 pour éviter les détournement
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         final Timer timer = new Timer(0, null);
         timer.addActionListener(action -> {
-            final double xPos = playerGraphics.getDXPos();
-            final double yPos = playerGraphics.getDYPos();
+            final int xPos = playerGraphics.getXPos();
+            final int yPos = playerGraphics.getYPos();
 
             CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
-            final double cellXPos = nextCell.getXPos();
-            final double cellYPos = nextCell.getYPos();
+            final int cellXPos = nextCell.getXPos();
+            final int cellYPos = nextCell.getYPos();
 
-            final double distanceX = xPos - cellXPos;
-            final double distanceY = yPos - cellYPos;
+            final int distanceX = xPos - cellXPos;
+            final int distanceY = yPos - cellYPos;
 
             final double distanceTot = Math.abs(distanceX) + Math.abs(distanceY);
 
-            final double travelX = playerMovementSpeed * (distanceX / distanceTot);
-            final double travelY = playerMovementSpeed * (distanceY / distanceTot);
+            final int travelX = (int) (playerMovementSpeed * (distanceX / distanceTot));
+            final int travelY = (int) (playerMovementSpeed * (distanceY / distanceTot));
 
             if (xPos != cellXPos) {
                 playerGraphics.setXPos(Math.abs(distanceX) <= Math.abs(travelX) ? cellXPos : xPos - travelX);
