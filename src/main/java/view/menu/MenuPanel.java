@@ -695,13 +695,13 @@ public final class MenuPanel extends JLayeredManager {
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
         JButton howToPlayButton = new JButton("Prise en main du jeu");
         howToPlayButton.setBackground(new Color(230, 205, 175));
-        howToPlayButton.setFont(Resources.getFont("NoitaBlackletter", 26));
+        howToPlayButton.setFont(Resources.getFont("NoitaBlackletter", 28));
         JButton gameFlowButton = new JButton("Déroulement de la partie");
         gameFlowButton.setBackground(new Color(230, 205, 175));
-        gameFlowButton.setFont(Resources.getFont("NoitaBlackletter", 26));
+        gameFlowButton.setFont(Resources.getFont("NoitaBlackletter", 28));
         JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
         mapSpecialtiesButton.setBackground(new Color(230, 205, 175));
-        mapSpecialtiesButton.setFont(Resources.getFont("NoitaBlackletter", 26));
+        mapSpecialtiesButton.setFont(Resources.getFont("NoitaBlackletter", 28));
         navPanel.add(howToPlayButton, BorderLayout.NORTH);
         navPanel.add(gameFlowButton, BorderLayout.CENTER);
         navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
@@ -715,7 +715,7 @@ public final class MenuPanel extends JLayeredManager {
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
         explanationTextArea.setBackground(new Color(255, 240, 200));
-        explanationTextArea.setFont(Resources.getFont("RifficFree", 16));
+        explanationTextArea.setFont(Resources.getFont("NoitaBlackletter", 20));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
         // JScrollPane scrollPane = new JScrollPane(explanationTextArea); // avec opaque jouer sur calque?
         //SwingFactory.createImagePanel(mainPanel, "paper", 40, 65);
@@ -742,7 +742,7 @@ public final class MenuPanel extends JLayeredManager {
             @Override
             public void mousePressed(MouseEvent e) {
                 scrollPane.setViewportView(explanationTextArea);
-                explanationTextArea.setText("     - PRISE EN MAIN DU LOGICIEL -\n\n Sur le menu du jeu, vous pouvez modifier les réglages sonores en cliquant sur \"Options\" ou vous pouvez vous lancer directement dans une partie en appuyant sur \"Jouer\".\nUne fois dans ce menu, vous pouvez choisir de rejoindre une partie déjà créée ou d'en être l'hôte. Vous pourrez alors configurer la partie comme cela vous convient le mieux !");
+                explanationTextArea.setText(" - PRISE EN MAIN DU LOGICIEL -\n\n Sur le menu du jeu, vous pouvez modifier les réglages sonores en cliquant sur \"Préparer l'expédition\" ou vous lancer directement dans une partie en appuyant sur \"Commencer une aventure\".\nUne fois dans ce menu, vous pouvez choisir de rejoindre une partie déjà créée en cliquant sur \"Rejoindre une escouade\" ou en être l'hôte en cliquant sur \"Créer une nouvelle aventure\". Vous pourrez alors configurer la partie comme cela vous convient le mieux !");
             }
         });
         gameFlowButton.addMouseListener(new MouseAdapter() {
@@ -755,8 +755,8 @@ public final class MenuPanel extends JLayeredManager {
         mapSpecialtiesButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                explanationTextArea.setText("     - Les différentes cases sur le plateau de jeu -\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
-                JPanel mapPanel = new JPanel(new GridLayout(8, 1));
+                explanationTextArea.setText(" - LES DIFFÉRENTES CASES DU JEU - \n\n Veuillez recharger la fenêtre du manuel afin d'afficher la liste des différentes cases du jeu.");
+                JPanel mapPanel = new JPanel(new GridLayout(9, 1));
                 JPanel gainCase = createCaseExplanationPanel(
                     "gain", "Bonus: Vous fait gagner une certaine quantité d'or.", 10);
                 gainCase.setBackground(new Color(255, 240, 200));
@@ -779,21 +779,23 @@ public final class MenuPanel extends JLayeredManager {
                 "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !", 10);
                 kingdomCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(kingdomCase);    // kingdom
-                JPanel propertyCase =
-                createCaseExplanationPanel("property",
+                JPanel propertyCase = createCaseExplanationPanel("property",
                 "Propriété: Achetez une propriété afin de réclamer le contrôle de la case et gagner un revenu.", 10);
                 propertyCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(propertyCase);    // property
                 JPanel shopCase = createCaseExplanationPanel("shop",
-                "Boutique: Vous permet d'acheter des objets tels que des dés spéciaux en échange de votre or.", 10); //?
+                "Boutique: Vous permet d'acheter diverses objets qui vous avantageront en échange d'or.", 10);
                 shopCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(shopCase);    // shop
                 JPanel voidCase =
-                createCaseExplanationPanel(
-                    "void", "Vide: Une case vide, sur laquelle rien ne se passe mis à part un repos bien mérité.", 10);
+                createCaseExplanationPanel("void",
+                "Vide: Une case vide, sur laquelle rien ne se passe mis à part un repos bien mérité.", 10);
                 voidCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(voidCase);    // void
-
+                JPanel cardCase = createCaseExplanationPanel("cardResized",
+                "Carte: Faites parler votre chance et tirez une carte, ce qui pourrait vous avantager (ou non) au cours de votre périple.", 10);
+                cardCase.setBackground(new Color(255, 240, 200));
+                mapPanel.add(cardCase);
                 JViewport viewport = scrollPane.getViewport();
                 viewport.setView(mapPanel);
 

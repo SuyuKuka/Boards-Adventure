@@ -7,6 +7,7 @@ import view.game.boardpanel.cellsgraphics.CellGraphics;
 import view.game.boardpanel.cellsgraphics.CellGraphicsFactory;
 
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -23,6 +24,9 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,10 +35,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -724,14 +730,17 @@ public final class BoardPanel extends JLayeredManager {
         JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
         background.setLayout(new BorderLayout());
         background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+        background.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
 
         controller.setCurrentCell();
 
-        JPanel top = new JPanel();
-        top.setLayout(new BorderLayout());
+        JPanel top = new JPanel(new BorderLayout());
+        JLabel shop = new JLabel("BOUTIQUE", SwingConstants.CENTER);
+        shop.setFont(Resources.getFont("NoitaBlackletter", 30));
+        top.setBackground(Color.LIGHT_GRAY);
+        top.add(shop, BorderLayout.CENTER);
 
-        JButton close = new JButton("X");
+        JButton close = SwingFactory.createImageButton(resizePanel, "notready", 5, 5, false);
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -741,17 +750,102 @@ public final class BoardPanel extends JLayeredManager {
             }
         });
         top.add(close, BorderLayout.EAST);
-
-        JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
-        top.add(shop, BorderLayout.CENTER);
+        background.add(top, BorderLayout.NORTH);
 
         //LISTE ITEMS
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2));
+        contentPanel.setBackground(new Color(230, 205, 175));
+        JPanel navPanel = new JPanel(new GridLayout(3, 1));
+        JButton item1 = new JButton("NOM ITEM 1");
+        item1.setBackground(new Color(230, 205, 175));
+        item1.setFont(Resources.getFont("NoitaBlackletter", 30));
+        JButton item2 = new JButton("NOM ITEM 2");
+        item2.setBackground(new Color(230, 205, 175));
+        item2.setFont(Resources.getFont("NoitaBlackletter", 30));
+        JButton item3 = new JButton("NOM ITEM 3");
+        item3.setBackground(new Color(230, 205, 175));
+        item3.setFont(Resources.getFont("NoitaBlackletter", 30));
+        navPanel.add(item1, BorderLayout.NORTH);
+        navPanel.add(item2, BorderLayout.CENTER);
+        navPanel.add(item3, BorderLayout.SOUTH);
+        contentPanel.add(navPanel, BorderLayout.WEST);
 
-        background.add(top, BorderLayout.NORTH);
+        // AFFICHAGE DES DETAILS ITEMS (dans le shop, l'espace à droite)
+        JPanel detailsPanel = new JPanel(new GridBagLayout());
+        detailsPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
+        detailsPanel.setBackground(new Color(255, 240, 200));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        JLabel itemNameLabel = new JLabel();
+        itemNameLabel.setFont(Resources.getFont("NoitaBlackletter", 28));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        detailsPanel.add(itemNameLabel, gbc);
+
+        JLabel itemImageLabel = new JLabel();
+        gbc.gridy++;
+        detailsPanel.add(itemImageLabel, gbc);
+
+        JLabel itemPriceLabel = new JLabel();
+        itemPriceLabel.setFont(Resources.getFont("RifficFree", 18));
+        gbc.gridy++;
+        detailsPanel.add(itemPriceLabel, gbc);
+
+        JButton buyButton = new JButton("J'achète");
+        buyButton.setFont(Resources.getFont("RifficFree", 16));
+        buyButton.setVisible(false);
+        gbc.gridy++;
+        gbc.insets = new Insets(10, 0, 0, 0);
+        detailsPanel.add(buyButton, gbc);
+
+        contentPanel.add(detailsPanel, BorderLayout.EAST);
+        background.add(contentPanel, BorderLayout.CENTER);
+
+        // LISTENERS BOUTON ITEMS
+        item1.addMouseListener(new MouseAdapter() { // Pour l'item 1
+            @Override
+            public void mousePressed(MouseEvent e) {
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 1", "void", "$100");
+                buyButton.setVisible(true);
+            }
+        });
+        item2.addMouseListener(new MouseAdapter() { // Pour l'item 2
+            @Override
+            public void mousePressed(MouseEvent e) {
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 2", "dice2", "$200");
+                buyButton.setVisible(true);
+            }
+        });
+        item3.addMouseListener(new MouseAdapter() { // Pour l'item 3
+            @Override
+            public void mousePressed(MouseEvent e) {
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 3", "hoe", "$69696969");
+                buyButton.setVisible(true);
+            }
+        });
+        background.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                e.consume();
+            }
+        });
 
         resizePanel.add(background);
         return resizePanel;
     }
+
+    // FONCTION ITEMS
+    private void displayItemDetails(JLabel nameLabel,
+    JLabel imageLabel, JLabel priceLabel, String name, String imagePath, String price) {
+    nameLabel.setText(name);
+    ImageIcon originalIcon = new ImageIcon(Resources.getImage(imagePath));
+    Image originalImage = originalIcon.getImage();
+    Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+    imageLabel.setIcon(new ImageIcon(resizedImage));
+    priceLabel.setText(price);
+}
 
     // #endregion
 
