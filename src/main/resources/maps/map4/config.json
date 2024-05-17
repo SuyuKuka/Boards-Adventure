@@ -9,6 +9,18 @@
 			"name" : "HOE",
 			"buyPrice" : "1"
 		}
+		{
+			"name" : "GOLDEN_ROAD",
+			"buyPrice" : "1"
+		}
+		{
+			"name" : "BIG_DICE",
+			"buyPrice" : "1"
+		}
+		{
+			"name" : "SACRED_BOOK",
+			"buyPrice" : "1"
+		}
 	],
 	"start_items" : [
 		{
@@ -17,6 +29,18 @@
 		},
 		{
 			"name" : "HOE",
+			"turnCooldown" : "2"
+		}
+		{
+			"name" : "BIG_DICE",
+			"turnCooldown" : "2"
+		}
+		{
+			"name" : "SACRED_BOOK",
+			"turnCooldown" : "2"
+		}
+		{
+			"name" : "GOLDEN_ROAD",
 			"turnCooldown" : "2"
 		}
 	],
