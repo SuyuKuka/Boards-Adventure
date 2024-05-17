@@ -14,6 +14,7 @@ public abstract class JLayeredManager extends JLayeredPane {
 
     public JLayeredManager(final int width, final int height) {
         setPreferredSize(new Dimension(width, height));
+        addResizeListener();
     }
 
     /**
@@ -29,6 +30,8 @@ public abstract class JLayeredManager extends JLayeredPane {
             revalidate();
         }
     }
+
+    public abstract void addResizeListener();
 
     /**
      * Ajoute le {@link Component} à la couche layerIndex si possible.

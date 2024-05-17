@@ -28,6 +28,7 @@ public final class Controller {
     private final Model model;
     // View
     private GamePanel gamePanel;
+    private int i = 1;
 
     // Jeu
     private Cell currentCell;
@@ -61,7 +62,11 @@ public final class Controller {
                 playerMove();
                 break;
             case PLAYER_MOVE:
-                if (getCurrentPlayer().getDiceRollValue() > 0) {
+                final Player player = getCurrentPlayer();
+                if (player.isInIntersection()) {
+                    player.setInIntersection(false);
+                    playerMove();
+                } else if (player.getDiceRollValue() > 0) {
                     playerMove();
                 } else {
                     playerArrived();
@@ -300,14 +305,6 @@ public final class Controller {
 
     public int getCurrentPlayerRollDiceValue() {
         return getCurrentPlayer().getDiceRollValue();
-    }
-
-    public boolean getRollDiceState() {
-        if (prevGameState == GameState.PLAYER_ACTION) {
-            return true;
-        }
-        System.out.println(prevGameState);
-        return false;
     }
 
     public static int getPlayerItemShopNb() {

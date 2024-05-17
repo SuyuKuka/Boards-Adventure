@@ -29,7 +29,7 @@ public abstract class CellGraphics extends EntityGraphics {
     private static int colorRange;
     private static final Rectangle COLOR_RANGE_DIM = new Rectangle();
 
-    private static final double START_ICON_PAINT_MULTIPLIER = 0.65;
+    private static final double START_ICON_PAINT_MULTIPLIER = 0.6;
     private static int iconRange;
     private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 

@@ -32,6 +32,7 @@ public abstract class Player {
     private int mapLap = 0;
     private int position;
     private int previousPosition = 0;
+    private boolean inIntersection;
 
     private int startItemCooldown = 0;
 
@@ -47,6 +48,7 @@ public abstract class Player {
         this.hexTeamColor = hexTeamColor;
         this.startItem = startItem;
         this.position = startPos;
+        this.inIntersection = false;
     }
 
     // region model methods
@@ -235,6 +237,14 @@ public abstract class Player {
 
     public final int getStartItemCooldown() {
         return startItemCooldown;
+    }
+
+    public final void setInIntersection(final boolean inIntersection) {
+        this.inIntersection = inIntersection;
+    }
+
+    public final boolean isInIntersection() {
+        return inIntersection;
     }
 
     // endregion

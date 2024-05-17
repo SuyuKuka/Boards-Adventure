@@ -19,6 +19,7 @@ import view.JLayeredManager;
 import view.View;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
+import view.game.overlaypanel.OverlayPanel;
 
 /**
  * Classe mère de la {@link View} EN JEU.
@@ -40,7 +41,7 @@ public final class GamePanel extends JLayeredManager {
 
     // COUCHES
     private final MainPanel mainPanel;
-    private final JPanel overlayPanel;
+    private final OverlayPanel overlayPanel;
     private final JPanel pausePanel;
 
     private HashMap<Integer, CellGraphics> cellsGraphics;
@@ -56,13 +57,20 @@ public final class GamePanel extends JLayeredManager {
         itemsGraphics = loadItemsGraphics(mapConfig);
 
         mainPanel = new MainPanel(this, mapConfig);
-        overlayPanel = createOverlayPanel();
+        overlayPanel = new OverlayPanel(this);
         pausePanel = createPausePanel();
 
         addComp(mainPanel, MAIN_PANEL);
         addComp(overlayPanel, OVERLAY_PANEL);
         addComp(pausePanel, PAUSE_PANEL);
 
+        addResizeListener();
+
+        setVisible(true);
+    }
+
+    @Override
+    public void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
@@ -75,8 +83,6 @@ public final class GamePanel extends JLayeredManager {
                 repaint();
             }
         });
-
-        setVisible(true);
     }
 
     //#region update
@@ -191,14 +197,7 @@ public final class GamePanel extends JLayeredManager {
 
     //#endregion
 
-    //#region Panels
-
-    private JPanel createOverlayPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(getBounds());
-        panel.setOpaque(false);
-        return panel;
-    }
+    //#region Pause
 
     private JPanel createPausePanel() {
         final JPanel panel = new JPanel();

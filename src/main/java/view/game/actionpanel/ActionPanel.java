@@ -40,7 +40,7 @@ public final class ActionPanel extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        final int width1 = (int) (width * 0.2);
+        final int width1 = (int) (width * 0.3);
         final int width2 = (int) (width * 0.3);
         final int width3 = (int) (width * 0.1);
         final int width4 = width - width1 - width2 - width3;
@@ -59,7 +59,7 @@ public final class ActionPanel extends JPanel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
-                final int width1 = (int) (dim.width * 0.2);
+                final int width1 = (int) (dim.width * 0.3);
                 final int width2 = (int) (dim.width * 0.3);
                 final int width3 = (int) (dim.width * 0.1);
                 final int width4 = dim.width - width1 - width2 - width3;

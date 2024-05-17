@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -503,6 +505,18 @@ public class SwingFactory {
             }
         });
         return textPane;
+    }
+
+    public static Font getResizedFont(final JLabel label, final String text, final Font font) {
+        FontMetrics metrics = label.getFontMetrics(font);
+        float currentFontSize = font.getSize();
+        while (metrics.stringWidth(text) < label.getWidth() && metrics.getHeight() < label.getHeight()) {
+            currentFontSize++;
+            label.setFont(font.deriveFont(currentFontSize));
+            metrics = label.getFontMetrics(label.getFont());
+            label.setText(text);
+        }
+        return font.deriveFont(currentFontSize);
     }
 
     /**

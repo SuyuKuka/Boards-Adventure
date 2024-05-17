@@ -76,7 +76,7 @@ public final class BoardPanel extends JLayeredManager {
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
-    private static final int CAMERA_MAX_HEIGHT = 480;
+    private static final int CAMERA_MAX_HEIGHT = 384; // = 480 * 0.8
     private static final double MIN_ALLOWED_ZOOM = 0.5;
     private final double minZoom;
     private final double maxZoom = 5;
@@ -119,6 +119,14 @@ public final class BoardPanel extends JLayeredManager {
         addComp(entitiesPanel, ENTITIES);
         redraw();
 
+        addResizeListener();
+        addMouseListeners();
+
+        setVisible(true);
+    }
+
+    @Override
+    public void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
@@ -131,10 +139,6 @@ public final class BoardPanel extends JLayeredManager {
                 repaint();
             }
         });
-
-        addMouseListeners();
-
-        setVisible(true);
     }
     //#region MouseListeners
 
@@ -299,7 +303,6 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void playerMove(final int startCellID) {
-        
         final int playerMovementSpeed = 4;
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
