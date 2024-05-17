@@ -1,5 +1,5 @@
 {
-	"cell_diameter" : 45,
+	"cell_diameter" : 60,
 	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE",
@@ -138,7 +138,7 @@
 		},
 		{
 			"id" : 112,
-			"type" : "LOSS",
+			"type" : "KINGDOM",
 			"loss" : 60,
 			"xPos" : 4370,
 			"yPos" : 2920
@@ -345,7 +345,7 @@
 		},
 		{
 			"id" : 402,
-			"type" : "VOID",
+			"type" : "KINGDOM",
 			"nextCellID" : 118,
 			"xPos" : 2435,
 			"yPos" : 4070
@@ -358,7 +358,7 @@
 		},
 		{
 			"id" : 501,
-			"type" : "GAIN",
+			"type" : "KINGDOM",
 			"gain" : 100,
 			"xPos" : 1300,
 			"yPos" : 2625
