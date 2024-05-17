@@ -21,6 +21,8 @@ public final class ItemFactory {
                 return new SacredBook(itemName,isShopItem,value);
             case BIG_DICE:
                 return new BigDice(itemName,isShopItem,value);
+            case BIG_DICE:
+                return new GoldenRoad(itemName,isShopItem,value);
             default:
                 break;
         }

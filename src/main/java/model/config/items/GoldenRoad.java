@@ -1,5 +1,5 @@
 package model.config.items;
-
+import Random.RANDNextint;
 import model.Model;
 
 public final class GoldenRoad extends Item {

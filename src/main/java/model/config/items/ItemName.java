@@ -5,4 +5,5 @@ public enum ItemName {
     LITTLE_DICE;
     SACRED_BOOK;
     BIG_DICE;
+    GOLDEN_ROAD;
 }

@@ -10,7 +10,7 @@ public final class SacredBook extends Item {
 
     @Override
     public void playItemEffect(Model model) {
-        if(model.getCurrentPlayer().getStartItem().turnCooldown==0){
+        if(model.getCurrentPlayer().getStartItem().getTurnCooldown()==0){
             Player p = model.getCurrentPlayer();
             if(model.getCurrentPlayerCelltype()==PROPERTY && !p.getCurrentCell().isAtHome(p)){
                 p.getCurrentCell().getOwner().removeProperty(p.getCurrentCell());
@@ -23,7 +23,7 @@ public final class SacredBook extends Item {
             }
         }
         else{
-            System.out.println("Votre objet est disponible dans "+model.getCurrentPlayer.getStartItem.getTurnCooldown()+" tours.");
+            System.out.println("Votre objet est disponible dans "+model.getCurrentPlayer().getStartItem().getTurnCooldown()+" tours.");
         }
     }
 }
