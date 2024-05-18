@@ -2,14 +2,10 @@ package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import java.util.ArrayList;
 
-import javax.swing.SwingUtilities;
-
 import controller.resources.Resources;
 import model.config.cells.Property;
 import view.game.boardpanel.BoardPanel;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

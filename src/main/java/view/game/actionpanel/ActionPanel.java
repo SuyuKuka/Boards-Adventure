@@ -15,12 +15,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import controller.resources.Resources;
 import model.config.cells.Property;
@@ -161,19 +160,13 @@ public final class ActionPanel extends JPanel {
         rollDiceButton = new JButton();
         rollDiceButton.setIcon(new ImageIcon(Resources.getImage("dice1")));
 
-        DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
-        listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
-        otherActionBox.setRenderer(listRenderer);
+        ((JLabel)otherActionBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+
         otherActionBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    rollDiceButton.setEnabled(false);
-                    Timer timer = new Timer(5000, t -> {
-                        rollDiceButton.setEnabled(true);
-                        ((Timer) t.getSource()).stop();
-                    });
-                    timer.start();
+                    System.out.println(e.getItem());
                 }
             }
         });
