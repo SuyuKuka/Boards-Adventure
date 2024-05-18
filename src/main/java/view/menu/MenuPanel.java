@@ -1278,37 +1278,28 @@ public final class MenuPanel extends JLayeredManager {
 
         switch (nb) {
             case 1 :
-                skinImg.setImage(Resources.getImage("frame-1").getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
-                skinImg.setImageSelection(1);
+            skin.setIcon(new ImageIcon(Resources.getImage("frame-1").getScaledInstance(
+                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
                 break;
             case 2 :
-                skinImg.setImage(Resources.getImage("frame-2").getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
-                skinImg.setImageSelection(2);
+            skin.setIcon(new ImageIcon(Resources.getImage("frame-2").getScaledInstance(
+                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
                 break;
             case 3 :
-                skinImg.setImage(Resources.getImage("frame-3").getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
-                skinImg.setImageSelection(3);
+            skin.setIcon(new ImageIcon(Resources.getImage("frame-3").getScaledInstance(
+                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
                 break;
             case 4 :
-                skinImg.setImage(Resources.getImage("frame-4").getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
-                skinImg.setImageSelection(4);
+            skin.setIcon(new ImageIcon(Resources.getImage("frame-4").getScaledInstance(
+                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
                 break;
             case 5 :
-                skinImg.setImage(Resources.getImage("frame-5").getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
-                skinImg.setImageSelection(5);
+                skin.setIcon(new ImageIcon(Resources.getImage("frame-5").getScaledInstance(
+            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
                 break;
             default:
                 break;
         }
-
-
-        // skin.setIcon(new ImageIcon(skinImg.getImage().getScaledInstance(
-        //     (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
 
         skin.repaint();
         skin.revalidate();
