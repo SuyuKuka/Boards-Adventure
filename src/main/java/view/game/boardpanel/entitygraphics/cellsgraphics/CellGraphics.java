@@ -1,4 +1,4 @@
-package view.game.boardpanel.cellsgraphics;
+package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 import controller.resources.Resources;
 import view.View;
 import view.game.boardpanel.BoardPanel;
-import view.game.boardpanel.EntityGraphics;
+import view.game.boardpanel.entitygraphics.EntityGraphics;
 
 /**
  * Classe ABSTRAIRE qui s'occupe de la vue des {@link model.config.cells}. <p>
@@ -29,17 +29,15 @@ public abstract class CellGraphics extends EntityGraphics {
     private static int colorRange;
     private static final Rectangle COLOR_RANGE_DIM = new Rectangle();
 
-    private static final double START_ICON_PAINT_MULTIPLIER = 0.65;
+    private static final double START_ICON_PAINT_MULTIPLIER = 0.6;
     private static int iconRange;
     private static final Rectangle ICON_RANGE_DIM = new Rectangle();
 
-    private final BoardPanel boardPanel;
     private final int cellID;
     private final Image cellImage;
 
     public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
-        this.boardPanel = boardPanel;
         this.cellID = cellID;
         this.cellImage = Resources.getImage(boardPanel.getController()
             .getCell(cellID).getCellType().name().toLowerCase());
@@ -56,6 +54,10 @@ public abstract class CellGraphics extends EntityGraphics {
             @Override
             public void mouseReleased(final MouseEvent e) {
                 frame.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
             }
         });
         addMouseMotionListener(new MouseAdapter() {
@@ -80,6 +82,7 @@ public abstract class CellGraphics extends EntityGraphics {
     }
 
     public final void updateSize() {
+        final BoardPanel boardPanel = getBoardPanel();
         setSize((int) (cellDiameter * boardPanel.getWidthRatio()),
             (int) (cellDiameter * boardPanel.getHeightRatio()));
     }
@@ -104,7 +107,6 @@ public abstract class CellGraphics extends EntityGraphics {
     }
 
     // region getters/setters
-
 
     public static int getCellDiameter() {
         return cellDiameter;
@@ -132,6 +134,14 @@ public abstract class CellGraphics extends EntityGraphics {
 
     public final Image getCellImage() {
         return cellImage;
+    }
+
+    public static double getStartColorPaintMultiplier() {
+        return START_COLOR_PAINT_MULTIPLIER;
+    }
+
+    public static double getStartIconPaintMultiplier() {
+        return START_ICON_PAINT_MULTIPLIER;
     }
 
     // endregion

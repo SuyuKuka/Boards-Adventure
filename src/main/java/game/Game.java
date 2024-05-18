@@ -16,6 +16,8 @@ import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
+import view.game.GamePanel;
+import view.menu.MenuPanel;
 
 /**
  * Classe mère du jeu.
@@ -28,6 +30,7 @@ public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
+    private static final String START_TEMP_MAP = "map4"; // // map4, spaceship, villanova, frostharbor
 
     private Mode mode = Mode.GAME;
 
@@ -92,7 +95,7 @@ public final class Game {
     private void initTempGameConfig(final HashMap<String, String> gameConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         // gameconfig
-        gameConfig.put("mapName", "frostharbor"); // map4, spaceship, villanova, frostharbor
+        gameConfig.put("mapName", START_TEMP_MAP);
         gameConfig.put("totalTurns", "45");
         // playersconfig
         // player1
@@ -104,29 +107,29 @@ public final class Game {
         player1.put("itemName", "HOE");
         playersConfig.add(player1);
         // player2
-        final HashMap<String, String> player2 = new HashMap<>();
-        player2.put("type", "human");
-        player2.put("name", "human2");
-        player2.put("className", "boardClass");
-        player2.put("teamColor", "#d16264");
-        player2.put("itemName", "LITTLE_DICE");
-        playersConfig.add(player2);
-        // computer1
-        final HashMap<String, String> computer1 = new HashMap<>();
-        computer1.put("type", "computer");
-        computer1.put("name", "computer1");
-        computer1.put("className", "boardClass");
-        computer1.put("teamColor", "#7ebbed");
-        computer1.put("itemName", "HOE");
-        playersConfig.add(computer1);
-        // computer2
-        final HashMap<String, String> computer2 = new HashMap<>();
-        computer2.put("type", "computer");
-        computer2.put("name", "computer2");
-        computer2.put("className", "boardClass");
-        computer2.put("teamColor", "#d16264");
-        computer2.put("itemName", "LITTLE_DICE");
-        playersConfig.add(computer2);
+        // final HashMap<String, String> player2 = new HashMap<>();
+        // player2.put("type", "human");
+        // player2.put("name", "human2");
+        // player2.put("className", "boardClass");
+        // player2.put("teamColor", "#d16264");
+        // player2.put("itemName", "LITTLE_DICE");
+        // playersConfig.add(player2);
+        // // computer1
+        // final HashMap<String, String> computer1 = new HashMap<>();
+        // computer1.put("type", "computer");
+        // computer1.put("name", "computer1");
+        // computer1.put("className", "boardClass");
+        // computer1.put("teamColor", "#7ebbed");
+        // computer1.put("itemName", "HOE");
+        // playersConfig.add(computer1);
+        // // computer2
+        // final HashMap<String, String> computer2 = new HashMap<>();
+        // computer2.put("type", "computer");
+        // computer2.put("name", "computer2");
+        // computer2.put("className", "boardClass");
+        // computer2.put("teamColor", "#d16264");
+        // computer2.put("itemName", "LITTLE_DICE");
+        // playersConfig.add(computer2);
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig,

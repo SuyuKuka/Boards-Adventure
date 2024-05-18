@@ -15,7 +15,7 @@ public final class Loss extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.incrementMoney(-loss);
+        player.incrementCoins(-loss);
     }
 
     public int getLoss() {

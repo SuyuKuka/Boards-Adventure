@@ -13,9 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Controller;
+import model.config.players.Player;
 import view.game.GamePanel;
 import view.game.datapanel.cardgraphics.CardGraphics;
 import view.game.datapanel.cardgraphics.CardGraphicsFactory;
+import view.game.overlaypanel.PlayerScore;
 
 /**
  * {@link DataPanel} est une classe qui extends {@link JPanel} et occupe de la partie gauche de {@link GamePanel}.
@@ -28,7 +30,7 @@ public final class DataPanel extends JPanel {
     private JLabel remainingTurns;
 
     private final JPanel scoreBoardPanel;
-    private final ArrayList<PlayerScore> playerScoreList = new ArrayList<>();
+    private final ArrayList<PlayerScore> playersScore = new ArrayList<>();
 
     private final JPanel cardGraphicsPanel;
     private CardGraphics cardGraphics;
@@ -42,8 +44,8 @@ public final class DataPanel extends JPanel {
         final int nbPlayers = gamePanel.getPlayersGraphics().size();
         final int scoreboardLines = nbPlayers < 4 ? 4 : nbPlayers;
 
-        final int height1 = (int) (height * 0.1);
-        int height2 = (int) (height * 0.3);
+        final int height1 = (int) (height * 0.05);
+        int height2 = (int) (height * 0.4);
         height2 -= height2 % scoreboardLines;
         final int height3 = height - height1 - height2;
         turnsPanel = createRemainingTurnsPanel(width, height1);
@@ -59,8 +61,8 @@ public final class DataPanel extends JPanel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
-                final int height1 = (int) (dim.height * 0.1);
-                int height2 = (int) (height * 0.3);
+                final int height1 = (int) (dim.height * 0.05);
+                int height2 = (int) (height * 0.4);
                 height2 -= height2 % scoreboardLines;
                 final int height3 = dim.height - height1 - height2;
                 turnsPanel.setPreferredSize(new Dimension(width, height1));
@@ -73,6 +75,14 @@ public final class DataPanel extends JPanel {
 
         setVisible(true);
     }
+
+    //#region update
+    public void updatePlayerScoreText() {
+        final Player player = gamePanel.getController().getCurrentPlayer();
+        playersScore.get(gamePanel.getController().getCurrentPlayerID()).updatePlayerScoreText();
+    }
+
+    //#endregion
     // #region gameState
     public void endTurn() {
         final Controller controller = gamePanel.getController();
@@ -112,7 +122,7 @@ public final class DataPanel extends JPanel {
         gamePanel.getPlayersGraphics().forEach((playerGraphics) -> {
             final PlayerScore playerScore = new PlayerScore(gamePanel, width, height / scoreboardLines,
                 playerGraphics.getPlayerID());
-            playerScoreList.add(playerScore);
+            playersScore.add(playerScore);
             panel.add(playerScore);
         });
         panel.setVisible(true);

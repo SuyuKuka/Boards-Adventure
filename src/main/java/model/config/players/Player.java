@@ -21,17 +21,18 @@ public abstract class Player {
     private final String hexTeamColor;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
+    private final ArrayList<Property> properties = new ArrayList<>();
     private final Item[] shopItem;
     private final String className;
 
-    private final ArrayList<Property> properties = new ArrayList<>();
-    private int money = 500;
+    private int coins = 500;
     private int gamePoint = 0;
     private int rank = 1;
     private int jailTurn = 0;
     private int mapLap = 0;
     private int position;
     private int previousPosition = 0;
+    private boolean inIntersection;
 
     private int startItemCooldown = 0;
 
@@ -47,12 +48,14 @@ public abstract class Player {
         this.hexTeamColor = hexTeamColor;
         this.startItem = startItem;
         this.position = startPos;
+        this.inIntersection = false;
     }
 
     // region model methods
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
+        diceRollValue = 4; //TODO test
     }
 
     public final void addProperty(final Property property) {
@@ -83,16 +86,16 @@ public abstract class Player {
         this.gamePoint += increment;
     }
 
-    public final void incrementMoney(final int increment) {
-        this.money += increment;
+    public final void incrementCoins(final int increment) {
+        this.coins += increment;
     }
 
     // endregion
 
     // region getters/setters
 
-    public final boolean hasEnoughMoney(final int price) {
-        return this.money >= price;
+    public final boolean hasEnoughCoins(final int price) {
+        return this.coins >= price;
     }
 
     public final Cell getPlayerCell(final Model model) {
@@ -171,12 +174,12 @@ public abstract class Player {
         return id;
     }
 
-    public final int getMoney() {
-        return money;
+    public final int getCoins() {
+        return coins;
     }
 
-    public final void setMoney(final int money) {
-        this.money = money;
+    public final void setCoins(int coins) {
+        this.coins = coins;
     }
 
     public final int getGamePoint() {
@@ -235,6 +238,14 @@ public abstract class Player {
 
     public final int getStartItemCooldown() {
         return startItemCooldown;
+    }
+
+    public final void setInIntersection(final boolean inIntersection) {
+        this.inIntersection = inIntersection;
+    }
+
+    public final boolean isInIntersection() {
+        return inIntersection;
     }
 
     // endregion

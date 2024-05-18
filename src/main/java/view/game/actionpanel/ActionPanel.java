@@ -3,7 +3,11 @@ package view.game.actionpanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
@@ -11,25 +15,30 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import controller.resources.Resources;
+import model.config.cells.Property;
 import view.game.GamePanel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public final class ActionPanel extends JPanel {
+
+    private static final Image PROPERTY_IMAGE = Resources.getImage("property");
 
     private final GamePanel gamePanel;
 
     private final ChatPanel chatPanel;
 
-    private final JPanel inventoryPanel;
+    private final JPanel infoPanel;
     private final JPanel buttonsPanel;
-    private final JPanel minimapPanel;
+    private final JPanel inventoryPanel;
 
     private JComboBox<Object> otherActionBox;
     private JButton rollDiceButton;
@@ -40,34 +49,36 @@ public final class ActionPanel extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        final int width1 = (int) (width * 0.2);
+        final int width1 = (int) (width * 0.25);
         final int width2 = (int) (width * 0.3);
-        final int width3 = (int) (width * 0.1);
-        final int width4 = width - width1 - width2 - width3;
+        int width4 = (int) (width * 0.3);
+        width4 -= width4 % gamePanel.getController().getPropertiesGroupNumber();
+        final int width3 = width - width1 - width2 - width4;
 
         this.chatPanel = new ChatPanel(gamePanel, width1, height);
         add(chatPanel, BorderLayout.WEST);
 
-        inventoryPanel = createInventoryPanel(width2, height);
-        add(inventoryPanel, BorderLayout.CENTER);
+        infoPanel = createInfoPanel(width2, height);
+        add(infoPanel, BorderLayout.CENTER);
 
         buttonsPanel = createButtonsPanel(width3, height);
-        minimapPanel = createMinimapPanel(width4, height);
-        final JPanel buttonsMinimapPanel = createButtonsMinimapPanel();
-        add(buttonsMinimapPanel, BorderLayout.EAST);
+        inventoryPanel = createInventoryPanel(width4, height);
+        final JPanel buttonsInventoryPanel = createButtonsInventoryPanel();
+        add(buttonsInventoryPanel, BorderLayout.EAST);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
-                final int width1 = (int) (dim.width * 0.2);
+                final int width1 = (int) (dim.width * 0.25);
                 final int width2 = (int) (dim.width * 0.3);
-                final int width3 = (int) (dim.width * 0.1);
-                final int width4 = dim.width - width1 - width2 - width3;
+                int width4 = (int) (dim.width * 0.3);
+                width4 -= width4 % gamePanel.getController().getPropertiesGroupNumber();
+                final int width3 = dim.width - width1 - width2 - width4;
                 chatPanel.setPreferredSize(new Dimension(width1, dim.height));
-                inventoryPanel.setPreferredSize(new Dimension(width2, dim.height));
-                buttonsMinimapPanel.setPreferredSize(new Dimension(width3 + width4, dim.height));
+                infoPanel.setPreferredSize(new Dimension(width2, dim.height));
+                buttonsInventoryPanel.setPreferredSize(new Dimension(width3 + width4, dim.height));
                 buttonsPanel.setPreferredSize(new Dimension(width3, dim.height));
-                minimapPanel.setPreferredSize(new Dimension(width4, dim.height));
+                inventoryPanel.setPreferredSize(new Dimension(width4, dim.height));
                 revalidate();
                 repaint();
             }
@@ -119,18 +130,25 @@ public final class ActionPanel extends JPanel {
 
     //#endregion
 
+    // #region Info
 
-    // #region Inventory
-
-    private JPanel createInventoryPanel(final int width, final int height) {
+    private JPanel createInfoPanel(final int width, final int height) {
         final JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(width, height));
         panel.setBackground(Color.RED);
         return panel;
     }
 
-
     // #endregion
+
+    private JPanel createButtonsInventoryPanel() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        panel.add(buttonsPanel, BorderLayout.WEST);
+        panel.add(inventoryPanel, BorderLayout.CENTER);
+        panel.setVisible(true);
+        return panel;
+    }
 
     // #region Buttons
 
@@ -142,19 +160,13 @@ public final class ActionPanel extends JPanel {
         rollDiceButton = new JButton();
         rollDiceButton.setIcon(new ImageIcon(Resources.getImage("dice1")));
 
-        DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
-        listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
-        otherActionBox.setRenderer(listRenderer);
+        ((JLabel)otherActionBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+
         otherActionBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    rollDiceButton.setEnabled(false);
-                    Timer timer = new Timer(5000, t -> {
-                        rollDiceButton.setEnabled(true);
-                        ((Timer) t.getSource()).stop();
-                    });
-                    timer.start();
+                    System.out.println(e.getItem());
                 }
             }
         });
@@ -171,23 +183,69 @@ public final class ActionPanel extends JPanel {
 
     // #endregion
 
-    // #region MiniMap
+    // #region Inventaire
 
-    private JPanel createMinimapPanel(final int width, final int height) {
-        final JPanel panel = new JPanel();
+    private JPanel createInventoryPanel(final int width, final int height) {
+        final HashMap<Integer, ArrayList<Property>> properties =
+            gamePanel.getController().getPropertiesGroup();
+        final int groupNB = properties.size();
+        int maxPropertiesInGroup = 0;
+        for (ArrayList<Property> list : properties.values()) {
+            final int listSize = list.size();
+            if (listSize > maxPropertiesInGroup) {
+                maxPropertiesInGroup = listSize;
+            }
+        }
+        final JPanel panel = new JPanel(new GridLayout(1, groupNB));
         panel.setPreferredSize(new Dimension(width, height));
-        panel.setBackground(Color.PINK);
+        panel.setOpaque(false);
+        for (ArrayList<Property> list : properties.values()) {
+            panel.add(createNewGroupPropertyPanel(maxPropertiesInGroup, list, width / groupNB, height));
+        }
+        return panel;
+    }
+
+    private JPanel createNewGroupPropertyPanel(final int maxPropertiesInGroup, final ArrayList<Property> list,
+            final int width, final int height) {
+        final JPanel panel = new JPanel(new GridLayout(maxPropertiesInGroup, 1));
+        final int listSize = list.size();
+        final Color color = gamePanel.getPropertyGraphics(list.get(0).getId()).getColor();
+        for (int i = 0; i < listSize; i++) {
+            final Property cell = list.get(i);
+            final JButton propertyButton = new JButton() {
+                @Override
+                protected void paintComponent(final Graphics g) {
+                    final Graphics2D g2d = (Graphics2D) g;
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    final Dimension dim = getSize();
+                    g2d.setColor(color);
+                    g2d.fillRect(0, 0, dim.width, dim.height);
+
+                    if (cell.getOwner() == null) {
+                        g2d.setColor(Color.WHITE);
+                    } else {
+                        g2d.setColor(Color.decode(cell.getOwner().getHexTeamColor()));
+                    }
+                    // Couleur intérieur
+                    final int widthInside = (int) (dim.width * 0.9);
+                    final int heightInside = (int) (dim.height * 0.9);
+                    final int xInside = (dim.width - widthInside) / 2;
+                    final int yInside = (dim.height - heightInside) / 2;
+                    g2d.fillRoundRect(xInside, yInside, widthInside, heightInside, 5, 5);
+                    // Icône
+                    final int widthIcon = (int) (dim.width * 0.7);
+                    final int heightIcon = (int) (dim.height * 0.7);
+                    final int xIcon = (dim.width - widthIcon) / 2;
+                    final int yIcon = (dim.height - heightIcon) / 2;
+                    g2d.drawImage(PROPERTY_IMAGE, xIcon, yIcon, widthIcon, heightIcon, this);
+                }
+            };
+            propertyButton.setSize(new Dimension(width, height / maxPropertiesInGroup));
+            panel.add(propertyButton);
+        }
         return panel;
     }
 
     //#endregion
 
-    private JPanel createButtonsMinimapPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(buttonsPanel, BorderLayout.WEST);
-        panel.add(minimapPanel, BorderLayout.CENTER);
-        panel.setVisible(true);
-        return panel;
-    }
 }

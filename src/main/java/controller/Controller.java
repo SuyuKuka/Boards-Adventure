@@ -1,8 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import view.game.GamePanel;
+import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -60,7 +62,11 @@ public final class Controller {
                 playerMove();
                 break;
             case PLAYER_MOVE:
-                if (getCurrentPlayer().getDiceRollValue() > 0) {
+                final Player player = getCurrentPlayer();
+                if (player.isInIntersection()) {
+                    player.setInIntersection(false);
+                    playerMove();
+                } else if (player.getDiceRollValue() > 0) {
                     playerMove();
                 } else {
                     playerArrived();
@@ -109,15 +115,16 @@ public final class Controller {
         prevGameState = GameState.ROLL_DICE;
         model.rollDice();
         gamePanel.rollDice();
-        gameUpdate();
     }
 
     // endregion
 
     private void playerMove() {
         prevGameState = GameState.PLAYER_MOVE;
+        final int startCellID = getCurrentPlayerCell().getId();
+        final int diceRollValue = getCurrentPlayerRollDiceValue();
         model.playerMove();
-        gamePanel.playerMove();
+        gamePanel.playerMove(startCellID, diceRollValue);
     }
 
     private void playerArrived() {
@@ -153,12 +160,12 @@ public final class Controller {
         }
     }
 
-    public void playerGainMoney() {
-        getCurrentPlayer().incrementMoney(getGainedMoney());
+    public void playerGainCoins() {
+        getCurrentPlayer().incrementCoins(getGainedMoney());
     }
 
     public void playerLossMoney() {
-        getCurrentPlayer().incrementMoney(-getLossMoney());
+        getCurrentPlayer().incrementCoins(-getLossMoney());
     }
 
     public void playerBuyProperty() {
@@ -200,6 +207,18 @@ public final class Controller {
 
     public void setCurrentCell() {
         this.currentCell = model.getGameMap().getCell(getCurrentPlayerPosition());
+    }
+
+    public Cell getPlayerCell(final int playerID) {
+        return getPlayer(playerID).getPlayerCell(model);
+    }
+
+    public HashMap<Integer, ArrayList<Property>> getPropertiesGroup() {
+        return model.getGameMap().getPropertiesGroup();
+    }
+
+    public int getPropertiesGroupNumber() {
+        return getPropertiesGroup().size();
     }
 
     public Cell getCurrentCell() {
@@ -249,8 +268,8 @@ public final class Controller {
         return model.getCurrentPlayer().getID();
     }
 
-    public int getCurrentMoney() {
-        return getCurrentPlayer().getMoney();
+    public int getCurrentPlayerCoins() {
+        return getCurrentPlayer().getCoins();
     }
 
     public int getGainedMoney() {
@@ -263,6 +282,10 @@ public final class Controller {
 
     public int getGamePoint() {
         return getCurrentPlayer().getGamePoint();
+    }
+
+    public PlayerGraphics getCurrentPlayerGraphics() {
+        return gamePanel.getPlayerGraphics(getCurrentPlayerID());
     }
 
     public int getPropertyPrice() {
@@ -291,14 +314,6 @@ public final class Controller {
 
     public int getCurrentPlayerRollDiceValue() {
         return getCurrentPlayer().getDiceRollValue();
-    }
-
-    public boolean getRollDiceState() {
-        if (prevGameState == GameState.PLAYER_ACTION) {
-            return true;
-        }
-        System.out.println(prevGameState);
-        return false;
     }
 
     public static int getPlayerItemShopNb() {

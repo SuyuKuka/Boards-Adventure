@@ -16,7 +16,7 @@ public final class SacredBook extends Item {
         final Property property = (Property) player.getPlayerCell(model);
         property.getOwner().removeProperty(property);
         property.setOwner(null);
-        player.setMoney(player.getMoney() / 4);
+        player.setCoins(player.getCoins() / 4);
         player.setStartItemCooldown(getTurnCooldown());
     }
 

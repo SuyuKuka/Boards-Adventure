@@ -13,4 +13,5 @@ public enum CellType {
     CARD,
     KINGDOM,
     DANGER,
+    NONE
 }

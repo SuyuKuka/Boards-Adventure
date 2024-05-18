@@ -1,8 +1,10 @@
-package view.game.boardpanel;
+package view.game.boardpanel.entitygraphics;
 
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+
+import view.game.boardpanel.BoardPanel;
 
 public abstract class EntityGraphics extends JLabel {
 
@@ -25,24 +27,33 @@ public abstract class EntityGraphics extends JLabel {
 
     private void updatePosition() {
         final Dimension size = getSize();
-        final int playerCamX = xPos - (int) boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2;
+        final int playerCamX = (int) (xPos - (int) boardPanel.getCameraX() + boardPanel.getCameraWidth() / 2);
         final int centerOffsetX = size.width / 2;
         final int finalX = (int) (playerCamX * boardPanel.getWidthRatio()) - centerOffsetX;
 
-        final int playerCamY = (yPos - (int) boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
+        final int playerCamY = (int) (yPos - (int) boardPanel.getCameraY() + boardPanel.getCameraHeight() / 2);
         final int centerOffsetY = size.height / 2;
         final int finalY = (int) (playerCamY * boardPanel.getHeightRatio()) - centerOffsetY;
 
         setLocation(finalX, finalY);
     }
 
+    public final void updateCoordinates(final int nextXPos, final int nextYPos) {
+        xPos = nextXPos;
+        yPos = nextYPos;
+        update();
+    }
+
     public final BoardPanel getBoardPanel() {
         return boardPanel;
     }
 
-    public final void updateCoordinates(final int nextXPos, final int nextYPos) {
-        xPos = nextXPos;
-        yPos = nextYPos;
+    public final void setXPos(final int nextXPos) {
+        this.xPos = nextXPos;
+    }
+
+    public final void setYPos(final int nextYPos) {
+        this.yPos = nextYPos;
     }
 
     public final int getXPos() {

@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,8 +17,10 @@ import controller.Controller;
 import controller.resources.Resources;
 import view.JLayeredManager;
 import view.View;
-import view.game.boardpanel.PlayerGraphics;
-import view.game.boardpanel.cellsgraphics.CellGraphics;
+import view.game.boardpanel.entitygraphics.PlayerGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.PropertyGraphics;
+import view.game.overlaypanel.OverlayPanel;
 
 /**
  * Classe mère de la {@link View} EN JEU.
@@ -42,7 +42,7 @@ public final class GamePanel extends JLayeredManager {
 
     // COUCHES
     private final MainPanel mainPanel;
-    private final JPanel overlayPanel;
+    private final OverlayPanel overlayPanel;
     private final JPanel pausePanel;
 
     private HashMap<Integer, CellGraphics> cellsGraphics;
@@ -58,13 +58,20 @@ public final class GamePanel extends JLayeredManager {
         itemsGraphics = loadItemsGraphics(mapConfig);
 
         mainPanel = new MainPanel(this, mapConfig);
-        overlayPanel = createOverlayPanel();
+        overlayPanel = new OverlayPanel(this);
         pausePanel = createPausePanel();
 
         addComp(mainPanel, MAIN_PANEL);
-        // addComp(overlayPanel, OVERLAY_PANEL);
-        // addComp(pausePanel, PAUSE_PANEL);
+        addComp(overlayPanel, OVERLAY_PANEL);
+        addComp(pausePanel, PAUSE_PANEL);
 
+        addResizeListener();
+
+        setVisible(true);
+    }
+
+    @Override
+    public void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
@@ -77,24 +84,9 @@ public final class GamePanel extends JLayeredManager {
                 repaint();
             }
         });
-
-        setVisible(true);
     }
 
-    //#region Panels
-
-    private JPanel createOverlayPanel() {
-        final JPanel panel = new JPanel();
-        panel.setBounds(getBounds());
-        panel.setOpaque(false);
-        return panel;
-    }
-
-    private JPanel createPausePanel() {
-        final JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
-    }
+    //#region update
 
     //#endregion
 
@@ -120,32 +112,21 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.rollDice();
     }
 
-    public void playerMove() {
-        mainPanel.playerMove();
+    public void playerMove(final int startCellID, final int diceRollValue) {
+        mainPanel.playerMove(startCellID, diceRollValue);
     }
 
     public void playerArrived() {
         mainPanel.playerArrived();
     }
 
-
     public void endTurn() {
         mainPanel.endTurn();
+        repaint();
     }
 
     public void gameEnd() {
         mainPanel.gameEnd();
-    }
-
-    /**
-     * Joue une action après un délai.
-     * @param delay délai en millisecondes.
-     * @param action action réalisée APRES le délai.
-     */
-    public void startSingleActionTimer(final int delay, final ActionListener action) {
-        final Timer timer = new Timer(delay, action);
-        timer.setRepeats(false);
-        timer.start();
     }
 
     //#endregion
@@ -166,6 +147,10 @@ public final class GamePanel extends JLayeredManager {
 
     public HashMap<Integer, CellGraphics> getCellsGraphics() {
         return cellsGraphics;
+    }
+
+    public PropertyGraphics getPropertyGraphics(final int cellID) {
+        return (PropertyGraphics) getCellGraphics(cellID);
     }
 
     public CellGraphics getCellGraphics(final int cellID) {
@@ -213,6 +198,16 @@ public final class GamePanel extends JLayeredManager {
 
     public ImageIcon getItemGraphics(final String itemName) {
         return itemsGraphics.get(itemName);
+    }
+
+    //#endregion
+
+    //#region Pause
+
+    private JPanel createPausePanel() {
+        final JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        return panel;
     }
 
     //#endregion

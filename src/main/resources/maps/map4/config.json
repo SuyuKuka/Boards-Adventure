@@ -290,44 +290,58 @@
 		},
 		{
 			"id" : 130,
+			"type" : "NONE",
+			"playerShouldTeleport" : true,
+			"xPos" : 0,
+			"yPos" : 688
+		},
+		{
+			"id" : 131,
+			"type" : "NONE",
+			"playerShouldTeleport" : true,
+			"xPos" : 1862,
+			"yPos" : 1647
+		},
+		{
+			"id" : 132,
 			"type" : "VOID",
 			"xPos" : 1826,
 			"yPos" : 1616
 		},
 		{
-			"id" : 131,
+			"id" : 133,
 			"type" : "VOID",
 			"xPos" : 1767,
 			"yPos" : 1565
 		},
 		{
-			"id" : 132,
+			"id" : 134,
 			"type" : "LOSS",
 			"loss" : 200,
 			"xPos" : 1772,
 			"yPos" : 1466
 		},
 		{
-			"id" : 133,
+			"id" : 135,
 			"type" : "LOSS",
 			"loss" : 200,
 			"xPos" : 1774,
 			"yPos" : 1369
 		},
 		{
-			"id" : 134,
+			"id" : 136,
 			"type" : "CARD",
 			"xPos" : 1819,
 			"yPos" : 1293
 		},
 		{
-			"id" : 135,
+			"id" : 137,
 			"type" : "VOID",
 			"xPos" : 1869,
 			"yPos" : 1227
 		},
 		{
-			"id" : 136,
+			"id" : 138,
 			"type" : "GAIN",
 			"gain" : 350,
 			"nextCellID" : 100,
@@ -447,7 +461,7 @@
 		{
 			"id" : 313,
 			"type" : "VOID",
-			"nextCellID" : 120,
+			"nextCellID" : 121,
 			"xPos" : 797,
 			"yPos" : 629
 		},
@@ -589,37 +603,51 @@
 		},
 		{
 			"id" : 502,
+			"type" : "NONE",
+			"playerShouldTeleport" : true,
+			"xPos" : 1135,
+			"yPos" : 0
+		},
+		{
+			"id" : 503,
+			"type" : "NONE",
+			"playerShouldTeleport" : true,
+			"xPos" : 634,
+			"yPos" : 1647
+		},
+		{
+			"id" : 504,
 			"type" : "VOID",
 			"xPos" : 638,
 			"yPos" : 1611
 		},
 		{
-			"id" : 503,
+			"id" : 505,
 			"type" : "CARD",
 			"xPos" : 636,
 			"yPos" : 1449
 		},
 		{
-			"id" : 504,
+			"id" : 506,
 			"type" : "GAIN",
 			"gain" : 100,
 			"xPos" : 610,
 			"yPos" : 1365
 		},
 		{
-			"id" : 505,
+			"id" : 507,
 			"type" : "VOID",
 			"xPos" : 549,
 			"yPos" : 1309
 		},
 		{
-			"id" : 506,
+			"id" : 508,
 			"type" : "DANGER",
 			"xPos" : 750,
 			"yPos" : 1151
 		},
 		{
-			"id" : 507,
+			"id" : 509,
 			"type" : "PROPERTY",
 			"prices" : [350, 400, 450, 550],
 			"group" : 4,
@@ -627,107 +655,107 @@
 			"yPos" : 1148
 		},
 		{
-			"id" : 508,
+			"id" : 510,
 			"type" : "LOSS",
 			"loss" : 150,
 			"xPos" : 905,
 			"yPos" : 1149
 		},
 		{
-			"id" : 509,
+			"id" : 511,
 			"type" : "VOID",
 			"xPos" : 977,
 			"yPos" : 1148
 		},
 		{
-			"id" : 510,
+			"id" : 512,
 			"type" : "VOID",
 			"xPos" : 1054,
 			"yPos" : 1150
 		},
 		{
-			"id" : 511,
+			"id" : 513,
 			"type" : "DANGER",
 			"xPos" : 1128,
 			"yPos" : 1147
 		},
 		{
-			"id" : 512,
+			"id" : 514,
 			"type" : "INTERSECTION",
-			"nextCellID" : [513, 301],
+			"nextCellID" : [515, 301],
 			"xPos" : 1203,
 			"yPos" : 1148
 		},
 		{
-			"id" : 513,
+			"id" : 515,
 			"type" : "LOSS",
 			"loss" : 200,
 			"xPos" : 1208,
 			"yPos" : 1323
 		},
 		{
-			"id" : 514,
+			"id" : 516,
 			"type" : "SHOP",
 			"xPos" : 1214,
 			"yPos" : 1422
 		},
 		{
-			"id" : 515,
+			"id" : 517,
 			"type" : "GAIN",
 			"gain" : 300,
 			"xPos" : 998,
 			"yPos" : 1500
 		},
 		{
-			"id" : 516,
+			"id" : 518,
 			"type" : "GAIN",
 			"gain" : 300,
 			"xPos" : 1033,
 			"yPos" : 1590
 		},
 		{
-			"id" : 517,
+			"id" : 519,
 			"type" : "VOID",
 			"xPos" : 1137,
 			"yPos" : 1614
 		},
 		{
-			"id" : 518,
+			"id" : 520,
 			"type" : "GAIN",
 			"gain" : 300,
 			"xPos" : 1225,
 			"yPos" : 1614
 		},
 		{
-			"id" : 519,
+			"id" : 521,
 			"type" : "CARD",
 			"xPos" : 1286,
 			"yPos" : 1560
 		},
 		{
-			"id" : 520,
+			"id" : 522,
 			"type" : "DANGER",
 			"xPos" : 1364,
 			"yPos" : 1563
 		},
 		{
-			"id" : 521,
+			"id" : 523,
 			"type" : "GAIN",
 			"gain" : 300,
 			"xPos" : 1441,
 			"yPos" : 1566
 		},
 		{
-			"id" : 522,
+			"id" : 524,
 			"type" : "GAIN",
 			"gain" : 300,
 			"xPos" : 1513,
 			"yPos" : 1564
 		},
 		{
-			"id" : 523,
+			"id" : 525,
 			"type" : "KINGDOM",
-			"nextCellID" : 128,
+			"nextCellID" : 131,
 			"xPos" : 1583,
 			"yPos" : 1565
 		},
@@ -785,7 +813,7 @@
 		{
 			"id" : 607,
 			"type" : "KINGDOM",
-			"nextCellID" : 505,
+			"nextCellID" : 507,
 			"xPos" : 485,
 			"yPos" : 1267
 		}

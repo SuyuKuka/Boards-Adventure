@@ -109,7 +109,14 @@ public final class MenuPanel extends JLayeredManager {
         initDefaultValues();
         createPanels();
         changeState(MenuState.MAINMENU);
+
+        addResizeListener();
+
         setVisible(true);
+    }
+
+    @Override
+    public void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
