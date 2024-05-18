@@ -3,7 +3,6 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -281,7 +280,7 @@ public class SwingFactory {
         return button;
     }
 
-    public static JButton createTextButton(final Component parent, final String text,
+    public static JButton createLobbyButton(final Component parent, final String text,
         final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
         final Image image = Resources.getImage("emptysword_small");
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
@@ -312,7 +311,6 @@ public class SwingFactory {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Audio.playSound("button.wav");
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         });
         parent.addComponentListener(new ComponentAdapter() {
@@ -324,6 +322,25 @@ public class SwingFactory {
             }
         });
         return button;
+    }
+
+    public static JButton createTextButton(final Component parent, final String text,
+        final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
+            final JButton button = new JButton(text);
+            button.setBorderPainted(false);
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setFocusPainted(false);
+            button.setForeground(Color.BLACK);
+            button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
+            button.setHorizontalTextPosition(JButton.LEFT);
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    Audio.playSound("button.wav");
+                }
+            });
+            return button;
     }
 
     // public static JPanel createNormalPanel() {
@@ -421,7 +438,6 @@ public class SwingFactory {
     //             }
     //         });
     //     }
-    //     // TODO : Que les boutons a rendre resize puis c'est bon
     //     frame.addComponentListener(new ComponentAdapter() {
     //         @Override
     //         public void componentResized(final ComponentEvent e) {
