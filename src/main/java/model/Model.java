@@ -98,6 +98,10 @@ public final class Model {
         currentLeader = player;
     }
 
+    public void skipTurn() {
+
+    }
+
     public void playCellEffect(final Player player) {
         gameMap.getCell(player.getPosition()).playCellEffect(player, this);
     }

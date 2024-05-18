@@ -14,11 +14,15 @@ public final class ItemFactory {
         }
         switch (itemName) {
             case HOE:
-                return new Hoe(itemName, isShopItem, value);
+                return new FarmerHoe(itemName, isShopItem, value);
             case LITTLE_DICE:
                 return new LittleDice(itemName, isShopItem, value);
             case SACRED_BOOK:
                 return new SacredBook(itemName, isShopItem, value);
+            case MAGIC_WAND:
+                return new MagicWand(itemName, isShopItem, value);
+            case LUCKY_POTION:
+                return new LuckyPotion(itemName, isShopItem, value);
             default:
                 break;
         }

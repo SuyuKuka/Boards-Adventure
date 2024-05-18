@@ -25,6 +25,9 @@ public class LossPropertyEffect extends CardEffect {
     @Override
     public void applyEffect(final Player player, final Model model) {
         final ArrayList<Property> properties = player.getProperties();
+        if (properties.size() == 0) {
+            return;
+        }
         player.removeProperty(properties.get(new Random().nextInt(properties.size())));
     }
 
