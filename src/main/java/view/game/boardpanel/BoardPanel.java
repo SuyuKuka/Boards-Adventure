@@ -4,6 +4,7 @@ import controller.Controller;
 import controller.resources.Resources;
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.EntityGraphics;
+import view.game.boardpanel.entitygraphics.TargetGraphics;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphicsFactory;
@@ -303,38 +304,24 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void playerMove(final int startCellID) {
-        final int playerMovementSpeed = 4; // > 4 pour éviter les détournement
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
+        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics);
+        entitiesPanelAdd(diceValue);
         final Timer timer = new Timer(0, null);
         timer.addActionListener(action -> {
-            final int xPos = playerGraphics.getXPos();
-            final int yPos = playerGraphics.getYPos();
-
-            CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
-            final int cellXPos = nextCell.getXPos();
-            final int cellYPos = nextCell.getYPos();
-
-            final int distanceX = xPos - cellXPos;
-            final int distanceY = yPos - cellYPos;
-
-            final double distanceTot = Math.abs(distanceX) + Math.abs(distanceY);
-
-            final int travelX = (int) (playerMovementSpeed * (distanceX / distanceTot));
-            final int travelY = (int) (playerMovementSpeed * (distanceY / distanceTot));
-
-            if (xPos != cellXPos) {
-                playerGraphics.setXPos(Math.abs(distanceX) <= Math.abs(travelX) ? cellXPos : xPos - travelX);
-            }
-            if (yPos != cellYPos) {
-                playerGraphics.setYPos(Math.abs(distanceY) <= Math.abs(travelY) ? cellYPos : yPos - travelY);
-            }
+            final CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
+            playerGraphics.updateMoving(nextCell);
+            diceValue.updateMoving();
             redraw();
-            if (xPos == cellXPos && yPos == cellYPos) {
+
+            if (playerGraphics.getXPos() == nextCell.getXPos() && playerGraphics.getYPos() == nextCell.getYPos()) {
                 if (nextCell == cellTarget) {
                     if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
+                        entitiesPanelRemove(diceValue);
                         showCellTypeInteraction();
                     } else {
+                        entitiesPanelRemove(diceValue);
                         controller.gameUpdate();
                     }
                     timer.stop();
