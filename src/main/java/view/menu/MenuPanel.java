@@ -88,7 +88,6 @@ public final class MenuPanel extends JLayeredManager {
     private InetAddress ip;
     private int port = 55000;
 
-    private ImageName mapImg = new ImageName(1, Resources.getImage("preview1"));
     private JLabel titleMap = new JLabel();
 
     private JPanel background = null;
@@ -496,9 +495,11 @@ public final class MenuPanel extends JLayeredManager {
         final JPanel mapSelection = SwingFactory.createTransparentPanel(parent, 100, 50);
         mapSelection.setLayout(new BorderLayout());
 
+        ImageName mapImg = new ImageName(1, Resources.getImage("preview1"));
+
         JButton left = SwingFactory.createImageButton(parent, "left", 20, 10, false);
         mapSelection.add(left, BorderLayout.WEST);
-        JLabel mapLabel = createImageImageLabel(parent, 60, 60, false);
+        JLabel mapLabel = createImageImageLabel(parent, mapImg, 60, 60, false);
         mapSelection.add(mapLabel, BorderLayout.CENTER);
         JButton right = SwingFactory.createImageButton(parent, "right", 20, 10, false);
         mapSelection.add(right, BorderLayout.EAST);
@@ -521,17 +522,18 @@ public final class MenuPanel extends JLayeredManager {
         mapDescription.add(scrollPane, BorderLayout.CENTER);
         panel.add(mapDescription);
 
-        selectMap(parent, mapLabel, desc, 0);
-        mapListerner(left, parent, mapLabel, desc, -1);
-        mapListerner(right, parent, mapLabel, desc, 1);
+        selectMap(parent, mapImg, mapLabel, desc, 0);
+        mapListerner(left, parent, mapImg, mapLabel, desc, -1);
+        mapListerner(right, parent, mapImg, mapLabel, desc, 1);
         return panel;
     }
 
-    private void mapListerner(JButton button, JPanel mapSelection, JLabel mapLabel, JTextArea desc, int i) {
+    private void mapListerner(JButton button, JPanel mapSelection, ImageName mapImg,
+        JLabel mapLabel, JTextArea desc, int i) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectMap(mapSelection, mapLabel, desc, i);
+                selectMap(mapSelection, mapImg, mapLabel, desc, i);
             }
         });
         handCursor(button);
@@ -743,10 +745,10 @@ public final class MenuPanel extends JLayeredManager {
         pseudo.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
         panel.add(pseudo);
 
-        JPanel skin = selectCharacter(parent, playerID);
+        JPanel skin = createSelectCharacter(parent, playerID);
         panel.add(skin);
 
-        JPanel item = selectItem(parent, playerID);
+        JPanel item = createSelectItem(parent, playerID);
         panel.add(item);
 
         JPanel status = createStatus(parent, playerID, (JTextPane) pseudo.getComponent(0));
@@ -828,25 +830,41 @@ public final class MenuPanel extends JLayeredManager {
         return panel;
     }
 
-    private JPanel selectCharacter(final JPanel parent, int playerID) {
+    private JPanel createSelectCharacter(final JPanel parent, int playerID) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 80);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        // panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setLayout(new BorderLayout());
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel.add(Box.createHorizontalGlue());
+        ImageName skinImg =  new ImageName(1, Resources.getImage("frame-1"));
+
         JButton left = SwingFactory.createImageButton(parent, "left", 5, 10, false);
         left.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
-        panel.add(left);
-        JLabel character = SwingFactory.createImageLabel(parent, "frame-1", 100, 20, false);
-        panel.add(character);
+        panel.add(left, BorderLayout.WEST);
+        JLabel character = createImageImageLabel(parent, skinImg, 20, 20, false);
+        panel.add(character, BorderLayout.CENTER);
         JButton right = SwingFactory.createImageButton(parent, "right", 5, 10, false);
         right.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
-        panel.add(right);
-        panel.add(Box.createHorizontalGlue());
+        panel.add(right, BorderLayout.EAST);
+
+        selectSkin(parent, skinImg, character, 0);
+        skinListerner(left, panel, skinImg, character, -1);
+        skinListerner(right, panel, skinImg, character, 1);
         return panel;
     }
 
-    private JPanel selectItem(final JPanel parent, int playerID) {
+    private void skinListerner(JButton button, JPanel mapSelection, ImageName mapImg,
+        JLabel skinLabel, int i) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectSkin(mapSelection, mapImg, skinLabel, i);
+            }
+        });
+        handCursor(button);
+    }
+
+    private JPanel createSelectItem(final JPanel parent, int playerID) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 20);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1196,7 +1214,7 @@ public final class MenuPanel extends JLayeredManager {
 
     // #region selector
 
-    private void selectMap(JPanel parent, JLabel map, JTextArea desc, int i) {
+    private void selectMap(JPanel parent, ImageName mapImg, JLabel map, JTextArea desc, int i) {
         int nb = mapImg.getImageSelection();
         nb += i;
         if (nb >= nbMaps) {
@@ -1238,7 +1256,7 @@ public final class MenuPanel extends JLayeredManager {
 
         final Dimension size = SwingFactory.calcDimension(mapImg.getImage(), parent, 60, 40, false);
                 map.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100,
-                    (int) (size.getWidth() * 60 / 100)));
+                    (int) (size.getHeight() * 60 / 100)));
                 map.setIcon(new ImageIcon(mapImg.getImage().getScaledInstance(
                     (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
 
@@ -1246,10 +1264,103 @@ public final class MenuPanel extends JLayeredManager {
         map.revalidate();
     }
 
-    public JLabel createImageImageLabel(final Component parent,
+    private void selectSkin(JPanel parent, ImageName skinImg, JLabel skin, int i) {
+        int nb = skinImg.getImageSelection();
+        nb += i;
+        if (nb >= 6) {
+            nb = 1;
+        } else if (nb <= 0) {
+            nb = 5;
+        }
+
+        final Dimension size = SwingFactory.calcDimension(skinImg.getImage(), parent, 60, 40, false);
+        // skin.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100, (int) (size.getHeight() * 60 / 100)));
+
+        switch (nb) {
+            case 1 :
+                skinImg.setImage(Resources.getImage("frame-1").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
+                skinImg.setImageSelection(1);
+                break;
+            case 2 :
+                skinImg.setImage(Resources.getImage("frame-2").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
+                skinImg.setImageSelection(2);
+                break;
+            case 3 :
+                skinImg.setImage(Resources.getImage("frame-3").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
+                skinImg.setImageSelection(3);
+                break;
+            case 4 :
+                skinImg.setImage(Resources.getImage("frame-4").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
+                skinImg.setImageSelection(4);
+                break;
+            case 5 :
+                skinImg.setImage(Resources.getImage("frame-5").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH));
+                skinImg.setImageSelection(5);
+                break;
+            default:
+                break;
+        }
+
+
+        // skin.setIcon(new ImageIcon(skinImg.getImage().getScaledInstance(
+        //     (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+
+        skin.repaint();
+        skin.revalidate();
+    }
+
+        private void selectItem(JPanel parent, ImageName itemImg, JLabel item, int i) {
+            int nb = itemImg.getImageSelection();
+            nb += i;
+            if (nb >= 6) {
+                nb = 1;
+            } else if (nb <= 0) {
+                nb = 5;
+            }
+
+            switch (nb) {
+                case 1 :
+                    itemImg.setImage(Resources.getImage("frame-1"));
+                    itemImg.setImageSelection(1);
+                    break;
+                case 2 :
+                    itemImg.setImage(Resources.getImage("frame-2"));
+                    itemImg.setImageSelection(2);
+                    break;
+                case 3 :
+                    itemImg.setImage(Resources.getImage("frame-3"));
+                    itemImg.setImageSelection(3);
+                    break;
+                case 4 :
+                    itemImg.setImage(Resources.getImage("frame-4"));
+                    itemImg.setImageSelection(4);
+                    break;
+                case 5 :
+                    itemImg.setImage(Resources.getImage("frame-5"));
+                    itemImg.setImageSelection(5);
+                    break;
+                default:
+                    break;
+            }
+
+        final Dimension size = SwingFactory.calcDimension(itemImg.getImage(), parent, 40, 40, false);
+        item.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100,
+            (int) (size.getHeight() * 40 / 100)));
+            item.setIcon(new ImageIcon(itemImg.getImage().getScaledInstance(
+            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+        item.repaint();
+        item.revalidate();
+    }
+
+    public JLabel createImageImageLabel(final Component parent, final ImageName imgName,
         final int widthPer, final int heightPer, final boolean resize) {
-        final Dimension size = SwingFactory.calcDimension(mapImg.getImage(), parent, widthPer, heightPer, resize);
-        final JLabel label = new JLabel(new ImageIcon(mapImg.getImage().getScaledInstance(
+        final Dimension size = SwingFactory.calcDimension(imgName.getImage(), parent, widthPer, heightPer, resize);
+        final JLabel label = new JLabel(new ImageIcon(imgName.getImage().getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
         label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
             (int) (size.getWidth() * heightPer / 100)));
@@ -1257,17 +1368,19 @@ public final class MenuPanel extends JLayeredManager {
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setVerticalAlignment(JLabel.CENTER);
         label.setOpaque(false);
+
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                final Dimension size = SwingFactory.calcDimension(mapImg.getImage(), parent, widthPer,
-                    heightPer, resize);
+                final Dimension size = SwingFactory.calcDimension(imgName.getImage(), parent, widthPer,
+                    heightPer, false);
                 label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
                     (int) (size.getWidth() * heightPer / 100)));
-                label.setIcon(new ImageIcon(mapImg.getImage().getScaledInstance(
+                label.setIcon(new ImageIcon(imgName.getImage().getScaledInstance(
                     (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
             }
         });
+
         return label;
     }
 
