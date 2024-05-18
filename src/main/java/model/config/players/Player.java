@@ -21,10 +21,10 @@ public abstract class Player {
     private final String hexTeamColor;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
+    private final ArrayList<Property> properties = new ArrayList<>();
     private final Item[] shopItem;
     private final String className;
 
-    private final ArrayList<Property> properties = new ArrayList<>();
     private int coins = 500;
     private int gamePoint = 0;
     private int rank = 1;
