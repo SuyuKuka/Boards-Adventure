@@ -12,7 +12,7 @@ public final class GoldenRoad extends Item {
 
     @Override
     public void playItemEffect(final Player player, final Model model) {
-        player.incrementMoney(new Random().nextInt(1000) + 1);
+        player.incrementCoins(new Random().nextInt(1000) + 1);
     }
 
     @Override

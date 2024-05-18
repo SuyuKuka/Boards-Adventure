@@ -14,7 +14,7 @@ public final class FarmerHoe extends Item {
     @Override
     public void playItemEffect(final Player player, final Model model) {
         Random rand = new Random();
-        player.incrementMoney((int) (150 * rand.nextDouble(3.0)));
+        player.incrementCoins((int) (150 * rand.nextDouble(3.0)));
         player.setStartItemCooldown(getTurnCooldown());
     }
 

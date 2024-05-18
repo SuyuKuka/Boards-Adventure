@@ -18,7 +18,7 @@ public class LuckyPotion extends Item {
         if (i < 50) {
             model.skipTurn();
         } else if (i > 50 && i < 80) {
-            player.incrementMoney(player.getMoney() / 10);
+            player.incrementCoins(player.getCoins() / 10);
         }
         player.setStartItemCooldown(getTurnCooldown());
     }
