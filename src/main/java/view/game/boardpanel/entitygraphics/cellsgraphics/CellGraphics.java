@@ -55,6 +55,10 @@ public abstract class CellGraphics extends EntityGraphics {
             public void mouseReleased(final MouseEvent e) {
                 frame.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CellGraphics.this, e, boardPanel));
+            }
         });
         addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -130,6 +134,14 @@ public abstract class CellGraphics extends EntityGraphics {
 
     public final Image getCellImage() {
         return cellImage;
+    }
+
+    public static double getStartColorPaintMultiplier() {
+        return START_COLOR_PAINT_MULTIPLIER;
+    }
+
+    public static double getStartIconPaintMultiplier() {
+        return START_ICON_PAINT_MULTIPLIER;
     }
 
     // endregion

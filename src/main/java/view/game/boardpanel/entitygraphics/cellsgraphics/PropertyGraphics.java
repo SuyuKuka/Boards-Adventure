@@ -2,10 +2,14 @@ package view.game.boardpanel.entitygraphics.cellsgraphics;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import controller.resources.Resources;
 import model.config.cells.Property;
 import view.game.boardpanel.BoardPanel;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -30,9 +34,11 @@ public final class PropertyGraphics extends CellGraphics {
 
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
+    private final Color color;
 
     public PropertyGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
+        this.color = COLORS.get(((Property) getBoardPanel().getController().getCell(cellID)).getGroup());
     }
 
     @Override
@@ -44,7 +50,7 @@ public final class PropertyGraphics extends CellGraphics {
         final Property cell = (Property) getBoardPanel().getController().getCell(cellID);
 
         // Contour
-        g2d.setColor(COLORS.get(cell.getGroup()));
+        g2d.setColor(color);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
         // Couleur intérieure
         if (cell.getOwner() == null) {
@@ -62,6 +68,18 @@ public final class PropertyGraphics extends CellGraphics {
         g2d.setColor(new Color(663399));
         g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici =12)
         g2d.drawString(String.valueOf(cellID), getWidth() / 4, getHeight() / 2);
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public static int getArcHeight() {
+        return ARC_HEIGHT;
+    }
+
+    public static int getArcWidth() {
+        return ARC_WIDTH;
     }
 
 }

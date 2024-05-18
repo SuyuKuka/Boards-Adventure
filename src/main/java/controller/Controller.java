@@ -217,6 +217,10 @@ public final class Controller {
         return model.getGameMap().getPropertiesGroup();
     }
 
+    public int getPropertiesGroupNumber() {
+        return getPropertiesGroup().size();
+    }
+
     public Cell getCurrentCell() {
         return currentCell;
     }

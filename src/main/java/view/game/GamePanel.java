@@ -19,6 +19,7 @@ import view.JLayeredManager;
 import view.View;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.PropertyGraphics;
 import view.game.overlaypanel.OverlayPanel;
 
 /**
@@ -146,6 +147,10 @@ public final class GamePanel extends JLayeredManager {
 
     public HashMap<Integer, CellGraphics> getCellsGraphics() {
         return cellsGraphics;
+    }
+
+    public PropertyGraphics getPropertyGraphics(final int cellID) {
+        return (PropertyGraphics) getCellGraphics(cellID);
     }
 
     public CellGraphics getCellGraphics(final int cellID) {

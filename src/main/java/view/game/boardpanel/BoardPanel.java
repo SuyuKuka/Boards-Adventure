@@ -186,26 +186,6 @@ public final class BoardPanel extends JLayeredManager {
                     if (!e.isControlDown()) {
                         if (e.getWheelRotation() < 0) {
                             // molette haut/zoom
-                            if (zoom <= maxZoom - 0.1) {
-                                updateCameraPosition(zoom + 0.1, cameraX, cameraY);
-                            }
-                        } else {
-                            // molette bas/dezoom
-                            if (zoom >= minZoom + 0.1) {
-                                updateCameraPosition(zoom - 0.1, cameraX, cameraY);
-                            }
-                        }
-                        redraw();
-                    }
-                }
-            });
-        } else {
-            addMouseWheelListener(new MouseWheelListener() {
-                @Override
-                public void mouseWheelMoved(final MouseWheelEvent e) {
-                    if (!e.isControlDown()) {
-                        if (e.getWheelRotation() < 0) {
-                            // molette haut/zoom
                             if (wideAngle) {
                                 wideAngle = false;
                             }
@@ -219,6 +199,26 @@ public final class BoardPanel extends JLayeredManager {
                             } else if (!wideAngle && cameraPan == null) {
                                 wideAngle = true;
                                 updateWideAngleCamera();
+                            }
+                        }
+                        redraw();
+                    }
+                }
+            });
+        } else {
+            addMouseWheelListener(new MouseWheelListener() {
+                @Override
+                public void mouseWheelMoved(final MouseWheelEvent e) {
+                    if (!e.isControlDown()) {
+                        if (e.getWheelRotation() < 0) {
+                            // molette haut/zoom
+                            if (zoom <= maxZoom - 0.1) {
+                                updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                            }
+                        } else {
+                            // molette bas/dezoom
+                            if (zoom >= minZoom + 0.1) {
+                                updateCameraPosition(zoom - 0.1, cameraX, cameraY);
                             }
                         }
                         redraw();
