@@ -12,6 +12,7 @@ import model.config.cardseffect.CardEffectFactory;
 import model.config.cells.Cell;
 import model.config.cells.CellFactory;
 import model.config.cells.CellType;
+import model.config.cells.Property;
 import model.config.cells.Start;
 import model.config.items.Item;
 import model.config.items.ItemFactory;
@@ -47,6 +48,21 @@ public final class GameMap {
 
         this.availableStartItems = loadAvailableStartItems(mapConfig.getJSONArray("start_items"));
         this.availableShopItems = loadAvailableShopItems(mapConfig.getJSONArray("shop_items"));
+    }
+
+    public HashMap<Integer, ArrayList<Property>> getPropertiesGroup() {
+        final HashMap<Integer, ArrayList<Property>> map = new HashMap<>();
+        for (Cell cell : cells.values()) {
+            if (cell instanceof Property) {
+                final Property property = (Property) cell;
+                final int group = property.getGroup();
+                if (!map.containsKey(group)) {
+                    map.put(group, new ArrayList<>());
+                }
+                map.get(group).add(property);
+            }
+        }
+        return map;
     }
 
     private int countCardEffectsQuantity() {
@@ -127,7 +143,7 @@ public final class GameMap {
         return startCell;
     }
 
-    //#region
+    //#region load
 
         public static HashMap<Integer, Cell> loadCells(final JSONArray jCells) {
         final HashMap<Integer, Cell> cells = new HashMap<>();

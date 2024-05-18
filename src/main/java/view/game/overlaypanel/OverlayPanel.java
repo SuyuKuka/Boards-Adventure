@@ -2,7 +2,6 @@ package view.game.overlaypanel;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -15,7 +14,6 @@ import java.awt.BorderLayout;
 import controller.resources.Resources;
 import view.SwingFactory;
 import view.game.GamePanel;
-import view.game.datapanel.PlayerScore;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -121,7 +119,8 @@ public final class OverlayPanel extends JPanel {
         playerActionLabel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                playerActionLabel.setFont(SwingFactory.getResizedFont(playerActionLabel, playerActionLabel.getText(), font));
+                playerActionLabel.setFont(SwingFactory.getResizedFont(playerActionLabel,
+                    playerActionLabel.getText(), font));
             }
         });
         playerActionLabel.setForeground(new Color(255, 222, 109));

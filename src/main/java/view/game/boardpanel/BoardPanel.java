@@ -80,6 +80,7 @@ public final class BoardPanel extends JLayeredManager {
     private static final int CAMERA_MAX_WIDTH = 720;
     private static final int CAMERA_MAX_HEIGHT = 384; // = 480 * 0.8
     private static final double MIN_ALLOWED_ZOOM = 0.5;
+    private final boolean wideAngleAllowed;
     private final double minZoom;
     private final double maxZoom = 5;
 
@@ -100,6 +101,7 @@ public final class BoardPanel extends JLayeredManager {
         this.controller = gamePanel.getController();
         this.boardImage = Resources.getImage("board");
 
+        this.wideAngleAllowed = mapConfig.optBoolean("wideAngleAllowed", true);
         minZoom = initMinZoom();
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
@@ -177,31 +179,53 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     private void addMouseWheelListener() {
-        addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                if (!e.isControlDown()) {
-                    if (e.getWheelRotation() < 0) {
-                        // molette haut/zoom
-                        if (wideAngle) {
-                            wideAngle = false;
+        if (wideAngleAllowed) {
+            addMouseWheelListener(new MouseWheelListener() {
+                @Override
+                public void mouseWheelMoved(final MouseWheelEvent e) {
+                    if (!e.isControlDown()) {
+                        if (e.getWheelRotation() < 0) {
+                            // molette haut/zoom
+                            if (zoom <= maxZoom - 0.1) {
+                                updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                            }
+                        } else {
+                            // molette bas/dezoom
+                            if (zoom >= minZoom + 0.1) {
+                                updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                            }
                         }
-                        if (zoom <= maxZoom - 0.1) {
-                            updateCameraPosition(zoom + 0.1, cameraX, cameraY);
-                        }
-                    } else {
-                        // molette bas/dezoom
-                        if (zoom >= minZoom + 0.1) {
-                            updateCameraPosition(zoom - 0.1, cameraX, cameraY);
-                        } else if (!wideAngle && cameraPan == null) {
-                            wideAngle = true;
-                            updateWideAngleCamera();
-                        }
+                        redraw();
                     }
-                    redraw();
                 }
-            }
-        });
+            });
+        } else {
+            addMouseWheelListener(new MouseWheelListener() {
+                @Override
+                public void mouseWheelMoved(final MouseWheelEvent e) {
+                    if (!e.isControlDown()) {
+                        if (e.getWheelRotation() < 0) {
+                            // molette haut/zoom
+                            if (wideAngle) {
+                                wideAngle = false;
+                            }
+                            if (zoom <= maxZoom - 0.1) {
+                                updateCameraPosition(zoom + 0.1, cameraX, cameraY);
+                            }
+                        } else {
+                            // molette bas/dezoom
+                            if (zoom >= minZoom + 0.1) {
+                                updateCameraPosition(zoom - 0.1, cameraX, cameraY);
+                            } else if (!wideAngle && cameraPan == null) {
+                                wideAngle = true;
+                                updateWideAngleCamera();
+                            }
+                        }
+                        redraw();
+                    }
+                }
+            });
+        }
     }
 
     private void addMouseMotionListener() {
@@ -308,7 +332,8 @@ public final class BoardPanel extends JLayeredManager {
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         playerGraphics.setDiceRollValue(diceRollValue);
-        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics, String.valueOf(playerGraphics.getDiceRollValue()));
+        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics,
+            String.valueOf(playerGraphics.getDiceRollValue()));
         entitiesPanelAdd(diceValue);
         final Timer timer = new Timer(0, null);
         timer.addActionListener(action -> {
@@ -329,7 +354,8 @@ public final class BoardPanel extends JLayeredManager {
                     timer.stop();
                 } else {
                     if (nextCell instanceof NoneGraphics && ((NoneGraphics) nextCell).shouldPlayerTeleport()) {
-                        playerGraphics.setNextCellID(controller.getCell(playerGraphics.getNextCellID()).getNextCellID());
+                        playerGraphics.setNextCellID(controller
+                            .getCell(playerGraphics.getNextCellID()).getNextCellID());
                         final CellGraphics noneNextCell = cellsGraphics.get(playerGraphics.getNextCellID());
                         playerGraphics.setXPos(noneNextCell.getXPos());
                         playerGraphics.setYPos(noneNextCell.getYPos());

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
@@ -210,6 +211,10 @@ public final class Controller {
 
     public Cell getPlayerCell(final int playerID) {
         return getPlayer(playerID).getPlayerCell(model);
+    }
+
+    public HashMap<Integer, ArrayList<Property>> getPropertiesGroup() {
+        return model.getGameMap().getPropertiesGroup();
     }
 
     public Cell getCurrentCell() {

@@ -1,4 +1,4 @@
-package view.game.datapanel;
+package view.game.overlaypanel;
 
 import java.awt.Image;
 import java.awt.RenderingHints;

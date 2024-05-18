@@ -19,7 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import controller.resources.Resources;
+import model.config.cells.Property;
 import view.game.GamePanel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class ActionPanel extends JPanel {
 
@@ -27,9 +31,9 @@ public final class ActionPanel extends JPanel {
 
     private final ChatPanel chatPanel;
 
-    private final JPanel inventoryPanel;
+    private final JPanel infoPanel;
     private final JPanel buttonsPanel;
-    private final JPanel minimapPanel;
+    private final JPanel inventoryPanel;
 
     private JComboBox<Object> otherActionBox;
     private JButton rollDiceButton;
@@ -48,12 +52,12 @@ public final class ActionPanel extends JPanel {
         this.chatPanel = new ChatPanel(gamePanel, width1, height);
         add(chatPanel, BorderLayout.WEST);
 
-        inventoryPanel = createInventoryPanel(width2, height);
-        add(inventoryPanel, BorderLayout.CENTER);
+        infoPanel = createInfoPanel(width2, height);
+        add(infoPanel, BorderLayout.CENTER);
 
         buttonsPanel = createButtonsPanel(width3, height);
-        minimapPanel = createMinimapPanel(width4, height);
-        final JPanel buttonsMinimapPanel = createButtonsMinimapPanel();
+        inventoryPanel = createInventoryPanel(width4, height);
+        final JPanel buttonsMinimapPanel = createButtonsInventoryPanel();
         add(buttonsMinimapPanel, BorderLayout.EAST);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -64,10 +68,10 @@ public final class ActionPanel extends JPanel {
                 final int width3 = (int) (dim.width * 0.1);
                 final int width4 = dim.width - width1 - width2 - width3;
                 chatPanel.setPreferredSize(new Dimension(width1, dim.height));
-                inventoryPanel.setPreferredSize(new Dimension(width2, dim.height));
+                infoPanel.setPreferredSize(new Dimension(width2, dim.height));
                 buttonsMinimapPanel.setPreferredSize(new Dimension(width3 + width4, dim.height));
                 buttonsPanel.setPreferredSize(new Dimension(width3, dim.height));
-                minimapPanel.setPreferredSize(new Dimension(width4, dim.height));
+                inventoryPanel.setPreferredSize(new Dimension(width4, dim.height));
                 revalidate();
                 repaint();
             }
@@ -122,7 +126,7 @@ public final class ActionPanel extends JPanel {
 
     // #region Inventory
 
-    private JPanel createInventoryPanel(final int width, final int height) {
+    private JPanel createInfoPanel(final int width, final int height) {
         final JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(width, height));
         panel.setBackground(Color.RED);
@@ -171,22 +175,49 @@ public final class ActionPanel extends JPanel {
 
     // #endregion
 
-    // #region MiniMap
+    // #region Inventaire
 
-    private JPanel createMinimapPanel(final int width, final int height) {
-        final JPanel panel = new JPanel();
+    private JPanel createInventoryPanel(final int width, final int height) {
+        final HashMap<Integer, ArrayList<Property>> properties =
+            gamePanel.getController().getPropertiesGroup();
+        final int groupNB = properties.size();
+        int maxPropertiesInGroup = 0;
+        for (ArrayList<Property> list : properties.values()) {
+            final int listSize = list.size();
+            if (listSize > maxPropertiesInGroup) {
+                maxPropertiesInGroup = listSize;
+            }
+        }
+        final JPanel panel = new JPanel(new GridLayout(1, groupNB));
         panel.setPreferredSize(new Dimension(width, height));
-        panel.setBackground(Color.PINK);
+        panel.setOpaque(false);
+        for (ArrayList<Property> list : properties.values()) {
+            panel.add(createNewGroupPropertyPanel(maxPropertiesInGroup, list, width / groupNB, height));
+        }
+        return panel;
+    }
+
+    private JPanel createNewGroupPropertyPanel(final int maxPropertiesInGroup, final ArrayList<Property> list,
+            final int width, final int height) {
+        final JPanel panel = new JPanel(new GridLayout(maxPropertiesInGroup, 1));
+        final int listSize = list.size();
+        for (int i = 0; i < listSize; i++) {
+            final JButton propertyButton = new JButton();
+            propertyButton.setSize(new Dimension(width, height / maxPropertiesInGroup));
+            propertyButton.setIcon(new ImageIcon(Resources.getImage("property").getScaledInstance(
+                propertyButton.getWidth(), propertyButton.getHeight(), i)));
+            panel.add(propertyButton);
+        }
         return panel;
     }
 
     //#endregion
 
-    private JPanel createButtonsMinimapPanel() {
+    private JPanel createButtonsInventoryPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.add(buttonsPanel, BorderLayout.WEST);
-        panel.add(minimapPanel, BorderLayout.CENTER);
+        panel.add(inventoryPanel, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
     }
