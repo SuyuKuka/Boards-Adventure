@@ -63,7 +63,6 @@ public final class Resources {
         final File menuFolder = new File(PATH + "images/menu/");
         loadImages(menuFolder, MODE_IMAGES, true);
         loadGifs(menuFolder, MODE_GIFS, true);
-        System.out.println(MODE_GIFS.keySet());
     }
 
     /**

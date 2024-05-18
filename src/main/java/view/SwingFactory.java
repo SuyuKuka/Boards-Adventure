@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -61,7 +62,7 @@ public class SwingFactory {
         panel.setBounds(0, 0, width, height);
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
-             height * botB / 100, width * rightB / 100));
+            height * botB / 100, width * rightB / 100));
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -73,7 +74,7 @@ public class SwingFactory {
                 parent.revalidate();
             }
         });
-        panel.setVisible(false);
+        panel.setVisible(true);
         return panel;
     }
 
@@ -629,5 +630,16 @@ public class SwingFactory {
 
     public static String getPath() {
         return PATH;
+    }
+
+    /**
+     * Joue une action après un délai.
+     * @param delay délai en millisecondes.
+     * @param action action réalisée APRES le délai.
+     */
+    public static void startSingleActionTimer(final int delay, final ActionListener action) {
+        final Timer timer = new Timer(delay, action);
+        timer.setRepeats(false);
+        timer.start();
     }
 }

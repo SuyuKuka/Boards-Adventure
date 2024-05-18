@@ -21,7 +21,6 @@ import controller.resources.Resources;
 
 public final class ActionPanel extends JPanel {
 
-
     private final GamePanel gamePanel;
 
     private final JPanel inventoryPanel;
@@ -42,15 +41,16 @@ public final class ActionPanel extends JPanel {
         gbc.weighty = 1;
 
         gbc.weightx = 0.4;
-        inventoryPanel = createInventoryPanel((int) (gbc.weightx * width), height);
+        inventoryPanel = createInventoryPanel((int) (0.4 * width), height);
         add(inventoryPanel, gbc);
 
         gbc.weightx = 0.2;
-        buttonsPanel = createButtonsPanel((int) (gbc.weightx * width), height);
+        buttonsPanel = createButtonsPanel((int) (0.2 * width), height);
         add(buttonsPanel, gbc);
 
         gbc.weightx = 0.4;
-        minimapPanel = createMinimapPanel((int) (gbc.weightx * width), height);
+        minimapPanel = createMinimapPanel((int) (0.4 * width), height);
+
         add(minimapPanel, gbc);
     }
 
