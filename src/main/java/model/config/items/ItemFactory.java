@@ -23,6 +23,10 @@ public final class ItemFactory {
                 return new MagicWand(itemName, isShopItem, value);
             case LUCKY_POTION:
                 return new LuckyPotion(itemName, isShopItem, value);
+            case BIG_DICE:
+                return new BigDice(itemName, isShopItem, value);
+            case GOLDEN_ROAD:
+                return new GoldenRoad(itemName, isShopItem, value);
             default:
                 break;
         }

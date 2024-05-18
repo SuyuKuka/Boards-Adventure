@@ -5,5 +5,7 @@ public enum ItemName {
     LITTLE_DICE,
     SACRED_BOOK,
     MAGIC_WAND,
-    LUCKY_POTION;
+    LUCKY_POTION,
+    BIG_DICE,
+    GOLDEN_ROAD;
 }
