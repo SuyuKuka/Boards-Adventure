@@ -1,7 +1,5 @@
 package view.game.boardpanel.entitygraphics.cellsgraphics;
 
-import java.util.ArrayList;
-
 import controller.resources.Resources;
 import model.config.cells.Property;
 import view.game.boardpanel.BoardPanel;
@@ -15,26 +13,13 @@ import java.awt.Color;
 
 public final class PropertyGraphics extends CellGraphics {
 
-    private static final ArrayList<Color> COLORS = new ArrayList<>();
-
-    static {
-        COLORS.add(Color.PINK);
-        COLORS.add(Color.RED);
-        COLORS.add(Color.BLUE);
-        COLORS.add(Color.GREEN);
-        COLORS.add(Color.YELLOW);
-        COLORS.add(Color.ORANGE);
-        COLORS.add(Color.LIGHT_GRAY);
-        COLORS.add(Color.MAGENTA);
-    }
-
     private static final int ARC_WIDTH = 5;
     private static final int ARC_HEIGHT = 5;
     private final Color color;
 
     public PropertyGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
-        this.color = COLORS.get(((Property) getBoardPanel().getController().getCell(cellID)).getGroup());
+        this.color = Color.decode(((Property) getBoardPanel().getController().getCell(cellID)).getGroupHexColor());
     }
 
     @Override

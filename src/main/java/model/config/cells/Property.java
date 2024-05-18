@@ -8,15 +8,15 @@ import model.config.players.Player;
 public final class Property extends Cell {
 
     private final ArrayList<Integer> buyPrices;
-    private final int group;
+    private final String groupHexColor;
     private int propertyState = 0;
     private Player owner = null;
 
     public Property(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
-        final ArrayList<Integer> buyPrices, final int group) {
+        final ArrayList<Integer> buyPrices, final String groupHexColor) {
         super(id, shouldPlayerStop, cellType, nextCellID);
         this.buyPrices = buyPrices;
-        this.group = group;
+        this.groupHexColor = groupHexColor;
     }
 
     @Override
@@ -85,8 +85,8 @@ public final class Property extends Cell {
         return owner;
     }
 
-    public int getGroup() {
-        return group;
+    public String getGroupHexColor() {
+        return groupHexColor;
     }
 
 }

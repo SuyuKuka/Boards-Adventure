@@ -28,7 +28,7 @@ public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
-    private static final String START_TEMP_MAP = "map4"; // // map4, spaceship, villanova, frostharbor
+    private static final String START_TEMP_MAP = "villanova"; // // map4, spaceship, villanova, frostharbor
 
     private Mode mode = Mode.GAME;
 
@@ -102,7 +102,7 @@ public final class Game {
         player1.put("name", "human1");
         player1.put("className", "boardClass");
         player1.put("teamColor", "#7ebbed");
-        player1.put("itemName", "HOE");
+        player1.put("itemName", "FARMER_HOE");
         playersConfig.add(player1);
         // player2
         // final HashMap<String, String> player2 = new HashMap<>();

@@ -45,17 +45,10 @@ public final class GamePanel extends JLayeredManager {
     private final OverlayPanel overlayPanel;
     private final JPanel pausePanel;
 
-    private HashMap<Integer, CellGraphics> cellsGraphics;
-    private ArrayList<PlayerGraphics> playersGraphics;
-    private HashMap<String, ImageIcon> itemsGraphics;
-
     public GamePanel(final View frame, final Controller controller, final JSONObject mapConfig) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         this.frame = frame;
         this.controller = controller;
-
-        // cellsGraphics et playersGraphics sont load par boardPanel
-        itemsGraphics = loadItemsGraphics(mapConfig);
 
         mainPanel = new MainPanel(this, mapConfig);
         overlayPanel = new OverlayPanel(this);
@@ -141,35 +134,32 @@ public final class GamePanel extends JLayeredManager {
 
     //#region cellsGraphics
 
-    public void setCellsGraphics(final HashMap<Integer, CellGraphics> cellsGraphics) {
-        this.cellsGraphics = cellsGraphics;
-    }
 
     public HashMap<Integer, CellGraphics> getCellsGraphics() {
-        return cellsGraphics;
+        return controller.getCellsGraphics();
     }
 
     public PropertyGraphics getPropertyGraphics(final int cellID) {
         return (PropertyGraphics) getCellGraphics(cellID);
     }
 
+    public HashMap<String, ArrayList<Integer>> getPropertiesInfo() {
+        return controller.getPropertiesInfo();
+    }
+
     public CellGraphics getCellGraphics(final int cellID) {
-        return cellsGraphics.get(cellID);
+        return controller.getCellGraphics(cellID);
     }
     //#endregion
 
     //#region playersGraphics
 
-    public void setPlayersGraphics(final ArrayList<PlayerGraphics> playersGraphics) {
-        this.playersGraphics = playersGraphics;
-    }
-
     public ArrayList<PlayerGraphics> getPlayersGraphics() {
-        return playersGraphics;
+        return controller.getPlayersGraphics();
     }
 
     public PlayerGraphics getPlayerGraphics(final int playerID) {
-        return playersGraphics.get(playerID);
+        return controller.getPlayerGraphics(playerID);
     }
     //#endregion
 
@@ -190,14 +180,6 @@ public final class GamePanel extends JLayeredManager {
             }
         }
         return items;
-    }
-
-    public HashMap<String, ImageIcon> getItemsGraphics() {
-        return itemsGraphics;
-    }
-
-    public ImageIcon getItemGraphics(final String itemName) {
-        return itemsGraphics.get(itemName);
     }
 
     //#endregion

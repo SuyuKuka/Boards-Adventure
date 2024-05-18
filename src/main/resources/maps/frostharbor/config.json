@@ -1,12 +1,25 @@
 {
-	"cell_diameter" : 60,
+	"cell_diameter" : 45,
+	"item_shop_nb" : 3,
 	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE",
 			"buyPrice" : "1"
 		},
 		{
-			"name" : "HOE",
+			"name" : "FARMER_HOE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "GOLDEN_ROAD",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "BIG_DICE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "SACRED_BOOK",
 			"buyPrice" : "1"
 		}
 	],
@@ -16,7 +29,19 @@
 			"turnCooldown" : "2"
 		},
 		{
-			"name" : "HOE",
+			"name" : "FARMER_HOE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "BIG_DICE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "SACRED_BOOK",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "GOLDEN_ROAD",
 			"turnCooldown" : "2"
 		}
 	],
@@ -32,19 +57,19 @@
 		{
 			"type" : "LOSE_PROPERTY_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "SWAP_POSITION_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "GAIN_ITEM_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "LOSE_ITEM_EFFECT",
 			"quantity" : 3
-		}, 
+		},
 		{
 			"type" : "GAIN_GAMEPOINT_EFFECT",
 			"quantity" : 2
@@ -75,7 +100,7 @@
 			"id" : 103,
 			"type" : "PROPERTY",
 			"prices" : [100, 150, 200, 300],
-			"group" : 0,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1420,
 			"yPos" : 2059
 		},
@@ -90,7 +115,7 @@
 			"id" : 105,
 			"type" : "PROPERTY",
 			"prices" : [110, 160, 210, 315],
-			"group" : 0,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1365,
 			"yPos" : 1855
 		},
@@ -111,7 +136,7 @@
 			"id" : 108,
 			"type" : "PROPERTY",
 			"prices" : [125, 175, 225, 325],
-			"group" : 0,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1375,
 			"yPos" : 1460
 		},
@@ -132,7 +157,7 @@
 			"id" : 111,
 			"type" : "PROPERTY",
 			"prices" : [120, 160, 230, 330],
-			"group" : 1,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1105,
 			"yPos" : 1125
 		},
@@ -146,7 +171,7 @@
 			"id" : 113,
 			"type" : "PROPERTY",
 			"prices" : [125, 175, 225, 325],
-			"group" : 1,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1245,
 			"yPos" : 880
 		},
@@ -161,7 +186,7 @@
 			"id" : 115,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 1,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1265,
 			"yPos" : 715
 		},
@@ -175,7 +200,7 @@
 			"id" : 117,
 			"type" : "PROPERTY",
 			"prices" : [175, 225, 275, 375],
-			"group" : 1,
+			"groupHexColor" : "#abdda4",
 			"gain" : 150,
 			"xPos" : 1495,
 			"yPos" : 630
@@ -218,7 +243,7 @@
 			"id" : 123,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 2,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 800,
 			"yPos" : 415
 		},
@@ -226,7 +251,7 @@
 			"id" : 124,
 			"type" : "PROPERTY",
 			"prices" : [210, 260, 315, 420],
-			"group" : 2,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 629,
 			"yPos" : 465
 		},
@@ -253,7 +278,7 @@
 			"id" : 128,
 			"type" : "PROPERTY",
 			"prices" : [300, 350, 400, 445],
-			"group" : 2,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 185,
 			"yPos" : 655
 		},
@@ -281,7 +306,7 @@
 			"id" : 132,
 			"type" : "PROPERTY",
 			"prices" : [310, 360, 420, 445],
-			"group" : 3,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 310,
 			"yPos" : 975
 		},
@@ -295,7 +320,7 @@
 			"id" : 134,
 			"type" : "PROPERTY",
 			"prices" : [330, 375, 420, 500],
-			"group" : 3,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 340,
 			"yPos" : 1211
 		},
@@ -309,7 +334,7 @@
 			"id" : 136,
 			"type": "PROPERTY",
 			"prices": [340, 380, 425, 510],
-			"group": 3,
+			"groupHexColor": "#f46d43",
 			"xPos" : 571,
 			"yPos" : 1370
 		},
@@ -323,7 +348,7 @@
 			"id" : 138,
 			"type" : "PROPERTY",
 			"prices": [350, 390, 440, 520],
-			"group": 3,
+			"groupHexColor": "#f46d43",
 			"xPos" : 461,
 			"yPos" : 1585
 		},
@@ -445,7 +470,7 @@
 			"id" : 301,
 			"type" : "PROPERTY",
 			"prices" : [220, 275, 325, 440],
-			"group" : 2,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 1325,
 			"yPos" : 314
 		},

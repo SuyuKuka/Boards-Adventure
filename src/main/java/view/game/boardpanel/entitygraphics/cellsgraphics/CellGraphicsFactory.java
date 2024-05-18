@@ -10,8 +10,7 @@ public final class CellGraphicsFactory {
         final int cellID = jObject.getInt("id");
         final int yPos = jObject.getInt("yPos");
         final int xPos = jObject.getInt("xPos");
-        final CellType cellType = CellType.valueOf(jObject.getString("type").toUpperCase());
-        // TODO MVC appel avec controller pour cellType au lieu de direct appeler le model par la view
+        final CellType cellType = boardPanel.getController().getCellType(jObject.getString("type").toUpperCase());
         switch (cellType) {
             case PROPERTY:
                 return new PropertyGraphics(boardPanel, cellID, xPos, yPos);

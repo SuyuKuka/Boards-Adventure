@@ -19,8 +19,8 @@ public final class CellFactory {
                 for (int i = 0; i < buyPricesJArray.length(); i++) {
                     buyPrices.add(buyPricesJArray.getInt(i));
                 }
-                final int group = jObject.getInt("group");
-                return new Property(id, playerStopBy, type, nextCellID, buyPrices, group);
+                final String groupHexColor = jObject.getString("groupHexColor");
+                return new Property(id, playerStopBy, type, nextCellID, buyPrices, groupHexColor);
             }
             case KINGDOM:
                 return new Kingdom(id, playerStopBy, type, nextCellID, jObject.optInt("throneCell", id));

@@ -13,7 +13,7 @@ public final class ItemFactory {
             value = Integer.valueOf(itemConfig.get("turnCooldown"));
         }
         switch (itemName) {
-            case HOE:
+            case FARMER_HOE:
                 return new FarmerHoe(itemName, isShopItem, value);
             case LITTLE_DICE:
                 return new LittleDice(itemName, isShopItem, value);

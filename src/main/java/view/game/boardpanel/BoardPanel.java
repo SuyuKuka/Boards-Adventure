@@ -111,9 +111,9 @@ public final class BoardPanel extends JLayeredManager {
         minZoom = initMinZoom();
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
-        gamePanel.setCellsGraphics(cellsGraphics);
+        gamePanel.getController().setCellsGraphics(cellsGraphics);
         this.playersGraphics = loadPlayerGraphics();
-        gamePanel.setPlayersGraphics(playersGraphics);
+        gamePanel.getController().setPlayersGraphics(playersGraphics);
 
         final PlayerGraphics currentPlayerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
         updateCameraPosition(zoom, currentPlayerGraphics.getXPos(), currentPlayerGraphics.getYPos());

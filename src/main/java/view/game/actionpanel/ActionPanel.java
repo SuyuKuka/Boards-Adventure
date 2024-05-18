@@ -15,10 +15,10 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import controller.resources.Resources;
@@ -49,10 +49,12 @@ public final class ActionPanel extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
+        final int nbPropertiesGroup = gamePanel.getPropertiesInfo().size();
+
         final int width1 = (int) (width * 0.25);
         final int width2 = (int) (width * 0.3);
         int width4 = (int) (width * 0.3);
-        width4 -= width4 % gamePanel.getController().getPropertiesGroupNumber();
+        width4 -= width4 % nbPropertiesGroup;
         final int width3 = width - width1 - width2 - width4;
 
         this.chatPanel = new ChatPanel(gamePanel, width1, height);
@@ -72,7 +74,7 @@ public final class ActionPanel extends JPanel {
                 final int width1 = (int) (dim.width * 0.25);
                 final int width2 = (int) (dim.width * 0.3);
                 int width4 = (int) (dim.width * 0.3);
-                width4 -= width4 % gamePanel.getController().getPropertiesGroupNumber();
+                width4 -= width4 % nbPropertiesGroup;
                 final int width3 = dim.width - width1 - width2 - width4;
                 chatPanel.setPreferredSize(new Dimension(width1, dim.height));
                 infoPanel.setPreferredSize(new Dimension(width2, dim.height));
@@ -101,7 +103,6 @@ public final class ActionPanel extends JPanel {
     }
 
     public void playerAction() {
-        rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
         rollDiceButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
@@ -156,11 +157,13 @@ public final class ActionPanel extends JPanel {
         final JPanel panel = new JPanel(new GridLayout(2, 1));
         panel.setPreferredSize(new Dimension(width, height));
         panel.setBackground(Color.PINK);
-        otherActionBox = new JComboBox<Object>(gamePanel.getItemsGraphics().values().toArray());
+        final ArrayList<Object> objects = new ArrayList<>();
+        objects.add(new ImageIcon(Resources.getImage("farmerhoe")));
+        otherActionBox = new JComboBox<Object>(objects.toArray());
         rollDiceButton = new JButton();
-        rollDiceButton.setIcon(new ImageIcon(Resources.getImage("dice1")));
+        rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
 
-        ((JLabel)otherActionBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+        ((JLabel) otherActionBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
         otherActionBox.addItemListener(new ItemListener() {
             @Override
@@ -186,45 +189,45 @@ public final class ActionPanel extends JPanel {
     // #region Inventaire
 
     private JPanel createInventoryPanel(final int width, final int height) {
-        final HashMap<Integer, ArrayList<Property>> properties =
-            gamePanel.getController().getPropertiesGroup();
-        final int groupNB = properties.size();
-        int maxPropertiesInGroup = 0;
-        for (ArrayList<Property> list : properties.values()) {
-            final int listSize = list.size();
-            if (listSize > maxPropertiesInGroup) {
-                maxPropertiesInGroup = listSize;
+        final HashMap<String, ArrayList<Integer>> propertiesInfo = gamePanel.getPropertiesInfo();
+        final int groupPropertiesNb = propertiesInfo.size();
+        int maxProperties = 0;
+        for (String key : propertiesInfo.keySet()) {
+            final int size = propertiesInfo.get(key).size();
+            if (size > maxProperties) {
+                maxProperties = size;
             }
         }
-        final JPanel panel = new JPanel(new GridLayout(1, groupNB));
-        panel.setPreferredSize(new Dimension(width, height));
-        panel.setOpaque(false);
-        for (ArrayList<Property> list : properties.values()) {
-            panel.add(createNewGroupPropertyPanel(maxPropertiesInGroup, list, width / groupNB, height));
+        final JPanel containerPanel = new JPanel(new GridLayout(1, groupPropertiesNb));
+        containerPanel.setPreferredSize(new Dimension(width, height));
+        containerPanel.setOpaque(false);
+        for (String hexColor : propertiesInfo.keySet()) {
+            final JPanel groupPanel = new JPanel(new GridLayout(maxProperties, 1));
+            initGroupPropertyPanel(groupPanel, hexColor, propertiesInfo.get(hexColor),
+                width / groupPropertiesNb, height / maxProperties);
+            containerPanel.add(groupPanel);
         }
-        return panel;
+        return containerPanel;
     }
 
-    private JPanel createNewGroupPropertyPanel(final int maxPropertiesInGroup, final ArrayList<Property> list,
-            final int width, final int height) {
-        final JPanel panel = new JPanel(new GridLayout(maxPropertiesInGroup, 1));
-        final int listSize = list.size();
-        final Color color = gamePanel.getPropertyGraphics(list.get(0).getId()).getColor();
-        for (int i = 0; i < listSize; i++) {
-            final Property cell = list.get(i);
+    private void initGroupPropertyPanel(final JPanel panel, final String hexColor,
+            final ArrayList<Integer> propertiesID, final int width, final int height) {
+        for (int i = 0; i < propertiesID.size(); i++) {
+            final int propertyCellID = propertiesID.get(i);
             final JButton propertyButton = new JButton() {
                 @Override
                 protected void paintComponent(final Graphics g) {
                     final Graphics2D g2d = (Graphics2D) g;
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     final Dimension dim = getSize();
-                    g2d.setColor(color);
+                    g2d.setColor(Color.decode(hexColor));
                     g2d.fillRect(0, 0, dim.width, dim.height);
-
-                    if (cell.getOwner() == null) {
+                    final Property property = ((Property) gamePanel.getController().getCell(propertyCellID));
+                    if (property.getOwner() == null) {
                         g2d.setColor(Color.WHITE);
                     } else {
-                        g2d.setColor(Color.decode(cell.getOwner().getHexTeamColor()));
+                        g2d.setColor(
+                            Color.decode(property.getOwner().getHexTeamColor()));
                     }
                     // Couleur intérieur
                     final int widthInside = (int) (dim.width * 0.9);
@@ -240,10 +243,9 @@ public final class ActionPanel extends JPanel {
                     g2d.drawImage(PROPERTY_IMAGE, xIcon, yIcon, widthIcon, heightIcon, this);
                 }
             };
-            propertyButton.setSize(new Dimension(width, height / maxPropertiesInGroup));
+            propertyButton.setSize(new Dimension(width, height));
             panel.add(propertyButton);
         }
-        return panel;
     }
 
     //#endregion

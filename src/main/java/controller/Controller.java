@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
@@ -29,6 +30,8 @@ public final class Controller {
     private final Model model;
     // View
     private GamePanel gamePanel;
+    private HashMap<Integer, CellGraphics> cellsGraphics;
+    private ArrayList<PlayerGraphics> playersGraphics;
 
     // Jeu
     private Cell currentCell;
@@ -213,14 +216,6 @@ public final class Controller {
         return getPlayer(playerID).getPlayerCell(model);
     }
 
-    public HashMap<Integer, ArrayList<Property>> getPropertiesGroup() {
-        return model.getGameMap().getPropertiesGroup();
-    }
-
-    public int getPropertiesGroupNumber() {
-        return getPropertiesGroup().size();
-    }
-
     public Cell getCurrentCell() {
         return currentCell;
     }
@@ -328,6 +323,45 @@ public final class Controller {
     }
 
     // region getters/setters
+
+    public HashMap<String, ArrayList<Integer>> getPropertiesInfo() {
+        final HashMap<String, ArrayList<Integer>> propertiesInfo = new HashMap<>();
+        for (Cell cell : model.getGameMap().getCells().values()) {
+            if (cell instanceof Property) {
+                final Property property = (Property) cell;
+                final String hexColor = property.getGroupHexColor();
+                if (!propertiesInfo.containsKey(property.getGroupHexColor())) {
+                    propertiesInfo.put(hexColor, new ArrayList<>());
+                }
+                propertiesInfo.get(hexColor).add(property.getId());
+            }
+        }
+        return propertiesInfo;
+    }
+
+    public void setCellsGraphics(HashMap<Integer, CellGraphics> cellsGraphics) {
+        this.cellsGraphics = cellsGraphics;
+    }
+
+    public HashMap<Integer, CellGraphics> getCellsGraphics() {
+        return cellsGraphics;
+    }
+
+    public CellGraphics getCellGraphics(final int cellID) {
+        return cellsGraphics.get(cellID);
+    }
+
+    public void setPlayersGraphics(ArrayList<PlayerGraphics> playersGraphics) {
+        this.playersGraphics = playersGraphics;
+    }
+
+    public ArrayList<PlayerGraphics> getPlayersGraphics() {
+        return playersGraphics;
+    }
+
+    public PlayerGraphics getPlayerGraphics(final int index) {
+        return playersGraphics.get(index);
+    }
 
     // endregion
 }

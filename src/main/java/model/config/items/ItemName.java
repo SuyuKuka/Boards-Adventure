@@ -1,7 +1,7 @@
 package model.config.items;
 
 public enum ItemName {
-    HOE,
+    FARMER_HOE,
     LITTLE_DICE,
     SACRED_BOOK,
     MAGIC_WAND,

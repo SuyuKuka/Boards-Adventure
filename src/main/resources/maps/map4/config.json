@@ -7,7 +7,7 @@
 			"buyPrice" : "1"
 		},
 		{
-			"name" : "HOE",
+			"name" : "FARMER_HOE",
 			"buyPrice" : "1"
 		},
 		{
@@ -29,7 +29,7 @@
 			"turnCooldown" : "2"
 		},
 		{
-			"name" : "HOE",
+			"name" : "FARMER_HOE",
 			"turnCooldown" : "2"
 		},
 		{
@@ -100,7 +100,7 @@
 			"id" : 103,
 			"type" : "PROPERTY",
 			"prices" : [100, 150, 200, 300],
-			"group" : 0,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 1546,
 			"yPos" : 905
 		},
@@ -115,7 +115,7 @@
 			"id" : 105,
 			"type" : "PROPERTY",
 			"prices" : [100, 150, 200, 300],
-			"group" : 0,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 1490,
 			"yPos" : 762
 		},
@@ -130,7 +130,7 @@
 			"id" : 107,
 			"type" : "PROPERTY",
 			"prices" : [125, 175, 225, 325],
-			"group" : 0,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 1578,
 			"yPos" : 633
 		},
@@ -138,7 +138,7 @@
 			"id" : 108,
 			"type" : "PROPERTY",
 			"prices" : [125, 175, 225, 325],
-			"group" : 0,
+			"groupHexColor" : "#3288bd",
 			"xPos" : 1647,
 			"yPos" : 584
 		},
@@ -166,7 +166,7 @@
 			"id" : 112,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 1,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1471,
 			"yPos" : 471
 		},
@@ -186,7 +186,7 @@
 			"id" : 115,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 1,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1219,
 			"yPos" : 429
 		},
@@ -194,7 +194,7 @@
 			"id" : 116,
 			"type" : "PROPERTY",
 			"prices" : [175, 225, 275, 375],
-			"group" : 1,
+			"groupHexColor" : "#d53e4f",
 			"xPos" : 1128,
 			"yPos" : 457
 		},
@@ -209,7 +209,7 @@
 			"id" : 118,
 			"type" : "PROPERTY",
 			"prices" : [175, 225, 275, 375],
-			"group" : 2,
+			"groupHexColor" : "#f46d43",
 			"xPos" : 1008,
 			"yPos" : 547
 		},
@@ -230,7 +230,7 @@
 			"id" : 121,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 2,
+			"groupHexColor" : "#f46d43",
 			"xPos" : 797,
 			"yPos" : 560
 		},
@@ -251,7 +251,7 @@
 			"id" : 124,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 2,
+			"groupHexColor" : "#f46d43",
 			"xPos" : 504,
 			"yPos" : 588
 		},
@@ -265,7 +265,7 @@
 			"id" : 126,
 			"type" : "PROPERTY",
 			"prices" : [225, 275, 325, 425],
-			"group" : 2,
+			"groupHexColor" : "#f46d43",
 			"xPos" : 356,
 			"yPos" : 659
 		},
@@ -378,7 +378,7 @@
 			"id" : 301,
 			"type" : "PROPERTY",
 			"prices" : [350, 400, 450, 550],
-			"group" : 4,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 1216,
 			"yPos" : 1072
 		},
@@ -386,7 +386,7 @@
 			"id" : 302,
 			"type" : "PROPERTY",
 			"prices" : [375, 425, 475, 575],
-			"group" : 4,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 1234,
 			"yPos" : 998
 		},
@@ -419,7 +419,7 @@
 			"id" : 307,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 5,
+			"groupHexColor" : "#e6f598",
 			"xPos" : 1185,
 			"yPos" : 654
 		},
@@ -427,7 +427,7 @@
 			"id" : 308,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 5,
+			"groupHexColor" : "#e6f598",
 			"xPos" : 1106,
 			"yPos" : 685
 		},
@@ -442,7 +442,7 @@
 			"id" : 310,
 			"type" : "PROPERTY",
 			"prices" : [250, 300, 350, 450],
-			"group" : 5,
+			"groupHexColor" : "#e6f598",
 			"xPos" : 960,
 			"yPos" : 745
 		},
@@ -482,7 +482,7 @@
 			"id" : 402,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 6,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1410,
 			"yPos" : 239
 		},
@@ -490,7 +490,7 @@
 			"id" : 403,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 6,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1329,
 			"yPos" : 241
 		},
@@ -511,7 +511,7 @@
 			"id" : 406,
 			"type" : "PROPERTY",
 			"prices" : [150, 200, 250, 350],
-			"group" : 6,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 1075,
 			"yPos" : 256
 		},
@@ -526,7 +526,7 @@
 			"id" : 408,
 			"type" : "PROPERTY",
 			"prices" : [175, 225, 275, 375],
-			"group" : 6,
+			"groupHexColor" : "#abdda4",
 			"xPos" : 880,
 			"yPos" : 266
 		},
@@ -540,7 +540,7 @@
 			"id" : 410,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 7,
+			"groupHexColor" : "#66c2a5",
 			"xPos" : 749,
 			"yPos" : 177
 		},
@@ -568,7 +568,7 @@
 			"id" : 414,
 			"type" : "PROPERTY",
 			"prices" : [200, 250, 300, 400],
-			"group" : 7,
+			"groupHexColor" : "#66c2a5",
 			"xPos" : 354,
 			"yPos" : 410
 		},
@@ -583,7 +583,7 @@
 			"type" : "PROPERTY",
 			"nextCellID" : 147,
 			"prices" : [250, 300, 350, 450],
-			"group" : 7,
+			"groupHexColor" : "#66c2a5",
 			"xPos" : 369,
 			"yPos" : 570
 		},
@@ -650,7 +650,7 @@
 			"id" : 509,
 			"type" : "PROPERTY",
 			"prices" : [350, 400, 450, 550],
-			"group" : 4,
+			"groupHexColor" : "#fee08b",
 			"xPos" : 830,
 			"yPos" : 1148
 		},
@@ -770,7 +770,7 @@
 			"id" : 601,
 			"type" : "PROPERTY",
 			"prices" : [250, 300, 350, 450],
-			"group" : 3,
+			"groupHexColor" : "#fdae61",
 			"xPos" : 297,
 			"yPos" : 891
 		},
@@ -785,7 +785,7 @@
 			"id" : 603,
 			"type" : "PROPERTY",
 			"prices" : [250, 300, 350, 450],
-			"group" : 3,
+			"groupHexColor" : "#fdae61",
 			"xPos" : 385,
 			"yPos" : 984
 		},
@@ -793,7 +793,7 @@
 			"id" : 604,
 			"type" : "PROPERTY",
 			"prices" : [275, 325, 375, 475],
-			"group" : 3,
+			"groupHexColor" : "#fdae61",
 			"xPos" : 386,
 			"yPos" : 1059
 		},
