@@ -491,7 +491,7 @@ public final class BoardPanel extends JLayeredManager {
         int gain = controller.getGainedMoney();
 
         JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
-            "RifficFree", Color.BLACK, 32);
+            Color.BLACK, 32);
         gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(gainLabel);
 
@@ -518,9 +518,9 @@ public final class BoardPanel extends JLayeredManager {
         int loss = controller.getLossMoney();
 
         JLabel lossLabel = SwingFactory.createTextLabel("Tu as perdu " + loss + " $ !\n",
-            "RifficFree", Color.BLACK, 32);
-            lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            background.add(lossLabel);
+            Color.BLACK, 32);
+        lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        background.add(lossLabel);
         // System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
 
         createCloseTimerLabel(background);
@@ -543,12 +543,12 @@ public final class BoardPanel extends JLayeredManager {
         controller.setCurrentCell();
 
         JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner un point en plus !\n",
-            "RifficFree", Color.BLACK, 32);
+            Color.BLACK, 32);
         kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(kingdomLabel);
 
         JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint()
-        + " points !\n", "RifficFree", Color.BLACK, 26);
+            + " points !\n", Color.BLACK, 26);
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(pointsLabel);
 
@@ -585,7 +585,7 @@ public final class BoardPanel extends JLayeredManager {
         int price = controller.getPropertyPrice();
         String name = "\"Nom de la propriete\"";
         JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
-                "RifficFree", Color.BLACK, 32);
+            Color.BLACK, 32);
         propertyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         if (controller.playerIsAtHome()) {
             propertyLabel.setText("Veux tu ameliorer cette propriete ?\n");
@@ -595,7 +595,7 @@ public final class BoardPanel extends JLayeredManager {
         panel.add(propertyLabel);
 
         JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
-            "RifficFree", Color.BLACK, 18);
+            Color.BLACK, 18);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(propertyPrice);
 
@@ -656,7 +656,7 @@ public final class BoardPanel extends JLayeredManager {
         panel.add(rentTextPane);
 
         JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentMoney() + "$.\n",
-        "RifficFree", Color.BLACK, 26);
+            Color.BLACK, 26);
         moneyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(moneyLabel);
 
@@ -696,7 +696,7 @@ public final class BoardPanel extends JLayeredManager {
         });
         top.add(close, BorderLayout.EAST);
 
-        JLabel shop = SwingFactory.createTextLabel("Boutique", "RifficFree", Color.BLACK, 32);
+        JLabel shop = SwingFactory.createTextLabel("Boutique", Color.BLACK, 32);
         top.add(shop, BorderLayout.CENTER);
 
         //LISTE ITEMS
@@ -745,7 +745,7 @@ public final class BoardPanel extends JLayeredManager {
         final int[] remainingSeconds = {2};
 
         JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
-        "RifficFree", Color.BLACK, 16);
+            Color.BLACK, 16);
         closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(closeLabel);
 

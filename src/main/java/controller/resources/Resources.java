@@ -236,7 +236,7 @@ public final class Resources {
 
     public static ImageIcon getGif(final String key) {
         if (MODE_GIFS.containsKey(key)) {
-            return MODE_GIFS.get(key);
+            return new ImageIcon(MODE_GIFS.get(key).getImage().getScaledInstance(-1, -1, Image.SCALE_DEFAULT));
         }
         return null;
     }

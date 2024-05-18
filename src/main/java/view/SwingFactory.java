@@ -215,7 +215,6 @@ public class SwingFactory {
 
     public static JLabel createImageLabel(final Component parent, final String img,
         final int widthPer, final int heightPer, final boolean resize) {
-            System.out.println("temp");
         final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
         final JLabel label = new JLabel(new ImageIcon(image.getScaledInstance(
@@ -246,6 +245,24 @@ public class SwingFactory {
                 (int) (parent.getHeight() * heightPer / 100));
         } else {
             final Dimension imageSize = new Dimension(image.getWidth(null), image.getHeight(null));
+            final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
+            final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
+            final double ratio = Math.min(widthRatio, heightRatio);
+            // System.out.println(parent.getWidth() * widthPer / 100 + " "
+            //     + parent.getHeight() * heightPer / 100 + " " + ratio);
+
+            return new Dimension((int) (imageSize.width  * ratio),
+                (int) (imageSize.height * ratio));
+        }
+    }
+
+    public static Dimension calcDimension(final JLabel label, final Component parent,
+        final int widthPer, final int heightPer, final boolean resize) {
+        if (resize) {
+            return new Dimension((int) (parent.getWidth() * widthPer / 100),
+                (int) (parent.getHeight() * heightPer / 100));
+        } else {
+            final Dimension imageSize = new Dimension(label.getIcon().getIconWidth(), label.getIcon().getIconHeight());
             final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
             final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
             final double ratio = Math.min(widthRatio, heightRatio);
@@ -401,11 +418,11 @@ public class SwingFactory {
         return label;
     }
 
-    public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
+    public static JLabel createTextLabel(final String text, final Color foregroundColor,
         final int size) {
         final JLabel label = new JLabel(text);
         label.setForeground(foregroundColor);
-        label.setFont(Resources.getFont(fontName, size));
+        label.setFont(Resources.getFont("NoitaBlackletter", size));
         return label;
     }
 
