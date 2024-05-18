@@ -29,7 +29,7 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
 
-    private Mode mode = Mode.MENU;
+    private Mode mode = Mode.GAME;
 
     private View view;
     private Model model = null;
@@ -92,7 +92,7 @@ public final class Game {
     private void initTempGameConfig(final HashMap<String, String> gameConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         // gameconfig
-        gameConfig.put("mapName", "spaceship"); // map4, spaceship, villanova
+        gameConfig.put("mapName", "frostharbor"); // map4, spaceship, villanova, frostharbor
         gameConfig.put("totalTurns", "45");
         // playersconfig
         // player1
