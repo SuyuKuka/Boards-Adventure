@@ -847,18 +847,18 @@ public final class MenuPanel extends JLayeredManager {
         right.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
         panel.add(right, BorderLayout.EAST);
 
-        selectSkin(parent, skinImg, character, 0);
-        skinListerner(left, panel, skinImg, character, -1);
-        skinListerner(right, panel, skinImg, character, 1);
+        selectSkin(parent, skinImg, character, playerID, 0);
+        skinListerner(left, panel, skinImg, character, playerID, -1);
+        skinListerner(right, panel, skinImg, character, playerID, 1);
         return panel;
     }
 
     private void skinListerner(JButton button, JPanel mapSelection, ImageName mapImg,
-        JLabel skinLabel, int i) {
+        JLabel skinLabel, int playerID, int i) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectSkin(mapSelection, mapImg, skinLabel, i);
+                selectSkin(mapSelection, mapImg, skinLabel, playerID, i);
             }
         });
         handCursor(button);
@@ -1264,8 +1264,8 @@ public final class MenuPanel extends JLayeredManager {
         map.revalidate();
     }
 
-    private void selectSkin(JPanel parent, ImageName skinImg, JLabel skin, int i) {
-        int nb = skinImg.getImageSelection();
+    private void selectSkin(JPanel parent, ImageName skinImg, JLabel skin, int playerID, int i) {
+        int nb = Integer.valueOf(playersConfig.get(playerID).get("skin"));
         nb += i;
         if (nb >= 6) {
             nb = 1;
@@ -1278,24 +1278,29 @@ public final class MenuPanel extends JLayeredManager {
 
         switch (nb) {
             case 1 :
-            skin.setIcon(new ImageIcon(Resources.getImage("frame-1").getScaledInstance(
-                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                skin.setIcon(new ImageIcon(Resources.getImage("frame-1").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                playersConfig.get(playerID).replace("skin", "1");
                 break;
             case 2 :
-            skin.setIcon(new ImageIcon(Resources.getImage("frame-2").getScaledInstance(
-                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                skin.setIcon(new ImageIcon(Resources.getImage("frame-2").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                    playersConfig.get(playerID).replace("skin", "2");
                 break;
             case 3 :
-            skin.setIcon(new ImageIcon(Resources.getImage("frame-3").getScaledInstance(
-                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                skin.setIcon(new ImageIcon(Resources.getImage("frame-3").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                playersConfig.get(playerID).replace("skin", "3");
                 break;
             case 4 :
-            skin.setIcon(new ImageIcon(Resources.getImage("frame-4").getScaledInstance(
-                (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                skin.setIcon(new ImageIcon(Resources.getImage("frame-4").getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                playersConfig.get(playerID).replace("skin", "4");
                 break;
             case 5 :
                 skin.setIcon(new ImageIcon(Resources.getImage("frame-5").getScaledInstance(
-            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                playersConfig.get(playerID).replace("skin", "5");
                 break;
             default:
                 break;
