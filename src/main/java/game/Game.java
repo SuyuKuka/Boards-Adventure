@@ -28,6 +28,7 @@ public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
+    private static final String START_TEMP_MAP = "map4";
 
     private Mode mode = Mode.GAME;
 
@@ -92,7 +93,7 @@ public final class Game {
     private void initTempGameConfig(final HashMap<String, String> gameConfig,
             final ArrayList<HashMap<String, String>> playersConfig) {
         // gameconfig
-        gameConfig.put("mapName", "map4");
+        gameConfig.put("mapName", START_TEMP_MAP);
         gameConfig.put("totalTurns", "45");
         // playersconfig
         // player1

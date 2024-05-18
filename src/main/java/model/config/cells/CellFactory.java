@@ -50,6 +50,8 @@ public final class CellFactory {
                 return new Danger(id, playerStopBy, type, nextCellID);
             case VOID:
                 return new Void(id, playerStopBy, type, nextCellID);
+            case NONE:
+                return new None(id, playerStopBy, type, nextCellID);
             default:
                 break;
         }

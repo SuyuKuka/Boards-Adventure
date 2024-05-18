@@ -15,6 +15,9 @@ public final class CellGraphicsFactory {
         switch (cellType) {
             case PROPERTY:
                 return new PropertyGraphics(boardPanel, cellID, xPos, yPos);
+            case NONE:
+                return new NoneGraphics(boardPanel, cellID, xPos, yPos,
+                    jObject.optBoolean("shouldPlayerTeleport", true));
             default:
                 break;
         }

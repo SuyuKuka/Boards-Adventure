@@ -16,12 +16,14 @@ public final class PlayerGraphics extends EntityGraphics {
 
     private Image playerImage;
     private int nextCellID;
+    private int diceRollValue;
 
     public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
         this.playerID = playerID;
         playerImage = Resources.getImage("j" + playerID);
         nextCellID = boardPanel.getController().getPlayerCell(playerID).getNextCellID();
+        diceRollValue = 0;
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
         setVisible(true);
@@ -73,6 +75,18 @@ public final class PlayerGraphics extends EntityGraphics {
 
     public void setNextCellID(final int nextCellID) {
         this.nextCellID = nextCellID;
+    }
+
+    public void setDiceRollValue(final int diceRollValue) {
+        this.diceRollValue = diceRollValue;
+    }
+
+    public int getDiceRollValue() {
+        return diceRollValue;
+    }
+
+    public void incrementDiceRollValue(final int value) {
+        diceRollValue += value;
     }
 
 }

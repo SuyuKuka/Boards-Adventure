@@ -9,6 +9,7 @@ import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphicsFactory;
 import view.game.boardpanel.entitygraphics.cellsgraphics.IntersectionChoiceGraphics;
+import view.game.boardpanel.entitygraphics.cellsgraphics.NoneGraphics;
 
 import java.awt.Image;
 import java.awt.Point;
@@ -303,16 +304,17 @@ public final class BoardPanel extends JLayeredManager {
         controller.gameUpdate();
     }
 
-    public void playerMove(final int startCellID) {
+    public void playerMove(final int startCellID, final int diceRollValue) {
         final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
-        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics);
+        playerGraphics.setDiceRollValue(diceRollValue);
+        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics, String.valueOf(playerGraphics.getDiceRollValue()));
         entitiesPanelAdd(diceValue);
         final Timer timer = new Timer(0, null);
         timer.addActionListener(action -> {
             final CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
             playerGraphics.updateMoving(nextCell);
-            diceValue.updateMoving();
+            diceValue.updateMoving(String.valueOf(playerGraphics.getDiceRollValue()));
             redraw();
 
             if (playerGraphics.getXPos() == nextCell.getXPos() && playerGraphics.getYPos() == nextCell.getYPos()) {
@@ -326,6 +328,13 @@ public final class BoardPanel extends JLayeredManager {
                     }
                     timer.stop();
                 } else {
+                    if (nextCell instanceof NoneGraphics && ((NoneGraphics) nextCell).shouldPlayerTeleport()) {
+                        playerGraphics.setNextCellID(controller.getCell(playerGraphics.getNextCellID()).getNextCellID());
+                        final CellGraphics noneNextCell = cellsGraphics.get(playerGraphics.getNextCellID());
+                        playerGraphics.setXPos(noneNextCell.getXPos());
+                        playerGraphics.setYPos(noneNextCell.getYPos());
+                    }
+                    playerGraphics.incrementDiceRollValue(-1);
                     playerGraphics.setNextCellID(controller.getCell(playerGraphics.getNextCellID()).getNextCellID());
                 }
             }

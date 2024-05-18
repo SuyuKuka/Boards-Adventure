@@ -111,8 +111,8 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.rollDice();
     }
 
-    public void playerMove(final int startCellID) {
-        mainPanel.playerMove(startCellID);
+    public void playerMove(final int startCellID, final int diceRollValue) {
+        mainPanel.playerMove(startCellID, diceRollValue);
     }
 
     public void playerArrived() {

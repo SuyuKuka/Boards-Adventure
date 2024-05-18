@@ -80,8 +80,8 @@ public final class MainPanel extends JPanel {
         boardPanel.rollDice();
     }
 
-    public void playerMove(final int startCellID) {
-        boardPanel.playerMove(startCellID);
+    public void playerMove(final int startCellID, final int diceRollValue) {
+        boardPanel.playerMove(startCellID, diceRollValue);
     }
 
     public void playerArrived() {

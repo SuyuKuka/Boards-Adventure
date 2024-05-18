@@ -28,7 +28,6 @@ public final class Controller {
     private final Model model;
     // View
     private GamePanel gamePanel;
-    private int i = 1;
 
     // Jeu
     private Cell currentCell;
@@ -122,8 +121,9 @@ public final class Controller {
     private void playerMove() {
         prevGameState = GameState.PLAYER_MOVE;
         final int startCellID = getCurrentPlayerCell().getId();
+        final int diceRollValue = getCurrentPlayerRollDiceValue();
         model.playerMove();
-        gamePanel.playerMove(startCellID);
+        gamePanel.playerMove(startCellID, diceRollValue);
     }
 
     private void playerArrived() {

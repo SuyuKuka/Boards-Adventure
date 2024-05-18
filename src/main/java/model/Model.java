@@ -10,6 +10,7 @@ import model.config.GameMap;
 import model.config.Team;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
+import model.config.cells.None;
 import model.config.players.Player;
 
 /**
@@ -74,7 +75,9 @@ public final class Model {
         while (currentPlayer.getDiceRollValue() > 0) {
             currentPlayer.setPosition(playerCell.getNextCellID());
             playerCell = currentPlayer.getPlayerCell(this);
-            currentPlayer.incrementDiceRollValue(-1);
+            if (!(playerCell instanceof None)) {
+                currentPlayer.incrementDiceRollValue(-1);
+            }
             if (playerCell.shouldPlayerStopBy()) {
                 currentPlayer.setInIntersection(playerCell instanceof Intersection);
                 return;

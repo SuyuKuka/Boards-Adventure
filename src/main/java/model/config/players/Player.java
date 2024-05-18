@@ -55,7 +55,7 @@ public abstract class Player {
 
     public final void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 40;
+        diceRollValue = 4; //TODO test
     }
 
     public final void addProperty(final Property property) {
