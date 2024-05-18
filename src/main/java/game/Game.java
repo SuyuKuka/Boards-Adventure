@@ -16,8 +16,6 @@ import model.config.players.ComputerPlayer;
 import model.config.players.HumanPlayer;
 import model.config.players.Player;
 import view.View;
-import view.game.GamePanel;
-import view.menu.MenuPanel;
 
 /**
  * Classe mère du jeu.
