@@ -14,7 +14,7 @@ import view.game.boardpanel.BoardPanel;
 
 public final class TargetGraphics extends EntityGraphics {
 
-    private static final Font FONT = Resources.getFont("NoitaBlackletter", 22);
+    private static final Font FONT = Resources.getFont(32);
 
     private final EntityGraphics targetEntity;
     private final Image image;

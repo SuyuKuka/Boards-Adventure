@@ -4,31 +4,31 @@
 	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE",
-			"buyPrice" : "1"
+			"buyPrice" : "250"
 		},
 		{
 			"name" : "FARMER_HOE",
-			"buyPrice" : "1"
+			"buyPrice" : "400"
 		},
 		{
 			"name" : "GOLDEN_ROAD",
-			"buyPrice" : "1"
+			"buyPrice" : "800"
 		},
 		{
 			"name" : "BIG_DICE",
-			"buyPrice" : "1"
+			"buyPrice" : "250"
 		},
 		{
 			"name" : "SACRED_BOOK",
-			"buyPrice" : "1"
+			"buyPrice" : "350"
 		},
 		{
 			"name" : "MAGIC_WAND",
-			"buyPrice" : "1"
+			"buyPrice" : "300"
 		},
 		{
 			"name" : "LUCKY_POTION",
-			"buyPrice" : "1"
+			"buyPrice" : "300"
 		}
 	],
 	"start_items" : [
@@ -41,24 +41,16 @@
 			"turnCooldown" : "2"
 		},
 		{
-			"name" : "BIG_DICE",
-			"turnCooldown" : "2"
-		},
-		{
 			"name" : "SACRED_BOOK",
-			"turnCooldown" : "2"
-		},
-		{
-			"name" : "GOLDEN_ROAD",
-			"turnCooldown" : "2"
+			"turnCooldown" : "5"
 		},
 		{
 			"name" : "MAGIC_WAND",
-			"turnCooldown" : "2"
+			"turnCooldown" : "3"
 		},
 		{
 			"name" : "LUCKY_POTION",
-			"turnCooldown" : "2"
+			"turnCooldown" : "3"
 		}
 	],
 	"cards_effect" : [
@@ -770,8 +762,9 @@
 		},
 		{
 			"id" : 525,
-			"type" : "STAR",
-			"nextCellID" : 131,
+			"type" : "COINS",
+			"value" : 300,
+			"nextCellID" : 133,
 			"xPos" : 1583,
 			"yPos" : 1565
 		},
@@ -828,7 +821,8 @@
 		},
 		{
 			"id" : 607,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 300,
 			"nextCellID" : 507,
 			"xPos" : 485,
 			"yPos" : 1267

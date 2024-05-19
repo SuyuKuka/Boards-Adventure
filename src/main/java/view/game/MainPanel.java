@@ -9,18 +9,21 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
+import controller.Controller;
 import view.game.actionpanel.ActionPanel;
 import view.game.boardpanel.BoardPanel;
 
 public final class MainPanel extends JPanel {
 
     private final GamePanel gamePanel;
+    private final Controller controller;
 
     private final BoardPanel boardPanel;
     private final ActionPanel actionPanel;
 
-    public MainPanel(final GamePanel gamePanel, final JSONObject mapConfig) {
+    public MainPanel(final GamePanel gamePanel, final Controller controller, final JSONObject mapConfig) {
         this.gamePanel = gamePanel;
+        this.controller = controller;
         final Dimension dim = gamePanel.getPreferredSize();
         setSize(dim.width, dim.height);
         setLayout(new BorderLayout());
@@ -29,7 +32,7 @@ public final class MainPanel extends JPanel {
         final int height2 = dim.height - height1;
 
         boardPanel = new BoardPanel(gamePanel, mapConfig, dim.width, height1);
-        actionPanel = new ActionPanel(gamePanel, dim.width, height2);
+        actionPanel = new ActionPanel(gamePanel, controller, dim.width, height2);
 
         add(boardPanel, BorderLayout.CENTER);
         add(actionPanel, BorderLayout.SOUTH);
@@ -84,9 +87,9 @@ public final class MainPanel extends JPanel {
         boardPanel.playerMove(diceRollValue);
     }
 
-    public void playerArrived() {
+    public void playerArrived(final boolean isStarCell) {
         boardPanel.playerArrived();
-        actionPanel.playerArrived();
+        actionPanel.playerArrived(isStarCell);
     }
 
 
@@ -104,6 +107,10 @@ public final class MainPanel extends JPanel {
 
     public GamePanel getGamePanel() {
         return gamePanel;
+    }
+
+    public ActionPanel getActionPanel() {
+        return actionPanel;
     }
 
 }

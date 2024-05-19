@@ -12,7 +12,7 @@ public final class Property extends Cell {
     private int propertyState = 0;
     private Player owner = null;
 
-    public Property(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
+    public Property(final int id, final int shouldPlayerStop, final CellType cellType, final int nextCellID,
         final ArrayList<Integer> buyPrices, final String groupHexColor) {
         super(id, shouldPlayerStop, cellType, nextCellID);
         this.buyPrices = buyPrices;
@@ -21,23 +21,16 @@ public final class Property extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        if (owner == null) {
-            if (player.getCoins() < buyPrices.get(0)) {
-                System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
-                + buyPrices.get(0) + "$).");
-            }
-        } else if (isAtHome(player)) {
-            if (propertyState + 1 > buyPrices.size()) {
-                System.out.println("Votre propriété est déjà au max.");
-            } else if (player.getCoins() < buyPrices.get(propertyState + 1)) {
-                System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
-                + buyPrices.get(propertyState + 1) + "$).");
-            }
-        } else {
-            final int price = buyPrices.get(propertyState - 1);
-            if (player.getCoins() < price) {
-                //model.removePlayer(player);
-                System.out.println(player + " a pas assez d'argents.");
+        if (isStarCell()) {
+            computerBuyStar(player, model);
+            return;
+        }
+        if (owner != null && !isAtHome(player) && !owner.getHexTeamColor().equals(player.getHexTeamColor())) {
+            final int price = (int) (buyPrices.get(propertyState - 1) * 0.70);
+            final int leftCoins = player.getCoins();
+            if (leftCoins < price) {
+                player.incrementCoins(-leftCoins);
+                owner.incrementCoins(leftCoins);
             } else {
                 player.incrementCoins(-price);
                 owner.incrementCoins(price);

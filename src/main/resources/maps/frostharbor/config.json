@@ -4,31 +4,31 @@
 	"shop_items" : [
 		{
 			"name" : "LITTLE_DICE",
-			"buyPrice" : "1"
+			"buyPrice" : "250"
 		},
 		{
 			"name" : "FARMER_HOE",
-			"buyPrice" : "1"
+			"buyPrice" : "400"
 		},
 		{
 			"name" : "GOLDEN_ROAD",
-			"buyPrice" : "1"
+			"buyPrice" : "800"
 		},
 		{
 			"name" : "BIG_DICE",
-			"buyPrice" : "1"
+			"buyPrice" : "250"
 		},
 		{
 			"name" : "SACRED_BOOK",
-			"buyPrice" : "1"
+			"buyPrice" : "350"
 		},
 		{
 			"name" : "MAGIC_WAND",
-			"buyPrice" : "1"
+			"buyPrice" : "300"
 		},
 		{
 			"name" : "LUCKY_POTION",
-			"buyPrice" : "1"
+			"buyPrice" : "300"
 		}
 	],
 	"start_items" : [
@@ -41,24 +41,46 @@
 			"turnCooldown" : "2"
 		},
 		{
-			"name" : "BIG_DICE",
-			"turnCooldown" : "2"
-		},
-		{
 			"name" : "SACRED_BOOK",
-			"turnCooldown" : "2"
-		},
-		{
-			"name" : "GOLDEN_ROAD",
-			"turnCooldown" : "2"
+			"turnCooldown" : "5"
 		},
 		{
 			"name" : "MAGIC_WAND",
-			"turnCooldown" : "2"
+			"turnCooldown" : "3"
 		},
 		{
 			"name" : "LUCKY_POTION",
-			"turnCooldown" : "2"
+			"turnCooldown" : "3"
+		}
+	],
+	"cards_effect" : [
+		{
+			"type" : "TELEPORTATION_EFFECT",
+			"cellIDs" : [109, 400, 302, 511, 513, 520, 130, 502, 605, 126]
+		},
+		{
+			"type" : "MONEY_EFFECT",
+			"quantity-amount" : [[4, 100], [4, -100], [3, 200], [3, -200], [2, 300], [2, -300]]
+		},
+		{
+			"type" : "LOSE_PROPERTY_EFFECT",
+			"quantity" : 3
+		},
+		{
+			"type" : "SWAP_POSITION_EFFECT",
+			"quantity" : 3
+		},
+		{
+			"type" : "GAIN_ITEM_EFFECT",
+			"quantity" : 3
+		},
+		{
+			"type" : "LOSE_ITEM_EFFECT",
+			"quantity" : 3
+		},
+		{
+			"type" : "GAIN_GAMEPOINT_EFFECT",
+			"quantity" : 2
 		}
 	],
 	"cells" : [
@@ -243,7 +265,8 @@
 		},
 		{
 			"id" : 125,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 200,
 			"xPos" : 525,
 			"yPos" : 445
 		},
@@ -386,7 +409,8 @@
 		},
 		{
 			"id" : 146,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 200,
 			"xPos" : 476,
 			"yPos" : 2285
 		},
@@ -399,7 +423,8 @@
 		},
 		{
 			"id" : 148,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 200,
 			"xPos" : 705,
 			"yPos" : 2180
 		},
@@ -489,7 +514,8 @@
 
 		{
 			"id" : 400,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 200,
 			"nextCellID" : 203,
 			"xPos" : 565,
 			"yPos" : 925

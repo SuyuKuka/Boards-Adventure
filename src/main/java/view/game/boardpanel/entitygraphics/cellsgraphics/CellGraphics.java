@@ -3,9 +3,11 @@ package view.game.boardpanel.entitygraphics.cellsgraphics;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 import javax.swing.SwingUtilities;
 
@@ -19,6 +21,9 @@ import view.game.boardpanel.entitygraphics.EntityGraphics;
  * Par défaut, les cellules du jeu sont invoquées par la classe {@link DefaultCellGraphics}.
  */
 public abstract class CellGraphics extends EntityGraphics {
+
+    private static final Color STAR_COLOR = new Color(255, 215, 0);
+    private static final Image STAR_IMAGE = Resources.getImage("star");
     // PAINT
     // Graphiquement, une cellule contient plusieurs couches dans l'ordre :
     // - Le contour
@@ -147,6 +152,20 @@ public abstract class CellGraphics extends EntityGraphics {
 
     public static double getStartIconPaintMultiplier() {
         return START_ICON_PAINT_MULTIPLIER;
+    }
+
+    public final void paintStarComponent(final Graphics2D g2d) {
+        // Coutour
+        g2d.setColor(STAR_COLOR);
+        g2d.fillOval(0, 0, getWidth(), getHeight());
+        // Couleur intérieure
+        g2d.setColor(Color.WHITE);
+        final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
+        g2d.fillOval(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height);
+        // icône
+        final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
+        g2d.drawImage(STAR_IMAGE, iconRangeDim.x, iconRangeDim.y,
+            iconRangeDim.width, iconRangeDim.height, this);
     }
 
     // endregion

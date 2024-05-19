@@ -12,7 +12,7 @@ import model.config.items.Item;
 public final class Player {
 
     private static final int MAX_ITEM_SHOP = 3;
-    private static int itemShopNb;
+    private static int maxShopItem = 3;
     private static int playerIDIterator = 0;
 
     private final int id;
@@ -42,7 +42,7 @@ public final class Player {
             final Item startItem, final int startPos) {
         this.id = playerIDIterator;
         playerIDIterator++;
-        shopItem = new Item[itemShopNb];
+        shopItem = new Item[maxShopItem];
         this.className = className;
         this.name = name;
         this.isHuman = isHuman;
@@ -55,7 +55,6 @@ public final class Player {
 
     public void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 4;
     }
 
     public void addProperty(final Property property) {
@@ -64,6 +63,10 @@ public final class Player {
 
     public void removeProperty(final Property property) {
         properties.remove(property);
+    }
+
+    public void usedItem(int i) {
+        shopItem[i] = null;
     }
 
     // endregion
@@ -104,6 +107,11 @@ public final class Player {
 
     public void setDiceRollValue(final int diceRollValue) {
         this.diceRollValue = diceRollValue;
+    }
+
+    public void buyStar(final int price) {
+        stars++;
+        coins -= price;
     }
 
     public int getDiceRollValue() {
@@ -194,6 +202,7 @@ public final class Player {
         for (int i = 0; i < shopItem.length; i++) {
             if (shopItem[i] == null) {
                 shopItem[i] = item;
+                break;
             }
         }
     }
@@ -208,14 +217,14 @@ public final class Player {
 
     public static void setItemShopNb(final int nbItems) {
         if (nbItems > MAX_ITEM_SHOP) {
-            itemShopNb = MAX_ITEM_SHOP;
+            maxShopItem = MAX_ITEM_SHOP;
         } else {
-            itemShopNb = nbItems;
+            maxShopItem = nbItems;
         }
     }
 
-    public static int getItemShopNb() {
-        return itemShopNb;
+    public static int getMaxShopItem() {
+        return maxShopItem;
     }
 
     public static int getMaxItemShop() {

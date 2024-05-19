@@ -6,7 +6,7 @@ import model.config.cardseffect.CardEffect;
 
 public class Card extends Cell {
 
-    public Card(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+    public Card(final int id, final int shouldPlayerStop, final CellType cellType, final int nextCellID) {
         super(id, shouldPlayerStop, cellType, nextCellID);
     }
 
@@ -18,8 +18,12 @@ public class Card extends Cell {
      */
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        final CardEffect cardEffect = model.getGameMap().loadRandomCardEffect();
-        cardEffect.applyEffect(player, model);
+        if (isStarCell()) {
+            computerBuyStar(player, model);
+        } else {
+            final CardEffect cardEffect = model.getGameMap().loadRandomCardEffect();
+            cardEffect.applyEffect(player, model);
+        }
     }
 
 }

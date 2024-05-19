@@ -22,5 +22,33 @@ public final class Team {
         return hexTeamColor;
     }
 
+    public int getPlayersStars(final ArrayList<Player> players) {
+        int stars = 0;
+        for (int i = 0; i < playerIDs.size(); i++) {
+            stars += players.get(playerIDs.get(i)).getStars();
+        }
+        return stars;
+    }
+
+    public int getPlayersPropertiesNb(final ArrayList<Player> players) {
+        int propertiesNb = 0;
+        for (int i = 0; i < playerIDs.size(); i++) {
+            propertiesNb += players.get(playerIDs.get(i)).getProperties().size();
+        }
+        return propertiesNb;
+    }
+
+    public int getPlayersCoins(final ArrayList<Player> players) {
+        int coins = 0;
+        for (int i = 0; i < playerIDs.size(); i++) {
+            coins += players.get(playerIDs.get(i)).getCoins();
+        }
+        return coins;
+    }
+
+    public ArrayList<Integer> getPlayerIDs() {
+        return playerIDs;
+    }
+
     // endregion
 }

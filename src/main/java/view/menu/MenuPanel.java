@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import controller.resources.Audio;
 import controller.resources.Resources;
 import view.JLayeredManager;
 import view.SwingFactory;
@@ -46,7 +45,6 @@ public final class MenuPanel extends JLayeredManager {
     public MenuPanel(final View frame) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         this.frame = frame;
-        Audio.playMusic("MenuTheme.wav");
         backgroundImage = Resources.getGif("backgroundMoving");
         addComp(createBackground(), BACKGROUND_INDEX);
         addComp(createMainMenu(), PANEL_INDEX);

@@ -66,6 +66,21 @@ public final class GameMap {
         return null;
     }
 
+    public int getMaxStarCellsPoss() {
+        int count = 0;
+        for (final Cell cell : cells.values()) {
+            count += canBeStarCell(cell) ? 1 : 0;
+        }
+        return count;
+    }
+
+    public boolean canBeStarCell(final Cell cell) {
+        final CellType cellType = cell.getCellType();
+        return !cell.isStarCell() && !(cellType == CellType.START || cellType == CellType.SHOP
+        || cellType == CellType.STAR || cellType == CellType.INTERSECTION
+        || cellType == CellType.NONE);
+    }
+
     public CardEffect loadRandomCardEffect() {
         final Random rand = new Random();
         int randInt = rand.nextInt(cardEffectsCounter);

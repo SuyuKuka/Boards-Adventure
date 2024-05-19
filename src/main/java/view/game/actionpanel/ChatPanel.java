@@ -79,18 +79,65 @@ public final class ChatPanel extends JPanel {
             + controller.getCurrentPlayerRollDiceValue() + " !\n", true);
     }
 
-    public void playerArrived() {
-        final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
+    public void playerArrived(final boolean isStarCell) {
+        if (isStarCell) {
+            addStarLogText();
+        } else {
+            addGameLogText();
+        }
+    }
+
+    private void addStarLogText() {
+        final String playerName = controller.getCurrentPlayerName();
+        final boolean isComputer = !controller.getCurrentPlayer().isHuman();
+        addLogText(playerName + " tombe sur une case Etoile !!!!!\n", true);
+        SwingFactory.startSingleActionTimer(500, action -> {
+            if (controller.getCurrentPlayer().getCoins() < controller.getStarPrice()) {
+                addNotEnoughCoinsForStarLogText();
+            } else if (!controller.getCurrentPlayerCellIsStar() && isComputer) {
+                addBuyStarLogText();
+            } else if (isComputer) {
+                addNotBuyStarLogText();
+            }
+        });
+
+    }
+
+    private void addNotEnoughCoinsForStarLogText() {
+        final String playerName = controller.getCurrentPlayerName();
+        addLogText(playerName + " n'a pas assez d'argents pour acheter l'étoile :(\n", false);
+    }
+
+    public void addBuyStarLogText() {
+        final String playerName = controller.getCurrentPlayerName();
+        addLogText(playerName + " achète l'étoile et en possède "
+                + controller.getCurrentPlayer().getStars() + " désormais.\n", false);
+    }
+
+    public void addNotBuyStarLogText() {
+        final String playerName = controller.getCurrentPlayerName();
+        addLogText(playerName + " n'achète pas cette étoile pour une quelconque raison :(", false);
+    }
+
+    private void addGameLogText() {
+        final CellType cellType = controller.getCurrentPlayerCellType();
         final String cellString = String.valueOf(cellType);
         final String playerName = controller.getCurrentPlayerName();
-        addLogText(playerName + " tombe sur une case "
+        final boolean playerStop = controller.getCurrentPlayerRollDiceValue() > 0;
+        final String playerAction;
+        if (playerStop) {
+            playerAction = " se halte sur une case ";
+        } else {
+            playerAction = " arrête son chemin sur une case ";
+        }
+        addLogText(playerName + playerAction
             + cellString.substring(0, 1) + cellString.substring(1).toLowerCase() + " !\n", true);
         SwingFactory.startSingleActionTimer(500, action -> {
             switch (cellType) {
                 case COINS:
-                    final int value = gamePanel.getController().getCurrentPlayerCellCoinsValue();
+                    final int value = controller.getCurrentPlayerCellCoinsValue();
                     if (value >= 0) {
-                        addLogText(playerName + " a gagné " + -value + " pièces !\n", false);
+                        addLogText(playerName + " a gagné " + value + " pièces !\n", false);
                     } else {
                         addLogText(playerName + " a perdu " + -value + " pièces :(\n", false);
                     }
@@ -100,15 +147,14 @@ public final class ChatPanel extends JPanel {
                     break;
                 case VOID:
                     addLogText("Rien ne se passe...\n", false);
-                case CARD:
                     break;
-                case PROPERTY:
+                case DANGER:
+                    addLogText("Quelque chose de mystérieux s'est passé...", false);
                     break;
                 default:
                     break;
             }
         });
-
     }
 
 

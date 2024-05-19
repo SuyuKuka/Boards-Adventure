@@ -31,7 +31,7 @@ public final class Game {
     private static final String[] FFA_COLORS = {"#d7191c", "#fdae61", "#abdda4", "#2b83ba"};
     private static final String START_TEMP_MAP = "kingdom"; // kingdom, spaceship, villanova, frostharbor
 
-    private Mode mode = Mode.GAME;
+    private Mode mode = Mode.MENU;
 
     private View view;
     private Model model = null;
@@ -53,6 +53,8 @@ public final class Game {
         if (view.hasPanel()) {
             view.removePanel();
         }
+        Audio.stopMusic();
+        Audio.playMusic("MenuTheme.wav");
         mode = Mode.MENU;
         Resources.loadMenuResources();
         view.initNewMenuPanel();
@@ -126,7 +128,7 @@ public final class Game {
         computer1.put("teamColor", "#7ebbed");
         computer1.put("itemName", "FARMER_HOE");
         playersConfig.add(computer1);
-        // // computer2
+        // computer2
         final HashMap<String, String> computer2 = new HashMap<>();
         computer2.put("type", "computer");
         computer2.put("name", "Ordinateur 2");
