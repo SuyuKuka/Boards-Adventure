@@ -122,25 +122,21 @@ public final class ActionPanel extends JPanel {
         rollDiceButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
-                System.out.println("aaaaa");
                 if (dice) {
-                    System.out.println("dice");
                     removeActionList();
                     gamePanel.getController().rollDice();
                     rollDiceButton.removeMouseListener(this);
                 } else {
                     if (otherActionBox.getSelectedItem() == startItem) {
-                        System.out.println("start item");
                         controller.playerApplyStartItem();
                     } else {
-                        System.out.println("shop item");
                         if (controller.playerApplyShopItem(
                             shopItem.get((ImageIcon) otherActionBox.getSelectedItem()))) {
                             dice = true;
                             removeActionList();
                             buttonsPanel = createButtonsPanel();
                             buttonsInventoryPanel.add(buttonsPanel, BorderLayout.WEST);
-                            // buttonsInventoryPanel.revalidate();
+                            buttonsInventoryPanel.revalidate();
                         }
                     }
                     gamePanel.updatePlayersScoreGraphics();
