@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import controller.Controller;
 import controller.resources.Resources;
 import model.config.cells.Property;
 import view.game.GamePanel;
@@ -33,18 +34,28 @@ public final class ActionPanel extends JPanel {
     private static final Image PROPERTY_IMAGE = Resources.getImage("property");
 
     private final GamePanel gamePanel;
+    private final Controller controller;
 
     private final ChatPanel chatPanel;
 
     private final JPanel infoPanel;
-    private final JPanel buttonsPanel;
+    private JPanel buttonsPanel;
     private final JPanel inventoryPanel;
+    private final JPanel buttonsInventoryPanel;
 
     private JComboBox<Object> otherActionBox;
+    private ImageIcon rollDiceIcon = new ImageIcon(Resources.getImage("dice4"));
+    private ImageIcon startItem;
+    private HashMap<ImageIcon, Integer> shopItem = new HashMap<>();
     private JButton rollDiceButton;
+    private final int widthButton;
+    private final int heightButton;
 
-    public ActionPanel(final GamePanel gamePanel, final int width, final int height) {
+    private boolean dice = true;
+
+    public ActionPanel(final GamePanel gamePanel, final Controller controller, final int width, final int height) {
         this.gamePanel = gamePanel;
+        this.controller = controller;
         setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -55,7 +66,8 @@ public final class ActionPanel extends JPanel {
         final int width2 = (int) (width * 0.3);
         int width4 = (int) (width * 0.3);
         width4 -= width4 % nbPropertiesGroup;
-        final int width3 = width - width1 - width2 - width4;
+        this.widthButton = width - width1 - width2 - width4;
+        this.heightButton = height;
 
         this.chatPanel = new ChatPanel(gamePanel, width1, height);
         add(chatPanel, BorderLayout.WEST);
@@ -63,9 +75,9 @@ public final class ActionPanel extends JPanel {
         infoPanel = createInfoPanel(width2, height);
         add(infoPanel, BorderLayout.CENTER);
 
-        buttonsPanel = createButtonsPanel(width3, height);
+        buttonsPanel = createButtonsPanel();
         inventoryPanel = createInventoryPanel(width4, height);
-        final JPanel buttonsInventoryPanel = createButtonsInventoryPanel();
+        buttonsInventoryPanel = createButtonsInventoryPanel();
         add(buttonsInventoryPanel, BorderLayout.EAST);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -96,6 +108,10 @@ public final class ActionPanel extends JPanel {
 
     public void newTurn() {
         chatPanel.newTurn();
+        removeActionList();
+        buttonsPanel = createButtonsPanel();
+        buttonsInventoryPanel.add(buttonsPanel, BorderLayout.WEST);
+        buttonsInventoryPanel.revalidate();
     }
 
     public void inJail() {
@@ -106,8 +122,18 @@ public final class ActionPanel extends JPanel {
         rollDiceButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent e) {
-                gamePanel.getController().rollDice();
-                rollDiceButton.removeMouseListener(this);
+                if (dice) {
+                    removeActionList();
+                    gamePanel.getController().rollDice();
+                    rollDiceButton.removeMouseListener(this);
+                } else {
+                    if (otherActionBox.getSelectedItem() == startItem) {
+                        controller.playerApplyStartItem();
+                    } else {
+                        controller.playerApplyShopItem(shopItem.get((ImageIcon) otherActionBox.getSelectedItem()));
+                    }
+                    gamePanel.updatePlayersScoreGraphics();
+                }
             }
         });
     }
@@ -153,12 +179,25 @@ public final class ActionPanel extends JPanel {
 
     // #region Buttons
 
-    private JPanel createButtonsPanel(final int width, final int height) {
+    private JPanel createButtonsPanel() {
         final JPanel panel = new JPanel(new GridLayout(2, 1));
-        panel.setPreferredSize(new Dimension(width, height));
+        panel.setPreferredSize(new Dimension(widthButton, heightButton));
         panel.setBackground(Color.PINK);
+
         final ArrayList<Object> objects = new ArrayList<>();
-        objects.add(new ImageIcon(Resources.getImage("farmerhoe")));
+        objects.add(rollDiceIcon);
+        this.startItem = new ImageIcon(Resources.getImage(controller.getCurrentPlayer().
+            getStartItem().getItemName().name().toLowerCase()).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        objects.add(startItem);
+
+        for (int i = 0; i < controller.getCurrentPlayer().getShopItem().length; i++) {
+            ImageIcon tmp = new ImageIcon(Resources.getImage(
+                controller.getCurrentPlayer().getShopItem()[i].getItemName().name().toLowerCase())
+                .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+            objects.add(tmp);
+            shopItem.put(tmp, i);
+        }
+
         otherActionBox = new JComboBox<Object>(objects.toArray());
         rollDiceButton = new JButton();
         rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
@@ -169,7 +208,14 @@ public final class ActionPanel extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    System.out.println(e.getItem());
+                    ImageIcon selectedIcon = (ImageIcon) otherActionBox.getSelectedItem();
+                    if (selectedIcon == rollDiceIcon) {
+                        dice = true;
+                        rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
+                    } else {
+                        dice = false;
+                        rollDiceButton.setIcon(selectedIcon);
+                    }
                 }
             }
         });
@@ -182,6 +228,11 @@ public final class ActionPanel extends JPanel {
 
         panel.add(rollDiceButton);
         return panel;
+    }
+
+    public void removeActionList() {
+        buttonsInventoryPanel.remove(buttonsPanel);
+        buttonsInventoryPanel.revalidate();
     }
 
     // #endregion
@@ -249,5 +300,13 @@ public final class ActionPanel extends JPanel {
     }
 
     //#endregion
+
+    public JPanel getButtonsPanel() {
+        return buttonsPanel;
+    }
+
+    public JPanel getButtonsInventoryPanel() {
+        return buttonsInventoryPanel;
+    }
 
 }

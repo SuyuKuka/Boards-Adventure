@@ -115,7 +115,7 @@ public final class OverlayPanel extends JPanel {
         turnsLabel.setText("Tour 1 / 45");
 
         // Font
-        final Font font = Resources.getFont("NoitaBlackletter", 40);
+        final Font font = Resources.getFont(40);
         turnsLabel.setFont(SwingFactory.getResizedFont(turnsLabel, turnsLabel.getText(), font));
         turnsLabel.addComponentListener(new ComponentAdapter() {
             @Override
@@ -132,7 +132,7 @@ public final class OverlayPanel extends JPanel {
         playerActionLabel.setPreferredSize(new Dimension(width, height));
         playerActionLabel.setText("hello");
         // Font
-        final Font font = Resources.getFont("NoitaBlackletter", 22);
+        final Font font = Resources.getFont(22);
         playerActionLabel.setFont(SwingFactory.getResizedFont(playerActionLabel, playerActionLabel.getText(), font));
         playerActionLabel.addComponentListener(new ComponentAdapter() {
             @Override
@@ -188,7 +188,7 @@ public final class OverlayPanel extends JPanel {
         return button;
     }
 
-    public PlayerScore getplayerScorePanel() {
+    public PlayerScore getPlayerScore() {
         return playerScorePanel;
     }
 

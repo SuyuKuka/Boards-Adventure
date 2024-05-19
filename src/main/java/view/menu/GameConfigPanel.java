@@ -101,7 +101,7 @@ public final class GameConfigPanel extends JPanel {
 
         JTextArea desc = new JTextArea();
         desc.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        desc.setFont(Resources.getFont("NoitaBlackletter", defaultFont / 2));
+        desc.setFont(Resources.getFont(defaultFont / 2));
         desc.setForeground(Color.BLACK);
         desc.setLineWrap(true);
         desc.setWrapStyleWord(true);
@@ -216,7 +216,7 @@ public final class GameConfigPanel extends JPanel {
         radioButton.setBorderPainted(false);
         radioButton.setContentAreaFilled(false);
         radioButton.setFocusPainted(false);
-        radioButton.setFont(Resources.getFont("NoitaBlackletter", 32));
+        radioButton.setFont(Resources.getFont(32));
         group.add(radioButton);
         return radioButton;
     }
@@ -302,10 +302,10 @@ public final class GameConfigPanel extends JPanel {
 
     private void selectMap(JPanel parent, JLabel map, JTextArea desc, int i, int widthPer, int heightPer) {
         selectMap += i;
-        if (selectMap >= nbMaps) {
+        if (selectMap > nbMaps) {
             selectMap = 1;
         } else if (selectMap <= 0) {
-            selectMap = 3;
+            selectMap = nbMaps;
         }
         Image mapImg = Resources.getImage("preview" + selectMap);
         switch (selectMap) {
@@ -330,6 +330,12 @@ public final class GameConfigPanel extends JPanel {
                     + "sommes d'argent qui vous servirons à acquérir vos biens. Attention toutefois à ne pas "
                     + "perdre ce précieux argent ou à ne pas vous retrouver derrière les barreaux.");
                 break;
+            case 4 :
+                titleMap.setText("Frost Arbor");
+                desc.setText("Vous êtes piégé sur le vieux port de Frost Arbor, un lieu où le froid glacial  "
+                    + "rencontre les eaux sombres et mystérieuses. Les bâtiments délabrés et les quais abandonnés "
+                    + "racontent des histoires de marins disparus et de trésors perdus. Seule la richesse "
+                    + "peut acheter votre liberté. ");
             default:
                 break;
         }

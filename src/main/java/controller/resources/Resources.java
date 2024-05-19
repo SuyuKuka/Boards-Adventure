@@ -160,8 +160,8 @@ public final class Resources {
         }
     }
 
-    public static Font getFont(final String font, final float size) {
-        return FONTS.get(font).deriveFont(Font.BOLD, size);
+    public static Font getFont(final float size) {
+        return FONTS.get("NoitaBlackletter").deriveFont(Font.BOLD, size);
     }
 
     // endregion

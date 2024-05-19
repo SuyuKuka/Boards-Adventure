@@ -740,16 +740,15 @@ public final class BoardPanel extends JLayeredManager {
     private void createRentPanel(JPanel panel) {
         JTextPane rentTextPane = new JTextPane();
         rentTextPane.setText("Oops, tu as atterri sur la propriété de quelqu'un d'autre. Tu dois payer "
-        + controller.getRentPrice() + "$.\n");
+        + controller.getRentPrice() + " coins.\n");
         rentTextPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-        rentTextPane.setFont(Resources.getFont("NoitaBlackletter", 32));
+        rentTextPane.setFont(Resources.getFont(32));
         rentTextPane.setForeground(Color.BLACK);
         rentTextPane.setEditable(false);
         rentTextPane.setFocusable(false);
         rentTextPane.setPreferredSize(new Dimension(WIDTH, 50));
         gamePanel.getController().updatePlayersScore();
 
-        //Center le texte du rentTextPane
         StyledDocument doc = rentTextPane.getStyledDocument();
         Style centerStyle = rentTextPane.addStyle("CenterStyle", null);
         StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
@@ -757,8 +756,8 @@ public final class BoardPanel extends JLayeredManager {
 
         panel.add(rentTextPane);
 
-        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentPlayerCoins() + "$.\n",
-        Color.BLACK, 26);
+        JLabel moneyLabel = SwingFactory.createTextLabel("Il te reste " + controller.getCurrentPlayerCoins()
+        + " coins.\n", Color.BLACK, 32);
         moneyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(moneyLabel);
 
@@ -786,7 +785,7 @@ public final class BoardPanel extends JLayeredManager {
 
         JPanel top = new JPanel(new BorderLayout());
         JLabel shop = new JLabel("BOUTIQUE", SwingConstants.CENTER);
-        shop.setFont(Resources.getFont("NoitaBlackletter", 30));
+        shop.setFont(Resources.getFont(64));
         top.setBackground(Color.LIGHT_GRAY);
         top.add(shop, BorderLayout.CENTER);
 
@@ -809,13 +808,13 @@ public final class BoardPanel extends JLayeredManager {
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
         JButton item1 = new JButton("NOM ITEM 1");
         item1.setBackground(new Color(230, 205, 175));
-        item1.setFont(Resources.getFont("NoitaBlackletter", 30));
+        item1.setFont(Resources.getFont(64));
         JButton item2 = new JButton("NOM ITEM 2");
         item2.setBackground(new Color(230, 205, 175));
-        item2.setFont(Resources.getFont("NoitaBlackletter", 30));
+        item2.setFont(Resources.getFont(64));
         JButton item3 = new JButton("NOM ITEM 3");
         item3.setBackground(new Color(230, 205, 175));
-        item3.setFont(Resources.getFont("NoitaBlackletter", 30));
+        item3.setFont(Resources.getFont(64));
         navPanel.add(item1, BorderLayout.NORTH);
         navPanel.add(item2, BorderLayout.CENTER);
         navPanel.add(item3, BorderLayout.SOUTH);
@@ -829,7 +828,7 @@ public final class BoardPanel extends JLayeredManager {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         JLabel itemNameLabel = new JLabel();
-        itemNameLabel.setFont(Resources.getFont("NoitaBlackletter", 28));
+        itemNameLabel.setFont(Resources.getFont(32));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -840,12 +839,12 @@ public final class BoardPanel extends JLayeredManager {
         detailsPanel.add(itemImageLabel, gbc);
 
         JLabel itemPriceLabel = new JLabel();
-        itemPriceLabel.setFont(Resources.getFont("NoitaBlackletter", 18));
+        itemPriceLabel.setFont(Resources.getFont(18));
         gbc.gridy++;
         detailsPanel.add(itemPriceLabel, gbc);
 
         JButton buyButton = new JButton("J'achète");
-        buyButton.setFont(Resources.getFont("NoitaBlackletter", 16));
+        buyButton.setFont(Resources.getFont(16));
         buyButton.setVisible(false);
         gbc.gridy++;
         gbc.insets = new Insets(10, 0, 0, 0);
@@ -933,10 +932,10 @@ public final class BoardPanel extends JLayeredManager {
     // #endregion
 
     private void createCloseTimerLabel(JPanel panel) {
-        final int[] remainingSeconds = {2};
+        final int[] remainingSeconds = {4};
 
         JLabel closeLabel = SwingFactory.createTextLabel("Fermeture automatique dans " + remainingSeconds[0] + "s",
-        Color.BLACK, 16);
+        Color.BLACK, 32);
         closeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(closeLabel);
 

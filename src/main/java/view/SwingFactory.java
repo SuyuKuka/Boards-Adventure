@@ -340,7 +340,7 @@ public class SwingFactory {
 
         button.setText(text);
         button.setForeground(Color.BLACK);
-        button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
+        button.setFont(Resources.getFont(sizeFont));
         button.setHorizontalTextPosition(JButton.LEFT);
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -378,7 +378,7 @@ public class SwingFactory {
             button.setContentAreaFilled(false);
             button.setFocusPainted(false);
             button.setForeground(Color.BLACK);
-            button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
+            button.setFont(Resources.getFont(sizeFont));
             button.setHorizontalTextPosition(JButton.LEFT);
             button.addMouseListener(new MouseAdapter() {
                 @Override
@@ -407,7 +407,7 @@ public class SwingFactory {
         final int size) {
         final JLabel label = new JLabel(text);
         label.setForeground(foregroundColor);
-        label.setFont(Resources.getFont("NoitaBlackletter", size));
+        label.setFont(Resources.getFont(size));
         return label;
     }
 
