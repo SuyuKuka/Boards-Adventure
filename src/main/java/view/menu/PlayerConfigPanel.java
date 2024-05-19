@@ -137,10 +137,10 @@ public final class PlayerConfigPanel extends JPanel {
         JPanel character1 = createCharacter(parent, 0);
         configCharacter.add(character1);
 
-        addPlayer4 = createAddPlayer(parent, 3, null);
-        addPlayer3 = createAddPlayer(parent, 2, addPlayer4);
         addPlayer2 = createAddPlayer(parent, 1, addPlayer3);
-        
+        addPlayer3 = createAddPlayer(parent, 2, addPlayer4);
+        addPlayer4 = createAddPlayer(parent, 3, null);
+
         configCharacter.add(addPlayer2);
         return configCharacter;
     }
@@ -166,7 +166,7 @@ public final class PlayerConfigPanel extends JPanel {
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel team = null;
-        if(gameConfig.get("mode").equals("2v2")){
+        if (gameConfig.get("mode").equals("2v2")) {
             team = createTeam(parent, playerID);
             panel.add(team);
         }
@@ -183,7 +183,7 @@ public final class PlayerConfigPanel extends JPanel {
 
         JPanel status = createStatus(parent, playerID, team, (JTextPane) pseudo.getComponent(0), skin, item);
         panel.add(status);
-        
+
         return panel;
     }
 
@@ -270,14 +270,14 @@ public final class PlayerConfigPanel extends JPanel {
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
         panel.add(pseudo, BorderLayout.CENTER, 0);
 
-        if(playerID != 0) {
+        if (playerID != 0) {
             JButton delete = SwingFactory.createImageButton(parent, "delete", 4, 4, false);
             delete.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     playersConfig.remove(playerID);
                     System.out.println(playerID);
-                    if(playerID == 3) {
+                    if (playerID == 3) {
                         configCharacter.remove(addPlayer4);
                         addPlayer4 = createAddPlayer(parent, 3, null);
                         configCharacter.add(addPlayer4);
@@ -300,7 +300,6 @@ public final class PlayerConfigPanel extends JPanel {
             });
             panel.add(delete, BorderLayout.EAST);
         }
-        
         return panel;
     }
 
@@ -508,31 +507,37 @@ public final class PlayerConfigPanel extends JPanel {
                         error.add(SwingFactory.createTextLabel("Pas assez de joueur", Color.BLACK, defaultFont / 2));
                         error.revalidate();
                         return;
-                    } else if (playersConfig.get(i).get("team").equals("none") && gameConfig.get("mode").equals("2v2")) {
+                    } else if (playersConfig.get(i).get("team").equals("none")
+                        && gameConfig.get("mode").equals("2v2")) {
                         error.removeAll();
-                        error.add(SwingFactory.createTextLabel(playersConfig.get(i).get("pseudo") +" n'a pas de team", Color.BLACK, defaultFont / 2));
+                        error.add(SwingFactory.createTextLabel(playersConfig.get(i).get("pseudo")
+                            + " n'a pas de team", Color.BLACK, defaultFont / 2));
                         error.revalidate();
                         return;
                     } else if (playersConfig.get(i).get("team").equals("red") && gameConfig.get("mode").equals("2v2")) {
                         redTeam++;
-                        if(redTeam > 2) {
+                        if (redTeam > 2) {
                             error.removeAll();
-                            error.add(SwingFactory.createTextLabel("Trop de joueur dans l'équipe rouge", Color.BLACK, defaultFont / 2));
+                            error.add(SwingFactory.createTextLabel("Trop de joueur dans l'équipe rouge",
+                                Color.BLACK, defaultFont / 2));
                             error.revalidate();
                             return;
                         }
-                    } else if (playersConfig.get(i).get("team").equals("blue") && gameConfig.get("mode").equals("2v2")) {
+                    } else if (playersConfig.get(i).get("team").equals("blue")
+                        && gameConfig.get("mode").equals("2v2")) {
                         blueTeam++;
-                        if(blueTeam > 2) {
+                        if (blueTeam > 2) {
                             error.removeAll();
-                            error.add(SwingFactory.createTextLabel("Trop de joueur dans l'équipe bleue", Color.BLACK, defaultFont / 2));
+                            error.add(SwingFactory.createTextLabel("Trop de joueur dans l'équipe bleue",
+                                Color.BLACK, defaultFont / 2));
                             error.revalidate();
                             return;
                         }
                     }
                     if (playersConfig.get(i).get("status").equals("false")) {
                         error.removeAll();
-                        error.add(SwingFactory.createTextLabel(playersConfig.get(i).get("pseudo") + " n'a pas confirmer ses configs", Color.BLACK, defaultFont / 2));
+                        error.add(SwingFactory.createTextLabel(playersConfig.get(i).get("pseudo")
+                            + " n'a pas confirmer ses configurations", Color.BLACK, defaultFont / 2));
                         error.revalidate();
                         return;
                     }
