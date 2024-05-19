@@ -5,7 +5,7 @@ import model.Player;
 
 public final class Shop extends Cell {
 
-    public Shop(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+    public Shop(final int id, final int shouldPlayerStop, final CellType cellType, final int nextCellID) {
         super(id, shouldPlayerStop, cellType, nextCellID);
     }
 

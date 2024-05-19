@@ -34,16 +34,20 @@ public final class DefaultCellGraphics extends CellGraphics {
     public void paintComponent(final Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // Coutour
-        g2d.fillOval(0, 0, getWidth(), getHeight());
-        // Couleur intérieure
-        g2d.setColor(Color.WHITE);
-        final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
-        g2d.fillOval(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height);
-        // icône
-        final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
-        g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
-            iconRangeDim.width, iconRangeDim.height, this);
+        if (getBoardPanel().getController().isStarCell(getCellID())) {
+            paintStarComponent(g2d);
+        } else {
+            // Coutour
+            g2d.fillOval(0, 0, getWidth(), getHeight());
+            // Couleur intérieure
+            g2d.setColor(Color.WHITE);
+            final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
+            g2d.fillOval(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height);
+            // icône
+            final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
+            g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
+                iconRangeDim.width, iconRangeDim.height, this);
+        }
     }
 
 }

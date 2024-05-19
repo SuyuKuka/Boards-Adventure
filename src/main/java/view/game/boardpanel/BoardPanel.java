@@ -15,6 +15,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import javax.swing.Box;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -338,13 +339,13 @@ public final class BoardPanel extends JLayeredManager {
         final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics, String.valueOf(diceRollValue));
         entitiesPanelAdd(diceValue);
         redraw();
-        SwingFactory.startSingleActionTimer(700, action -> {
-            playerGraphics.updateCoordinates(cellGraphics.getXPos(), cellGraphics.getYPos());
+        SwingFactory.startSingleActionTimer(400, action -> {
             diceValue.setLabelText(controller.getCurrentPlayerRollDiceValue() + "");
+            playerGraphics.updateCoordinates(cellGraphics.getXPos(), cellGraphics.getYPos());
             diceValue.updateMoving();
             redraw();
         });
-        SwingFactory.startSingleActionTimer(1000, action2 -> {
+        SwingFactory.startSingleActionTimer(800, action2 -> {
             entitiesPanelRemove(diceValue);
             controller.gameUpdate();
         });
@@ -357,9 +358,45 @@ public final class BoardPanel extends JLayeredManager {
         gamePanel.getController().updatePlayersScore();
     }
 
+    private JPanel createStarPanel() {
+        final JPanel container = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+        JPanel panel = SwingFactory.createGamePanelCells(this, 60, 60);
+        panel.setBackground(Color.CYAN);
+        panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+        panel.add(Box.createVerticalGlue());
+
+        final int playerCoins = controller.getCurrentPlayerCoins();
+        final int starPrice = controller.getStarPrice();
+        if (playerCoins > starPrice) {
+            System.out.println("hello");
+        } else {
+            JLabel label = SwingFactory.createTextLabel("Désolé, l'étoile coûte " + starPrice
+                + " coins et tu n'as que " + playerCoins + " coins.",
+            Color.BLACK, 18);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(label);
+            SwingFactory.startSingleActionTimer(3000, action -> {
+                removeComp(INTERACTION);
+                controller.gameUpdate();
+            });
+        }
+        panel.add(Box.createVerticalGlue());
+        container.add(panel);
+        return container;
+    }
+
     public void playerArrived() {
         updateCurrentPlayerGraphicsPosition();
+        final PlayerGraphics currentPlayerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
+        updateCameraPosition(zoom, currentPlayerGraphics.getXPos(), currentPlayerGraphics.getYPos());
+        redraw();
         final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
+        if (controller.getCurrentPlayerCellIsStar()) {
+            if (controller.getCurrentPlayer().isHuman()) {
+                addComp(createStarPanel(), INTERACTION);
+                return;
+            }
+        }
         switch (cellType) {
             case INTERSECTION:
                 createIntersectionEntities();
@@ -627,7 +664,6 @@ public final class BoardPanel extends JLayeredManager {
 
     public JPanel createPropertyPanel() {
         JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        resizePanel.setVisible(true);
 
         JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
         background.setBackground(Color.CYAN);
@@ -706,7 +742,7 @@ public final class BoardPanel extends JLayeredManager {
         rentTextPane.setText("Oops, tu as atterri sur la propriété de quelqu'un d'autre. Tu dois payer "
         + controller.getRentPrice() + "$.\n");
         rentTextPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-        rentTextPane.setFont(Resources.getFont("RifficFree", 32));
+        rentTextPane.setFont(Resources.getFont("NoitaBlackletter", 32));
         rentTextPane.setForeground(Color.BLACK);
         rentTextPane.setEditable(false);
         rentTextPane.setFocusable(false);
@@ -754,7 +790,7 @@ public final class BoardPanel extends JLayeredManager {
         top.setBackground(Color.LIGHT_GRAY);
         top.add(shop, BorderLayout.CENTER);
 
-        JButton close = SwingFactory.createImageButton(resizePanel, "notready", 5, 5, false);
+        JButton close = SwingFactory.createImageButton(resizePanel, "delete", 5, 5, false);
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
@@ -804,12 +840,12 @@ public final class BoardPanel extends JLayeredManager {
         detailsPanel.add(itemImageLabel, gbc);
 
         JLabel itemPriceLabel = new JLabel();
-        itemPriceLabel.setFont(Resources.getFont("RifficFree", 18));
+        itemPriceLabel.setFont(Resources.getFont("NoitaBlackletter", 18));
         gbc.gridy++;
         detailsPanel.add(itemPriceLabel, gbc);
 
         JButton buyButton = new JButton("J'achète");
-        buyButton.setFont(Resources.getFont("RifficFree", 16));
+        buyButton.setFont(Resources.getFont("NoitaBlackletter", 16));
         buyButton.setVisible(false);
         gbc.gridy++;
         gbc.insets = new Insets(10, 0, 0, 0);

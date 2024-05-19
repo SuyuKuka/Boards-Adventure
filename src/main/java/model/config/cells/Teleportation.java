@@ -7,7 +7,7 @@ public final class Teleportation extends Cell {
 
     private final int idTargetCell;
 
-    public Teleportation(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID,
+    public Teleportation(final int id, final int shouldPlayerStop, final CellType cellType, final int nextCellID,
         final int idTargetCell) {
         super(id, shouldPlayerStop, cellType, nextCellID);
         this.idTargetCell = idTargetCell;
@@ -15,8 +15,11 @@ public final class Teleportation extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.setPosition(idTargetCell);
-        return;
+        if (isStarCell()) {
+            computerBuyStar(player, model);
+        } else {
+            player.setPosition(idTargetCell);
+        }
     }
 
 }

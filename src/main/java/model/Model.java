@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.Comparator;
 
 import org.json.JSONObject;
@@ -23,9 +25,12 @@ public final class Model {
     private final HashMap<String, Team> teams;
     private int playerPlayIterator = 0;
 
-    private final int nbPlayers;
     private final int totalTurns;
     private int currentTurn = 1;
+
+    private final int starPrice;
+    private final int starCellsNb;
+    private final ArrayList<Integer> starCellIDs = new ArrayList<>();
 
     private GameState gameState = null;
 
@@ -41,8 +46,27 @@ public final class Model {
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
-        this.nbPlayers = players.size();
         currentPlayer = players.get(playerPlayIterator);
+        this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 600));
+        final int maxStarCellNb = gameMap.getMaxStarCellsPoss();
+        final int mapConfigStarCellsNb = Integer.valueOf(mapConfig.optInt("starCellsNb", 2));
+        this.starCellsNb = mapConfigStarCellsNb > maxStarCellNb ? maxStarCellNb : mapConfigStarCellsNb;
+        for (int i = 0; i < starCellsNb; i++) {
+            loadRandomStarCell();
+        }
+    }
+
+    public void loadRandomStarCell() {
+        final List<Integer> list = new ArrayList<Integer>(gameMap.getCells().keySet());
+        while (true) {
+            final int randomCellID = list.get(new Random().nextInt(list.size()));
+            final Cell cell = gameMap.getCell(randomCellID);
+            if (gameMap.canBeStarCell(cell)) {
+                starCellIDs.add(randomCellID);
+                getCell(randomCellID).setStarCell(true);
+                return;
+            }
+        }
     }
 
     private HashMap<String, Team> createTeams() {
@@ -80,7 +104,7 @@ public final class Model {
             nextCell = getCell(getCell(currentPlayer.getPosition()).getNextCellID());
         }
         currentPlayer.setPosition(nextCell.getId());
-        if (!(nextCell instanceof None || nextCell.shouldPlayerStopBy())) {
+        if (!(nextCell instanceof None || nextCell.getShouldPlayerStopByValue() == 0 || nextCell.isStarCell())) {
             currentPlayer.incrementDiceRollValue(-1);
         }
     }
@@ -88,7 +112,8 @@ public final class Model {
     // endregion
 
     public void playerArrived() {
-        gameMap.getCell(currentPlayer.getPosition()).playCellEffect(currentPlayer, this);
+        final Cell cell = gameMap.getCell(currentPlayer.getPosition());
+        cell.playCellEffect(currentPlayer, this);
     }
 
     public void endTurn() {
@@ -158,6 +183,10 @@ public final class Model {
 
     public Cell getCell(final int cellID) {
         return gameMap.getCell(cellID);
+    }
+
+    public int getStarPrice() {
+        return starPrice;
     }
 
     private static Comparator<Player> createRankComparator() {

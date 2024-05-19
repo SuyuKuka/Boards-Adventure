@@ -5,13 +5,16 @@ import model.Player;
 
 public final class Danger extends Cell {
 
-    public Danger(final int id, final boolean shouldPlayerStop, final CellType cellType, final int nextCellID) {
+    public Danger(final int id, final int shouldPlayerStop, final CellType cellType, final int nextCellID) {
         super(id, shouldPlayerStop, cellType, nextCellID);
     }
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        return; // TODO DANGER
+        if (isStarCell()) {
+            computerBuyStar(player, model);
+        }
+        return;
     }
 
 

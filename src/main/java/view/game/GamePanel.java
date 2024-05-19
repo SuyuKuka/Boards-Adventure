@@ -120,9 +120,8 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.playerMove(diceRollValue);
     }
 
-    public void playerArrived() {
-        mainPanel.playerArrived();
-        overlayPanel.playerArrived();
+    public void playerArrived(final boolean isStarCell) {
+        mainPanel.playerArrived(isStarCell);
     }
 
     public void endTurn() {

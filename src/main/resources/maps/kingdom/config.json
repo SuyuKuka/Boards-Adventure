@@ -770,7 +770,8 @@
 		},
 		{
 			"id" : 525,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 300,
 			"nextCellID" : 131,
 			"xPos" : 1583,
 			"yPos" : 1565
@@ -828,7 +829,8 @@
 		},
 		{
 			"id" : 607,
-			"type" : "STAR",
+			"type" : "COINS",
+			"value" : 300,
 			"nextCellID" : 507,
 			"xPos" : 485,
 			"yPos" : 1267

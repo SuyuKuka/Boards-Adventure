@@ -73,10 +73,6 @@ public final class OverlayPanel extends JPanel {
         setVisible(true);
     }
 
-    public void playerArrived() {
-        gamePanel.getController().updatePlayersScore();
-    }
-
     public void updatePlayersScoreText() {
         for (final PlayerScore playerScore : playersScore) {
             playerScore.updatePlayerScoreText();

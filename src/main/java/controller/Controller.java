@@ -65,7 +65,8 @@ public final class Controller {
                 playerMove();
                 break;
             case PLAYER_MOVE:
-                if (getCurrentPlayerCell().shouldPlayerStopBy() || getCurrentPlayer().getDiceRollValue() <= 0) {
+                final Cell cell = getCurrentPlayerCell();
+                if (cell.shouldPlayerStopBy() || getCurrentPlayer().getDiceRollValue() <= 0 || cell.isStarCell()) {
                     playerArrived();
                 } else {
                     playerMove();
@@ -135,9 +136,10 @@ public final class Controller {
 
     private void playerArrived() {
         prevGameState = GameState.PLAYER_ARRIVED;
+        final boolean isStarCell = getCurrentPlayerCellIsStar();
         model.playerArrived();
+        gamePanel.playerArrived(isStarCell);
         updatePlayersScore();
-        gamePanel.playerArrived();
     }
 
     public void updatePlayersScore() {
@@ -191,7 +193,7 @@ public final class Controller {
 
     public boolean shouldDiceRollValueDecrement(final int cellID) {
         final Cell cell = model.getGameMap().getCell(cellID);
-        return !(cell instanceof None || cell.shouldPlayerStopBy());
+        return !(cell instanceof None || cell.getShouldPlayerStopByValue() == 0);
     }
 
     public void playShowCard() {
@@ -274,6 +276,10 @@ public final class Controller {
         return model.getCurrentTurn();
     }
 
+    public int getStarPrice() {
+        return model.getStarPrice();
+    }
+
     public Player getCurrentPlayer() {
         return model.getCurrentPlayer();
     }
@@ -292,6 +298,14 @@ public final class Controller {
 
     public int getCurrentPlayerStars() {
         return getCurrentPlayer().getStars();
+    }
+
+    public boolean getCurrentPlayerCellIsStar() {
+        return getCurrentPlayerCell().isStarCell();
+    }
+
+    public boolean isStarCell(final int cellID) {
+        return getCell(cellID).isStarCell();
     }
 
     public PlayerGraphics getCurrentPlayerGraphics() {

@@ -116,8 +116,8 @@ public final class ActionPanel extends JPanel {
         chatPanel.rollDice();
     }
 
-    public void playerArrived() {
-        chatPanel.playerArrived();
+    public void playerArrived(final boolean isStarCell) {
+        chatPanel.playerArrived(isStarCell);
     }
 
 

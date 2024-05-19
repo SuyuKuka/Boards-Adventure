@@ -29,21 +29,26 @@ public final class PropertyGraphics extends CellGraphics {
         final int cellID = getCellID();
         final Property cell = (Property) getBoardPanel().getController().getCell(cellID);
 
-        // Contour
-        g2d.setColor(color);
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
-        // Couleur intérieure
-        if (cell.getOwner() == null) {
-            g2d.setColor(Color.WHITE);
+        if (getBoardPanel().getController().isStarCell(getCellID())) {
+            paintStarComponent(g2d);
         } else {
-            g2d.setColor(Color.decode(cell.getOwner().getHexTeamColor()));
+            // Contour
+            g2d.setColor(color);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
+            // Couleur intérieure
+            if (cell.getOwner() == null) {
+                g2d.setColor(Color.WHITE);
+            } else {
+                g2d.setColor(Color.decode(cell.getOwner().getHexTeamColor()));
+            }
+            final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
+            g2d.fillRoundRect(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height,
+                ARC_WIDTH, ARC_HEIGHT);
+            // icône
+            final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
+            g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
+                iconRangeDim.width, iconRangeDim.height, this);
         }
-        final Rectangle colorRangeDim = CellGraphics.getColorRangeDim();
-        g2d.fillRoundRect(colorRangeDim.x, colorRangeDim.y, colorRangeDim.width, colorRangeDim.height,
-            ARC_WIDTH, ARC_HEIGHT);
-        // icône
-        final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
-        g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y, iconRangeDim.width, iconRangeDim.height, this);
     }
 
     public Color getColor() {

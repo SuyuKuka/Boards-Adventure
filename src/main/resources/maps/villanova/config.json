@@ -181,7 +181,8 @@
         },
         {
             "id" : 11,
-            "type" : "STAR",
+            "type" : "COINS",
+			"value" : 200,
             "xPos" : 1580,
             "yPos" : 695
         },
@@ -239,7 +240,8 @@
         },
         {
             "id" : 19,
-            "type" : "STAR",
+            "type" : "COINS",
+			"value" : 200,
             "xPos" : 760,
             "yPos" : 830
         },
@@ -336,7 +338,8 @@
         },
         {
             "id" : 34,
-            "type" : "STAR",
+            "type" : "COINS",
+			"value" : 200,
             "nextCellID" : 9,
             "xPos" : 1460,
             "yPos" : 350
@@ -366,7 +369,8 @@
         },
         {
             "id" : 43,
-            "type" : "STAR",
+            "type" : "COINS",
+			"value" : 200,
             "nextCellID" : 45,
             "xPos" : 555,
             "yPos" : 165

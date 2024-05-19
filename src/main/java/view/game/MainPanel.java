@@ -84,9 +84,9 @@ public final class MainPanel extends JPanel {
         boardPanel.playerMove(diceRollValue);
     }
 
-    public void playerArrived() {
+    public void playerArrived(final boolean isStarCell) {
         boardPanel.playerArrived();
-        actionPanel.playerArrived();
+        actionPanel.playerArrived(isStarCell);
     }
 
 

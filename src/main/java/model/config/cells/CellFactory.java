@@ -10,7 +10,7 @@ public final class CellFactory {
     public static Cell createCell(final JSONObject jObject) {
         final CellType type = CellType.valueOf(jObject.getString("type").toUpperCase());
         final Integer id = jObject.getInt("id");
-        final boolean playerStopBy = jObject.optBoolean("playerStopBy", false);
+        final int playerStopBy = jObject.optInt("playerStopBy", -1);
         final Integer nextCellID = jObject.optInt("nextCellID", id + 1);
         switch (type) {
             case PROPERTY: {
@@ -22,10 +22,8 @@ public final class CellFactory {
                 final String groupHexColor = jObject.getString("groupHexColor");
                 return new Property(id, playerStopBy, type, nextCellID, buyPrices, groupHexColor);
             }
-            case STAR:
-                return new Star(id, playerStopBy, type, nextCellID);
             case START:
-                return new Start(id, playerStopBy, type, nextCellID,  jObject.getInt("lapGain"));
+                return new Start(id, 1, type, nextCellID,  jObject.getInt("lapGain"));
             case CARD:
                 return new Card(id, playerStopBy, type, nextCellID);
             case INTERSECTION: {
@@ -34,10 +32,10 @@ public final class CellFactory {
                 for (int i = 0; i < nextCellIDsJArray.length(); i++) {
                     nextCellIDs.add(nextCellIDsJArray.getInt(i));
                 }
-                return new Intersection(id, true, type, nextCellIDs);
+                return new Intersection(id, 0, type, nextCellIDs);
             }
             case SHOP:
-                return new Shop(id, jObject.optBoolean("playerStopBy", true), type, nextCellID);
+                return new Shop(id, 1, type, nextCellID);
             case TELEPORTATION:
                 return new Teleportation(id, playerStopBy, type, nextCellID, jObject.getInt("targetCell"));
             case JAIL:

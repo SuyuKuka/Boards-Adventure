@@ -55,7 +55,7 @@ public final class Player {
 
     public void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 4;
+        diceRollValue = 40;
     }
 
     public void addProperty(final Property property) {
@@ -104,6 +104,11 @@ public final class Player {
 
     public void setDiceRollValue(final int diceRollValue) {
         this.diceRollValue = diceRollValue;
+    }
+
+    public void buyStar(final int price) {
+        stars++;
+        coins -= price;
     }
 
     public int getDiceRollValue() {
