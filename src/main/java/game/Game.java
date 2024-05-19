@@ -29,9 +29,9 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
     private static final String[] FFA_COLORS = {"#d7191c", "#fdae61", "#abdda4", "#2b83ba"};
-    private static final String START_TEMP_MAP = "map4"; // map4, spaceship, villanova, frostharbor
+    private static final String START_TEMP_MAP = "kingdom"; // kingdom, spaceship, villanova, frostharbor
 
-    private Mode mode = Mode.MENU;
+    private Mode mode = Mode.GAME;
 
     private View view;
     private Model model = null;
@@ -75,7 +75,8 @@ public final class Game {
         final JSONObject mapConfig = Resources.loadGameResources(mapName);
 
         final GameMap gameMap = new GameMap(mapName, mapConfig);
-        final ArrayList<Player> players = createPlayers(playersConfig, gameMap);
+        final ArrayList<Player> players = createPlayers(playersConfig, gameMap,
+            gameConfig.get("mode").equals("FFA"));
         model = new Model(gameMap, players, gameConfig, mapConfig);
         controller = new Controller(this, model);
         controller.setGamePanel(view.initNewGamePanel(controller, mapConfig));
@@ -104,47 +105,47 @@ public final class Game {
         // player1
         final HashMap<String, String> player1 = new HashMap<>();
         player1.put("type", "human");
-        player1.put("name", "human1");
-        player1.put("className", "boardClass");
+        player1.put("name", "Joueur 1");
+        player1.put("className", "Board");
         player1.put("teamColor", "#7ebbed");
         player1.put("itemName", "FARMER_HOE");
         playersConfig.add(player1);
         // player2
         final HashMap<String, String> player2 = new HashMap<>();
         player2.put("type", "human");
-        player2.put("name", "human2");
-        player2.put("className", "boardClass");
+        player2.put("name", "Joueur 2");
+        player2.put("className", "Bacchus");
         player2.put("teamColor", "#d16264");
-        player2.put("itemName", "LITTLE_DICE");
+        player2.put("itemName", "SACRED_BOOK");
         playersConfig.add(player2);
         // computer1
         final HashMap<String, String> computer1 = new HashMap<>();
         computer1.put("type", "computer");
-        computer1.put("name", "computer1");
-        computer1.put("className", "boardClass");
+        computer1.put("name", "Ordinateur 1");
+        computer1.put("className", "Gloria");
         computer1.put("teamColor", "#7ebbed");
         computer1.put("itemName", "FARMER_HOE");
         playersConfig.add(computer1);
         // // computer2
-        // final HashMap<String, String> computer2 = new HashMap<>();
-        // computer2.put("type", "computer");
-        // computer2.put("name", "computer2");
-        // computer2.put("className", "boardClass");
-        // computer2.put("teamColor", "#d16264");
-        // computer2.put("itemName", "LITTLE_DICE");
-        // playersConfig.add(computer2);
+        final HashMap<String, String> computer2 = new HashMap<>();
+        computer2.put("type", "computer");
+        computer2.put("name", "Ordinateur 2");
+        computer2.put("className", "May");
+        computer2.put("teamColor", "#d16264");
+        computer2.put("itemName", "MAGIC_WAND");
+        playersConfig.add(computer2);
     }
 
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig,
-            final GameMap gameMap) {
+            final GameMap gameMap, final boolean isFFA) {
         final ArrayList<Player> playersList = new ArrayList<>();
         for (int index = 0; index < playersConfig.size(); index++) {
             final HashMap<String, String> playerConfig = playersConfig.get(index);
             final String name = playerConfig.get("name");
             final boolean isHuman = playerConfig.get("type") == "human";
             final String className = playerConfig.get("className");
-            String teamColor = playerConfig.get("teamColor");
-            if (teamColor.equals("none")) {
+            String teamColor = "";
+            if (isFFA) {
                 teamColor = FFA_COLORS[index];
             } else if (teamColor.equals("red")) {
                 teamColor = "#d16264";

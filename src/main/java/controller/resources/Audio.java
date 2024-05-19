@@ -15,10 +15,10 @@ public final class Audio {
     private static final String MUSIC_PATH = "src/main/resources/audio/music/";
     private static final String SOUND_PATH = "src/main/resources/audio/sound/";
 
-    private static Clip music;
-    private static Clip sound;
-    private static AudioInputStream audioMusic;
-    private static AudioInputStream audioSound;
+    private static Clip music = null;
+    private static Clip sound = null;
+    private static AudioInputStream audioMusic = null;
+    private static AudioInputStream audioSound = null;
     private static float musicVolume = 1.0f;
     private static float soundVolume = 1.0f;
 
@@ -38,7 +38,9 @@ public final class Audio {
     }
 
     public static void stopMusic() {
-        music.close();
+        if (music != null) {
+            music.close();
+        }
     }
 
     public static void playSound(final String soundName) {
