@@ -63,15 +63,14 @@ public class SwingFactory {
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
             height * botB / 100, width * rightB / 100));
-        parent.addComponentListener(new ComponentAdapter() {
+        panel.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                final int height = (int) parent.getHeight();
-                final int width = (int) parent.getWidth();
-                panel.setPreferredSize(new Dimension(width, height));
-                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
-                    height * botB / 100, width * rightB / 100));
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = parent.getPreferredSize();
+                panel.setBorder(BorderFactory.createEmptyBorder(dim.height * topB / 100, dim.width * leftB / 100,
+                    dim.height * botB / 100, dim.width * rightB / 100));
                 parent.revalidate();
+                parent.repaint();
             }
         });
         panel.setVisible(true);
@@ -248,8 +247,6 @@ public class SwingFactory {
             final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
             final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
             final double ratio = Math.min(widthRatio, heightRatio);
-            // System.out.println(parent.getWidth() * widthPer / 100 + " "
-            //     + parent.getHeight() * heightPer / 100 + " " + ratio);
 
             return new Dimension((int) (imageSize.width  * ratio),
                 (int) (imageSize.height * ratio));
@@ -278,9 +275,9 @@ public class SwingFactory {
         final int widthPer, final int heightPer, final boolean resize) {
         final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
-        final JButton button = new JButton(new ImageIcon(image.getScaledInstance(
-            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-            button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+        final JButton button = new JButton();
+        button.setPreferredSize(new Dimension(size.width, size.height));
+        button.setIcon(new ImageIcon(image.getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH)));
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
@@ -290,9 +287,9 @@ public class SwingFactory {
             @Override
             public void componentResized(ComponentEvent e) {
                 final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
-                button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+                button.setPreferredSize(new Dimension(size.width, size.height));
                 button.setIcon(new ImageIcon(image.getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                    size.width, size.height, Image.SCALE_SMOOTH)));
             }
         });
         return button;

@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 
+import controller.resources.Audio;
 import controller.resources.Resources;
 import view.JLayeredManager;
 import view.SwingFactory;
@@ -44,9 +45,6 @@ public final class MenuPanel extends JLayeredManager {
 
     private ImageIcon backgroundImage;
 
-    private int height;
-    private int width;
-
     private boolean host = false;
 
     private String code = "";
@@ -58,10 +56,7 @@ public final class MenuPanel extends JLayeredManager {
     public MenuPanel(final View frame) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         this.frame = frame;
-        setPreferredSize(new Dimension(frame.getContentPane().getWidth(), frame.getContentPane().getHeight()));
-        this.height = getPreferredSize().height;
-        this.width = getPreferredSize().width;
-        // Audio.playMusic("MenuTheme.wav");
+        Audio.playMusic("MenuTheme.wav");
         initDefaultValues();
         backgroundImage = Resources.getGif("backgroundMoving");
         addComp(createBackground(), BACKGROUND_INDEX);
@@ -72,7 +67,7 @@ public final class MenuPanel extends JLayeredManager {
             public void componentResized(final ComponentEvent e) {
                 final Dimension dim = getSize();
                 setPreferredSize(dim);
-                for (Component comp : getLayersMap().values()) {
+                for (final Component comp : getLayersMap().values()) {
                     comp.setSize(dim);
                     comp.setPreferredSize(dim);
                 }
@@ -330,18 +325,13 @@ public final class MenuPanel extends JLayeredManager {
     // #region manualIcon 3
     private JPanel createManualIcon() {
         final JPanel panel = SwingFactory.createContainerPanel(this, 93, 0, 0, 95);
-        panel.add(createBook(panel));
-        panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                System.out.println(panel.getSize());
-            }
-        });
+        final JButton button = createBook(panel);
+        panel.add(button);
         panel.setVisible(true);
         return panel;
     }
 
-    private JButton createBook(JPanel parent) {
+    private JButton createBook(final JPanel parent) {
         final JButton button = SwingFactory.createImageButton(parent, "manual_close", 3, 5, false);
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -448,14 +438,6 @@ public final class MenuPanel extends JLayeredManager {
 
     public void setHost(boolean host) {
         this.host = host;
-    }
-
-    public int getHeightMenu() {
-        return height;
-    }
-
-    public int getWidthMenu() {
-        return width;
     }
 
     public static int getPanelIndex() {

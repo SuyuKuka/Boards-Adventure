@@ -53,8 +53,8 @@ public final class PlayerConfigPanel extends JPanel {
     public PlayerConfigPanel(final MenuPanel menuPanel, final HashMap<String, String> gameConfig) {
         setOpaque(false);
         this.menuPanel = menuPanel;
-        height = menuPanel.getHeightMenu();
-        width = menuPanel.getWidthMenu();
+        height = menuPanel.getHeight();
+        width = menuPanel.getWidth();
         this.gameConfig = gameConfig;
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
