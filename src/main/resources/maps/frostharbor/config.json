@@ -1,0 +1,499 @@
+{
+	"cell_diameter" : 45,
+	"item_shop_nb" : 3,
+	"shop_items" : [
+		{
+			"name" : "LITTLE_DICE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "FARMER_HOE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "GOLDEN_ROAD",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "BIG_DICE",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "SACRED_BOOK",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "LUCKY_POTION",
+			"buyPrice" : "1"
+		}
+	],
+	"start_items" : [
+		{
+			"name" : "LITTLE_DICE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "FARMER_HOE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "BIG_DICE",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "SACRED_BOOK",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "GOLDEN_ROAD",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "LUCKY_POTION",
+			"turnCooldown" : "2"
+		}
+	],
+	"cells" : [
+		{
+			"id" : 100,
+			"type" : "START",
+			"lapGain" : 300,
+			"xPos" : 1255,
+			"yPos" : 2285
+		},
+		{
+			"id" : 101,
+			"type" : "COINS",
+			"value" : 60,
+			"xPos" : 1475,
+			"yPos" : 2275
+		},
+		{
+			"id" : 102,
+			"type" : "CARD",
+			"xPos" : 1575,
+			"yPos" : 2130
+		},
+		{
+			"id" : 103,
+			"type" : "PROPERTY",
+			"prices" : [100, 150, 200, 300],
+			"groupHexColor" : "#d53e4f",
+			"xPos" : 1420,
+			"yPos" : 2059
+		},
+		{
+			"id" : 104,
+			"type" : "COINS",
+			"value" : -40,
+			"xPos" : 1550,
+			"yPos" : 1910
+		},
+		{
+			"id" : 105,
+			"type" : "PROPERTY",
+			"prices" : [110, 160, 210, 315],
+			"groupHexColor" : "#d53e4f",
+			"xPos" : 1365,
+			"yPos" : 1855
+		},
+		{
+			"id" : 106,
+			"type" : "VOID",
+			"xPos" : 1430,
+			"yPos" : 1726
+		},
+		{
+			"id" : 107,
+			"type" : "COINS",
+			"value" : 80,
+			"xPos" : 1295,
+			"yPos" : 1569
+		},
+		{
+			"id" : 108,
+			"type" : "PROPERTY",
+			"prices" : [125, 175, 225, 325],
+			"groupHexColor" : "#d53e4f",
+			"xPos" : 1375,
+			"yPos" : 1460
+		},
+		{
+			"id" : 109,
+			"type" : "CARD",
+			"xPos" : 1275,
+			"yPos" : 1350
+		},
+		{
+			"id" : 110,
+			"type" : "COINS",
+			"value" : 150,
+			"xPos" : 1250,
+			"yPos" : 1245
+		},
+		{
+			"id" : 111,
+			"type" : "PROPERTY",
+			"prices" : [120, 160, 230, 330],
+			"groupHexColor" : "#abdda4",
+			"xPos" : 1105,
+			"yPos" : 1125
+		},
+		{
+			"id" : 112,
+			"type" : "DANGER",
+			"xPos" : 1210,
+			"yPos" : 1035
+		},
+		{
+			"id" : 113,
+			"type" : "PROPERTY",
+			"prices" : [125, 175, 225, 325],
+			"groupHexColor" : "#abdda4",
+			"xPos" : 1245,
+			"yPos" : 880
+		},
+		{
+			"id" : 114,
+			"type" : "INTERSECTION",
+			"nextCellID" : [115, 200],
+			"xPos" : 1200,
+			"yPos" : 790
+		},
+		{
+			"id" : 115,
+			"type" : "PROPERTY",
+			"prices" : [150, 200, 250, 350],
+			"groupHexColor" : "#abdda4",
+			"xPos" : 1265,
+			"yPos" : 715
+		},
+		{
+			"id" : 116,
+			"type" : "DANGER",
+			"xPos" : 1380,
+			"yPos" : 705
+		},
+		{
+			"id" : 117,
+			"type" : "PROPERTY",
+			"prices" : [175, 225, 275, 375],
+			"groupHexColor" : "#abdda4",
+			"value" : 150,
+			"xPos" : 1495,
+			"yPos" : 630
+		},
+		{
+			"id" : 118,
+			"type" : "COINS",
+			"value" : 100,
+			"xPos" : 1425,
+			"yPos" : 540
+		},
+		{
+			"id" : 119,
+			"type" : "INTERSECTION",
+			"nextCellID" : [112, 300],
+			"xPos" : 1350,
+			"yPos" : 509
+		},
+		{
+			"id" : 120,
+			"type" : "COINS",
+			"value" : -125,
+			"xPos" : 1200,
+			"yPos" : 490
+		},
+		{
+			"id" : 121,
+			"type" : "DANGER",
+			"xPos" : 1080,
+			"yPos" : 470
+		},
+		{
+			"id" : 122,
+			"type" : "COINS",
+			"value" : 125,
+			"xPos" : 950,
+			"yPos" : 434
+		},
+		{
+			"id" : 123,
+			"type" : "PROPERTY",
+			"prices" : [200, 250, 300, 400],
+			"groupHexColor" : "#fee08b",
+			"xPos" : 800,
+			"yPos" : 415
+		},
+		{
+			"id" : 124,
+			"type" : "PROPERTY",
+			"prices" : [210, 260, 315, 420],
+			"groupHexColor" : "#fee08b",
+			"xPos" : 629,
+			"yPos" : 465
+		},
+		{
+			"id" : 125,
+			"type" : "STAR",
+			"xPos" : 525,
+			"yPos" : 445
+		},
+		{
+			"id" : 126,
+			"type" : "COINS",
+			"value" : -150,
+			"xPos" : 410,
+			"yPos" : 506
+		},
+		{
+			"id" : 127,
+			"type" : "DANGER",
+			"xPos" : 265,
+			"yPos" : 545
+		},
+		{
+			"id" : 128,
+			"type" : "PROPERTY",
+			"prices" : [300, 350, 400, 445],
+			"groupHexColor" : "#fee08b",
+			"xPos" : 185,
+			"yPos" : 655
+		},
+		{
+			"id" : 129,
+			"type" : "CARD",
+			"xPos" : 285,
+			"yPos" : 750
+		},
+		{
+			"id" : 130,
+			"type" : "COINS",
+			"value" : 200,
+			"xPos" : 410,
+			"yPos" : 760
+		},
+		{
+			"id" : 131,
+			"type" : "INTERSECTION",
+			"nextCellID" : [132, 400],
+			"xPos" : 440,
+			"yPos" : 890
+		},
+		{
+			"id" : 132,
+			"type" : "PROPERTY",
+			"prices" : [310, 360, 420, 445],
+			"groupHexColor" : "#3288bd",
+			"xPos" : 310,
+			"yPos" : 975
+		},
+		{
+			"id" : 133,
+			"type" : "CARD",
+			"xPos" : 330,
+			"yPos" : 1085
+		},
+		{
+			"id" : 134,
+			"type" : "PROPERTY",
+			"prices" : [330, 375, 420, 500],
+			"groupHexColor" : "#3288bd",
+			"xPos" : 340,
+			"yPos" : 1211
+		},
+		{
+			"id" : 135,
+			"type" : "DANGER",
+			"xPos" : 560,
+			"yPos" : 1250
+		},
+		{
+			"id" : 136,
+			"type": "PROPERTY",
+			"prices": [340, 380, 425, 510],
+			"groupHexColor": "#f46d43",
+			"xPos" : 571,
+			"yPos" : 1370
+		},
+		{
+			"id" : 137,
+			"type" : "VOID",
+			"xPos" : 623,
+			"yPos" : 1480
+		},
+		{
+			"id" : 138,
+			"type" : "PROPERTY",
+			"prices": [350, 390, 440, 520],
+			"groupHexColor": "#f46d43",
+			"xPos" : 461,
+			"yPos" : 1585
+		},
+		{
+			"id" : 139,
+			"type" : "COINS",
+			"value" : 200,
+			"xPos" : 318,
+			"yPos" : 1516
+		},
+		{
+			"id" : 140,
+			"type" : "COINS",
+			"value" : 225,
+			"xPos" : 221,
+			"yPos" : 1610
+		},
+		{
+			"id" : 141,
+			"type" : "COINS",
+			"value" : -150,
+			"xPos" : 178,
+			"yPos" : 1770
+		},
+		{
+			"id" : 142,
+			"type" : "VOID",
+			"xPos" : 212,
+			"yPos" : 1865
+		},
+		{
+			"id" : 143,
+			"type" : "SHOP",
+			"xPos" : 291,
+			"yPos" : 1955
+		},
+		{
+			"id" : 144,
+			"type" : "DANGER",
+			"xPos" : 222,
+			"yPos" : 2086
+		},
+		{
+			"id" : 145,
+			"type" : "COINS",
+			"value" : 250,
+			"xPos" : 315,
+			"yPos" : 2214
+		},
+		{
+			"id" : 146,
+			"type" : "STAR",
+			"xPos" : 476,
+			"yPos" : 2285
+		},
+		{
+			"id" : 147,
+			"type" : "CARD",
+			"value" : 250,
+			"xPos" : 695,
+			"yPos" : 2305
+		},
+		{
+			"id" : 148,
+			"type" : "STAR",
+			"xPos" : 705,
+			"yPos" : 2180
+		},
+		{
+			"id" : 149,
+			"type" : "VOID",
+			"nextCellID" : 100,
+			"xPos" : 930,
+			"yPos" : 2195
+		},
+
+		{
+			"id" : 200,
+			"type" : "VOID",
+			"xPos" : 1035,
+			"yPos" : 799
+		},
+		{
+			"id" : 201,
+			"type" : "DANGER",
+			"xPos" : 899,
+			"yPos" : 825
+		},
+		{
+			"id" : 202,
+			"type" : "VOID",
+			"nextCellID" : 900,
+			"xPos" : 730,
+			"yPos" : 914
+		},
+		{
+			"id" : 203,
+			"type" : "COINS",
+			"value" : -120,
+			"xPos" : 632,
+			"yPos" : 1000
+		},
+		{
+			"id" : 204,
+			"type" : "CARD",
+			"nextCellID" : 133,
+			"xPos" : 635,
+			"yPos" : 1115
+		},
+
+		{
+			"id" : 300,
+			"type" : "COINS",
+			"value" : 150,
+			"xPos" : 1375,
+			"yPos" : 410
+		},
+		{
+			"id" : 301,
+			"type" : "PROPERTY",
+			"prices" : [220, 275, 325, 440],
+			"groupHexColor" : "#fee08b",
+			"xPos" : 1325,
+			"yPos" : 314
+		},
+		{
+			"id" : 302,
+			"type" : "SHOP",
+			"xPos" : 1180,
+			"yPos" : 335
+		},
+		{
+			"id" : 303,
+			"type" : "CARD",
+			"xPos" : 1100,
+			"yPos" : 255
+		},
+		{
+			"id" : 304,
+			"type" : "DANGER",
+			"xPos" : 985,
+			"yPos" : 256
+		},
+		{
+			"id" : 305,
+			"type" : "COINS",
+			"value" : -50,
+			"nextCellID" : 122,
+			"xPos" : 960,
+			"yPos" : 350
+		},
+
+		{
+			"id" : 400,
+			"type" : "STAR",
+			"nextCellID" : 203,
+			"xPos" : 565,
+			"yPos" : 925
+		}
+	
+	]
+}

@@ -1,0 +1,33 @@
+package view.game.boardpanel.entitygraphics.cellsgraphics;
+
+import org.json.JSONObject;
+
+import model.config.cells.CellType;
+import view.game.boardpanel.BoardPanel;
+
+public final class CellGraphicsFactory {
+    public static CellGraphics createCellGraphics(final BoardPanel boardPanel, final JSONObject jObject) {
+        final int cellID = jObject.getInt("id");
+        final int yPos = jObject.getInt("yPos");
+        final int xPos = jObject.getInt("xPos");
+        final CellType cellType = boardPanel.getController().getCellType(jObject.getString("type").toUpperCase());
+        switch (cellType) {
+            case PROPERTY:
+                return new PropertyGraphics(boardPanel, cellID, xPos, yPos);
+            case COINS:
+                return new CoinsGraphics(boardPanel, cellID, xPos, yPos, jObject.getInt("value") > 0);
+            case NONE:
+                return new NoneGraphics(boardPanel, cellID, xPos, yPos,
+                    jObject.optBoolean("shouldPlayerTeleport", true));
+            default:
+                break;
+        }
+        return new DefaultCellGraphics(boardPanel, cellID, xPos, yPos);
+    }
+
+    public static CellGraphics createIntersectionChoice(final BoardPanel boardPanel, final CellGraphics cellTarget) {
+        return new IntersectionChoiceGraphics(boardPanel, cellTarget.getCellID(),
+            cellTarget.getXPos(), cellTarget.getYPos());
+    }
+
+}
