@@ -246,8 +246,8 @@ public final class GamePanel extends JLayeredManager {
         back.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
-                frame.getGame().startMenu();
                 Audio.stopMusic();
+                frame.getGame().startMenu();
             }
         });
         background.add(back, BorderLayout.SOUTH);

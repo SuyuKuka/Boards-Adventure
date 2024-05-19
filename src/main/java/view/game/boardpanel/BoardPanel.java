@@ -98,6 +98,8 @@ public final class BoardPanel extends JLayeredManager {
     private Point cameraPan = null;
     private boolean wideAngle = false;
 
+    private int actualItem;
+
     private final Image boardImage;
 
     private Color bgColor = new Color(230, 205, 175);
@@ -415,9 +417,6 @@ public final class BoardPanel extends JLayeredManager {
                 break;
             case SHOP:
                 addComp(createShopPanel(), INTERACTION);
-                break;
-            case CARD:
-                addComp(createCardPanel(), INTERACTION);
                 break;
             default:
                 SwingFactory.startSingleActionTimer(1000, action -> controller.gameUpdate());
@@ -788,6 +787,7 @@ public final class BoardPanel extends JLayeredManager {
         background.setBorder(BorderFactory.createLineBorder(borderColor, 4));
 
         controller.setCurrentCell();
+        controller.getShopItem();
 
         JPanel top = new JPanel(new BorderLayout());
         JLabel shop = new JLabel("BOUTIQUE", SwingConstants.CENTER);
@@ -812,13 +812,13 @@ public final class BoardPanel extends JLayeredManager {
         JPanel contentPanel = new JPanel(new GridLayout(1, 2));
         contentPanel.setBackground(new Color(230, 205, 175));
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
-        JButton item1 = new JButton("NOM ITEM 1");
+        JButton item1 = new JButton("ITEM 1");
         item1.setBackground(new Color(230, 205, 175));
         item1.setFont(Resources.getFont(64));
-        JButton item2 = new JButton("NOM ITEM 2");
+        JButton item2 = new JButton("ITEM 2");
         item2.setBackground(new Color(230, 205, 175));
         item2.setFont(Resources.getFont(64));
-        JButton item3 = new JButton("NOM ITEM 3");
+        JButton item3 = new JButton("ITEM 3");
         item3.setBackground(new Color(230, 205, 175));
         item3.setFont(Resources.getFont(64));
         navPanel.add(item1, BorderLayout.NORTH);
@@ -849,7 +849,7 @@ public final class BoardPanel extends JLayeredManager {
         detailsPanel.add(itemPriceLabel, gbc);
 
         JButton buyButton = new JButton("J'achète");
-        buyButton.setFont(Resources.getFont(16));
+        buyButton.setFont(Resources.getFont(32));
         buyButton.setVisible(false);
         gbc.gridy++;
         gbc.insets = new Insets(10, 0, 0, 0);
@@ -861,22 +861,43 @@ public final class BoardPanel extends JLayeredManager {
         item1.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 1", "void", "$100");
+                actualItem = 0;
+                int item = 0;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
             }
         });
         item2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 2", "dice2", "$200");
+                actualItem = 1;
+                int item = 1;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
             }
         });
         item3.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 3", "hoe", "$69696969");
+                actualItem = 2;
+                int item = 2;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
+            }
+        });
+        buyButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                controller.buyItem(actualItem, controller.getShopItemPrice(actualItem));
+                removeComp(INTERACTION);
+                revalidate();
+                controller.gameUpdate();
             }
         });
         background.addMouseListener(new MouseAdapter() {
@@ -898,38 +919,6 @@ public final class BoardPanel extends JLayeredManager {
         Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(resizedImage));
         priceLabel.setText(price);
-    }
-
-    // #endregion
-
-    // #region Card
-
-    public JPanel createCardPanel() {
-        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        resizePanel.setVisible(true);
-
-        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setLayout(new BorderLayout());
-        background.setBackground(bgColor);
-        background.setBorder(BorderFactory.createLineBorder(borderColor, 2));
-
-        controller.setCurrentCell();
-
-        JButton open = new JButton("X");
-        open.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                controller.playShowCard();
-                gamePanel.getController().updatePlayersScore();
-                removeComp(INTERACTION);
-                controller.gameUpdate();
-                revalidate();
-            }
-        });
-        background.add(open);
-
-        resizePanel.add(background);
-        return resizePanel;
     }
 
     // #endregion
