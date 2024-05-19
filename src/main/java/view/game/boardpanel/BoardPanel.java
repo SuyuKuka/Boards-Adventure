@@ -84,7 +84,7 @@ public final class BoardPanel extends JLayeredManager {
 
     // CAMERA ET ZOOM
     private static final int CAMERA_MAX_WIDTH = 720;
-    private static final int CAMERA_MAX_HEIGHT = 384; // = 480 * 0.8
+    private static final int CAMERA_MAX_HEIGHT = 384;
     private static final double MIN_ALLOWED_ZOOM = 0.5;
     private final boolean wideAngleAllowed;
     private final double minZoom;
@@ -979,6 +979,7 @@ public final class BoardPanel extends JLayeredManager {
                     controller.buyItem(actualItem, controller.getShopItemPrice(actualItem));
                     removeComp(INTERACTION);
                     revalidate();
+                    controller.updatePlayersScore();
                     controller.gameUpdate();
                 }
             }

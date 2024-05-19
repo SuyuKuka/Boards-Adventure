@@ -297,4 +297,9 @@ public final class ChatPanel extends JPanel {
     }
 
     // #endregion
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
 }

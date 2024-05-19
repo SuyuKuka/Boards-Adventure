@@ -113,4 +113,8 @@ public final class MainPanel extends JPanel {
         return actionPanel;
     }
 
+    public Controller getController() {
+        return controller;
+    }
+
 }

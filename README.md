@@ -1,25 +1,19 @@
 # Monopoly
 
 ## Description
-Board's Adventure est un jeu de plateau jouable à 4 joueurs, tour par tour. Votre but est simple, acheter des propriétés des objets, mais surtout passer un maximum de tours "Roi du Royaume".
-Pour ce faire, des cases "Royaumes" sont présentes sur les plateaux qui vous permettent de devenir Roi et de détroner le roi actuel s'il y en a un.
+Board’s Adventure est un jeu de plateau inspiré de celui qui a bercé notre enfance, Monopoly. On a repris le concept de base du Monopoly, c’est-à-dire, le monopole tout en donnant un côté innovant afin de pouvoir vivre de nouvelle expérience.
+Le but du jeu est d'obtenir le plus d’étoiles afin d’accomplir l’objectif de la map. Il faudra parcourir la map pour pouvoir acheter des étoiles qui se déplaceront de manière aléatoire. Afin d’acheter les étoiles, il faudra trouver des moyens récolter de l’argent “coins”, et pour cela, le jeu a disposition diverses solutions pour subvenir aux besoins.
 
 ## Information complémentaire
-La partie se termine au moment où les 25/35/45 tours sont passés (Tout dépend de la configuration de la partie par l'utilisateur).
-Pour plus de détails sur les différentes cases, le déroulement d'une partie ainsi que la prise en main du jeu, un manuel est disponible en jeu, il vous suffit juste de cliquer
-sur le petit livre en bas à droite de l'écran.
+Une partie contient un nombre limité de tour (25/35/45) définissable dans les configurations.
+Pour avoir plus de détails sur les différentes cellules du jeu et le déroulement de la partie, vous pouvez cliquer sur le petit manuel mit a disposition afin de se renseigner.
 
 Google docs du jeu :
 https://docs.google.com/document/d/1gT4sxsQJ5qRlqFvo9c-TGwI0fd4GD03ONNf_X-a7Uwg/edit?usp=sharing
-## Configuration nécessaire
-
-## Différents Lancements
-Si vous souhaitez accéder aux menus, il suffit juste de modifier dans le fichier src/game/Game.java ligne 32 "private mode=Mode.GAME" en "private mode=Mode.MENU"
-Pour être dans une partie déjà lancé, faire de meme et mettre "private mode=Mode.MENU"
 
 ## Installation et Lancement
 L'installation des librairies json est requise pour pouvoir lancer le jeu.
-Une fois fait,il suffit d'éxécuter le fichier BoardsAdventure.jar à la racine de l'arborescence.
+Une fois cela fait, il suffit d'éxécuter le fichier BoardsAdventure.jar à la racine de l'arborescence.
 
 ## Crédits
 

@@ -28,6 +28,8 @@ public final class Model {
     private final int totalTurns;
     private int currentTurn = 1;
 
+    private boolean doubleDice;
+
     private final int starPrice;
     private final int starCellsNb;
     private final ArrayList<Integer> starCellIDs = new ArrayList<>();
@@ -45,6 +47,7 @@ public final class Model {
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
+        this.doubleDice = Boolean.valueOf(gameConfig.get("doubleDice"));
         currentPlayer = players.get(playerPlayIterator);
         this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 400));
         final int maxStarCellNb = gameMap.getMaxStarCellsPoss();
@@ -89,7 +92,7 @@ public final class Model {
     }
 
     public void rollDice() {
-        currentPlayer.rollDice();
+        currentPlayer.rollDice(doubleDice);
     }
 
     // region playerMove
@@ -203,5 +206,12 @@ public final class Model {
         };
     }
 
+    public boolean getDoubleDice() {
+        return doubleDice;
+    }
+
+    public HashMap<String, Team> getTeams() {
+        return teams;
+    }
 
 }

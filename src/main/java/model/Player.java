@@ -53,8 +53,13 @@ public final class Player {
 
     // region model methods
 
-    public void rollDice() {
-        diceRollValue = RAND.nextInt(6) + 1;
+    public void rollDice(boolean doubleDice) {
+        if (doubleDice) {
+            diceRollValue += RAND.nextInt(6) + 1;
+            diceRollValue += RAND.nextInt(6) + 1;
+        } else {
+            diceRollValue += RAND.nextInt(6) + 1;
+        }
     }
 
     public void addProperty(final Property property) {

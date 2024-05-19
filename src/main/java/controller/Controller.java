@@ -118,7 +118,7 @@ public final class Controller {
         prevGameState = GameState.PLAYER_ACTION;
         final Player player = getCurrentPlayer();
         if (!player.isHuman()) {
-            player.rollDice();
+            player.rollDice(model.getDoubleDice());
         }
         gamePanel.playerAction();
     }
@@ -142,6 +142,7 @@ public final class Controller {
         prevGameState = GameState.PLAYER_ARRIVED;
         final boolean isStarCell = getCurrentPlayerCellIsStar();
         model.playerArrived();
+        updatePlayersScore();
         gamePanel.playerArrived(isStarCell);
     }
 
@@ -182,7 +183,7 @@ public final class Controller {
 
     public void playerRollDice() {
         final Player currentPlayer = getCurrentPlayer();
-        currentPlayer.rollDice();
+        currentPlayer.rollDice(model.getDoubleDice());
         if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
             currentPlayer.setJailTurn(0);
         }
@@ -370,7 +371,7 @@ public final class Controller {
     }
 
     public void getCurrentPlayerRollDice() {
-        getCurrentPlayer().rollDice();
+        getCurrentPlayer().rollDice(model.getDoubleDice());
     }
 
     public int getCurrentPlayerRollDiceValue() {

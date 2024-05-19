@@ -13,7 +13,7 @@ public final class BigDice extends Item {
 
     @Override
     public void playItemEffect(final Player player, final Model model) {
-        player.setDiceRollValue(new Random().nextInt(10) + 1);
+        player.incrementDiceRollValue(new Random().nextInt(10) + 1);
     }
 
     @Override

@@ -167,6 +167,7 @@ public final class Game {
     }
 
     public static void main(final String[] args) {
-        Game launcher = new Game();
+        new Game();
     }
+
 }

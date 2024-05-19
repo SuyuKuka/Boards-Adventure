@@ -13,7 +13,7 @@ public final class LittleDice extends Item {
 
     @Override
     public void playItemEffect(final Player player, final Model model) {
-        model.getCurrentPlayer().setDiceRollValue(new Random().nextInt(3) + 1);
+        player.incrementDiceRollValue((new Random().nextInt(3) + 1));
         player.setStartItemCooldown(getTurnCooldown());
     }
 
