@@ -136,7 +136,6 @@ public final class Controller {
     private void playerArrived() {
         prevGameState = GameState.PLAYER_ARRIVED;
         model.playerArrived();
-        updatePlayersScore();
         gamePanel.playerArrived();
     }
 
@@ -157,6 +156,7 @@ public final class Controller {
     private void endTurn() {
         prevGameState = GameState.END_TURN;
         model.endTurn();
+        updatePlayersScore();
         gamePanel.endTurn();
     }
 
@@ -199,6 +199,20 @@ public final class Controller {
         // ((Card) currentCell).showCard(getCurrentPlayer(), model);
     }
 
+    public void playerApplyStartItem() {
+        if (getCurrentPlayer().getStartItemCooldown() == 0
+            && getCurrentPlayer().getStartItem().canItemBeActivated(getCurrentPlayer(), model)) {
+            getCurrentPlayer().getStartItem().playItemEffect(getCurrentPlayer(), model);
+        }
+    }
+
+    public void playerApplyShopItem(int i) {
+        System.out.println("Shop item applied");
+        if (getCurrentPlayer().getStartItem().canItemBeActivated(getCurrentPlayer(), model)) {
+            getCurrentPlayer().getShopItem()[i].playItemEffect(getCurrentPlayer(), model);
+        }
+
+    }
     // #endregion
 
     // region model getters/setters
@@ -384,6 +398,10 @@ public final class Controller {
 
     public CellGraphics getCurrentPlayerCellGraphics() {
         return cellsGraphics.get(getCurrentPlayerCell().getId());
+    }
+
+    public void setPrevGameState(GameState prevGameState) {
+        this.prevGameState = prevGameState;
     }
 
     // endregion

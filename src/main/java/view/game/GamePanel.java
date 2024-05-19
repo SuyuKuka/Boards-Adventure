@@ -59,7 +59,7 @@ public final class GamePanel extends JLayeredManager {
         this.frame = frame;
         this.controller = controller;
 
-        mainPanel = new MainPanel(this, mapConfig);
+        mainPanel = new MainPanel(this, controller, mapConfig);
         overlayPanel = new OverlayPanel(this);
         pausePanel = createPausePanel();
 
@@ -194,7 +194,7 @@ public final class GamePanel extends JLayeredManager {
 
         JPanel top = new JPanel(new BorderLayout());
         JLabel shop = new JLabel("Settings", SwingConstants.CENTER);
-        shop.setFont(Resources.getFont("NoitaBlackletter", 64));
+        shop.setFont(Resources.getFont(64));
         top.setBackground(Color.LIGHT_GRAY);
         top.add(shop, BorderLayout.CENTER);
 
@@ -257,5 +257,9 @@ public final class GamePanel extends JLayeredManager {
     public void updatePlayersScoreGraphics() {
         overlayPanel.updatePlayersRanksGraphics(controller.getPlayersRankList());
         overlayPanel.updatePlayersScoreText();
+    }
+
+    public MainPanel getMainPanel() {
+        return mainPanel;
     }
 }

@@ -61,9 +61,10 @@ public final class PlayerConfigPanel extends JPanel {
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
 
-        add(SwingFactory.createTransparentPanel(this, 100, 10));
+        add(SwingFactory.createTransparentPanel(this, 100, 20));
         initError();
         add(error);
+        add(SwingFactory.createTransparentPanel(this, 100, 10));
 
         add(createConfigCharacter(this));
         add(SwingFactory.createTransparentPanel(this, 100, 50));
@@ -222,7 +223,7 @@ public final class PlayerConfigPanel extends JPanel {
         JTextPane pseudo = new JTextPane();
         pseudo.setText(playersConfig.get(playersConfig.size() - 1).get("name"));
         pseudo.setForeground(Color.BLACK);
-        pseudo.setFont(Resources.getFont("NoitaBlackletter", 32));
+        pseudo.setFont(Resources.getFont(32));
         pseudo.setPreferredSize(new Dimension(200, 50));
 
         ((AbstractDocument) pseudo.getDocument()).setDocumentFilter(new DocumentFilter() {

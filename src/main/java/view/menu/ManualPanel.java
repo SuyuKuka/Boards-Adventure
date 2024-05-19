@@ -50,7 +50,7 @@ public final class ManualPanel extends JPanel {
         // HAUT, CHANGER FONTS
         JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("  Manuel", SwingConstants.CENTER);
-        titleLabel.setFont(Resources.getFont("NoitaBlackletter", 22));
+        titleLabel.setFont(Resources.getFont(64));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setBackground(new Color(205, 173, 142));
 
@@ -68,13 +68,13 @@ public final class ManualPanel extends JPanel {
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
         JButton howToPlayButton = new JButton("Prise en main du jeu");
         howToPlayButton.setBackground(new Color(230, 205, 175));
-        howToPlayButton.setFont(Resources.getFont("NoitaBlackletter", 64));
+        howToPlayButton.setFont(Resources.getFont(64));
         JButton gameFlowButton = new JButton("Déroulement de la partie");
         gameFlowButton.setBackground(new Color(230, 205, 175));
-        gameFlowButton.setFont(Resources.getFont("NoitaBlackletter", 64));
+        gameFlowButton.setFont(Resources.getFont(64));
         JButton mapSpecialtiesButton = new JButton("Spécialité des cartes");
         mapSpecialtiesButton.setBackground(new Color(230, 205, 175));
-        mapSpecialtiesButton.setFont(Resources.getFont("NoitaBlackletter", 64));
+        mapSpecialtiesButton.setFont(Resources.getFont(64));
         navPanel.add(howToPlayButton, BorderLayout.NORTH);
         navPanel.add(gameFlowButton, BorderLayout.CENTER);
         navPanel.add(mapSpecialtiesButton, BorderLayout.SOUTH);
@@ -90,7 +90,7 @@ public final class ManualPanel extends JPanel {
         explanationTextArea.setWrapStyleWord(true);
         explanationTextArea.setEditable(false);
         explanationTextArea.setBackground(new Color(255, 240, 200));
-        explanationTextArea.setFont(Resources.getFont("NoitaBlackletter", 32));
+        explanationTextArea.setFont(Resources.getFont(32));
         JScrollPane scrollPane = new JScrollPane(explanationTextArea);
 
         closeButton.addMouseListener(new MouseAdapter() {
@@ -215,7 +215,7 @@ public final class ManualPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
 
         JLabel descriptionLabel = new JLabel(description);
-        descriptionLabel.setFont(Resources.getFont("NoitaBlackletter", 32));
+        descriptionLabel.setFont(Resources.getFont(32));
         casePanel.add(descriptionLabel, gbc);
         return casePanel;
     }

@@ -101,7 +101,7 @@ public final class GameConfigPanel extends JPanel {
 
         JTextArea desc = new JTextArea();
         desc.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        desc.setFont(Resources.getFont("NoitaBlackletter", defaultFont / 2));
+        desc.setFont(Resources.getFont(defaultFont / 2));
         desc.setForeground(Color.BLACK);
         desc.setLineWrap(true);
         desc.setWrapStyleWord(true);
@@ -216,7 +216,7 @@ public final class GameConfigPanel extends JPanel {
         radioButton.setBorderPainted(false);
         radioButton.setContentAreaFilled(false);
         radioButton.setFocusPainted(false);
-        radioButton.setFont(Resources.getFont("NoitaBlackletter", 32));
+        radioButton.setFont(Resources.getFont(32));
         group.add(radioButton);
         return radioButton;
     }

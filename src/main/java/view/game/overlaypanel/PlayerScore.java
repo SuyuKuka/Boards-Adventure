@@ -168,8 +168,10 @@ public final class PlayerScore extends JPanel {
         panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         panel.setPreferredSize(new Dimension(0, 0));
         nameLabel.setText(name);
+        nameLabel.setFont(Resources.getFont(16));
         nameLabel.setHorizontalAlignment(JLabel.CENTER);
         panel.add(nameLabel);
+        coinsLabel.setFont(Resources.getFont(16));
         coinsLabel.setIcon(new ImageIcon(Resources.getImage("coins")
         .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
         coinsLabel.setText(controller.getPlayer(playerId).getCoins() + "");
@@ -184,10 +186,12 @@ public final class PlayerScore extends JPanel {
         panel.setPreferredSize(new Dimension(0, 0));
         panel.setOpaque(false);
         gamePointsLabel.setText("0");
+        gamePointsLabel.setFont(Resources.getFont(16));
         gamePointsLabel.setIcon(new ImageIcon(Resources.getImage("points")
             .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
         panel.add(gamePointsLabel);
         propertiesLabel.setText("0");
+        propertiesLabel.setFont(Resources.getFont(16));
         propertiesLabel.setIcon(new ImageIcon(Resources.getImage("properties")
             .getScaledInstance((int) (width * 0.2), (int) (height / 2 * 0.8), Image.SCALE_SMOOTH)));
         panel.add(propertiesLabel);
