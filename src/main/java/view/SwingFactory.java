@@ -200,14 +200,14 @@ public class SwingFactory {
         final JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        final Dimension size = new Dimension(parent.getWidth() * 60 / 100, parent.getHeight() * 60 / 100);
+        final Dimension size = new Dimension(parent.getWidth() * widthPer / 100, parent.getHeight() * heightPer / 100);
         panel.setMaximumSize(size);
         panel.setPreferredSize(size);
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                final Dimension size = new Dimension((int) (parent.getWidth() * 60 / 100),
-                    (int) (parent.getHeight() * 60 / 100));
+                final Dimension size = new Dimension((int) (parent.getWidth() * widthPer / 100),
+                    (int) (parent.getHeight() * heightPer / 100));
                 panel.setMaximumSize(size);
                 panel.setPreferredSize(size);
             }
@@ -297,7 +297,7 @@ public class SwingFactory {
         final Image image = Resources.getImage("emptysword_small");
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
         final JButton button = new JButton();
-        button.setPreferredSize(new Dimension((int) size.getWidth() + 20, (int) size.getHeight())); //ne fonctionne pas
+        button.setPreferredSize(new Dimension((int) size.getWidth() + 20, (int) size.getHeight()));
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
@@ -350,11 +350,16 @@ public class SwingFactory {
         return label;
     }
 
-    public static JLabel createTextLabel(final String text, final String fontName, final Color foregroundColor,
-        final int size) {
+    public static JLabel createTextLabel(final String text, final Color foregroundColor, final int size) {
         final JLabel label = new JLabel(text);
         label.setForeground(foregroundColor);
-        label.setFont(Resources.getFont(fontName, size));
+        label.setFont(Resources.getFont("NoitaBlackletter", size));
+        label.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                label.setFont(SwingFactory.getResizedFont(label, text, Resources.getFont("NoitaBlackletter", size)));
+            }
+        });
         return label;
     }
 
