@@ -98,7 +98,12 @@ public final class BoardPanel extends JLayeredManager {
     private Point cameraPan = null;
     private boolean wideAngle = false;
 
+    private int actualItem;
+
     private final Image boardImage;
+
+    private Color bgColor = new Color(230, 205, 175);
+    private Color borderColor = new Color(205, 173, 142);
 
     public BoardPanel(final GamePanel gamePanel, final JSONObject mapConfig,
             final int width, final int height) {
@@ -363,8 +368,8 @@ public final class BoardPanel extends JLayeredManager {
     private JPanel createStarPanel() {
         final JPanel container = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
         JPanel panel = SwingFactory.createGamePanelCells(this, 60, 60);
-        panel.setBackground(Color.CYAN);
-        panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+        panel.setBackground(bgColor);
+        panel.setBorder(BorderFactory.createLineBorder(borderColor, 2));
         panel.add(Box.createVerticalGlue());
 
         final int playerCoins = controller.getCurrentPlayerCoins();
@@ -442,9 +447,6 @@ public final class BoardPanel extends JLayeredManager {
                 break;
             case SHOP:
                 addComp(createShopPanel(), INTERACTION);
-                break;
-            case CARD:
-                addComp(createCardPanel(), INTERACTION);
                 break;
             default:
                 SwingFactory.startSingleActionTimer(1000, action -> controller.gameUpdate());
@@ -580,6 +582,8 @@ public final class BoardPanel extends JLayeredManager {
         final String labelString = "Début du jeu !";
         final JLabel label = SwingFactory.createJLabel();
         label.setText(labelString);
+        label.setForeground(Color.BLACK);
+        label.setFont(Resources.getFont(64));
         panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
@@ -600,6 +604,8 @@ public final class BoardPanel extends JLayeredManager {
         final String labelString = "Tour de " + controller.getCurrentPlayer().getName();
         final JLabel label = SwingFactory.createJLabel();
         label.setText(labelString);
+        label.setForeground(Color.BLACK);
+        label.setFont(Resources.getFont(64));
         panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
@@ -625,7 +631,9 @@ public final class BoardPanel extends JLayeredManager {
         panel.setOpaque(false);
         final String labelString = "FIN DU TOUR !";
         final JLabel label = SwingFactory.createJLabel();
+        label.setFont(Resources.getFont(64));
         label.setText(labelString);
+        label.setForeground(Color.BLACK);
         panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
@@ -668,18 +676,18 @@ public final class BoardPanel extends JLayeredManager {
         resizePanel.setVisible(true);
 
         JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+        background.setBackground(bgColor);
+        background.setBorder(BorderFactory.createLineBorder(borderColor, 2));
 
         controller.setCurrentCell();
 
-        JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner un point en plus !\n",
-            Color.BLACK, 32);
+        JLabel kingdomLabel = SwingFactory.createTextLabel("Tu viens de gagner une étoile en plus !\n",
+            Color.BLACK, 64);
         kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(kingdomLabel);
 
         JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getCurrentPlayerStars()
-        + " points !\n", Color.BLACK, 26);
+        + " étoiles !\n", Color.BLACK, 32);
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(pointsLabel);
 
@@ -696,8 +704,8 @@ public final class BoardPanel extends JLayeredManager {
         JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
 
         JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
+        background.setBackground(bgColor);
+        background.setBorder(BorderFactory.createLineBorder(borderColor, 2));
 
         controller.setCurrentCell();
 
@@ -714,8 +722,8 @@ public final class BoardPanel extends JLayeredManager {
     private void createBuyAndUpgradePanel(JPanel panel) {
         panel.add(Box.createVerticalGlue());
         int price = controller.getPropertyPrice();
-        JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
-                Color.BLACK, 32);
+        JLabel propertyLabel = SwingFactory.createTextLabel("",
+                Color.BLACK, 64);
         propertyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         if (controller.playerIsAtHome()) {
             propertyLabel.setText("Veux tu ameliorer cette proprieté ?\n");
@@ -724,8 +732,8 @@ public final class BoardPanel extends JLayeredManager {
         }
         panel.add(propertyLabel);
 
-        JLabel propertyPrice = SwingFactory.createTextLabel("Prix : " + price + "\n",
-            Color.BLACK, 18);
+        JLabel propertyPrice = SwingFactory.createTextLabel("Le prix est de " + price + " coins\n",
+            Color.BLACK, 32);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(propertyPrice);
 
@@ -739,15 +747,17 @@ public final class BoardPanel extends JLayeredManager {
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
-                removeComp(INTERACTION);
-                if (!controller.propertyHasOwner()) {
-                    controller.playerBuyProperty();
-                } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
-                    controller.playerUpgradeProperty();
+                if (controller.hasEnoughCoinsProperty(price)) {
+                    removeComp(INTERACTION);
+                    if (!controller.propertyHasOwner()) {
+                        controller.playerBuyProperty();
+                    } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
+                        controller.playerUpgradeProperty();
+                    }
+                    gamePanel.getController().updatePlayersScore();
+                    controller.gameUpdate();
+                    revalidate();
                 }
-                gamePanel.getController().updatePlayersScore();
-                controller.gameUpdate();
-                revalidate();
             }
         });
 
@@ -773,7 +783,7 @@ public final class BoardPanel extends JLayeredManager {
         rentTextPane.setText("Oops, tu as atterri sur la propriété de quelqu'un d'autre. Tu dois payer "
         + controller.getRentPrice() + " coins.\n");
         rentTextPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-        rentTextPane.setFont(Resources.getFont(32));
+        rentTextPane.setFont(Resources.getFont(64));
         rentTextPane.setForeground(Color.BLACK);
         rentTextPane.setEditable(false);
         rentTextPane.setFocusable(false);
@@ -854,10 +864,11 @@ public final class BoardPanel extends JLayeredManager {
 
         JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
         background.setLayout(new BorderLayout());
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
+        background.setBackground(bgColor);
+        background.setBorder(BorderFactory.createLineBorder(borderColor, 4));
 
         controller.setCurrentCell();
+        controller.getShopItem();
 
         JPanel top = new JPanel(new BorderLayout());
         JLabel shop = new JLabel("BOUTIQUE", SwingConstants.CENTER);
@@ -882,13 +893,13 @@ public final class BoardPanel extends JLayeredManager {
         JPanel contentPanel = new JPanel(new GridLayout(1, 2));
         contentPanel.setBackground(new Color(230, 205, 175));
         JPanel navPanel = new JPanel(new GridLayout(3, 1));
-        JButton item1 = new JButton("NOM ITEM 1");
+        JButton item1 = new JButton("ITEM 1");
         item1.setBackground(new Color(230, 205, 175));
         item1.setFont(Resources.getFont(64));
-        JButton item2 = new JButton("NOM ITEM 2");
+        JButton item2 = new JButton("ITEM 2");
         item2.setBackground(new Color(230, 205, 175));
         item2.setFont(Resources.getFont(64));
-        JButton item3 = new JButton("NOM ITEM 3");
+        JButton item3 = new JButton("ITEM 3");
         item3.setBackground(new Color(230, 205, 175));
         item3.setFont(Resources.getFont(64));
         navPanel.add(item1, BorderLayout.NORTH);
@@ -896,7 +907,6 @@ public final class BoardPanel extends JLayeredManager {
         navPanel.add(item3, BorderLayout.SOUTH);
         contentPanel.add(navPanel, BorderLayout.WEST);
 
-        // AFFICHAGE DES DETAILS ITEMS (dans le shop, l'espace à droite)
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         detailsPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
         detailsPanel.setBackground(new Color(255, 240, 200));
@@ -920,7 +930,7 @@ public final class BoardPanel extends JLayeredManager {
         detailsPanel.add(itemPriceLabel, gbc);
 
         JButton buyButton = new JButton("J'achète");
-        buyButton.setFont(Resources.getFont(16));
+        buyButton.setFont(Resources.getFont(32));
         buyButton.setVisible(false);
         gbc.gridy++;
         gbc.insets = new Insets(10, 0, 0, 0);
@@ -929,26 +939,48 @@ public final class BoardPanel extends JLayeredManager {
         contentPanel.add(detailsPanel, BorderLayout.EAST);
         background.add(contentPanel, BorderLayout.CENTER);
 
-        // LISTENERS BOUTON ITEMS
-        item1.addMouseListener(new MouseAdapter() { // Pour l'item 1
+        item1.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 1", "void", "100");
+                actualItem = 0;
+                int item = 0;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
             }
         });
-        item2.addMouseListener(new MouseAdapter() { // Pour l'item 2
+        item2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 2", "dice2", "200");
+                actualItem = 1;
+                int item = 1;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
             }
         });
-        item3.addMouseListener(new MouseAdapter() { // Pour l'item 3
+        item3.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 3", "hoe", "69696969");
+                actualItem = 2;
+                int item = 2;
+                String st = controller.getShopItemName(item).replace("_", " ");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, st, controller.
+                    getShopItemName(item).toLowerCase(), String.valueOf(controller.getShopItemPrice(item)) + " coins");
                 buyButton.setVisible(true);
+            }
+        });
+        buyButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (controller.hasEnoughCoinsItem(actualItem)) {
+                    controller.buyItem(actualItem, controller.getShopItemPrice(actualItem));
+                    removeComp(INTERACTION);
+                    revalidate();
+                    controller.gameUpdate();
+                }
             }
         });
         background.addMouseListener(new MouseAdapter() {
@@ -962,47 +994,14 @@ public final class BoardPanel extends JLayeredManager {
         return resizePanel;
     }
 
-    // FONCTION ITEMS
     private void displayItemDetails(JLabel nameLabel,
-    JLabel imageLabel, JLabel priceLabel, String name, String imagePath, String price) {
-    nameLabel.setText(name);
-    ImageIcon originalIcon = new ImageIcon(Resources.getImage(imagePath));
-    Image originalImage = originalIcon.getImage();
-    Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-    imageLabel.setIcon(new ImageIcon(resizedImage));
-    priceLabel.setText(price);
-}
-
-    // #endregion
-
-    // #region Card
-
-    public JPanel createCardPanel() {
-        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        resizePanel.setVisible(true);
-
-        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setLayout(new BorderLayout());
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
-
-        controller.setCurrentCell();
-
-        JButton open = new JButton("X");
-        open.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                controller.playShowCard();
-                gamePanel.getController().updatePlayersScore();
-                removeComp(INTERACTION);
-                controller.gameUpdate();
-                revalidate();
-            }
-        });
-        background.add(open);
-
-        resizePanel.add(background);
-        return resizePanel;
+        JLabel imageLabel, JLabel priceLabel, String name, String imagePath, String price) {
+        nameLabel.setText(name);
+        ImageIcon originalIcon = new ImageIcon(Resources.getImage(imagePath));
+        Image originalImage = originalIcon.getImage();
+        Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(resizedImage));
+        priceLabel.setText(price);
     }
 
     // #endregion

@@ -53,7 +53,7 @@ public final class ActionPanel extends JPanel {
     private ImageIcon rollDiceIcon = new ImageIcon(Resources.getImage("dice4"));
     private ImageIcon startItem;
     private HashMap<ImageIcon, Integer> shopItem = new HashMap<>();
-    private JButton rollDiceButton;
+    private JButton rollDiceButton = new JButton();
     private final int widthButton;
     private final int heightButton;
 
@@ -137,7 +137,14 @@ public final class ActionPanel extends JPanel {
                     if (otherActionBox.getSelectedItem() == startItem) {
                         controller.playerApplyStartItem();
                     } else {
-                        controller.playerApplyShopItem(shopItem.get((ImageIcon) otherActionBox.getSelectedItem()));
+                        if (controller.playerApplyShopItem(
+                            shopItem.get((ImageIcon) otherActionBox.getSelectedItem()))) {
+                            dice = true;
+                            removeActionList();
+                            buttonsPanel = createButtonsPanel();
+                            buttonsInventoryPanel.add(buttonsPanel, BorderLayout.WEST);
+                            buttonsInventoryPanel.revalidate();
+                        }
                     }
                     gamePanel.updatePlayersScoreGraphics();
                 }
@@ -282,15 +289,17 @@ public final class ActionPanel extends JPanel {
         objects.add(startItem);
 
         for (int i = 0; i < controller.getCurrentPlayer().getShopItem().length; i++) {
-            ImageIcon tmp = new ImageIcon(Resources.getImage(
-                controller.getCurrentPlayer().getShopItem()[i].getItemName().name().toLowerCase())
-                .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-            objects.add(tmp);
-            shopItem.put(tmp, i);
+            if (controller.getCurrentPlayer().getShopItem()[i] != null) {
+                ImageIcon tmp = new ImageIcon(Resources.getImage(
+                    controller.getCurrentPlayer().getShopItem()[i].getItemName().name().toLowerCase())
+                    .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                objects.add(tmp);
+                shopItem.put(tmp, i);
+            }
         }
 
         otherActionBox = new JComboBox<Object>(objects.toArray());
-        rollDiceButton = new JButton();
+
         rollDiceButton.setIcon(Resources.getGif("rolling_dice"));
 
         ((JLabel) otherActionBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);

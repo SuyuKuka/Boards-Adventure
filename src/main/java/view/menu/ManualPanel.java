@@ -158,11 +158,6 @@ public final class ManualPanel extends JPanel {
                     "Intersection: Choissisez entre deux chemins à emprunter afin de continuer votre route.", 10);
                     intersectionCase.setBackground(new Color(255, 240, 200));
                 mapPanel.add(intersectionCase);    // intersection
-                JPanel kingdomCase = createCaseExplanationPanel("kingdom",
-                    "Kingdom: Un événement spécial, battez-vous pour prendre possession du trône et de la partie !",
-                        10);
-                        kingdomCase.setBackground(new Color(255, 240, 200));
-                mapPanel.add(kingdomCase);    // kingdom
                 JPanel propertyCase = createCaseExplanationPanel("property",
                     "Propriété: Achetez une propriété afin d'avoir le contrôle de la case et gagner un revenu.", 10);
                 propertyCase.setBackground(new Color(255, 240, 200));

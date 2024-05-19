@@ -41,7 +41,6 @@ public final class Model {
     public Model(final GameMap gameMap, final ArrayList<Player> players, final HashMap<String, String> gameConfig,
         final JSONObject mapConfig) {
         Player.resetPlayerIDIterator();
-        Player.setItemShopNb(mapConfig.optInt("item_shop_nb", 1));
         this.gameMap = gameMap;
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;

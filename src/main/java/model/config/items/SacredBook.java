@@ -13,11 +13,13 @@ public final class SacredBook extends Item {
 
     @Override
     public void playItemEffect(final Player player, final Model model) {
-        final Property property = (Property) player.getPlayerCell(model);
-        property.getOwner().removeProperty(property);
-        property.setOwner(null);
-        player.setCoins(player.getCoins() / 4);
-        player.setStartItemCooldown(getTurnCooldown());
+        if (player.getPlayerCell(model) instanceof Property) {
+            final Property property = (Property) player.getPlayerCell(model);
+            property.getOwner().removeProperty(property);
+            property.setOwner(null);
+            player.setCoins(player.getCoins() / 4);
+            player.setStartItemCooldown(getTurnCooldown());
+        }
     }
 
     @Override

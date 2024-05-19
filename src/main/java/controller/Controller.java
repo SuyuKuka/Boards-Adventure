@@ -17,6 +17,8 @@ import model.config.cells.Coins;
 import model.config.cells.None;
 import model.config.cells.Property;
 import model.config.cells.Start;
+import model.config.items.Item;
+import model.config.cells.Shop;;
 
 /**
  * Classe qui fait office de Contrôleur pour le {@link Model} et la {@link View}.
@@ -36,6 +38,7 @@ public final class Controller {
 
     // Jeu
     private Cell currentCell;
+    private Item[] shopItems;
 
     public Controller(final Game game, final Model model) {
         this.game = game;
@@ -208,11 +211,6 @@ public final class Controller {
         return !(cell instanceof None || cell.getShouldPlayerStopByValue() == 0);
     }
 
-    public void playShowCard() {
-        //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
-        // ((Card) currentCell).showCard(getCurrentPlayer(), model);
-    }
-
     public void playerApplyStartItem() {
         if (getCurrentPlayer().getStartItemCooldown() == 0
             && getCurrentPlayer().getStartItem().canItemBeActivated(getCurrentPlayer(), model)) {
@@ -220,12 +218,15 @@ public final class Controller {
         }
     }
 
-    public void playerApplyShopItem(int i) {
-        if (getCurrentPlayer().getStartItem().canItemBeActivated(getCurrentPlayer(), model)) {
+    public boolean playerApplyShopItem(int i) {
+        if (getCurrentPlayer().getShopItem()[i].canItemBeActivated(getCurrentPlayer(), model)) {
             getCurrentPlayer().getShopItem()[i].playItemEffect(getCurrentPlayer(), model);
+            getCurrentPlayer().usedItem(i);
+            return true;
         }
-
+        return false;
     }
+
     // #endregion
 
     // region model getters/setters
@@ -272,12 +273,6 @@ public final class Controller {
 
     public boolean canPlayerUseStartItem(final int playerID) {
         return getPlayer(playerID).canUseStartItem();
-    }
-
-    public String getCardEffect() {
-        //TODO stocker la carte dans Joueur et pas dans Card avant de continuer
-        //return ((Card) currentCell).getCardEffect().toString();
-        return "carte !!";
     }
 
     public Start getStartCell() {
@@ -357,6 +352,23 @@ public final class Controller {
         return ((Property) currentCell).hasOwner();
     }
 
+    public void getShopItem() {
+        shopItems = ((Shop) currentCell).getShopItem();
+    }
+
+    public String getShopItemName(int i) {
+        return shopItems[i].getItemName().toString();
+    }
+
+    public int getShopItemPrice(int i) {
+        return shopItems[i].getBuyPrice();
+    }
+
+    public void buyItem(int i, int price) {
+        ((Shop) currentCell).buyItem(getCurrentPlayer(), shopItems[i]);
+        getCurrentPlayer().setCoins(getCurrentPlayer().getCoins() - price);
+    }
+
     public void getCurrentPlayerRollDice() {
         getCurrentPlayer().rollDice();
     }
@@ -366,11 +378,20 @@ public final class Controller {
     }
 
     public static int getPlayerItemShopNb() {
-        return Player.getItemShopNb();
+        return Player.getMaxItemShop();
     }
 
     public boolean isCurrentPlayerHuman() {
         return getCurrentPlayer().isHuman();
+    }
+
+    public boolean hasEnoughCoinsItem(int i) {
+        return getCurrentPlayer().hasEnoughCoins(shopItems[i].getBuyPrice());
+    }
+
+    public boolean hasEnoughCoinsProperty(int i) {
+        int price = ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState());
+        return getCurrentPlayer().hasEnoughCoins(price);
     }
 
     public void buyStar() {
