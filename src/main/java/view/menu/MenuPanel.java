@@ -229,10 +229,9 @@ public final class MenuPanel extends JLayeredManager {
         musicPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         musicPanel.setOpaque(false);
         musicPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
-        final JLabel musique = SwingFactory.createTextLabel("Musique : - ", "NoitaBlackletter",
-            Color.BLACK, defaultFont);
+        final JLabel musique = SwingFactory.createTextLabel("Musique : - ", Color.BLACK, defaultFont);
         final JSlider musicSlider = SwingFactory.createMusicSlider();
-        final JLabel plusMusic = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, defaultFont);
+        final JLabel plusMusic = SwingFactory.createTextLabel(" +", Color.BLACK, defaultFont);
         musicPanel.add(musique);
         musicPanel.add(musicSlider);
         musicPanel.add(plusMusic);
@@ -242,9 +241,9 @@ public final class MenuPanel extends JLayeredManager {
         soundPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         soundPanel.setOpaque(false);
         soundPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
-        final JLabel sound = SwingFactory.createTextLabel("Son : - ", "NoitaBlackletter", Color.BLACK, defaultFont);
+        final JLabel sound = SwingFactory.createTextLabel("Son : - ", Color.BLACK, defaultFont);
         final JSlider soundSlider = SwingFactory.createSoundSlider();
-        final JLabel plusSound = SwingFactory.createTextLabel(" +", "NoitaBlackletter", Color.BLACK, defaultFont);
+        final JLabel plusSound = SwingFactory.createTextLabel(" +", Color.BLACK, defaultFont);
         soundPanel.add(sound);
         soundPanel.add(soundSlider);
         soundPanel.add(plusSound);
@@ -366,7 +365,7 @@ public final class MenuPanel extends JLayeredManager {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
         final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + ip.getHostAddress() + ":" + port,
-            "NoitaBlackletter", Color.BLACK, defaultFont / 2);
+            Color.BLACK, defaultFont / 2);
         lobbyCode.setVerticalAlignment(JLabel.CENTER);
         panel.add(lobbyCode);
         return panel;
@@ -457,7 +456,7 @@ public final class MenuPanel extends JLayeredManager {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(Box.createVerticalGlue());
 
-        JLabel title = SwingFactory.createTextLabel("Royaume Médieval", "NoitaBlackletter", Color.BLACK, defaultFont);
+        JLabel title = SwingFactory.createTextLabel("Royaume Médieval", Color.BLACK, defaultFont);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(title);
         panel.add(Box.createVerticalGlue());
@@ -472,7 +471,7 @@ public final class MenuPanel extends JLayeredManager {
         turnsPanel.setLayout(new BoxLayout(turnsPanel, BoxLayout.X_AXIS));
         turnsPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 0, 0));
         JLabel turns = SwingFactory.createTextLabel("Nombre de tours :",
-        "NoitaBlackletter", Color.BLACK, defaultFont / 2);
+        Color.BLACK, defaultFont / 2);
 
         ButtonGroup group = new ButtonGroup();
         JRadioButton turnsBox1 = createRadioButton("25", group, true);
