@@ -79,7 +79,7 @@ public final class ChatPanel extends JPanel {
             + controller.getCurrentPlayerRollDiceValue() + " !\n", true);
     }
 
-    public void playerArrived() { // TODO fsfsfd
+    public void playerArrived() {
         final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
         final String cellString = String.valueOf(cellType);
         final String playerName = controller.getCurrentPlayerName();

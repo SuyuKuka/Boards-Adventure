@@ -202,29 +202,21 @@ public final class ManualPanel extends JPanel {
     }
 
     private JPanel createCaseExplanationPanel(String img, String description, int imageSize) {
-        // BufferedImage caseImage = loadImage(img); // TODO Vraiment utile ?
-        // caseImage = resizeImage(caseImage, imageSize, imageSize);
-
-        // Création du JPanel avec un GridBagLayout
         JPanel casePanel = new JPanel(new GridBagLayout());
-        // Création des contraintes pour le placement des composants
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 3, 5, 3);
 
-        // Ajout de l'image de la case
         JLabel iconLabel = new JLabel(new ImageIcon(Resources.getImage(img)));
         casePanel.add(iconLabel, gbc);
-        // Changement des contraintes pour positionner le texte en dessous de l'image
         gbc.gridx++;
         gbc.anchor = GridBagConstraints.WEST;
-        // Ajout du texte de description
+
         JLabel descriptionLabel = new JLabel(description);
         descriptionLabel.setFont(Resources.getFont("NoitaBlackletter", 32));
         casePanel.add(descriptionLabel, gbc);
-
         return casePanel;
     }
 

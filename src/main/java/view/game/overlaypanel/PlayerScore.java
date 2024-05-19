@@ -237,4 +237,8 @@ public final class PlayerScore extends JPanel {
         }
     }
 
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
 }

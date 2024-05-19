@@ -23,7 +23,6 @@ public final class Model {
     private final HashMap<String, Team> teams;
     private int playerPlayIterator = 0;
 
-    private final int nbPlayers;
     private final int totalTurns;
     private int currentTurn = 1;
 
@@ -41,7 +40,6 @@ public final class Model {
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
-        this.nbPlayers = players.size();
         currentPlayer = players.get(playerPlayIterator);
     }
 

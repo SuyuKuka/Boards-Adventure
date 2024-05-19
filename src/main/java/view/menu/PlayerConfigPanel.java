@@ -173,7 +173,8 @@ public final class PlayerConfigPanel extends JPanel {
     private void initCharacterValue(final int playerID, final boolean player) {
         HashMap<String, String> newPlayer = new HashMap<>();
         newPlayer.put("teamColor", "none");
-        newPlayer.put("name", player ? "Player " + (playersConfig.size() + 1) : "Ordinateur " + (playersConfig.size() + 1));
+        newPlayer.put("name", player ? "Player "
+        + (playersConfig.size() + 1) : "Ordinateur " + (playersConfig.size() + 1));
         newPlayer.put("selectSkin", "1");
         newPlayer.put("className", "Board");
         newPlayer.put("itemName", "farmer_hoe");
@@ -503,7 +504,8 @@ public final class PlayerConfigPanel extends JPanel {
                             + " n'a pas d'équipe", Color.BLACK, defaultFont / 2));
                         error.revalidate();
                         return;
-                    } else if (playersConfig.get(i).get("teamColor").equals("red") && gameConfig.get("mode").equals("2v2")) {
+                    } else if (playersConfig.get(i).get("teamColor").equals("red")
+                        && gameConfig.get("mode").equals("2v2")) {
                         redTeam++;
                         if (redTeam > 2) {
                             error.removeAll();
@@ -562,7 +564,8 @@ public final class PlayerConfigPanel extends JPanel {
             skin.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
                 (int) (size.getHeight() * heightPer / 100)));
 
-            skin.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("className")).getScaledInstance(
+            skin.setIcon(new ImageIcon(Resources.getImage(
+                playersConfig.get(playerID).get("className")).getScaledInstance(
                 (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
             skin.repaint();
             skin.revalidate();
