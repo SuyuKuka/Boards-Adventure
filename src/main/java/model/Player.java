@@ -26,7 +26,7 @@ public final class Player {
     private final String className;
 
     private int coins = 500;
-    private int gamePoint = 0;
+    private int stars = 0;
     private int rank = 1;
     private int jailTurn = 0;
     private int mapLap = 0;
@@ -82,8 +82,8 @@ public final class Player {
         mapLap += increment;
     }
 
-    public void incrementGamePoint(final int increment) {
-        this.gamePoint += increment;
+    public void incrementStars(final int increment) {
+        this.stars += increment;
     }
 
     public void incrementCoins(final int increment) {
@@ -182,8 +182,8 @@ public final class Player {
         this.coins = coins;
     }
 
-    public int getGamePoint() {
-        return gamePoint;
+    public int getStars() {
+        return stars;
     }
 
     public ArrayList<CardEffect> getCards() {

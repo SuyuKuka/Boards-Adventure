@@ -74,9 +74,23 @@ public final class OverlayPanel extends JPanel {
     }
 
     public void playerArrived() {
-        final int playerID = gamePanel.getController().getCurrentPlayerID();
-        playersScore.get(playerID).updatePlayerScoreText();
+        gamePanel.getController().updatePlayersScore();
     }
+
+    public void updatePlayersScoreText() {
+        for (final PlayerScore playerScore : playersScore) {
+            playerScore.updatePlayerScoreText();
+        }
+    }
+
+    public void updatePlayersRanksGraphics(final ArrayList<Integer> rankList) {
+        for (int i = 0; i < rankList.size(); i++) {
+            playersScore.get(i).updateRankImage(Resources.getImage("rank" + rankList.get(i)));
+        }
+        revalidate();
+        repaint();
+    }
+
 
     //#region turns + playersAction
 
@@ -180,10 +194,6 @@ public final class OverlayPanel extends JPanel {
 
     public PlayerScore getplayerScorePanel() {
         return playerScorePanel;
-    }
-
-    public void updatePlayerScore(String rank) {
-        playerScorePanel.updateRankImage(Resources.getImage(rank));
     }
 
     public ArrayList<PlayerScore> getPlayersScore() {

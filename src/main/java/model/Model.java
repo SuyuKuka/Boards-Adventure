@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Comparator;
 
 import org.json.JSONObject;
 
@@ -15,13 +16,14 @@ import model.config.cells.None;
  */
 public final class Model {
 
+    private static final Comparator<Player> RANK_COMPARATOR = createRankComparator();
     private final GameMap gameMap;
 
     private final ArrayList<Player> players;
     private final HashMap<String, Team> teams;
     private int playerPlayIterator = 0;
 
-    private final int nbPlayers;;
+    private final int nbPlayers;
     private final int totalTurns;
     private int currentTurn = 1;
 
@@ -90,10 +92,6 @@ public final class Model {
     }
 
     public void endTurn() {
-        for (Player player : players) {
-            player.setRank(1);
-            rankUpdate(player);
-        }
         currentPlayer.decrementStartItemCooldown();
         playerPlayIterator = (playerPlayIterator + 1) % players.size();
         if (playerPlayIterator == 0) {
@@ -101,27 +99,16 @@ public final class Model {
         }
     }
 
-    public void rankUpdate(Player player) {
-        for (Player otherPlayer : players) {
-            if (otherPlayer != player) {
-                if (player.getGamePoint() > otherPlayer.getGamePoint()) {
-                    otherPlayer.increaseRank(nbPlayers);
-                } else if (player.getGamePoint() < otherPlayer.getGamePoint()) {
-                    player.increaseRank(nbPlayers);
-                } else {
-                    if (player.getProperties().size() > otherPlayer.getProperties().size()) {
-                        otherPlayer.increaseRank(nbPlayers);
-                    } else if (player.getProperties().size() < otherPlayer.getProperties().size()) {
-                        player.increaseRank(nbPlayers);
-                    } else {
-                        if (player.getCoins() > otherPlayer.getCoins()) {
-                            otherPlayer.increaseRank(nbPlayers);
-                        } else if (player.getCoins() < otherPlayer.getCoins()) {
-                            player.increaseRank(nbPlayers);
-                        }
-                    }
-                }
+    public void updatePlayersRank() {
+        final ArrayList<Player> playersRankList = new ArrayList<>(players);
+        playersRankList.sort(RANK_COMPARATOR);
+        int currentRank = 1;
+        players.get(0).setRank(currentRank);
+        for (int i = 1; i < playersRankList.size(); i++) {
+            if (RANK_COMPARATOR.compare(playersRankList.get(i), playersRankList.get(i - 1)) != 0) {
+                currentRank++;
             }
+            playersRankList.get(i).setRank(currentRank);
         }
     }
 
@@ -171,6 +158,21 @@ public final class Model {
 
     public Cell getCell(final int cellID) {
         return gameMap.getCell(cellID);
+    }
+
+    private static Comparator<Player> createRankComparator() {
+        return new Comparator<Player>() {
+            @Override
+            public int compare(final Player p1, final Player p2) {
+                if (p1.getStars() != p2.getStars()) {
+                    return Integer.compare(p2.getStars(), p1.getStars());
+                } else if (p1.getProperties().size() != p2.getProperties().size()) {
+                    return Integer.compare(p2.getProperties().size(), p1.getProperties().size());
+                } else {
+                    return Integer.compare(p2.getCoins(), p1.getCoins());
+                }
+            }
+        };
     }
 
 

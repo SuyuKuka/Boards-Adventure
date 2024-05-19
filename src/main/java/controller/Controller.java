@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import controller.resources.Resources;
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
@@ -137,16 +136,28 @@ public final class Controller {
     private void playerArrived() {
         prevGameState = GameState.PLAYER_ARRIVED;
         model.playerArrived();
+        updatePlayersScore();
         gamePanel.playerArrived();
+    }
+
+    public void updatePlayersScore() {
+        model.updatePlayersRank();
+        gamePanel.updatePlayersScoreGraphics();
+    }
+
+    public ArrayList<Integer> getPlayersRankList() {
+        final ArrayList<Integer> rankList = new ArrayList<>();
+        final ArrayList<Player> playerList = model.getPlayers();
+        for (int i = 0; i < playerList.size(); i++) {
+            rankList.add(playerList.get(i).getRank());
+        }
+        return rankList;
     }
 
     private void endTurn() {
         prevGameState = GameState.END_TURN;
         model.endTurn();
         gamePanel.endTurn();
-        for (Player player : model.getPlayers()) {
-            gamePanel.getOverlayPanel().updatePlayerScore(String.valueOf(player.getRank()));
-        }
     }
 
     private void gameEnd() {
@@ -279,8 +290,8 @@ public final class Controller {
         return getCurrentPlayer().getCoins();
     }
 
-    public int getGamePoint() {
-        return getCurrentPlayer().getGamePoint();
+    public int getCurrentPlayerStars() {
+        return getCurrentPlayer().getStars();
     }
 
     public PlayerGraphics getCurrentPlayerGraphics() {

@@ -12,7 +12,7 @@ public final class Star extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        player.incrementGamePoint(1);
+        player.incrementStars(1);
     }
 
 }

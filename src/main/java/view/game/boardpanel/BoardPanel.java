@@ -354,7 +354,7 @@ public final class BoardPanel extends JLayeredManager {
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         intersectIDs.forEach(cellID ->
             entitiesPanelAdd(CellGraphicsFactory.createIntersectionChoice(this, cellsGraphics.get(cellID))));
-        repaint();
+        gamePanel.getController().updatePlayersScore();
     }
 
     public void playerArrived() {
@@ -611,7 +611,7 @@ public final class BoardPanel extends JLayeredManager {
         kingdomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(kingdomLabel);
 
-        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getGamePoint()
+        JLabel pointsLabel = SwingFactory.createTextLabel("Tu as maintenant " + controller.getCurrentPlayerStars()
         + " points !\n", Color.BLACK, 26);
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         background.add(pointsLabel);
@@ -679,8 +679,7 @@ public final class BoardPanel extends JLayeredManager {
                 } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
                     controller.playerUpgradeProperty();
                 }
-                final int playerID = gamePanel.getController().getCurrentPlayerID();
-                gamePanel.getOverlayPanel().getPlayersScore().get(playerID).updatePlayerScoreText();
+                gamePanel.getController().updatePlayersScore();
                 controller.gameUpdate();
                 revalidate();
             }
@@ -712,6 +711,7 @@ public final class BoardPanel extends JLayeredManager {
         rentTextPane.setEditable(false);
         rentTextPane.setFocusable(false);
         rentTextPane.setPreferredSize(new Dimension(WIDTH, 50));
+        gamePanel.getController().updatePlayersScore();
 
         //Center le texte du rentTextPane
         StyledDocument doc = rentTextPane.getStyledDocument();
@@ -758,6 +758,7 @@ public final class BoardPanel extends JLayeredManager {
         close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
+                gamePanel.getController().updatePlayersScore();
                 controller.gameUpdate();
                 removeComp(INTERACTION);
                 revalidate();
@@ -881,6 +882,7 @@ public final class BoardPanel extends JLayeredManager {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 controller.playShowCard();
+                gamePanel.getController().updatePlayersScore();
                 removeComp(INTERACTION);
                 controller.gameUpdate();
                 revalidate();

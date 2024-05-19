@@ -13,14 +13,12 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import controller.Controller;
@@ -186,27 +184,6 @@ public final class GamePanel extends JLayeredManager {
     }
     //#endregion
 
-    //#region itemsGraphics
-
-    private HashMap<String, ImageIcon> loadItemsGraphics(final JSONObject mapConfig) {
-        final HashMap<String, ImageIcon> items = new HashMap<>();
-        final JSONArray shopItems = mapConfig.getJSONArray("shop_items");
-        for (int i = 0; i < shopItems.length(); i++) {
-            final String itemName = shopItems.getJSONObject(i).getString("name").toLowerCase();
-            items.put(itemName, new ImageIcon(Resources.getImage(itemName)));
-        }
-        final JSONArray startItems = mapConfig.getJSONArray("start_items");
-        for (int i = 0; i < startItems.length(); i++) {
-            final String itemName = shopItems.getJSONObject(i).getString("name").toLowerCase();
-            if (!items.containsKey(itemName)) {
-                items.put(itemName, new ImageIcon(Resources.getImage(itemName)));
-            }
-        }
-        return items;
-    }
-
-    //#endregion
-
     //#region Pause
 
     public JPanel createPausePanel() {
@@ -277,4 +254,8 @@ public final class GamePanel extends JLayeredManager {
 
     //#endregion
 
+    public void updatePlayersScoreGraphics() {
+        overlayPanel.updatePlayersRanksGraphics(controller.getPlayersRankList());
+        overlayPanel.updatePlayersScoreText();
+    }
 }
