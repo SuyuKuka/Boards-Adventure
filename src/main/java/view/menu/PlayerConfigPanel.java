@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -292,28 +294,32 @@ public final class PlayerConfigPanel extends JPanel {
         panel.setLayout(new BorderLayout());
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Image skinImg = Resources.getImage("board");
+        int widthPer = 20;
+        int heightPer = 20;
+        Image skinImg = Resources.getImage(playersConfig.get(playerID).get("skin"));
 
         JButton left = SwingFactory.createImageButton(parent, "left", 5, 10, false);
         left.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
         panel.add(left, BorderLayout.WEST, 0);
-        JLabel character = menuPanel.createImageImageLabel(parent, skinImg, 10, 10, false);
+        JLabel character = SwingFactory.createImageImageLabel(
+            this, skinImg, widthPer, heightPer, false);
         panel.add(character, BorderLayout.CENTER, 1);
         JButton right = SwingFactory.createImageButton(parent, "right", 5, 10, false);
         right.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
         panel.add(right, BorderLayout.EAST, 2);
 
-        selectSkin(parent, character, playerID, 0);
-        skinListener(left, parent, character, playerID, -1);
-        skinListener(right, parent, character, playerID, 1);
+        selectSkin(parent, character, playerID, 0, widthPer, heightPer);
+        skinListener(left, parent, character, playerID, -1, widthPer, heightPer);
+        skinListener(right, parent, character, playerID, 1,  widthPer, heightPer);
         return panel;
     }
 
-    private void skinListener(JButton button, JPanel skinSelection, JLabel skinLabel, int playerID, int i) {
+    private void skinListener(JButton button, JPanel skinSelection, JLabel skinLabel, int playerID,
+        int i, int widthPer, int heightPer) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectSkin(skinSelection, skinLabel, playerID, i);
+                selectSkin(skinSelection, skinLabel, playerID, i, widthPer, heightPer);
             }
         });
         menuPanel.handCursor(button);
@@ -328,24 +334,30 @@ public final class PlayerConfigPanel extends JPanel {
         panel.setLayout(new BorderLayout());
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        int widthPer = 10;
+        int heightPer = 10;
+        Image itemImg = Resources.getImage(playersConfig.get(playerID).get("item"));
+
         JButton left = SwingFactory.createImageButton(parent, "left", 4, 4, false);
         panel.add(left, BorderLayout.WEST, 0);
-        JLabel item = SwingFactory.createImageLabel(parent, "sword", 50, 20, false);
+        JLabel item = SwingFactory.createImageImageLabel(
+            parent, itemImg, widthPer, heightPer, false);
         panel.add(item, BorderLayout.CENTER, 1);
         JButton right = SwingFactory.createImageButton(parent, "right", 4, 4, false);
         panel.add(right, BorderLayout.EAST, 2);
 
-        selectItem(parent, item, playerID, 0);
-        itemListener(left, parent, item, playerID, -1);
-        itemListener(right, parent, item, playerID, 1);
+        selectItem(parent, item, playerID, 0, 10, 10);
+        itemListener(left, parent, item, playerID, -1, widthPer, heightPer);
+        itemListener(right, parent, item, playerID, 1, widthPer, heightPer);
         return panel;
     }
 
-    private void itemListener(JButton button, JPanel itemSelection, JLabel itemLabel, int playerID, int i) {
+    private void itemListener(JButton button, JPanel itemSelection, JLabel itemLabel, int playerID,
+        int i, int widthPer, int heightPer) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectItem(itemSelection, itemLabel, playerID, i);
+                selectItem(itemSelection, itemLabel, playerID, i, widthPer, heightPer);
             }
         });
         menuPanel.handCursor(button);
@@ -531,7 +543,7 @@ public final class PlayerConfigPanel extends JPanel {
 
     // #region Selector
 
-    private void selectSkin(JPanel parent, JLabel skin, int playerID, int i) {
+    private void selectSkin(JPanel parent, JLabel skin, int playerID, int i, int widthPer, int heightPer) {
         int selectSkin = Integer.parseInt(playersConfig.get(playerID).get("selectSkin")) + i;
         if (selectSkin >= 6) {
             selectSkin = 1;
@@ -542,9 +554,10 @@ public final class PlayerConfigPanel extends JPanel {
 
         if ((i == 0 && playerID == 0)) {
             playersConfig.get(playerID).replace("skin", "board");
-            final Dimension size = SwingFactory.calcDimension(new ImageIcon(
-            Resources.getImage(playersConfig.get(playerID).get("skin"))).getImage(), parent, 20, 20, false);
-            skin.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100, (int) (size.getHeight() * 60 / 100)));
+            final Dimension size = SwingFactory.calcDimension(new ImageIcon(Resources.getImage(
+                playersConfig.get(playerID).get("skin"))).getImage(), parent, widthPer, heightPer, false);
+            skin.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                (int) (size.getHeight() * heightPer / 100)));
 
             skin.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("skin")).getScaledInstance(
                 (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
@@ -559,7 +572,7 @@ public final class PlayerConfigPanel extends JPanel {
             case 1 :
                 for (int j = 0; j < playersConfig.size(); j++) {
                     if (playersConfig.get(j).get("skin").equals("board")) {
-                        selectSkin(parent, skin, playerID, i);
+                        selectSkin(parent, skin, playerID, i, widthPer, heightPer);
                         return;
                     }
                 }
@@ -568,7 +581,7 @@ public final class PlayerConfigPanel extends JPanel {
             case 2 :
                 for (int j = 0; j < playersConfig.size(); j++) {
                     if (playersConfig.get(j).get("skin").equals("howard")) {
-                        selectSkin(parent, skin, playerID, i);
+                        selectSkin(parent, skin, playerID, i, widthPer, heightPer);
                         return;
                     }
                 }
@@ -577,7 +590,7 @@ public final class PlayerConfigPanel extends JPanel {
             case 3 :
                 for (int j = 0; j < playersConfig.size(); j++) {
                     if (playersConfig.get(j).get("skin").equals("bacchus")) {
-                        selectSkin(parent, skin, playerID, i);
+                        selectSkin(parent, skin, playerID, i, widthPer, heightPer);
                         return;
                     }
                 }
@@ -586,7 +599,7 @@ public final class PlayerConfigPanel extends JPanel {
             case 4 :
                 for (int j = 0; j < playersConfig.size(); j++) {
                     if (playersConfig.get(j).get("skin").equals("gloria")) {
-                        selectSkin(parent, skin, playerID, i);
+                        selectSkin(parent, skin, playerID, i, widthPer, heightPer);
                         return;
                     }
                 }
@@ -595,7 +608,7 @@ public final class PlayerConfigPanel extends JPanel {
             case 5 :
                 for (int j = 0; j < playersConfig.size(); j++) {
                     if (playersConfig.get(j).get("skin").equals("may")) {
-                        selectSkin(parent, skin, playerID, i);
+                        selectSkin(parent, skin, playerID, i, widthPer, heightPer);
                         return;
                     }
                 }
@@ -605,17 +618,30 @@ public final class PlayerConfigPanel extends JPanel {
                 break;
         }
 
-        final Dimension size = SwingFactory.calcDimension(new ImageIcon(
-            Resources.getImage(playersConfig.get(playerID).get("skin"))).getImage(), parent, 20, 20, false);
-        skin.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100, (int) (size.getHeight() * 60 / 100)));
+        final Dimension size = SwingFactory.calcDimension(new ImageIcon(Resources.getImage(
+            playersConfig.get(playerID).get("skin"))).getImage(), parent, widthPer, heightPer, false);
+        skin.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+            (int) (size.getHeight() * heightPer / 100)));
 
         skin.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("skin")).getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = SwingFactory.calcDimension(Resources.getImage(
+                    playersConfig.get(playerID).get("skin")), parent, widthPer, heightPer, false);
+                skin.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                    (int) (size.getWidth() * heightPer / 100)));
+                skin.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("skin"))
+                    .getScaledInstance((int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
         skin.repaint();
         skin.revalidate();
     }
 
-    private void selectItem(JPanel parent, JLabel item, int playerID, int i) {
+    private void selectItem(JPanel parent, JLabel item, int playerID, int i, int widthPer, int heightPer) {
         selectItem += i;
         if (selectItem >= 6) {
             selectItem = 1;
@@ -643,12 +669,24 @@ public final class PlayerConfigPanel extends JPanel {
                 break;
         }
 
-        final Dimension size = SwingFactory.calcDimension(new ImageIcon(
-            Resources.getImage(playersConfig.get(playerID).get("item"))).getImage(), parent, 10, 10, false);
-        item.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100,
-            (int) (size.getHeight() * 40 / 100)));
+        final Dimension size = SwingFactory.calcDimension(new ImageIcon(Resources.getImage(
+            playersConfig.get(playerID).get("item"))).getImage(), parent, widthPer, heightPer, false);
+        item.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+            (int) (size.getHeight() * heightPer / 100)));
         item.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("item")).getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = SwingFactory.calcDimension(Resources.getImage(
+                    playersConfig.get(playerID).get("item")), parent, widthPer, heightPer, false);
+                item.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                    (int) (size.getWidth() * heightPer / 100)));
+                item.setIcon(new ImageIcon(Resources.getImage(playersConfig.get(playerID).get("item"))
+                    .getScaledInstance((int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
         item.repaint();
         item.revalidate();
     }

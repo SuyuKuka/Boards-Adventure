@@ -269,32 +269,6 @@ public final class MenuPanel extends JLayeredManager {
         });
     }
 
-    public JLabel createImageImageLabel(final Component parent, final Image img,
-        final int widthPer, final int heightPer, final boolean resize) {
-        final Dimension size = SwingFactory.calcDimension(img, parent, widthPer, heightPer, resize);
-        final JLabel label = new JLabel(new ImageIcon(img.getScaledInstance(
-            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-        label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
-            (int) (size.getWidth() * heightPer / 100)));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setVerticalAlignment(JLabel.CENTER);
-        label.setOpaque(false);
-
-        parent.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                final Dimension size = SwingFactory.calcDimension(img, parent, widthPer,
-                    heightPer, false);
-                label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
-                    (int) (size.getWidth() * heightPer / 100)));
-                label.setIcon(new ImageIcon(img.getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-            }
-        });
-        return label;
-    }
-
     public int getDefaultFont() {
         return this.defaultFont;
     }

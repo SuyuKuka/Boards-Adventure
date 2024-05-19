@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -81,11 +83,13 @@ public final class GameConfigPanel extends JPanel {
         final JPanel mapSelection = SwingFactory.createTransparentPanel(parent, 100, 50);
         mapSelection.setLayout(new BorderLayout());
 
-        Image mapImg = Resources.getImage("preview1");
+        int widthPer = 70;
+        int heightPer = 40;
+        Image mapImg = Resources.getImage("preview" + selectMap);
 
         JButton left = SwingFactory.createImageButton(parent, "left", 20, 10, false);
         mapSelection.add(left, BorderLayout.WEST);
-        JLabel mapLabel = menuPanel.createImageImageLabel(parent, mapImg, 60, 60, false);
+        JLabel mapLabel = SwingFactory.createImageImageLabel(parent, mapImg, widthPer, heightPer, false);
         mapSelection.add(mapLabel, BorderLayout.CENTER);
         JButton right = SwingFactory.createImageButton(parent, "right", 20, 10, false);
         mapSelection.add(right, BorderLayout.EAST);
@@ -108,17 +112,18 @@ public final class GameConfigPanel extends JPanel {
         mapDescription.add(scrollPane, BorderLayout.CENTER);
         panel.add(mapDescription);
 
-        selectMap(parent, mapLabel, desc, 0);
-        mapListerner(left, parent, mapLabel, desc, -1);
-        mapListerner(right, parent, mapLabel, desc, 1);
+        selectMap(parent, mapLabel, desc, 0, widthPer, heightPer);
+        mapListerner(left, parent, mapLabel, desc, -1, widthPer, heightPer);
+        mapListerner(right, parent, mapLabel, desc, 1, widthPer, heightPer);
         return panel;
     }
 
-    private void mapListerner(JButton button, JPanel mapSelection, JLabel mapLabel, JTextArea desc, int i) {
+    private void mapListerner(JButton button, JPanel mapSelection, JLabel mapLabel, JTextArea desc,
+    int i, int widthPer, int heightPer) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectMap(mapSelection, mapLabel, desc, i);
+                selectMap(mapSelection, mapLabel, desc, i, widthPer, heightPer);
             }
         });
         menuPanel.handCursor(button);
@@ -273,7 +278,7 @@ public final class GameConfigPanel extends JPanel {
 
     // #region Selector
 
-    private void selectMap(JPanel parent, JLabel map, JTextArea desc, int i) {
+    private void selectMap(JPanel parent, JLabel map, JTextArea desc, int i, int widthPer, int heightPer) {
         selectMap += i;
         if (selectMap >= nbMaps) {
             selectMap = 1;
@@ -307,11 +312,22 @@ public final class GameConfigPanel extends JPanel {
                 break;
         }
 
-        final Dimension size = SwingFactory.calcDimension(mapImg, parent, 60, 40, false);
-        map.setPreferredSize(new Dimension((int) size.getWidth() * 40 / 100,
-            (int) (size.getHeight() * 60 / 100)));
+        final Dimension size = SwingFactory.calcDimension(mapImg, parent, widthPer, heightPer, false);
+        map.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+            (int) (size.getHeight() * heightPer / 100)));
         map.setIcon(new ImageIcon(mapImg.getScaledInstance(
             (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = SwingFactory.calcDimension(mapImg, parent, widthPer, heightPer, false);
+                map.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                    (int) (size.getWidth() * heightPer / 100)));
+                map.setIcon(new ImageIcon(mapImg.getScaledInstance((int) size.getWidth(),
+                    (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
         map.repaint();
         map.revalidate();
     }
