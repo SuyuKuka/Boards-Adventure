@@ -39,8 +39,8 @@ public final class Game {
 
     private Game() {
         SwingUtilities.invokeLater(() -> {
-            view = new View(this);
             Resources.loadCommonResources();
+            view = new View(this);
             if (mode == Mode.GAME) {
                 startTempGame();
             } else {

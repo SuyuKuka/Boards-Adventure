@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import org.json.JSONObject;
 
 import controller.Controller;
+import controller.resources.Resources;
 import game.Game;
 import view.game.GamePanel;
 import view.menu.MenuPanel;
@@ -29,6 +30,7 @@ public final class View extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
+        setIconImage(Resources.getImage("Board"));
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int screenWidth = (int) screenSize.getWidth();
         final int screenHeight = (int) screenSize.getHeight();
