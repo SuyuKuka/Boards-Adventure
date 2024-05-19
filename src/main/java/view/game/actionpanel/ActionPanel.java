@@ -3,11 +3,13 @@ package view.game.actionpanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.FlowLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
@@ -18,12 +20,14 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import controller.Controller;
 import controller.resources.Resources;
 import model.config.cells.Property;
+import view.SwingFactory;
 import view.game.GamePanel;
 
 import java.util.ArrayList;
@@ -39,6 +43,8 @@ public final class ActionPanel extends JPanel {
     private final ChatPanel chatPanel;
 
     private final JPanel infoPanel;
+    private JPanel infoPanelInside = null;
+    private final JLabel defaultInfo;
     private JPanel buttonsPanel;
     private final JPanel inventoryPanel;
     private final JPanel buttonsInventoryPanel;
@@ -72,6 +78,7 @@ public final class ActionPanel extends JPanel {
         this.chatPanel = new ChatPanel(gamePanel, width1, height);
         add(chatPanel, BorderLayout.WEST);
 
+        defaultInfo = createDefaultInfo();
         infoPanel = createInfoPanel(width2, height);
         add(infoPanel, BorderLayout.CENTER);
 
@@ -160,10 +167,94 @@ public final class ActionPanel extends JPanel {
     // #region Info
 
     private JPanel createInfoPanel(final int width, final int height) {
-        final JPanel panel = new JPanel();
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.add(defaultInfo, BorderLayout.CENTER);
         panel.setPreferredSize(new Dimension(width, height));
-        panel.setBackground(Color.RED);
+        panel.setBackground(Color.GRAY);
         return panel;
+    }
+
+    private JLabel createDefaultInfo() {
+        final JLabel label = SwingFactory.createJLabel();
+        label.setText("Rien a signaler...");
+        final Font font = Resources.getFont(40);
+        label.setFont(font);
+        return label;
+    }
+
+    private void removeInfoPanelInside() {
+        if (infoPanelInside != null) {
+            infoPanel.remove(infoPanelInside);
+            infoPanelInside = null;
+            repaint();
+            revalidate();
+        } else {
+            infoPanel.remove(defaultInfo);
+        }
+    }
+
+    public void addDefaultInfo() {
+        if (infoPanelInside != null) {
+            infoPanel.remove(infoPanelInside);
+            infoPanelInside = null;
+            repaint();
+            revalidate();
+        }
+        infoPanel.add(defaultInfo);
+    }
+
+    public void addPropertyInfo(final int cellID) {
+        removeInfoPanelInside();
+        final JPanel panel = new JPanel(new BorderLayout());
+        final Property cell = (Property) controller.getCell(cellID);
+        panel.setBackground(Color.decode(cell.getGroupHexColor()));
+        // Owner
+        final JPanel ownerPanel = new JPanel(new FlowLayout());
+        final Font font = Resources.getFont(16);
+        ownerPanel.setOpaque(false);
+        final JLabel ownerLabel = new JLabel("Propriétaire : ");
+        ownerLabel.setFont(font);
+        final JLabel playerLabel = new JLabel();
+        playerLabel.setFont(font);
+        final Property property = ((Property) controller.getCell(cellID));
+        final boolean hasOwner = property.hasOwner();
+        if (hasOwner) {
+            final String ownerName = property.getOwner().getName() + "";
+            playerLabel.setText(ownerName);
+            playerLabel.setIcon(new ImageIcon(Resources.getImage(property
+                .getOwner().getClassName()).getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        } else {
+            playerLabel.setText(" Personne :(");
+        }
+        ownerPanel.add(ownerLabel);
+        ownerPanel.add(playerLabel);
+        panel.add(ownerPanel, BorderLayout.NORTH);
+        // Prix
+        final JPanel pricePanel = new JPanel(new BorderLayout());
+        pricePanel.setBorder(BorderFactory.createEmptyBorder(10, 00, 10, 00));
+        pricePanel.setOpaque(false);
+        final JLabel buyLabel = SwingFactory.createJLabel();
+        buyLabel.setFont(font);
+        final JLabel rentLabel = SwingFactory.createJLabel();
+        rentLabel.setFont(font);
+        if (hasOwner) {
+            final int buyPrice = property.getBuyPrices().get(property.getPropertyState() + 1);
+            final JLabel currentPriceLabel = SwingFactory.createJLabel();
+            currentPriceLabel.setFont(font);
+            currentPriceLabel.setText("Prix actuel : " + property.getBuyPrices().get(property.getPropertyState()));
+            pricePanel.add(currentPriceLabel, BorderLayout.NORTH);
+            buyLabel.setText("Prix d'amélioration : " + buyPrice);
+            rentLabel.setText("Loyer a payer : " + (int) (buyPrice * 0.70));
+        } else {
+            final int buyPrice = property.getBuyPrices().get(0);
+            buyLabel.setText("Prix d'achat : " + buyPrice);
+            rentLabel.setText("Loyer a payer : " + (int) (buyPrice * 0.70));
+        }
+        pricePanel.add(buyLabel, BorderLayout.CENTER);
+        pricePanel.add(rentLabel, BorderLayout.SOUTH);
+        panel.add(pricePanel, BorderLayout.CENTER);
+        infoPanelInside = panel;
+        infoPanel.add(infoPanelInside, BorderLayout.CENTER);
     }
 
     // #endregion
@@ -294,6 +385,15 @@ public final class ActionPanel extends JPanel {
                     g2d.drawImage(PROPERTY_IMAGE, xIcon, yIcon, widthIcon, heightIcon, this);
                 }
             };
+
+            propertyButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(final MouseEvent e) {
+                    addPropertyInfo(propertyCellID);
+                    revalidate();
+                    repaint();
+                }
+            });
             propertyButton.setSize(new Dimension(width, height));
             panel.add(propertyButton);
         }
@@ -303,6 +403,10 @@ public final class ActionPanel extends JPanel {
 
     public JPanel getButtonsPanel() {
         return buttonsPanel;
+    }
+
+    public ChatPanel getChatPanel() {
+        return chatPanel;
     }
 
     public JPanel getButtonsInventoryPanel() {

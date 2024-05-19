@@ -26,7 +26,6 @@ public final class OverlayPanel extends JPanel {
     private final GamePanel gamePanel;
 
     private final JLabel turnsLabel;
-    private final JLabel playerActionLabel;
 
     private final JPanel scoreboardPanel;
     private PlayerScore playerScorePanel;
@@ -43,7 +42,6 @@ public final class OverlayPanel extends JPanel {
         setOpaque(false);
 
         turnsLabel = new JLabel();
-        playerActionLabel = new JLabel();
         final JPanel turnsActionsPanel = createTurnsActionsPanel((int) (dim.width * 0.03), (int) (dim.height * 0.03),
             (int) (dim.width * 0.2), (int) (dim.height * 0.1));
         scoreboardPanel = createScoreboardPanel((int) (dim.width * 0.03), (int) (dim.height * 0.14),
@@ -62,8 +60,7 @@ public final class OverlayPanel extends JPanel {
                 turnsActionsPanel.setBounds((int) (dim.width * 0.03), (int) (dim.height * 0.03),
                     (int) (dim.width * 0.2), (int) (dim.height * 0.1));
                 final Dimension panelDim = turnsActionsPanel.getSize();
-                turnsLabel.setPreferredSize(new Dimension(panelDim.width, (int) (panelDim.height * 0.6)));
-                playerActionLabel.setPreferredSize(new Dimension(panelDim.width, (int) (panelDim.height * 0.4)));
+                turnsLabel.setPreferredSize(new Dimension(panelDim.width, (int) (panelDim.height * 0.8)));
                 scoreboardPanel.setBounds((int) (dim.width * 0.03), (int) (dim.height * 0.14),
                     (int) (dim.width * 0.2), (int) (dim.height * 0.25));
                 settingsButton.setBounds((int) (dim.width * 0.94), (int) (dim.height * 0.04),
@@ -71,6 +68,11 @@ public final class OverlayPanel extends JPanel {
             }
         });
         setVisible(true);
+    }
+
+    public void endTurn() {
+        turnsLabel.setText("Tour " + gamePanel.getController().getCurrentTurn()
+            + " / " + gamePanel.getController().getTotalTurns());
     }
 
     public void updatePlayersScoreText() {
@@ -103,10 +105,8 @@ public final class OverlayPanel extends JPanel {
         panel.setOpaque(false);
         panel.setBounds(x, y, width, height);
         final Dimension dim = panel.getSize();
-        initTurnsLabel(dim.width, (int) (dim.height * 0.6));
-        initPlayerActionLabel(dim.width, (int) (dim.height * 0.3));
+        initTurnsLabel(dim.width, (int) (dim.height * 0.8));
         panel.add(turnsLabel, BorderLayout.CENTER);
-        panel.add(playerActionLabel, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -126,23 +126,6 @@ public final class OverlayPanel extends JPanel {
 
         turnsLabel.setForeground(new Color(199, 45, 45));
         turnsLabel.setHorizontalAlignment(JLabel.CENTER);
-    }
-
-    private void initPlayerActionLabel(final int width, final int height) {
-        playerActionLabel.setPreferredSize(new Dimension(width, height));
-        playerActionLabel.setText("hello");
-        // Font
-        final Font font = Resources.getFont(22);
-        playerActionLabel.setFont(SwingFactory.getResizedFont(playerActionLabel, playerActionLabel.getText(), font));
-        playerActionLabel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                playerActionLabel.setFont(SwingFactory.getResizedFont(playerActionLabel,
-                    playerActionLabel.getText(), font));
-            }
-        });
-        playerActionLabel.setForeground(new Color(255, 222, 109));
-        playerActionLabel.setHorizontalAlignment(JLabel.CENTER);
     }
 
     //#endregion

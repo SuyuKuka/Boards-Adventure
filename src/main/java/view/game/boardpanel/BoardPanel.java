@@ -164,6 +164,8 @@ public final class BoardPanel extends JLayeredManager {
             public void mousePressed(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3 && !wideAngle) {
                     cameraPan = e.getPoint();
+                } else if (e.getButton() == MouseEvent.BUTTON1) {
+                    gamePanel.getMainPanel().getActionPanel().addDefaultInfo();
                 }
             }
             @Override
@@ -368,7 +370,41 @@ public final class BoardPanel extends JLayeredManager {
         final int playerCoins = controller.getCurrentPlayerCoins();
         final int starPrice = controller.getStarPrice();
         if (playerCoins > starPrice) {
-            System.out.println("hello");
+            panel.add(SwingFactory.createTextLabel("Voulez vous acheter l'étoile pour "
+                + starPrice + " coins ?", Color.BLACK, 18));
+            panel.add(SwingFactory.createTextLabel("(Vous avez " + playerCoins + " coins).", Color.BLACK, 18));
+            final JPanel buttonsPanel = new JPanel();
+            buttonsPanel.setOpaque(false);
+            buttonsPanel.setLayout(new FlowLayout());
+            buttonsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            JButton yes = new JButton("Oui");
+            yes.setFocusPainted(false);
+            yes.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(final MouseEvent e) {
+                    removeComp(INTERACTION);
+                    controller.buyStar();
+                    gamePanel.getMainPanel().getActionPanel().getChatPanel().addBuyStarLogText();
+                    controller.gameUpdate();
+                    revalidate();
+                    repaint();
+                }
+            });
+
+            JButton no = new JButton("Non");
+            no.setFocusPainted(false);
+            no.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(final MouseEvent e) {
+                    removeComp(INTERACTION);
+                    gamePanel.getMainPanel().getActionPanel().getChatPanel().addNotBuyStarLogText();
+                    controller.gameUpdate();
+                    revalidate();
+                }
+            });
+            buttonsPanel.add(yes);
+            buttonsPanel.add(no);
+            panel.add(buttonsPanel);
         } else {
             JLabel label = SwingFactory.createTextLabel("Désolé, l'étoile coûte " + starPrice
                 + " coins et tu n'as que " + playerCoins + " coins.",
@@ -400,12 +436,6 @@ public final class BoardPanel extends JLayeredManager {
         switch (cellType) {
             case INTERSECTION:
                 createIntersectionEntities();
-                break;
-            case DANGER:
-                // addComp(createDangerPanel(), INTERACTION);
-                break;
-            case JAIL:
-                // addComp(createJailPanel(), INTERACTION);
                 break;
             case PROPERTY:
                 addComp(createPropertyPanel(), INTERACTION);
@@ -682,19 +712,19 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     private void createBuyAndUpgradePanel(JPanel panel) {
+        panel.add(Box.createVerticalGlue());
         int price = controller.getPropertyPrice();
-        String name = "\"Nom de la propriete\"";
         JLabel propertyLabel = SwingFactory.createTextLabel("Veux tu ameliorer cette propriete ?\n",
                 Color.BLACK, 32);
         propertyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         if (controller.playerIsAtHome()) {
-            propertyLabel.setText("Veux tu ameliorer cette propriete ?\n");
+            propertyLabel.setText("Veux tu ameliorer cette proprieté ?\n");
         } else {
-            propertyLabel.setText("Veux tu acheter cette propriete ?\n");
+            propertyLabel.setText("Veux tu acheter cette proprieté ?\n");
         }
         panel.add(propertyLabel);
 
-        JLabel propertyPrice = SwingFactory.createTextLabel(name + " " + price + "$\n",
+        JLabel propertyPrice = SwingFactory.createTextLabel("Prix : " + price + "\n",
             Color.BLACK, 18);
         propertyPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(propertyPrice);
@@ -735,6 +765,7 @@ public final class BoardPanel extends JLayeredManager {
         buttonPanel.add(no);
 
         panel.add(buttonPanel);
+        panel.add(Box.createVerticalGlue());
     }
 
     private void createRentPanel(JPanel panel) {
@@ -857,21 +888,21 @@ public final class BoardPanel extends JLayeredManager {
         item1.addMouseListener(new MouseAdapter() { // Pour l'item 1
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 1", "void", "$100");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 1", "void", "100");
                 buyButton.setVisible(true);
             }
         });
         item2.addMouseListener(new MouseAdapter() { // Pour l'item 2
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 2", "dice2", "$200");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 2", "dice2", "200");
                 buyButton.setVisible(true);
             }
         });
         item3.addMouseListener(new MouseAdapter() { // Pour l'item 3
             @Override
             public void mousePressed(MouseEvent e) {
-                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 3", "hoe", "$69696969");
+                displayItemDetails(itemNameLabel, itemImageLabel, itemPriceLabel, "Item 3", "hoe", "69696969");
                 buyButton.setVisible(true);
             }
         });
@@ -1043,6 +1074,10 @@ public final class BoardPanel extends JLayeredManager {
 
     public ArrayList<EntityGraphics> getEntitiesGraphics() {
         return entitiesGraphics;
+    }
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
     }
 
     //#endregion

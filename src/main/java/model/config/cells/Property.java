@@ -25,23 +25,12 @@ public final class Property extends Cell {
             computerBuyStar(player, model);
             return;
         }
-        if (owner == null) {
-            if (player.getCoins() < buyPrices.get(0)) {
-                System.out.println("Désolé, vous n'avez pas assez d'argents pour acheter cette propriété ("
-                + buyPrices.get(0) + "$).");
-            }
-        } else if (isAtHome(player)) {
-            if (propertyState + 1 > buyPrices.size()) {
-                System.out.println("Votre propriété est déjà au max.");
-            } else if (player.getCoins() < buyPrices.get(propertyState + 1)) {
-                System.out.println("Désolé, vous n'avez pas assez d'argents pour améliorer votre propriété : ("
-                + buyPrices.get(propertyState + 1) + "$).");
-            }
-        } else {
-            final int price = buyPrices.get(propertyState - 1);
-            if (player.getCoins() < price) {
-                //model.removePlayer(player);
-                System.out.println(player + " a pas assez d'argents.");
+        if (owner != null && !isAtHome(player)) {
+            final int price = (int) (buyPrices.get(propertyState - 1) * 0.70);
+            final int leftCoins = player.getCoins();
+            if (leftCoins < price) {
+                player.incrementCoins(-leftCoins);
+                owner.incrementCoins(leftCoins);
             } else {
                 player.incrementCoins(-price);
                 owner.incrementCoins(price);

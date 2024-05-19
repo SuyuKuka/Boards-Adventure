@@ -126,6 +126,7 @@ public final class GamePanel extends JLayeredManager {
 
     public void endTurn() {
         mainPanel.endTurn();
+        overlayPanel.endTurn();
         repaint();
     }
 

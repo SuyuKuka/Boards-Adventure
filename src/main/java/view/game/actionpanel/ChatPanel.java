@@ -137,7 +137,7 @@ public final class ChatPanel extends JPanel {
                 case COINS:
                     final int value = controller.getCurrentPlayerCellCoinsValue();
                     if (value >= 0) {
-                        addLogText(playerName + " a gagné " + -value + " pièces !\n", false);
+                        addLogText(playerName + " a gagné " + value + " pièces !\n", false);
                     } else {
                         addLogText(playerName + " a perdu " + -value + " pièces :(\n", false);
                     }

@@ -7,7 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.Color;
 
 public final class PropertyGraphics extends CellGraphics {
@@ -19,6 +20,14 @@ public final class PropertyGraphics extends CellGraphics {
     public PropertyGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
         super(boardPanel, cellID, xPos, yPos);
         this.color = Color.decode(((Property) getBoardPanel().getController().getCell(cellID)).getGroupHexColor());
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                boardPanel.getGamePanel().getMainPanel().getActionPanel().addPropertyInfo(cellID);
+                revalidate();
+                repaint();
+            }
+        });
     }
 
     @Override
@@ -28,7 +37,6 @@ public final class PropertyGraphics extends CellGraphics {
 
         final int cellID = getCellID();
         final Property cell = (Property) getBoardPanel().getController().getCell(cellID);
-
         if (getBoardPanel().getController().isStarCell(getCellID())) {
             paintStarComponent(g2d);
         } else {

@@ -362,6 +362,15 @@ public final class Controller {
         return getCurrentPlayer().isHuman();
     }
 
+    public void buyStar() {
+        final Cell cell = getCurrentPlayerCell();
+        final Player player = getCurrentPlayer();
+        player.setDiceRollValue(0);
+        player.buyStar(model.getStarPrice());
+        cell.setStarCell(false);
+        model.loadRandomStarCell();
+    }
+
 
     // endregion
 
