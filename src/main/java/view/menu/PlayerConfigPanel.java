@@ -52,13 +52,22 @@ public final class PlayerConfigPanel extends JPanel {
 
     public PlayerConfigPanel(final MenuPanel menuPanel, final HashMap<String, String> gameConfig) {
         setOpaque(false);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.menuPanel = menuPanel;
         height = menuPanel.getHeight();
         width = menuPanel.getWidth();
         this.gameConfig = gameConfig;
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
-        add(createPanel());
+
+        add(createLobbyCode(this));
+        initError();
+        add(error);
+
+        add(createConfigCharacter(this));
+        add(SwingFactory.createTransparentPanel(this, 100, 50));
+        add(createBottomPanel(this));
+        // add(createPanel());
     }
 
     // #region Create Background
@@ -93,6 +102,13 @@ public final class PlayerConfigPanel extends JPanel {
     }
 
     // #endregion
+
+    private void initError() {
+        error = SwingFactory.createTransparentPanel(this, 100, 10);
+        error.setBackground(Color.RED);
+        error.setAlignmentX(Component.CENTER_ALIGNMENT);
+        error.setOpaque(true);
+    }
 
     // #region Create Panel
 

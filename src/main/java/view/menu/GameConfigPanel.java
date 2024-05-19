@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -50,18 +48,13 @@ public final class GameConfigPanel extends JPanel {
         this.menuPanel = menuPanel;
         height = menuPanel.getHeight();
         width = menuPanel.getWidth();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
-        add(createPanel());
+        add(createLobbyCode(this));
+        add(createGameLobby(this));
+        add(createBottomButton(this));
         setVisible(true);
-    }
-
-    private JPanel createPanel() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 2, 0, 0, 0);
-        panel.add(createLobbyCode(this));
-        panel.add(createGameLobby(this));
-        panel.add(createBottomButton(this));
-        return panel;
     }
 
     private JPanel createLobbyCode(final Component parent) {

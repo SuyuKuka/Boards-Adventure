@@ -121,7 +121,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region mainmenu 1
 
     private JPanel createMainMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
         final JButton play = SwingFactory.createLobbyButton(panel, "Commencer une aventure", 20, 10, 64, true);
@@ -152,7 +152,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region Settings
 
     private JPanel createSettingsMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 45, 0, 0, 6);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 45, 0, 0, 6);
 
         // Musique
         final JPanel musicPanel = new JPanel();
@@ -194,7 +194,7 @@ public final class MenuPanel extends JLayeredManager {
     // #region SelectMode
 
     public JPanel createSelectModeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
         final JButton create = SwingFactory.createLobbyButton(panel, "Créer une nouvelle aventure", 20, 10, 64, true);
@@ -234,7 +234,7 @@ public final class MenuPanel extends JLayeredManager {
     //#region JoinGame
 
     private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 0, 0, 0, 5);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
         panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
 
         JLabel title = new JLabel();
@@ -324,7 +324,7 @@ public final class MenuPanel extends JLayeredManager {
 
     // #region manualIcon 3
     private JPanel createManualIcon() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 93, 0, 0, 95);
+        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 93, 0, 0, 95);
         final JButton button = createBook(panel);
         panel.add(button);
         panel.setVisible(true);
