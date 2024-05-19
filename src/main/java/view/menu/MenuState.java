@@ -1,24 +1,15 @@
 package view.menu;
 
 public enum MenuState {
-    // BACKGROUND(0)
-    MAINMENU(1),
-    SETTINGS(2),
-    SELECTMOD(3),
-    JOINGAME(4),
-    MAPCONFIG(5),
-    CHARACTER(6),
-    // MANUALICON(7)
-    // MANUALBOOK(8)
-    MANUALBOOK_INDEX(8);
+    MAINMENU, // -> Settings ou SelectMode
 
-    private final int layerIndex;
+    SETTINGS, // -> MainMenu
 
-    MenuState(final int layerIndex) {
-        this.layerIndex = layerIndex;
-    }
+    SELECTMODE, // -> MainMenu ou GameConfig ou JoinGame
 
-    public int getLayerIndex() {
-        return layerIndex;
-    }
+    GAMECONFIG, // -> MainMenu ou PlayerConfig
+
+    JOINGAME, // -> SelectMode ou PlayerConfig
+
+    PLAYERCONFIG // -> GameConfig
 }

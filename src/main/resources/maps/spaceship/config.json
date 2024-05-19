@@ -21,6 +21,14 @@
 		{
 			"name" : "SACRED_BOOK",
 			"buyPrice" : "1"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "LUCKY_POTION",
+			"buyPrice" : "1"
 		}
 	],
 	"start_items" : [
@@ -43,13 +51,17 @@
 		{
 			"name" : "GOLDEN_ROAD",
 			"turnCooldown" : "2"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "LUCKY_POTION",
+			"turnCooldown" : "2"
 		}
 	],
 	"cards_effect" : [
-		{
-			"type" : "TELEPORTATION_EFFECT",
-			"cellIDs" : [109, 400, 302, 511, 513, 520, 130, 502, 605, 126]
-		},
 		{
 			"type" : "MONEY_EFFECT",
 			"quantity-amount" : [[4, 100], [4, -100], [3, 200], [3, -200], [2, 300], [2, -300]]

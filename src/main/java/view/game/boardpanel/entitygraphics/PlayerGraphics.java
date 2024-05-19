@@ -19,7 +19,7 @@ public final class PlayerGraphics extends EntityGraphics {
     public PlayerGraphics(final int playerID, final BoardPanel boardPanel, final int xPos, final int yPos) {
         super(boardPanel, xPos, yPos);
         this.playerID = playerID;
-        playerImage = Resources.getImage("j" + playerID);
+        playerImage = Resources.getImage(getBoardPanel().getController().getPlayer(playerID).getClassName());
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
         setVisible(true);

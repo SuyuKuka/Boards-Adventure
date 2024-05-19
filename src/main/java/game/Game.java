@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
 import controller.Controller;
+import controller.resources.Audio;
 import controller.resources.Resources;
 import model.Model;
 import model.Player;
@@ -27,9 +28,10 @@ public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
+    private static final String[] FFA_COLORS = {"#d7191c", "#fdae61", "#abdda4", "#2b83ba"};
     private static final String START_TEMP_MAP = "map4"; // map4, spaceship, villanova, frostharbor
 
-    private Mode mode = Mode.GAME;
+    private Mode mode = Mode.MENU;
 
     private View view;
     private Model model = null;
@@ -66,6 +68,8 @@ public final class Game {
         if (view.hasPanel()) {
             view.removePanel();
         }
+        Audio.stopMusic();
+        Audio.playMusic("GameTheme.wav");
         mode = Mode.GAME;
         final String mapName = gameConfig.get("mapName");
         final JSONObject mapConfig = Resources.loadGameResources(mapName);
@@ -94,6 +98,8 @@ public final class Game {
         // gameconfig
         gameConfig.put("mapName", START_TEMP_MAP);
         gameConfig.put("totalTurns", "45");
+        gameConfig.put("mode", "FFA");
+        gameConfig.put("doubleDice", "false");
         // playersconfig
         // player1
         final HashMap<String, String> player1 = new HashMap<>();
@@ -132,16 +138,24 @@ public final class Game {
     private ArrayList<Player> createPlayers(final ArrayList<HashMap<String, String>> playersConfig,
             final GameMap gameMap) {
         final ArrayList<Player> playersList = new ArrayList<>();
-        playersConfig.forEach(playerConfig -> {
+        for (int index = 0; index < playersConfig.size(); index++) {
+            final HashMap<String, String> playerConfig = playersConfig.get(index);
             final String name = playerConfig.get("name");
             final boolean isHuman = playerConfig.get("type") == "human";
             final String className = playerConfig.get("className");
-            final String teamColor = playerConfig.get("teamColor");
-            final String itemName = playerConfig.get("itemName");
+            String teamColor = playerConfig.get("teamColor");
+            if (teamColor.equals("none")) {
+                teamColor = FFA_COLORS[index];
+            } else if (teamColor.equals("red")) {
+                teamColor = "#d16264";
+            } else {
+                teamColor = "#7ebbed";
+            }
+            final String itemName = playerConfig.get("itemName").toUpperCase();
             final int startPos = gameMap.getStartCell().getId();
             playersList.add(new Player(name, isHuman, className, teamColor,
                 gameMap.generateItem(itemName, false), startPos));
-        });
+        }
         return playersList;
     }
 

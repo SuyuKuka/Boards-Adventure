@@ -71,9 +71,4 @@ public final class View extends JFrame {
         return modePanel != null;
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(getWidth(), getHeight());
-    }
-
 }

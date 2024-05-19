@@ -3,7 +3,6 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -65,19 +64,18 @@ public class SwingFactory {
         panel.setBounds(0, 0, width, height);
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
-             height * botB / 100, width * rightB / 100));
-        parent.addComponentListener(new ComponentAdapter() {
+            height * botB / 100, width * rightB / 100));
+        panel.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                final int height = (int) parent.getHeight();
-                final int width = (int) parent.getWidth();
-                panel.setPreferredSize(new Dimension(width, height));
-                panel.setBorder(BorderFactory.createEmptyBorder(height * topB / 100, width * leftB / 100,
-                    height * botB / 100, width * rightB / 100));
+            public void componentResized(final ComponentEvent e) {
+                final Dimension dim = parent.getPreferredSize();
+                panel.setBorder(BorderFactory.createEmptyBorder(dim.height * topB / 100, dim.width * leftB / 100,
+                    dim.height * botB / 100, dim.width * rightB / 100));
                 parent.revalidate();
+                parent.repaint();
             }
         });
-        panel.setVisible(false);
+        panel.setVisible(true);
         return panel;
     }
 
@@ -241,7 +239,33 @@ public class SwingFactory {
         return label;
     }
 
-    private static Dimension calcDimension(final Image image, final Component parent,
+    public static JLabel createImageImageLabel(final Component parent, final Image img,
+        final int widthPer, final int heightPer, final boolean resize) {
+        final Dimension size = SwingFactory.calcDimension(img, parent, widthPer, heightPer, resize);
+        final JLabel label = new JLabel(new ImageIcon(img.getScaledInstance(
+            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+        label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+            (int) (size.getWidth() * heightPer / 100)));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.CENTER);
+        label.setOpaque(false);
+
+        parent.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final Dimension size = SwingFactory.calcDimension(img, parent, widthPer,
+                    heightPer, false);
+                label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
+                    (int) (size.getWidth() * heightPer / 100)));
+                label.setIcon(new ImageIcon(img.getScaledInstance(
+                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        });
+        return label;
+    }
+
+    public static Dimension calcDimension(final Image image, final Component parent,
         final int widthPer, final int heightPer, final boolean resize) {
         if (resize) {
             return new Dimension((int) (parent.getWidth() * widthPer / 100),
@@ -251,6 +275,23 @@ public class SwingFactory {
             final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
             final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
             final double ratio = Math.min(widthRatio, heightRatio);
+
+            return new Dimension((int) (imageSize.width  * ratio),
+                (int) (imageSize.height * ratio));
+        }
+    }
+
+    public static Dimension calcDimension(final JLabel label, final Component parent,
+        final int widthPer, final int heightPer, final boolean resize) {
+        if (resize) {
+            return new Dimension((int) (parent.getWidth() * widthPer / 100),
+                (int) (parent.getHeight() * heightPer / 100));
+        } else {
+            final Dimension imageSize = new Dimension(label.getIcon().getIconWidth(), label.getIcon().getIconHeight());
+            final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
+            final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
+            final double ratio = Math.min(widthRatio, heightRatio);
+
             return new Dimension((int) (imageSize.width  * ratio),
                 (int) (imageSize.height * ratio));
         }
@@ -260,39 +301,33 @@ public class SwingFactory {
         final int widthPer, final int heightPer, final boolean resize) {
         final Image image = Resources.getImage(img);
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
-        final JButton button = new JButton(new ImageIcon(image.getScaledInstance(
-            (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-            button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+        final JButton button = new JButton();
+        button.setPreferredSize(new Dimension(size.width, size.height));
+        button.setIcon(new ImageIcon(image.getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH)));
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                parent.revalidate();
+            public void mousePressed(MouseEvent e) {
+                Audio.playSound("button.wav");
             }
         });
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
-                button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
+                button.setPreferredSize(new Dimension(size.width, size.height));
                 button.setIcon(new ImageIcon(image.getScaledInstance(
-                    (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
+                    size.width, size.height, Image.SCALE_SMOOTH)));
             }
         });
         return button;
     }
 
-    public static JButton createTextButton(final Component parent, final String text,
+    public static JButton createLobbyButton(final Component parent, final String text,
         final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
         final Image image = Resources.getImage("emptysword_small");
         final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
@@ -321,9 +356,8 @@ public class SwingFactory {
             }
 
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 Audio.playSound("button.wav");
-                parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         });
         parent.addComponentListener(new ComponentAdapter() {
@@ -334,6 +368,25 @@ public class SwingFactory {
             }
         });
         return button;
+    }
+
+    public static JButton createTextButton(final Component parent, final String text,
+        final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
+            final JButton button = new JButton(text);
+            button.setBorderPainted(false);
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setFocusPainted(false);
+            button.setForeground(Color.BLACK);
+            button.setFont(Resources.getFont("NoitaBlackletter", sizeFont));
+            button.setHorizontalTextPosition(JButton.LEFT);
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    Audio.playSound("button.wav");
+                }
+            });
+            return button;
     }
 
     public static JPanel createBoxLayoutPanel() {
@@ -350,16 +403,11 @@ public class SwingFactory {
         return label;
     }
 
-    public static JLabel createTextLabel(final String text, final Color foregroundColor, final int size) {
+    public static JLabel createTextLabel(final String text, final Color foregroundColor,
+        final int size) {
         final JLabel label = new JLabel(text);
         label.setForeground(foregroundColor);
         label.setFont(Resources.getFont("NoitaBlackletter", size));
-        label.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                label.setFont(SwingFactory.getResizedFont(label, text, Resources.getFont("NoitaBlackletter", size)));
-            }
-        });
         return label;
     }
 
@@ -534,4 +582,5 @@ public class SwingFactory {
     public static String getPath() {
         return PATH;
     }
+
 }

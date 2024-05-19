@@ -50,12 +50,4 @@ public final class PropertyGraphics extends CellGraphics {
         return color;
     }
 
-    public static int getArcHeight() {
-        return ARC_HEIGHT;
-    }
-
-    public static int getArcWidth() {
-        return ARC_WIDTH;
-    }
-
 }

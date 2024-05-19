@@ -21,6 +21,14 @@
 		{
 			"name" : "SACRED_BOOK",
 			"buyPrice" : "1"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"buyPrice" : "1"
+		},
+		{
+			"name" : "LUCKY_POTION",
+			"buyPrice" : "1"
 		}
 	],
 	"start_items" : [
@@ -42,6 +50,14 @@
 		},
 		{
 			"name" : "GOLDEN_ROAD",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "MAGIC_WAND",
+			"turnCooldown" : "2"
+		},
+		{
+			"name" : "LUCKY_POTION",
 			"turnCooldown" : "2"
 		}
 	],

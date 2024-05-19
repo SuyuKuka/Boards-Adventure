@@ -672,7 +672,7 @@ public final class BoardPanel extends JLayeredManager {
         yes.setFocusPainted(false);
         yes.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 removeComp(INTERACTION);
                 if (!controller.propertyHasOwner()) {
                     controller.playerBuyProperty();
@@ -689,7 +689,7 @@ public final class BoardPanel extends JLayeredManager {
         no.setFocusPainted(false);
         no.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 removeComp(INTERACTION);
                 controller.gameUpdate();
                 revalidate();
@@ -757,7 +757,7 @@ public final class BoardPanel extends JLayeredManager {
         JButton close = SwingFactory.createImageButton(resizePanel, "notready", 5, 5, false);
         close.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 gamePanel.getController().updatePlayersScore();
                 controller.gameUpdate();
                 removeComp(INTERACTION);
@@ -842,7 +842,7 @@ public final class BoardPanel extends JLayeredManager {
         });
         background.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 e.consume();
             }
         });
@@ -880,7 +880,7 @@ public final class BoardPanel extends JLayeredManager {
         JButton open = new JButton("X");
         open.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 controller.playShowCard();
                 gamePanel.getController().updatePlayersScore();
                 removeComp(INTERACTION);

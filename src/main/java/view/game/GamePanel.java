@@ -198,10 +198,10 @@ public final class GamePanel extends JLayeredManager {
         top.setBackground(Color.LIGHT_GRAY);
         top.add(shop, BorderLayout.CENTER);
 
-        JButton close = SwingFactory.createImageButton(frame.getContentPane(), "notready", 5, 5, false);
+        JButton close = SwingFactory.createImageButton(frame.getContentPane(), "delete", 5, 5, false);
         close.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 pausePanel.setVisible(false);
                 revalidate();
             }
@@ -244,7 +244,7 @@ public final class GamePanel extends JLayeredManager {
         JLabel back = SwingFactory.createTextLabel("Retourner au menu principal", Color.BLACK, 64);
         back.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 frame.getGame().startMenu();
             }
         });

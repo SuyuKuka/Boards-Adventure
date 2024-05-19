@@ -15,7 +15,6 @@ import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -47,8 +46,6 @@ public final class PlayerScore extends JPanel {
     private final JPanel itemsPanel;
     private final ArrayList<JLabel> itemsLabel;
 
-    private final JComboBox<Object> playerBox;
-
     public PlayerScore(final GamePanel gamePanel, final int width, final int height, final int playerId) {
         this.gamePanel = gamePanel;
         this.controller = gamePanel.getController();
@@ -56,7 +53,7 @@ public final class PlayerScore extends JPanel {
         setSize(width, height);
         setBackground(Color.decode(gamePanel.getController().getPlayer(playerId).getHexTeamColor()));
         this.rankImage = Resources.getImage("rank1");
-        this.classImage = Resources.getImage(controller.getCurrentPlayer().getClassName());
+        this.classImage = Resources.getImage(controller.getPlayer(playerId).getClassName());
 
         setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
@@ -87,10 +84,6 @@ public final class PlayerScore extends JPanel {
         itemsLabel = new ArrayList<>();
         itemsPanel = createItemsLabel((int) (width * gbc.weightx), height);
         add(itemsPanel, gbc);
-
-        gbc.weightx = 0.05;
-        playerBox = createComboBox((int) (width * gbc.weightx), height);
-        add(playerBox, gbc);
 
         addResizeListener();
 
@@ -230,12 +223,6 @@ public final class PlayerScore extends JPanel {
             panel.add(label);
         }
         return panel;
-    }
-
-    private JComboBox<Object> createComboBox(final int width, final int height) {
-        final JComboBox<Object> comboBox = new JComboBox<>();
-        comboBox.setPreferredSize(new Dimension(0, 0));
-        return comboBox;
     }
 
     //#endregion label/panel creation
