@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import model.Model;
+import model.Player;
 import model.config.cells.Property;
-import model.config.players.Player;
 
 /**
  * Fait perdre une propriété au joueur courant si possible.

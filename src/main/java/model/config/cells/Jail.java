@@ -1,7 +1,7 @@
 package model.config.cells;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 public final class Jail extends Cell {
 

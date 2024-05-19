@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
+import model.config.cells.CellType;
 import view.game.actionpanel.ActionPanel;
 import view.game.boardpanel.BoardPanel;
 
@@ -80,13 +81,14 @@ public final class MainPanel extends JPanel {
         boardPanel.rollDice();
     }
 
-    public void playerMove(final int startCellID, final int diceRollValue) {
-        boardPanel.playerMove(startCellID, diceRollValue);
+    public void playerMove(final int diceRollValue) {
+        boardPanel.playerMove(diceRollValue);
     }
 
     public void playerArrived() {
-        boardPanel.playerArrived();
-        actionPanel.playerArrived();
+        final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
+        boardPanel.playerArrived(cellType);
+        actionPanel.playerArrived(cellType);
     }
 
 

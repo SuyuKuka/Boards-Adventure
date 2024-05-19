@@ -1,8 +1,8 @@
 package model.config.cardseffect;
 
 import model.Model;
+import model.Player;
 import model.config.GameMap;
-import model.config.players.Player;
 
 /**
  * Fait gagner au joueur courant un {@link Item} choisi aléatoirement de type {@link Shop} si rien ne le contraint.

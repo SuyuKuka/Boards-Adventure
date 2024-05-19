@@ -1,7 +1,7 @@
 package model.config.items;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 /**
  * Deux types d'Item sont disponibles dans le jeu :

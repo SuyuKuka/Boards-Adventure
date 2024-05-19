@@ -1,7 +1,7 @@
 package model.config.cardseffect;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 /**
  * Téléporte le joueur courant sur la cellule {@link #cellID}.

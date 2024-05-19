@@ -7,11 +7,9 @@ import org.json.JSONObject;
 
 import game.GameState;
 import model.config.GameMap;
-import model.config.Team;
 import model.config.cells.Cell;
 import model.config.cells.Intersection;
 import model.config.cells.None;
-import model.config.players.Player;
 
 /**
  * Classe qui s'occupe de la logique du jeu.
@@ -71,17 +69,11 @@ public final class Model {
     // region playerMove
 
     public void playerMove() {
-        Cell playerCell = currentPlayer.getPlayerCell(this);
-        while (currentPlayer.getDiceRollValue() > 0) {
-            currentPlayer.setPosition(playerCell.getNextCellID());
-            playerCell = currentPlayer.getPlayerCell(this);
-            if (!(playerCell instanceof None)) {
-                currentPlayer.incrementDiceRollValue(-1);
-            }
-            if (playerCell.shouldPlayerStopBy()) {
-                currentPlayer.setInIntersection(playerCell instanceof Intersection);
-                return;
-            }
+        final Cell nextCell = getCell(getCell(currentPlayer.getPosition()).getNextCellID());
+        System.out.println(nextCell.getId() + " " + currentPlayer.getPosition());
+        currentPlayer.setPosition(nextCell.getId());
+        if (!(nextCell instanceof None || nextCell.shouldPlayerStopBy()) || nextCell instanceof Intersection) {
+            currentPlayer.incrementDiceRollValue(-1);
         }
     }
 
@@ -141,6 +133,10 @@ public final class Model {
 
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    public Cell getCell(final int cellID) {
+        return gameMap.getCell(cellID);
     }
 
 

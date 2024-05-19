@@ -3,7 +3,7 @@ package model.config.items;
 import java.util.Random;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 public final class FarmerHoe extends Item {
 

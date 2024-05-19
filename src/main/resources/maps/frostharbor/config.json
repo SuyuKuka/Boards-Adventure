@@ -85,8 +85,8 @@
 		},
 		{
 			"id" : 101,
-			"type" : "GAIN",
-			"gain" : 60,
+			"type" : "COINS",
+			"value" : 60,
 			"xPos" : 1475,
 			"yPos" : 2275
 		},
@@ -106,8 +106,8 @@
 		},
 		{
 			"id" : 104,
-			"type" : "LOSS",
-			"loss" : 40,
+			"type" : "COINS",
+			"value" : -40,
 			"xPos" : 1550,
 			"yPos" : 1910
 		},
@@ -127,8 +127,8 @@
 		},
 		{
 			"id" : 107,
-			"type" : "GAIN",
-			"gain" : 80,
+			"type" : "COINS",
+			"value" : 80,
 			"xPos" : 1295,
 			"yPos" : 1569
 		},
@@ -148,8 +148,8 @@
 		},
 		{
 			"id" : 110,
-			"type" : "GAIN",
-			"gain" : 150,
+			"type" : "COINS",
+			"value" : 150,
 			"xPos" : 1250,
 			"yPos" : 1245
 		},
@@ -201,14 +201,14 @@
 			"type" : "PROPERTY",
 			"prices" : [175, 225, 275, 375],
 			"groupHexColor" : "#abdda4",
-			"gain" : 150,
+			"value" : 150,
 			"xPos" : 1495,
 			"yPos" : 630
 		},
 		{
 			"id" : 118,
-			"type" : "GAIN",
-			"gain" : 100,
+			"type" : "COINS",
+			"value" : 100,
 			"xPos" : 1425,
 			"yPos" : 540
 		},
@@ -221,8 +221,8 @@
 		},
 		{
 			"id" : 120,
-			"type" : "LOSS",
-			"loss" : 125,
+			"type" : "COINS",
+			"value" : -125,
 			"xPos" : 1200,
 			"yPos" : 490
 		},
@@ -234,8 +234,8 @@
 		},
 		{
 			"id" : 122,
-			"type" : "GAIN",
-			"gain" : 125,
+			"type" : "COINS",
+			"value" : 125,
 			"xPos" : 950,
 			"yPos" : 434
 		},
@@ -263,8 +263,8 @@
 		},
 		{
 			"id" : 126,
-			"type" : "LOSS",
-			"loss" : 150,
+			"type" : "COINS",
+			"value" : -150,
 			"xPos" : 410,
 			"yPos" : 506
 		},
@@ -290,8 +290,8 @@
 		},
 		{
 			"id" : 130,
-			"type" : "GAIN",
-			"gain" : 200,
+			"type" : "COINS",
+			"value" : 200,
 			"xPos" : 410,
 			"yPos" : 760
 		},
@@ -354,22 +354,22 @@
 		},
 		{
 			"id" : 139,
-			"type" : "GAIN",
-			"gain" : 200,
+			"type" : "COINS",
+			"value" : 200,
 			"xPos" : 318,
 			"yPos" : 1516
 		},
 		{
 			"id" : 140,
-			"type" : "GAIN",
-			"gain" : 225,
+			"type" : "COINS",
+			"value" : 225,
 			"xPos" : 221,
 			"yPos" : 1610
 		},
 		{
 			"id" : 141,
-			"type" : "LOSS",
-			"loss" : 150,
+			"type" : "COINS",
+			"value" : -150,
 			"xPos" : 178,
 			"yPos" : 1770
 		},
@@ -393,8 +393,8 @@
 		},
 		{
 			"id" : 145,
-			"type" : "GAIN",
-			"gain" : 250,
+			"type" : "COINS",
+			"value" : 250,
 			"xPos" : 315,
 			"yPos" : 2214
 		},
@@ -407,7 +407,7 @@
 		{
 			"id" : 147,
 			"type" : "CARD",
-			"gain" : 250,
+			"value" : 250,
 			"xPos" : 695,
 			"yPos" : 2305
 		},
@@ -446,8 +446,8 @@
 		},
 		{
 			"id" : 203,
-			"type" : "LOSS",
-			"loss" : 120,
+			"type" : "COINS",
+			"value" : -120,
 			"xPos" : 632,
 			"yPos" : 1000
 		},
@@ -461,8 +461,8 @@
 
 		{
 			"id" : 300,
-			"type" : "GAIN",
-			"gain" : 150,
+			"type" : "COINS",
+			"value" : 150,
 			"xPos" : 1375,
 			"yPos" : 410
 		},
@@ -494,8 +494,8 @@
 		},
 		{
 			"id" : 305,
-			"type" : "LOSS",
-			"loss" : 50,
+			"type" : "COINS",
+			"value" : -50,
 			"nextCellID" : 122,
 			"xPos" : 960,
 			"yPos" : 350

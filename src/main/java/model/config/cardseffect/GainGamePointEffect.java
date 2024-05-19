@@ -1,7 +1,7 @@
 package model.config.cardseffect;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 /**
  * Donne 1 point à l'équipe du joueur courant.

@@ -54,7 +54,7 @@ public final class PlayerScore extends JPanel {
         this.controller = gamePanel.getController();
         this.playerId = playerId;
         setSize(width, height);
-        setBackground(Color.decode(controller.getPlayer(playerId).getHexTeamColor()));
+        setBackground(Color.decode(gamePanel.getController().getPlayer(playerId).getHexTeamColor()));
         this.rankImage = Resources.getImage("1st");
         this.classImage = Resources.getImage(controller.getCurrentPlayer().getClassName());
 

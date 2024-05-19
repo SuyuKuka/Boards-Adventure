@@ -3,6 +3,7 @@ package model.config.cells;
 public enum CellType {
     START,
     JAIL,
+    COINS,
     VOID,
     GAIN,
     LOSS,

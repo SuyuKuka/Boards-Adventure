@@ -15,6 +15,8 @@ public enum GameState {
 
     PLAYER_MOVE,
 
+    PLAYER_INTERSECTION,
+
     PLAYER_ARRIVED,
 
     END_TURN,

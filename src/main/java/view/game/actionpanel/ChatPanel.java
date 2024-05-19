@@ -22,6 +22,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 
 import controller.Controller;
+import model.config.cells.CellType;
 import view.game.GamePanel;
 
 public final class ChatPanel extends JPanel {
@@ -80,7 +81,7 @@ public final class ChatPanel extends JPanel {
             + controller.getCurrentPlayerRollDiceValue() + " !\n", true);
     }
 
-    public void playerArrived() {
+    public void playerArrived(final CellType cellType) { // TODO fsfsfd
         final String cellString = String.valueOf(controller.getCurrentPlayerCellType());
         addLogText(controller.getCurrentPlayerName() + " tombe sur une case "
             + cellString.substring(0, 1) + cellString.substring(1).toLowerCase() + " !\n", true);

@@ -98,6 +98,7 @@ public final class GamePanel extends JLayeredManager {
     }
 
     public void playerAction() {
+        // gérer le cas ou c'est un ordi
         mainPanel.playerAction();
     }
 
@@ -105,8 +106,8 @@ public final class GamePanel extends JLayeredManager {
         mainPanel.rollDice();
     }
 
-    public void playerMove(final int startCellID, final int diceRollValue) {
-        mainPanel.playerMove(startCellID, diceRollValue);
+    public void playerMove(final int diceRollValue) {
+        mainPanel.playerMove(diceRollValue);
     }
 
     public void playerArrived() {

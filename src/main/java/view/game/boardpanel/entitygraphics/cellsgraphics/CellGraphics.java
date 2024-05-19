@@ -36,11 +36,11 @@ public abstract class CellGraphics extends EntityGraphics {
     private final int cellID;
     private final Image cellImage;
 
-    public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+    public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos,
+            final Image cellImage) {
         super(boardPanel, xPos, yPos);
         this.cellID = cellID;
-        this.cellImage = Resources.getImage(boardPanel.getController()
-            .getCell(cellID).getCellType().name().toLowerCase());
+        this.cellImage = cellImage;
         final View frame = boardPanel.getFrame();
         addMouseListener(new MouseAdapter() {
             @Override
@@ -67,6 +67,11 @@ public abstract class CellGraphics extends EntityGraphics {
             }
         });
         setVisible(true);
+    }
+
+    public CellGraphics(final BoardPanel boardPanel, final int cellID, final int xPos, final int yPos) {
+        this(boardPanel, cellID, xPos, yPos,
+            Resources.getImage(boardPanel.getController().getCell(cellID).getCellType().name().toLowerCase()));
     }
 
     public static final void updatePaintVariables(final double widthRatio, final double heightRatio) {

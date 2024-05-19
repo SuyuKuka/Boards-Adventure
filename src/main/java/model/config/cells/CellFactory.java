@@ -42,10 +42,8 @@ public final class CellFactory {
                 return new Teleportation(id, playerStopBy, type, nextCellID, jObject.getInt("targetCell"));
             case JAIL:
                 return new Jail(id, playerStopBy, type, nextCellID, jObject.optInt("targetCell", id));
-            case LOSS:
-                return new Loss(id, playerStopBy, type, nextCellID, jObject.getInt("loss"));
-            case GAIN:
-                return new Gain(id, playerStopBy, type, nextCellID, jObject.getInt("gain"));
+            case COINS:
+                return new Coins(id, playerStopBy, type, nextCellID, jObject.getInt("value"));
             case DANGER:
                 return new Danger(id, playerStopBy, type, nextCellID);
             case VOID:

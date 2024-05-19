@@ -14,6 +14,8 @@ public final class CellGraphicsFactory {
         switch (cellType) {
             case PROPERTY:
                 return new PropertyGraphics(boardPanel, cellID, xPos, yPos);
+            case COINS:
+                return new CoinsGraphics(boardPanel, cellID, xPos, yPos, jObject.getInt("value") > 0);
             case NONE:
                 return new NoneGraphics(boardPanel, cellID, xPos, yPos,
                     jObject.optBoolean("shouldPlayerTeleport", true));

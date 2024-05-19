@@ -3,7 +3,7 @@ package model.config.cardseffect;
 import java.util.Random;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 /**
  * Echange la position du joueur courant avec un autre joueur choisi aléatoirement.

@@ -9,7 +9,6 @@ import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphicsFactory;
 import view.game.boardpanel.entitygraphics.cellsgraphics.IntersectionChoiceGraphics;
-import view.game.boardpanel.entitygraphics.cellsgraphics.NoneGraphics;
 
 import java.awt.Image;
 import java.awt.Insets;
@@ -107,7 +106,7 @@ public final class BoardPanel extends JLayeredManager {
         this.controller = gamePanel.getController();
         this.boardImage = Resources.getImage("board");
 
-        this.wideAngleAllowed = mapConfig.optBoolean("wideAngleAllowed", true);
+        this.wideAngleAllowed = mapConfig.optBoolean("wideAngleAllowed", false);
         minZoom = initMinZoom();
         CellGraphics.updateCellSize(mapConfig.getInt("cell_diameter"));
         this.cellsGraphics = loadCellsGraphics(mapConfig.getJSONArray("cells"));
@@ -330,96 +329,45 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void rollDice() {
-        System.out.println("affiche le dé qui spawn et qui donne la valeur");
         controller.gameUpdate();
     }
 
-    public void playerMove(final int startCellID, final int diceRollValue) {
-        final CellGraphics cellTarget = cellsGraphics.get(controller.getCurrentPlayer().getPosition());
+    public void playerMove(final int diceRollValue) {
         final PlayerGraphics playerGraphics = playersGraphics.get(controller.getCurrentPlayerID());
-        playerGraphics.setDiceRollValue(diceRollValue);
-        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics,
-            String.valueOf(playerGraphics.getDiceRollValue()));
+        final CellGraphics cellGraphics = controller.getCurrentPlayerCellGraphics();
+        final TargetGraphics diceValue = new TargetGraphics(this, playerGraphics, String.valueOf(diceRollValue));
         entitiesPanelAdd(diceValue);
-        final Timer timer = new Timer(0, null);
-        timer.addActionListener(action -> {
-            final CellGraphics nextCell = cellsGraphics.get(playerGraphics.getNextCellID());
-            playerGraphics.updateMoving(nextCell);
-            diceValue.updateMoving(String.valueOf(playerGraphics.getDiceRollValue()));
+        redraw();
+        SwingFactory.startSingleActionTimer(700, action -> {
+            playerGraphics.updateCoordinates(cellGraphics.getXPos(), cellGraphics.getYPos());
+            diceValue.setLabelText(controller.getCurrentPlayerRollDiceValue() + "");
+            diceValue.updateMoving();
             redraw();
-
-            if (playerGraphics.getXPos() == nextCell.getXPos() && playerGraphics.getYPos() == nextCell.getYPos()) {
-                if (nextCell == cellTarget) {
-                    if (controller.getCurrentPlayerCell().shouldPlayerStopBy()) {
-                        entitiesPanelRemove(diceValue);
-                        showCellTypeInteraction();
-                    } else {
-                        entitiesPanelRemove(diceValue);
-                        controller.gameUpdate();
-                    }
-                    timer.stop();
-                } else {
-                    if (nextCell instanceof NoneGraphics && ((NoneGraphics) nextCell).shouldPlayerTeleport()) {
-                        playerGraphics.setNextCellID(controller
-                            .getCell(playerGraphics.getNextCellID()).getNextCellID());
-                        final CellGraphics noneNextCell = cellsGraphics.get(playerGraphics.getNextCellID());
-                        playerGraphics.setXPos(noneNextCell.getXPos());
-                        playerGraphics.setYPos(noneNextCell.getYPos());
-                    }
-                    playerGraphics.incrementDiceRollValue(-1);
-                    playerGraphics.setNextCellID(controller.getCell(playerGraphics.getNextCellID()).getNextCellID());
-                }
-            }
         });
-        timer.start();
-    }
-
-    private void showCellTypeInteraction() {
-        switch (controller.getCurrentPlayerCellType()) {
-            case INTERSECTION:
-                createIntersectionEntities();
-                break;
-            case GAIN:
-                createGainEntity();
-            case LOSS:
-                createLossEntity();
-            case PROPERTY:
-                addComp(createPropertyPanel(), INTERACTION);
-            case SHOP:
-                addComp(createShopPanel(), INTERACTION);
-            case CARD:
-                addComp(createCardPanel(), INTERACTION);
-            default:
-                break;
-        }
-    }
-
-    private void createGainEntity() {
-
-    }
-
-    private void createLossEntity() {
-
+        SwingFactory.startSingleActionTimer(1000, action2 -> {
+            entitiesPanelRemove(diceValue);
+            controller.gameUpdate();
+        });
     }
 
     private void createIntersectionEntities() {
         final ArrayList<Integer> intersectIDs = ((Intersection) controller.getCurrentPlayerCell()).getNextCellIDs();
         intersectIDs.forEach(cellID ->
             entitiesPanelAdd(CellGraphicsFactory.createIntersectionChoice(this, cellsGraphics.get(cellID))));
+        repaint();
     }
 
-    public void playerArrived() {
+    public void playerArrived(final CellType cellType) {
         updateCurrentPlayerGraphicsPosition();
-        final CellType cellType = controller.getCurrentPlayerCellType();
         switch (cellType) {
-            case GAIN:
-                addComp(createGainPanel(), INTERACTION);
+            case INTERSECTION:
+                createIntersectionEntities();
                 break;
-            case LOSS:
-                addComp(createLossPanel(), INTERACTION);
+            case DANGER:
+                // addComp(createDangerPanel(), INTERACTION);
                 break;
-            case KINGDOM:
-                addComp(createKingdomPanel(), INTERACTION);
+            case JAIL:
+                // addComp(createJailPanel(), INTERACTION);
                 break;
             case PROPERTY:
                 addComp(createPropertyPanel(), INTERACTION);
@@ -431,7 +379,7 @@ public final class BoardPanel extends JLayeredManager {
                 addComp(createCardPanel(), INTERACTION);
                 break;
             default:
-                SwingFactory.startSingleActionTimer(500, e -> controller.gameUpdate());
+                controller.gameUpdate();
                 break;
         }
     }
@@ -644,61 +592,6 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     // #endregion
-
-    // #region Gain
-
-    public JPanel createGainPanel() {
-        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
-        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        resizePanel.setVisible(true);
-
-        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
-
-        controller.setCurrentCell();
-        controller.playerGainCoins();
-        int gain = controller.getGainedMoney();
-
-        JLabel gainLabel = SwingFactory.createTextLabel("Tu as gagne " + gain + " $ !\n",
-            "RifficFree", Color.BLACK, 32);
-        gainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        background.add(gainLabel);
-
-        createCloseTimerLabel(background);
-        resizePanel.add(background);
-        return resizePanel;
-    }
-
-    // #endregion
-
-    //#region Loss
-
-    public JPanel createLossPanel() {
-        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney()); //Verification de sa money
-        JPanel resizePanel = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
-        resizePanel.setVisible(true);
-
-        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
-        background.setBackground(Color.CYAN);
-        background.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
-
-        controller.setCurrentCell();
-        controller.playerLossMoney();
-        int loss = controller.getLossMoney();
-
-        JLabel lossLabel = SwingFactory.createTextLabel("Tu as perdu " + loss + " $ !\n",
-            "RifficFree", Color.BLACK, 32);
-            lossLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            background.add(lossLabel);
-        // System.out.println(controller.getCurrentPlayer().getTeam().getMoney());
-
-        createCloseTimerLabel(background);
-        resizePanel.add(background);
-        return resizePanel;
-    }
-
-    //#endregion
 
     // #region Kingdom
 

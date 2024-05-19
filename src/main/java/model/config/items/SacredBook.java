@@ -1,9 +1,9 @@
 package model.config.items;
 
 import model.Model;
+import model.Player;
 import model.config.cells.Cell;
 import model.config.cells.Property;
-import model.config.players.Player;
 
 public final class SacredBook extends Item {
 

@@ -1,9 +1,10 @@
 package model.config.cells;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 public final class Intersection extends Cell {
 
@@ -17,6 +18,10 @@ public final class Intersection extends Cell {
 
     public ArrayList<Integer> getNextCellIDs() {
         return nextCellIDs;
+    }
+
+    public int getRandomNextCellID() {
+        return nextCellIDs.get(new Random().nextInt(nextCellIDs.size()));
     }
 
     @Override

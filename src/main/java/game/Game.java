@@ -11,10 +11,9 @@ import org.json.JSONObject;
 import controller.Controller;
 import controller.resources.Resources;
 import model.Model;
+import model.Player;
+
 import model.config.GameMap;
-import model.config.players.ComputerPlayer;
-import model.config.players.HumanPlayer;
-import model.config.players.Player;
 import view.View;
 
 /**
@@ -28,7 +27,7 @@ public final class Game {
 
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
-    private static final String START_TEMP_MAP = "villanova"; // // map4, spaceship, villanova, frostharbor
+    private static final String START_TEMP_MAP = "map4"; // map4, spaceship, villanova, frostharbor
 
     private Mode mode = Mode.GAME;
 
@@ -118,7 +117,7 @@ public final class Game {
         // computer1.put("name", "computer1");
         // computer1.put("className", "boardClass");
         // computer1.put("teamColor", "#7ebbed");
-        // computer1.put("itemName", "HOE");
+        // computer1.put("itemName", "FARMER_HOE");
         // playersConfig.add(computer1);
         // // computer2
         // final HashMap<String, String> computer2 = new HashMap<>();
@@ -140,13 +139,8 @@ public final class Game {
             final String teamColor = playerConfig.get("teamColor");
             final String itemName = playerConfig.get("itemName");
             final int startPos = gameMap.getStartCell().getId();
-            if (isHuman) {
-                playersList.add(new HumanPlayer(name, className, teamColor,
-                    gameMap.generateItem(itemName, false), startPos));
-            } else {
-                playersList.add(new ComputerPlayer(name, className, teamColor,
-                    gameMap.generateItem(itemName, false), startPos));
-            }
+            playersList.add(new Player(name, isHuman, className, teamColor,
+                gameMap.generateItem(itemName, false), startPos));
         });
         return playersList;
     }

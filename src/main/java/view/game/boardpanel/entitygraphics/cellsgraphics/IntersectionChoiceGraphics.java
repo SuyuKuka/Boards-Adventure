@@ -24,7 +24,7 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
                     boardPanel.removeComp(BoardPanel.getInteraction());
                     boardPanel.cleanIntersectionEntities();
                     controller.getCurrentPlayer().setPosition(cellID);
-                    controller.getCurrentPlayerGraphics().setNextCellID(cellID);
+                    controller.getCurrentPlayerGraphics().updateCoordinates(xPos, yPos);
                     controller.gameUpdate();
                 }
             }

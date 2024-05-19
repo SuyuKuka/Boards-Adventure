@@ -3,7 +3,7 @@ package model.config.cells;
 import java.util.ArrayList;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 public final class Property extends Cell {
 

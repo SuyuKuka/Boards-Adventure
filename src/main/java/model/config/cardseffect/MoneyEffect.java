@@ -1,7 +1,7 @@
 package model.config.cardseffect;
 
 import model.Model;
-import model.config.players.Player;
+import model.Player;
 
 /**
  * Ajoute ou diminue l'argent que possède l'équipe du joueur par {@link #amount}.

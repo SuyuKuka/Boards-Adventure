@@ -1,8 +1,8 @@
 package model.config.cardseffect;
 
 import model.Model;
+import model.Player;
 import model.config.items.Item;
-import model.config.players.Player;
 
 /**
  * Fait perdre l'objet de shop du joueur si il en possède un.

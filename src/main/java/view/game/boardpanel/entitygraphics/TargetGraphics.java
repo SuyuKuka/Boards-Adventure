@@ -18,18 +18,18 @@ public final class TargetGraphics extends EntityGraphics {
 
     private final EntityGraphics targetEntity;
     private final Image image;
-    private String text;
+    private String labelText;
     private final double xRatio;
     private final int xOffset;
     private final double yRatio;
     private final int yOffset;
 
     public TargetGraphics(final BoardPanel boardPanel, final EntityGraphics targetEntity, final Image image,
-            final String text, final int xOffset, final int yOffset, final double xRatio, final double yRatio) {
+            final String labelText, final int xOffset, final int yOffset, final double xRatio, final double yRatio) {
         super(boardPanel, targetEntity.getXPos() + xOffset, targetEntity.getYPos() + yOffset);
         this.targetEntity = targetEntity;
         this.image = image;
-        this.text = text;
+        this.labelText = labelText;
         this.xRatio = xRatio;
         this.xOffset = xOffset;
         this.yRatio = yRatio;
@@ -39,18 +39,21 @@ public final class TargetGraphics extends EntityGraphics {
         setVisible(true);
     }
 
+    /**
+     * {@link TargetGraphics} avec des paramètres par défaut pour suivre le {@link Player} courant.
+     * @param boardPanel
+     * @param player
+     * @param currentPlayerDiceRollValue
+     */
     public TargetGraphics(final BoardPanel boardPanel, final PlayerGraphics player,
             final String currentPlayerDiceRollValue) {
-        this(boardPanel, player, Resources.getImage("placeholder"),
+        this(boardPanel, player, null,
             currentPlayerDiceRollValue, 0, -30, 0.6, 0.6);
     }
 
-    public void updateMoving(final String diceRollValue) {
+    public void updateMoving() {
         setXPos(targetEntity.getXPos() + xOffset);
         setYPos(targetEntity.getYPos() + yOffset);
-        if (text != diceRollValue) {
-            text = diceRollValue;
-        }
         revalidate();
         repaint();
     }
@@ -66,13 +69,19 @@ public final class TargetGraphics extends EntityGraphics {
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Dimension dim = getSize();
-        // g.drawImage(image, 0, 0, dim.width, dim.height, this);
-        final Font font = SwingFactory.getResizedFont(this, text, FONT);
+        if (image != null) {
+            g.drawImage(image, 0, 0, dim.width, dim.height, this);
+        }
+        final Font font = SwingFactory.getResizedFont(this, labelText, FONT);
         final FontMetrics metrics = g.getFontMetrics(font);
-        final int x = (dim.width - metrics.stringWidth(text)) / 2;
+        final int x = (dim.width - metrics.stringWidth(labelText)) / 2;
         final int y = ((dim.height - metrics.getHeight()) / 2) + metrics.getAscent();
         g.setFont(font);
-        g.drawString(text, x, y);
+        g.drawString(labelText, x, y);
+    }
+
+    public void setLabelText(final String labelText) {
+        this.labelText = labelText;
     }
 
 }

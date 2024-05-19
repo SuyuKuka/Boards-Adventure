@@ -1,16 +1,15 @@
-package model.config.players;
+package model;
 
 import static game.Game.RAND;
 
 import java.util.ArrayList;
 
-import model.Model;
 import model.config.cardseffect.CardEffect;
 import model.config.cells.Cell;
 import model.config.cells.Property;
 import model.config.items.Item;
 
-public abstract class Player {
+public final class Player {
 
     private static final int MAX_ITEM_SHOP = 3;
     private static int itemShopNb;
@@ -18,6 +17,7 @@ public abstract class Player {
 
     private final int id;
     private final String name;
+    private final boolean isHuman;
     private final String hexTeamColor;
     private final Item startItem;
     private final ArrayList<CardEffect> cards = new ArrayList<>();
@@ -38,13 +38,14 @@ public abstract class Player {
 
     private int diceRollValue = 0;
 
-    public Player(final String name, final String className, final String hexTeamColor,
+    public Player(final String name, final boolean isHuman, final String className, final String hexTeamColor,
             final Item startItem, final int startPos) {
         this.id = playerIDIterator;
         playerIDIterator++;
         shopItem = new Item[itemShopNb];
         this.className = className;
         this.name = name;
+        this.isHuman = isHuman;
         this.hexTeamColor = hexTeamColor;
         this.startItem = startItem;
         this.position = startPos;
@@ -53,16 +54,16 @@ public abstract class Player {
 
     // region model methods
 
-    public final void rollDice() {
+    public void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 4;
+        diceRollValue = 1;
     }
 
-    public final void addProperty(final Property property) {
+    public void addProperty(final Property property) {
         properties.add(property);
     }
 
-    public final void removeProperty(final Property property) {
+    public void removeProperty(final Property property) {
         properties.remove(property);
     }
 
@@ -70,23 +71,23 @@ public abstract class Player {
 
     // region increment
 
-    public final void incrementDiceRollValue(final int increment) {
+    public void incrementDiceRollValue(final int increment) {
         diceRollValue += increment;
     }
 
-    public final void incrementPosition(final int increment) {
+    public void incrementPosition(final int increment) {
         position += increment;
     }
 
-    public final void incrementMapLap(final int increment) {
+    public void incrementMapLap(final int increment) {
         mapLap += increment;
     }
 
-    public final void incrementGamePoint(final int increment) {
+    public void incrementGamePoint(final int increment) {
         this.gamePoint += increment;
     }
 
-    public final void incrementCoins(final int increment) {
+    public void incrementCoins(final int increment) {
         this.coins += increment;
     }
 
@@ -94,103 +95,103 @@ public abstract class Player {
 
     // region getters/setters
 
-    public final boolean hasEnoughCoins(final int price) {
+    public boolean hasEnoughCoins(final int price) {
         return this.coins >= price;
     }
 
-    public final Cell getPlayerCell(final Model model) {
+    public Cell getPlayerCell(final Model model) {
         return model.getGameMap().getCell(position);
     }
 
-    public final void setDiceRollValue(final int diceRollValue) {
+    public void setDiceRollValue(final int diceRollValue) {
         this.diceRollValue = diceRollValue;
     }
 
-    public final int getDiceRollValue() {
+    public int getDiceRollValue() {
         return diceRollValue;
     }
 
-    public final String getHexTeamColor() {
+    public String getHexTeamColor() {
         return hexTeamColor;
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final ArrayList<Property> getProperties() {
+    public ArrayList<Property> getProperties() {
         return properties;
     }
 
-    public final void setJailTurn(final int jailTurn) {
+    public void setJailTurn(final int jailTurn) {
         this.jailTurn = jailTurn;
     }
 
-    public final int getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public final int getJailTurn() {
+    public int getJailTurn() {
         return jailTurn;
     }
 
-    public final Item getStartItem() {
+    public Item getStartItem() {
         return startItem;
     }
 
-    public final Item[] getShopItem() {
+    public Item[] getShopItem() {
         return shopItem;
     }
 
-    public final String getClassName() {
+    public String getClassName() {
         return className;
     }
 
-    public final void setPosition(final int position) {
+    public void setPosition(final int position) {
         this.position = position;
     }
 
-    public final int getPosition() {
+    public int getPosition() {
         return position;
     }
 
-    public final int getMapLap() {
+    public int getMapLap() {
         return mapLap;
     }
 
-    public final void setPreviousPosition(final int previousPosition) {
+    public void setPreviousPosition(final int previousPosition) {
         this.previousPosition = previousPosition;
     }
 
-    public final int getPreviousPosition() {
+    public int getPreviousPosition() {
         return previousPosition;
     }
 
-    public final boolean isJailed() {
+    public boolean isJailed() {
         return jailTurn > 0;
     }
 
-    public final int getID() {
+    public int getID() {
         return id;
     }
 
-    public final int getCoins() {
+    public int getCoins() {
         return coins;
     }
 
-    public final void setCoins(int coins) {
+    public void setCoins(int coins) {
         this.coins = coins;
     }
 
-    public final int getGamePoint() {
+    public int getGamePoint() {
         return gamePoint;
     }
 
-    public final ArrayList<CardEffect> getCards() {
+    public ArrayList<CardEffect> getCards() {
         return cards;
     }
 
-    public final void addShopItem(final Item item) {
+    public void addShopItem(final Item item) {
         for (int i = 0; i < shopItem.length; i++) {
             if (shopItem[i] == null) {
                 shopItem[i] = item;
@@ -198,11 +199,11 @@ public abstract class Player {
         }
     }
 
-    public final boolean hasShopItem() {
+    public boolean hasShopItem() {
         return shopItem != null;
     }
 
-    public static final void resetPlayerIDIterator() {
+    public static void resetPlayerIDIterator() {
         playerIDIterator = 0;
     }
 
@@ -222,29 +223,33 @@ public abstract class Player {
         return MAX_ITEM_SHOP;
     }
 
-    public final boolean canUseStartItem() {
+    public boolean canUseStartItem() {
         return startItemCooldown == 0;
     }
 
-    public final void setStartItemCooldown(final int startItemCooldown) {
+    public void setStartItemCooldown(final int startItemCooldown) {
         this.startItemCooldown = startItemCooldown;
     }
 
-    public final void decrementStartItemCooldown() {
+    public void decrementStartItemCooldown() {
         if (startItemCooldown > 0) {
             startItemCooldown--;
         }
     }
 
-    public final int getStartItemCooldown() {
+    public boolean isHuman() {
+        return isHuman;
+    }
+
+    public int getStartItemCooldown() {
         return startItemCooldown;
     }
 
-    public final void setInIntersection(final boolean inIntersection) {
+    public void setInIntersection(final boolean inIntersection) {
         this.inIntersection = inIntersection;
     }
 
-    public final boolean isInIntersection() {
+    public boolean isInIntersection() {
         return inIntersection;
     }
 

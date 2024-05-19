@@ -97,8 +97,8 @@
         },
         {
             "id" : 1,
-            "type" : "GAIN",
-            "gain" : 100,
+            "type" : "COINS",
+            "value" : 100,
             "xPos" : 280,
             "yPos" : 450
         },
@@ -126,8 +126,8 @@
         },
         {
             "id" : 5,
-            "type" : "GAIN",
-            "gain" : 150,
+            "type" : "COINS",
+            "value" : 150,
             "xPos" : 850,
             "yPos" : 400
         },
@@ -148,8 +148,8 @@
         },
         {
             "id" : 8,
-            "type" : "GAIN",
-            "gain" : 100,
+            "type" : "COINS",
+            "value" : 100,
             "xPos" : 1245,
             "yPos" : 450
         },
@@ -176,8 +176,8 @@
         },
         {
             "id" : 12,
-            "type" : "GAIN",
-            "gain" : -100,
+            "type" : "COINS",
+            "value" : -100,
             "xPos" : 1435,
             "yPos" : 690
         },
@@ -191,8 +191,8 @@
         },
         {
             "id" : 14,
-            "type" : "GAIN",
-            "gain" : 100,
+            "type" : "COINS",
+            "value" : 100,
             "xPos" : 1090,
             "yPos" : 710
         },
@@ -258,8 +258,8 @@
         },
         {
             "id" : 23,
-            "type" : "GAIN",
-            "gain" : -200,
+            "type" : "COINS",
+            "value" : -200,
             "xPos" : 385,
             "yPos" : 615
         },
@@ -281,8 +281,8 @@
         },
         {
             "id" : 26,
-            "type" : "GAIN",
-            "gain" : -50,
+            "type" : "COINS",
+            "value" : -50,
             "xPos" : 125,
             "yPos" : 685
         },
@@ -297,8 +297,8 @@
         },
         {
             "id" : 30,
-            "type" : "GAIN",
-            "gain" : 100,
+            "type" : "COINS",
+            "value" : 100,
             "xPos" : 1105,
             "yPos" : 345
         },
@@ -373,8 +373,8 @@
         },
         {
             "id" : 45,
-            "type" : "GAIN",
-            "gain" : -200,
+            "type" : "COINS",
+            "value" : -200,
             "xPos" : 570,
             "yPos" : 270
         },
@@ -404,8 +404,8 @@
         },
         {
             "id" : 49,
-            "type" : "GAIN",
-            "gain" : -50,
+            "type" : "COINS",
+            "value" : -50,
             "xPos" : 150,
             "yPos" : 200
         },

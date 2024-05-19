@@ -9,13 +9,13 @@ import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
 import game.Game;
 import game.GameState;
 import model.Model;
+import model.Player;
 import model.config.cells.Cell;
 import model.config.cells.CellType;
-import model.config.cells.Gain;
-import model.config.cells.Loss;
+import model.config.cells.Coins;
+import model.config.cells.None;
 import model.config.cells.Property;
 import model.config.cells.Start;
-import model.config.players.Player;
 
 /**
  * Classe qui fait office de Contrôleur pour le {@link Model} et la {@link View}.
@@ -65,18 +65,18 @@ public final class Controller {
                 playerMove();
                 break;
             case PLAYER_MOVE:
-                final Player player = getCurrentPlayer();
-                if (player.isInIntersection()) {
-                    player.setInIntersection(false);
-                    playerMove();
-                } else if (player.getDiceRollValue() > 0) {
-                    playerMove();
-                } else {
+                if (getCurrentPlayerCell().shouldPlayerStopBy() || getCurrentPlayer().getDiceRollValue() <= 0) {
                     playerArrived();
+                } else {
+                    playerMove();
                 }
                 break;
             case PLAYER_ARRIVED:
-                endTurn();
+                if (getCurrentPlayer().getDiceRollValue() > 0) {
+                    playerMove();
+                } else {
+                    endTurn();
+                }
                 break;
             case END_TURN:
                 if (model.getCurrentTurn() == model.getTotalTurns()) {
@@ -111,6 +111,10 @@ public final class Controller {
     // region playerAction
     private void playerAction() {
         prevGameState = GameState.PLAYER_ACTION;
+        final Player player = getCurrentPlayer();
+        if (!player.isHuman()) {
+            player.rollDice();
+        }
         gamePanel.playerAction();
     }
 
@@ -124,10 +128,9 @@ public final class Controller {
 
     private void playerMove() {
         prevGameState = GameState.PLAYER_MOVE;
-        final int startCellID = getCurrentPlayerCell().getId();
         final int diceRollValue = getCurrentPlayerRollDiceValue();
         model.playerMove();
-        gamePanel.playerMove(startCellID, diceRollValue);
+        gamePanel.playerMove(diceRollValue);
     }
 
     private void playerArrived() {
@@ -163,20 +166,17 @@ public final class Controller {
         }
     }
 
-    public void playerGainCoins() {
-        getCurrentPlayer().incrementCoins(getGainedMoney());
-    }
-
-    public void playerLossMoney() {
-        getCurrentPlayer().incrementCoins(-getLossMoney());
-    }
-
     public void playerBuyProperty() {
         ((Property) currentCell).buy(getCurrentPlayer());
     }
 
     public void playerUpgradeProperty() {
         ((Property) currentCell).upgrade(getCurrentPlayer());
+    }
+
+    public boolean shouldDiceRollValueDecrement(final int cellID) {
+        final Cell cell = model.getGameMap().getCell(cellID);
+        return !(cell instanceof None || cell.shouldPlayerStopBy());
     }
 
     public void playShowCard() {
@@ -194,6 +194,10 @@ public final class Controller {
 
     public Cell getCell(final int cellID) {
         return model.getGameMap().getCell(cellID);
+    }
+
+    public Coins getCoins(final int cellID) {
+        return (Coins) model.getGameMap().getCell(cellID);
     }
 
     public int getCurrentPlayerPosition() {
@@ -267,14 +271,6 @@ public final class Controller {
         return getCurrentPlayer().getCoins();
     }
 
-    public int getGainedMoney() {
-        return ((Gain) currentCell).getGain();
-    }
-
-    public int getLossMoney() {
-        return ((Loss) currentCell).getLoss();
-    }
-
     public int getGamePoint() {
         return getCurrentPlayer().getGamePoint();
     }
@@ -313,6 +309,10 @@ public final class Controller {
 
     public static int getPlayerItemShopNb() {
         return Player.getItemShopNb();
+    }
+
+    public boolean isCurrentPlayerHuman() {
+        return getCurrentPlayer().isHuman();
     }
 
 
@@ -361,6 +361,10 @@ public final class Controller {
 
     public PlayerGraphics getPlayerGraphics(final int index) {
         return playersGraphics.get(index);
+    }
+
+    public CellGraphics getCurrentPlayerCellGraphics() {
+        return cellsGraphics.get(getCurrentPlayerCell().getId());
     }
 
     // endregion

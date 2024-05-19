@@ -1,8 +1,8 @@
 package model.config.cells;
 
 import model.Model;
+import model.Player;
 import model.config.cardseffect.CardEffect;
-import model.config.players.Player;
 
 public class Card extends Cell {
 
@@ -13,11 +13,12 @@ public class Card extends Cell {
     /**
      * Selectionne aléatoirement une carte dans cards et l'utilise.
      *
-     * @param  player  the player to apply the effect to
-     * @param  model   the game model
+     * @param  player
+     * @param  model
      */
     @Override
-    public void playCellEffect(Player player, Model model) {
+    public void playCellEffect(final Player player, final Model model) {
+        System.out.println("sefs");
         final CardEffect cardEffect = model.getGameMap().loadRandomCardEffect();
         cardEffect.applyEffect(player, model);
     }
