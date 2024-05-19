@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import org.json.JSONObject;
 
 import controller.Controller;
+import controller.resources.Audio;
 import controller.resources.Resources;
 import view.JLayeredManager;
 import view.SwingFactory;
@@ -188,14 +189,15 @@ public final class GamePanel extends JLayeredManager {
     public JPanel createPausePanel() {
         JPanel background = SwingFactory.createGamePanelCells(frame.getContentPane(), 100, 100);
         background.setLayout(new BorderLayout());
-        background.setBackground(Color.CYAN);
+        background.setBackground(new Color(230, 205, 175));
         background.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
 
         JPanel top = new JPanel(new BorderLayout());
-        JLabel shop = new JLabel("Settings", SwingConstants.CENTER);
-        shop.setFont(Resources.getFont(64));
-        top.setBackground(Color.LIGHT_GRAY);
-        top.add(shop, BorderLayout.CENTER);
+        JLabel title = new JLabel("Settings", SwingConstants.CENTER);
+        title.setFont(Resources.getFont(64));
+        title.setForeground(Color.black);
+        top.setBackground(new Color(205, 173, 142));
+        top.add(title, BorderLayout.CENTER);
 
         JButton close = SwingFactory.createImageButton(frame.getContentPane(), "delete", 5, 5, false);
         close.addMouseListener(new MouseAdapter() {
@@ -245,6 +247,7 @@ public final class GamePanel extends JLayeredManager {
             @Override
             public void mousePressed(final MouseEvent e) {
                 frame.getGame().startMenu();
+                Audio.stopMusic();
             }
         });
         background.add(back, BorderLayout.SOUTH);
