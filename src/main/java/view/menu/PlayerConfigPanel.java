@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -60,14 +59,20 @@ public final class PlayerConfigPanel extends JPanel {
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
 
-        add(createLobbyCode(this));
+        add(SwingFactory.createTransparentPanel(this, 100, 10));
         initError();
         add(error);
 
         add(createConfigCharacter(this));
         add(SwingFactory.createTransparentPanel(this, 100, 50));
         add(createBottomPanel(this));
-        // add(createPanel());
+    }
+
+    private void initError() {
+        error = SwingFactory.createTransparentPanel(this, 100, 10);
+        error.setBackground(Color.RED);
+        error.setAlignmentX(Component.CENTER_ALIGNMENT);
+        error.setOpaque(true);
     }
 
     // #region Create Background
@@ -98,46 +103,6 @@ public final class PlayerConfigPanel extends JPanel {
         panel.setOpaque(false);
         panel.setSize(getPreferredSize());
         panel.setVisible(true);
-        return panel;
-    }
-
-    // #endregion
-
-    private void initError() {
-        error = SwingFactory.createTransparentPanel(this, 100, 10);
-        error.setBackground(Color.RED);
-        error.setAlignmentX(Component.CENTER_ALIGNMENT);
-        error.setOpaque(true);
-    }
-
-    // #region Create Panel
-
-    private JPanel createPanel() {
-        final JPanel panel = SwingFactory.createContainerPanel(this, 2, 0, 0, 0);
-        panel.add(createLobbyCode(panel));
-
-        error = SwingFactory.createTransparentPanel(panel, 100, 10);
-        error.setBackground(Color.RED);
-        error.setAlignmentX(Component.CENTER_ALIGNMENT);
-        error.setOpaque(true);
-        panel.add(error);
-
-        panel.add(createConfigCharacter(panel));
-        panel.add(SwingFactory.createTransparentPanel(panel, 100, 50));
-        panel.add(createBottomPanel(panel));
-        return panel;
-    }
-
-    // #endregion
-
-    // #region Create Lobby Code
-    private JPanel createLobbyCode(final Component parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + menuPanel.getIp().getHostAddress()
-        + ":" + menuPanel.getPort(), Color.BLACK, defaultFont / 2);
-        lobbyCode.setVerticalAlignment(JLabel.CENTER);
-        panel.add(lobbyCode);
         return panel;
     }
 
@@ -210,7 +175,6 @@ public final class PlayerConfigPanel extends JPanel {
         newPlayer.put("selectSkin", "1");
         newPlayer.put("skin", "board");
         newPlayer.put("item", "farmerhoe");
-        newPlayer.put("host", menuPanel.getHost() ? "true" : "false");
         newPlayer.put("status", player ? "false" : "true");
         newPlayer.put("person", player ? "player" : "bot");
         playersConfig.add(playerID, newPlayer);
@@ -496,15 +460,9 @@ public final class PlayerConfigPanel extends JPanel {
         back.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (menuPanel.getHost()) {
-                    menuPanel.removeComp(MenuPanel.getPanelIndex());
-                    menuPanel.addComp(new GameConfigPanel(menuPanel), MenuPanel.getPanelIndex());
-                    menuPanel.setBackgroundImage(new ImageIcon(Resources.getImage("sign")));
-                } else {
-                    menuPanel.removeComp(MenuPanel.getPanelIndex());
-                    menuPanel.addComp(menuPanel.createSelectModeMenu(), MenuPanel.getPanelIndex());
-                    menuPanel.setBackgroundImage(Resources.getGif("backgroundMoving"));
-                }
+                menuPanel.removeComp(MenuPanel.getPanelIndex());
+                menuPanel.addComp(new GameConfigPanel(menuPanel), MenuPanel.getPanelIndex());
+                menuPanel.setBackgroundImage(new ImageIcon(Resources.getImage("sign")));
             }
         });
         menuPanel.handCursor(back);

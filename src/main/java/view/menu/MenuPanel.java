@@ -1,6 +1,5 @@
 package view.menu;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -11,8 +10,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
@@ -21,7 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 
 import controller.resources.Audio;
 import controller.resources.Resources;
@@ -45,19 +41,12 @@ public final class MenuPanel extends JLayeredManager {
 
     private ImageIcon backgroundImage;
 
-    private boolean host = false;
-
-    private String code = "";
-    private InetAddress ip;
-    private int port = 55000;
-
     private int defaultFont = 64;
 
     public MenuPanel(final View frame) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
         this.frame = frame;
         Audio.playMusic("MenuTheme.wav");
-        initDefaultValues();
         backgroundImage = Resources.getGif("backgroundMoving");
         addComp(createBackground(), BACKGROUND_INDEX);
         addComp(createMainMenu(), PANEL_INDEX);
@@ -76,14 +65,6 @@ public final class MenuPanel extends JLayeredManager {
             }
         });
         setVisible(true);
-    }
-
-    private void initDefaultValues() {
-        try {
-            ip = InetAddress.getLocalHost();
-        } catch (UnknownHostException e1) {
-            e1.printStackTrace();
-        }
     }
 
     public void handCursor(JButton button) {
@@ -203,7 +184,6 @@ public final class MenuPanel extends JLayeredManager {
             @Override
             public void mouseReleased(MouseEvent e) {
                 panel.setVisible(false);
-                host = true;
                 backgroundImage = Resources.getGif("good");
                 SwingFactory.startSingleActionTimer(2900, action -> {
                     backgroundImage = new ImageIcon(Resources.getImage("blackscreen"));
@@ -217,103 +197,9 @@ public final class MenuPanel extends JLayeredManager {
         });
         panel.add(create);
 
-        final JButton join = SwingFactory.createLobbyButton(panel, "Rejoindre une escouade", 20, 10, 64, true);
-        handCursor(join);
-        changeState(join, MenuState.JOINGAME, PANEL_INDEX);
-        panel.add(join);
-
         final JButton back = SwingFactory.createLobbyButton(panel, "Rebrousser chemin", 20, 10, 64, true);
         handCursor(back);
         changeState(back, MenuState.MAINMENU, PANEL_INDEX);
-        panel.add(back);
-        return panel;
-    }
-
-    // #endregion
-
-    //#region JoinGame
-
-    private JPanel createJoinCodeMenu() {
-        final JPanel panel = SwingFactory.createContainerPanel(frame.getContentPane(), 0, 0, 0, 5);
-        panel.add(SwingFactory.createTransparentPanel(panel, 45, 45));
-
-        JLabel title = new JLabel();
-        title.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
-        title.setText("Saisir les coordonnées de l'aventure : ");
-        title.setFont(Resources.getFont("NoitaBlackletter", defaultFont));
-        title.setForeground(Color.BLACK);
-        panel.add(title);
-
-        JPanel codePanel = SwingFactory.createTransparentPanel(panel, 40, 6);
-        codePanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 0));
-        codePanel.setLayout(new BorderLayout());
-        codePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JTextArea joinCode = new JTextArea();
-        joinCode.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        joinCode.setFont(Resources.getFont("NoitaBlackletter", defaultFont / 2));
-        joinCode.setText("(AdresseIP:Port)");
-        joinCode.setPreferredSize(new Dimension(250, 20));
-        joinCode.setForeground(Color.LIGHT_GRAY);
-        joinCode.setLineWrap(true);
-        joinCode.setWrapStyleWord(true);
-
-        joinCode.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (joinCode.getText().equals("(AdresseIP:Port)")) {
-                    joinCode.setEditable(true);
-                    joinCode.setText("");
-                    joinCode.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (joinCode.getText().equals("(AdresseIP:Port)")) {
-                    joinCode.setEditable(true);
-                    joinCode.setText("");
-                    joinCode.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (joinCode.getText().equals("")) {
-                    joinCode.setEditable(false);
-                    joinCode.setText("(AdresseIP:Port)");
-                    joinCode.setForeground(Color.LIGHT_GRAY);
-                }
-            }
-        });
-
-        codePanel.add(joinCode, BorderLayout.CENTER);
-
-        JButton join = SwingFactory.createImageButton(panel, "next_arrow", 6, 6, false);
-        join.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (!joinCode.getText().equals("(AdresseIP:Port)") && !joinCode.getText().equals("")) {
-                    host = false;
-                    code = joinCode.getText();
-                    backgroundImage = Resources.getGif("good");
-                    SwingFactory.startSingleActionTimer(2900, action -> {
-                        backgroundImage = Resources.getGif("blackscreen");
-                        SwingFactory.startSingleActionTimer(300, action2 -> {
-                            backgroundImage = new ImageIcon(Resources.getImage("village"));
-                            changeState(join, MenuState.PLAYERCONFIG, PANEL_INDEX);
-                        });
-                    });
-                }
-            }
-        });
-        codePanel.add(join, BorderLayout.EAST);
-        handCursor(join);
-        panel.add(codePanel);
-
-        JButton back = SwingFactory.createLobbyButton(panel, "Rebrousser chemin", 20, 10, 64, true);
-        handCursor(back);
-        changeState(back, MenuState.SELECTMODE, PANEL_INDEX);
         panel.add(back);
         return panel;
     }
@@ -374,9 +260,6 @@ public final class MenuPanel extends JLayeredManager {
                     case SETTINGS:
                         comp1 = createSettingsMenu();
                         break;
-                    case JOINGAME:
-                        comp1 = createJoinCodeMenu();
-                        break;
                     default:
                         comp1 = null;
                         break;
@@ -412,14 +295,6 @@ public final class MenuPanel extends JLayeredManager {
         return label;
     }
 
-    public InetAddress getIp() {
-        return this.ip;
-    }
-
-    public int getPort() {
-        return this.port;
-    }
-
     public int getDefaultFont() {
         return this.defaultFont;
     }
@@ -430,14 +305,6 @@ public final class MenuPanel extends JLayeredManager {
 
     public void setBackgroundImage(ImageIcon backgroundImage) {
         this.backgroundImage = backgroundImage;
-    }
-
-    public boolean getHost() {
-        return this.host;
-    }
-
-    public void setHost(boolean host) {
-        this.host = host;
     }
 
     public static int getPanelIndex() {

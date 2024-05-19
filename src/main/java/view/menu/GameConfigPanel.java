@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -51,21 +50,13 @@ public final class GameConfigPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setSize(new Dimension(width, height));
         this.defaultFont = menuPanel.getDefaultFont();
-        add(createLobbyCode(this));
+        add(SwingFactory.createTransparentPanel(this, 100, 10));
         add(createGameLobby(this));
         add(createBottomButton(this));
         setVisible(true);
     }
 
-    private JPanel createLobbyCode(final Component parent) {
-        final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 5);
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        final JLabel lobbyCode = SwingFactory.createTextLabel("Code : " + menuPanel.getIp().getHostAddress()
-        + ":" + menuPanel.getPort(), Color.BLACK, defaultFont / 2);
-        lobbyCode.setVerticalAlignment(JLabel.CENTER);
-        panel.add(lobbyCode);
-        return panel;
-    }
+    // #region Create GameLobby
 
     private JPanel createGameLobby(final JPanel parent) {
         final JPanel panel = SwingFactory.createImagePanel(parent, "sign", 100, 85);
@@ -77,6 +68,10 @@ public final class GameConfigPanel extends JPanel {
         panel.add(createGameSettings(parent));
         return panel;
     }
+
+    // #endregion
+
+    // #region Create MapSection
 
     private JPanel createMapSection(final JPanel parent) {
         final JPanel panel = SwingFactory.createImagePanel(parent, "paper", 50, 90);
@@ -128,6 +123,10 @@ public final class GameConfigPanel extends JPanel {
         });
         menuPanel.handCursor(button);
     }
+
+    // #endregion
+
+    // #region Create GameSettings
 
     private JPanel createGameSettings(final Component parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 50, 90);
@@ -217,6 +216,10 @@ public final class GameConfigPanel extends JPanel {
         return radioButton;
     }
 
+    // #endregion
+
+    // #region BottomButton
+
     private JPanel createBottomButton(final JPanel parent) {
         final JPanel panel = SwingFactory.createTransparentPanel(parent, 100, 10);
         panel.setLayout(new BorderLayout());
@@ -226,7 +229,6 @@ public final class GameConfigPanel extends JPanel {
             @Override
             public void mouseReleased(final MouseEvent e) {
                 GameConfigPanel.this.setVisible(false);
-                menuPanel.setHost(false);
                 parent.setVisible(false);
                 menuPanel.setBackgroundImage(Resources.getGif("back"));
                 SwingFactory.startSingleActionTimer(1800, action -> {
@@ -266,6 +268,10 @@ public final class GameConfigPanel extends JPanel {
         panel.add(selectCharacter, BorderLayout.EAST);
         return panel;
     }
+
+    // #endregion
+
+    // #region Selector
 
     private void selectMap(JPanel parent, JLabel map, JTextArea desc, int i) {
         selectMap += i;
@@ -310,29 +316,6 @@ public final class GameConfigPanel extends JPanel {
         map.revalidate();
     }
 
-    // public JLabel createImageImageLabel(final Component parent, final Image img,
-    //     final int widthPer, final int heightPer, final boolean resize) {
-    //     final Dimension size = SwingFactory.calcDimension(img, parent, widthPer, heightPer, resize);
-    //     final JLabel label = new JLabel(new ImageIcon(img.getScaledInstance(
-    //         (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-    //     label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
-    //         (int) (size.getWidth() * heightPer / 100)));
-    //     label.setAlignmentX(Component.CENTER_ALIGNMENT);
-    //     label.setHorizontalAlignment(JLabel.CENTER);
-    //     label.setVerticalAlignment(JLabel.CENTER);
-    //     label.setOpaque(false);
+    // #endregion
 
-    //     parent.addComponentListener(new ComponentAdapter() {
-    //         @Override
-    //         public void componentResized(ComponentEvent e) {
-    //             final Dimension size = SwingFactory.calcDimension(img, parent, widthPer,
-    //                 heightPer, false);
-    //             label.setPreferredSize(new Dimension((int) size.getWidth() * widthPer / 100,
-    //                 (int) (size.getWidth() * heightPer / 100)));
-    //             label.setIcon(new ImageIcon(img.getScaledInstance(
-    //                 (int) size.getWidth(), (int) size.getHeight(), Image.SCALE_SMOOTH)));
-    //         }
-    //     });
-    //     return label;
-    // }
 }
