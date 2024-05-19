@@ -602,6 +602,7 @@ public final class BoardPanel extends JLayeredManager {
         final String labelString = "FIN DU TOUR !";
         final JLabel label = SwingFactory.createJLabel();
         label.setText(labelString);
+        label.setForeground(Color.BLACK);
         panel.add(label, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;
@@ -714,15 +715,17 @@ public final class BoardPanel extends JLayeredManager {
         yes.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
-                removeComp(INTERACTION);
-                if (!controller.propertyHasOwner()) {
-                    controller.playerBuyProperty();
-                } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
-                    controller.playerUpgradeProperty();
+                if (controller.hasEnoughCoinsProperty(price)) {
+                    removeComp(INTERACTION);
+                    if (!controller.propertyHasOwner()) {
+                        controller.playerBuyProperty();
+                    } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
+                        controller.playerUpgradeProperty();
+                    }
+                    gamePanel.getController().updatePlayersScore();
+                    controller.gameUpdate();
+                    revalidate();
                 }
-                gamePanel.getController().updatePlayersScore();
-                controller.gameUpdate();
-                revalidate();
             }
         });
 
@@ -894,10 +897,12 @@ public final class BoardPanel extends JLayeredManager {
         buyButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                controller.buyItem(actualItem, controller.getShopItemPrice(actualItem));
-                removeComp(INTERACTION);
-                revalidate();
-                controller.gameUpdate();
+                if (controller.hasEnoughCoinsItem(actualItem)) {
+                    controller.buyItem(actualItem, controller.getShopItemPrice(actualItem));
+                    removeComp(INTERACTION);
+                    revalidate();
+                    controller.gameUpdate();
+                }
             }
         });
         background.addMouseListener(new MouseAdapter() {

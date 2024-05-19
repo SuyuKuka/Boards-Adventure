@@ -373,6 +373,15 @@ public final class Controller {
         return getCurrentPlayer().isHuman();
     }
 
+    public boolean hasEnoughCoinsItem(int i) {
+        return getCurrentPlayer().hasEnoughCoins(shopItems[i].getBuyPrice());
+    }
+
+    public boolean hasEnoughCoinsProperty(int i) {
+        int price = ((Property) currentCell).getBuyPrices().get(((Property) currentCell).getPropertyState());
+        return getCurrentPlayer().hasEnoughCoins(price);
+    }
+
 
     // endregion
 

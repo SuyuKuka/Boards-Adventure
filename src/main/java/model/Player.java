@@ -55,7 +55,6 @@ public final class Player {
 
     public void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 7;
     }
 
     public void addProperty(final Property property) {

@@ -31,7 +31,7 @@ public final class Game {
     private static final String[] FFA_COLORS = {"#d7191c", "#fdae61", "#abdda4", "#2b83ba"};
     private static final String START_TEMP_MAP = "kingdom"; // kingdom, spaceship, villanova, frostharbor
 
-    private Mode mode = Mode.GAME;
+    private Mode mode = Mode.MENU;
 
     private View view;
     private Model model = null;
