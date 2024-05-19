@@ -112,7 +112,8 @@ public final class OverlayPanel extends JPanel {
 
     private void initTurnsLabel(final int width, final int height) {
         turnsLabel.setPreferredSize(new Dimension(width, height));
-        turnsLabel.setText("Tour 1 / 45");
+        turnsLabel.setText("Tour " + gamePanel.getController().getCurrentTurn()
+         + " / " + gamePanel.getController().getTotalTurns());
 
         // Font
         final Font font = Resources.getFont(40);

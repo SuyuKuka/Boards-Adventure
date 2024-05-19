@@ -57,12 +57,6 @@ public class SwingFactory {
     public static JPanel createContainerPanel(final Component parent, final int topB,
             final int rightB, final int botB, final int leftB) {
         final JPanel panel = new JPanel();
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                e.consume();
-            }
-        });
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         final int height = (int) parent.getHeight();
         final int width = (int) parent.getWidth();

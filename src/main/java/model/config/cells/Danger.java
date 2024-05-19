@@ -14,7 +14,7 @@ public final class Danger extends Cell {
         if (isStarCell()) {
             computerBuyStar(player, model);
         }
-        return;
+        player.setCoins(1);
     }
 
 

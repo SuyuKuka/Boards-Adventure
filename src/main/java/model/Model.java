@@ -47,7 +47,7 @@ public final class Model {
         this.players = players;
         this.teams = createTeams();
         currentPlayer = players.get(playerPlayIterator);
-        this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 600));
+        this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 400));
         final int maxStarCellNb = gameMap.getMaxStarCellsPoss();
         final int mapConfigStarCellsNb = Integer.valueOf(mapConfig.optInt("starCellsNb", 2));
         this.starCellsNb = mapConfigStarCellsNb > maxStarCellNb ? maxStarCellNb : mapConfigStarCellsNb;

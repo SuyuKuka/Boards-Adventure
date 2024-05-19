@@ -147,9 +147,9 @@ public final class ChatPanel extends JPanel {
                     break;
                 case VOID:
                     addLogText("Rien ne se passe...\n", false);
-                case CARD:
                     break;
-                case PROPERTY:
+                case DANGER:
+                    addLogText("Quelque chose de mystérieux s'est passé...", false);
                     break;
                 default:
                     break;

@@ -24,8 +24,6 @@ public final class CoinsGraphics extends CellGraphics {
                 final int button = e.getButton();
                 if (button == MouseEvent.BUTTON3) {
                     boardPanel.dispatchEvent(SwingUtilities.convertMouseEvent(CoinsGraphics.this, e, boardPanel));
-                } else if (button == MouseEvent.BUTTON1) {
-                    System.out.println("clique gauche cellule !!!");
                 }
             }
         });

@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import controller.resources.Audio;
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
@@ -165,6 +166,7 @@ public final class Controller {
     private void gameEnd() {
         prevGameState = GameState.GAME_END;
         gamePanel.gameEnd();
+        Audio.stopMusic();
     }
 
     // endregion
@@ -181,6 +183,16 @@ public final class Controller {
         if (currentPlayer.isJailed() && currentPlayer.getDiceRollValue() == 6) {
             currentPlayer.setJailTurn(0);
         }
+    }
+
+    public ArrayList<String> getWinnersStringList() {
+        final ArrayList<String> list = new ArrayList<>();
+        for (Player player : model.getPlayers()) {
+            if (player.getRank() == 1) {
+                list.add(player.getName());
+            }
+        }
+        return list;
     }
 
     public void playerBuyProperty() {
@@ -209,7 +221,6 @@ public final class Controller {
     }
 
     public void playerApplyShopItem(int i) {
-        System.out.println("Shop item applied");
         if (getCurrentPlayer().getStartItem().canItemBeActivated(getCurrentPlayer(), model)) {
             getCurrentPlayer().getShopItem()[i].playItemEffect(getCurrentPlayer(), model);
         }
@@ -425,6 +436,10 @@ public final class Controller {
 
     public void setPrevGameState(GameState prevGameState) {
         this.prevGameState = prevGameState;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     // endregion

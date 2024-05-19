@@ -461,7 +461,7 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     public void gameEnd() {
-        System.out.println("gameend !!");
+        addComp(createEndGamePanel(), INTERACTION);
     }
 
     private void updateCurrentPlayerGraphicsPosition() {
@@ -800,6 +800,51 @@ public final class BoardPanel extends JLayeredManager {
     }
 
     // #endregion
+
+    //#region gameEnd
+
+    private JPanel createEndGamePanel() {
+        JPanel container = SwingFactory.createContainerPanel(this, 20, 20, 20, 20);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 60, 60);
+        background.add(SwingFactory.createTransparentPanel(background, 50, 40));
+        background.setBackground(new Color(255, 240, 200));
+        background.setBorder(BorderFactory.createLineBorder(new Color(230, 205, 175), 2));
+
+        final JLabel label = SwingFactory.createJLabel();
+        final ArrayList<String> winners = controller.getWinnersStringList();
+        if (winners.size() == 1) {
+            label.setText("Le vainqueur est " + winners.get(0) + " !");
+        } else {
+            String str = "";
+            for (int i = 0; i < winners.size(); i++) {
+                if (i == winners.size() - 2) {
+                    str += winners.get(i) + " et ";
+                } else if (i == winners.size() - 1) {
+                    str += winners.get(i);
+                } else {
+                    str += winners.get(i) + ", ";
+                }
+            }
+            label.setText("Egalité ! Les vainqueurs sont " + str.substring(0, str.length() - 2) + " !");
+        }
+        label.setFont(Resources.getFont(20));
+        background.add(label);
+
+        final JButton quitGame = new JButton();
+        quitGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                gamePanel.getController().getGame().startMenu();
+            }
+        });
+        background.add(quitGame);
+
+        container.add(background);
+        return container;
+    }
+
+    //#endregion
 
     // #region Shop
 
