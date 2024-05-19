@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import game.GameState;
 import model.config.GameMap;
 import model.config.cells.Cell;
-import model.config.cells.Intersection;
 import model.config.cells.None;
 
 /**
@@ -69,10 +68,15 @@ public final class Model {
     // region playerMove
 
     public void playerMove() {
-        final Cell nextCell = getCell(getCell(currentPlayer.getPosition()).getNextCellID());
-        System.out.println(nextCell.getId() + " " + currentPlayer.getPosition());
+        final Cell nextCell;
+        if (currentPlayer.getNextCellID() != -1) {
+            nextCell = getCell(currentPlayer.getNextCellID());
+            currentPlayer.setNextCellID(-1);
+        } else {
+            nextCell = getCell(getCell(currentPlayer.getPosition()).getNextCellID());
+        }
         currentPlayer.setPosition(nextCell.getId());
-        if (!(nextCell instanceof None || nextCell.shouldPlayerStopBy()) || nextCell instanceof Intersection) {
+        if (!(nextCell instanceof None || nextCell.shouldPlayerStopBy())) {
             currentPlayer.incrementDiceRollValue(-1);
         }
     }

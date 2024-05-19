@@ -22,8 +22,8 @@ public final class CellFactory {
                 final String groupHexColor = jObject.getString("groupHexColor");
                 return new Property(id, playerStopBy, type, nextCellID, buyPrices, groupHexColor);
             }
-            case KINGDOM:
-                return new Kingdom(id, playerStopBy, type, nextCellID, jObject.optInt("throneCell", id));
+            case STAR:
+                return new Star(id, playerStopBy, type, nextCellID);
             case START:
                 return new Start(id, playerStopBy, type, nextCellID,  jObject.getInt("lapGain"));
             case CARD:

@@ -754,7 +754,7 @@
 		},
 		{
 			"id" : 525,
-			"type" : "KINGDOM",
+			"type" : "STAR",
 			"nextCellID" : 131,
 			"xPos" : 1583,
 			"yPos" : 1565
@@ -812,7 +812,7 @@
 		},
 		{
 			"id" : 607,
-			"type" : "KINGDOM",
+			"type" : "STAR",
 			"nextCellID" : 507,
 			"xPos" : 485,
 			"yPos" : 1267

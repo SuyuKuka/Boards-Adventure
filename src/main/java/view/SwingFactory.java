@@ -251,9 +251,6 @@ public class SwingFactory {
             final double widthRatio = parent.getWidth() * widthPer / 100 / imageSize.getWidth();
             final double heightRatio = parent.getHeight() * heightPer / 100 / imageSize.getHeight();
             final double ratio = Math.min(widthRatio, heightRatio);
-            // System.out.println(parent.getWidth() * widthPer / 100 + " "
-            //     + parent.getHeight() * heightPer / 100 + " " + ratio);
-
             return new Dimension((int) (imageSize.width  * ratio),
                 (int) (imageSize.height * ratio));
         }
@@ -332,7 +329,6 @@ public class SwingFactory {
         parent.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                // System.out.println(size);
                 final Dimension size = calcDimension(image, parent, widthPer, heightPer, resize);
                 button.setPreferredSize(new Dimension((int) size.getWidth(), (int) size.getHeight()));
             }

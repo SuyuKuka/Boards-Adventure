@@ -112,6 +112,7 @@ public final class GamePanel extends JLayeredManager {
 
     public void playerArrived() {
         mainPanel.playerArrived();
+        overlayPanel.playerArrived();
     }
 
     public void endTurn() {

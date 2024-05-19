@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import controller.resources.Resources;
-import model.config.cells.CellType;
 import model.config.cells.Property;
 import view.game.GamePanel;
 
@@ -117,8 +116,8 @@ public final class ActionPanel extends JPanel {
         chatPanel.rollDice();
     }
 
-    public void playerArrived(final CellType cellType) {
-        chatPanel.playerArrived(cellType);
+    public void playerArrived() {
+        chatPanel.playerArrived();
     }
 
 

@@ -23,6 +23,7 @@ import javax.swing.text.html.InlineView;
 
 import controller.Controller;
 import model.config.cells.CellType;
+import view.SwingFactory;
 import view.game.GamePanel;
 
 public final class ChatPanel extends JPanel {
@@ -38,8 +39,6 @@ public final class ChatPanel extends JPanel {
     // Chat global entre les joueurs
     private final JTextPane globalChatTextPane;
 
-    // Chat par équipe
-    private final JTextPane teamChatTextPane;
 
     static {
         StyleConstants.setFontSize(SAT, 14);
@@ -53,9 +52,8 @@ public final class ChatPanel extends JPanel {
 
         logTextPane = createTextPane();
         globalChatTextPane = createTextPane();
-        teamChatTextPane = createTextPane();
 
-        add(createTabPanel(logTextPane, globalChatTextPane, teamChatTextPane), BorderLayout.CENTER);
+        add(createTabPanel(logTextPane, globalChatTextPane), BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -81,10 +79,36 @@ public final class ChatPanel extends JPanel {
             + controller.getCurrentPlayerRollDiceValue() + " !\n", true);
     }
 
-    public void playerArrived(final CellType cellType) { // TODO fsfsfd
-        final String cellString = String.valueOf(controller.getCurrentPlayerCellType());
-        addLogText(controller.getCurrentPlayerName() + " tombe sur une case "
+    public void playerArrived() { // TODO fsfsfd
+        final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
+        final String cellString = String.valueOf(cellType);
+        final String playerName = controller.getCurrentPlayerName();
+        addLogText(playerName + " tombe sur une case "
             + cellString.substring(0, 1) + cellString.substring(1).toLowerCase() + " !\n", true);
+        SwingFactory.startSingleActionTimer(500, action -> {
+            switch (cellType) {
+                case COINS:
+                    final int value = gamePanel.getController().getCurrentPlayerCellCoinsValue();
+                    if (value >= 0) {
+                        addLogText(playerName + " a gagné " + -value + " pièces !\n", false);
+                    } else {
+                        addLogText(playerName + " a perdu " + -value + " pièces :(\n", false);
+                    }
+                    break;
+                case TELEPORTATION:
+                    addLogText(playerName + " s'est téléporté !\n", false);
+                    break;
+                case VOID:
+                    addLogText("Rien ne se passe...\n", false);
+                case CARD:
+                    break;
+                case PROPERTY:
+                    break;
+                default:
+                    break;
+            }
+        });
+
     }
 
 
@@ -102,11 +126,10 @@ public final class ChatPanel extends JPanel {
 
     // #region Chat
 
-    private JTabbedPane createTabPanel(final JTextPane logPane, final JTextPane globalPane, final JTextPane teamPane) {
+    private JTabbedPane createTabPanel(final JTextPane logPane, final JTextPane globalPane) {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Systeme", createLogPanel(logPane));
         tabbedPane.add("Global", createChatPanel(globalPane));
-        tabbedPane.add("Equipe", createChatPanel(teamPane));
         return tabbedPane;
     }
 

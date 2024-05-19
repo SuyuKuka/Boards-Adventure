@@ -208,6 +208,10 @@ public final class Controller {
         return model.getGameMap().getCell(getCurrentPlayerPosition());
     }
 
+    public int getCurrentPlayerCellCoinsValue() {
+        return ((Coins) getCurrentPlayerCell()).getValue();
+    }
+
     public CellType getCurrentPlayerCellType() {
         return model.getGameMap().getCell(getCurrentPlayerPosition()).getCellType();
     }

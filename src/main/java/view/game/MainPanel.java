@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
-import model.config.cells.CellType;
 import view.game.actionpanel.ActionPanel;
 import view.game.boardpanel.BoardPanel;
 
@@ -86,9 +85,8 @@ public final class MainPanel extends JPanel {
     }
 
     public void playerArrived() {
-        final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
-        boardPanel.playerArrived(cellType);
-        actionPanel.playerArrived(cellType);
+        boardPanel.playerArrived();
+        actionPanel.playerArrived();
     }
 
 

@@ -357,8 +357,9 @@ public final class BoardPanel extends JLayeredManager {
         repaint();
     }
 
-    public void playerArrived(final CellType cellType) {
+    public void playerArrived() {
         updateCurrentPlayerGraphicsPosition();
+        final CellType cellType = gamePanel.getController().getCurrentPlayerCellType();
         switch (cellType) {
             case INTERSECTION:
                 createIntersectionEntities();
@@ -379,7 +380,7 @@ public final class BoardPanel extends JLayeredManager {
                 addComp(createCardPanel(), INTERACTION);
                 break;
             default:
-                controller.gameUpdate();
+                SwingFactory.startSingleActionTimer(1000, action -> controller.gameUpdate());
                 break;
         }
     }

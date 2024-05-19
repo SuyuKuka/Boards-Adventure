@@ -156,8 +156,6 @@ public final class MenuPanel extends JLayeredManager {
     public void changeState(final MenuState newMenuState) {
         if (menuState != null) {
             getLayerComp(menuState.getLayerIndex()).setVisible(false);
-            System.out.println("menuState : " + menuState);
-            System.out.println("newMenuState : " + newMenuState);
         }
         this.menuState = newMenuState;
         final JPanel newStatePanel = (JPanel) getLayerComp(menuState.getLayerIndex());

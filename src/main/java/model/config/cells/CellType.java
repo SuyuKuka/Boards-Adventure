@@ -12,7 +12,7 @@ public enum CellType {
     SHOP,
     TELEPORTATION,
     CARD,
-    KINGDOM,
+    STAR,
     DANGER,
     NONE
 }

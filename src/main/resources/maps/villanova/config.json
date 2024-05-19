@@ -169,8 +169,7 @@
         },
         {
             "id" : 11,
-            "type" : "KINGDOM",
-            "throneCell" : -2,
+            "type" : "STAR",
             "xPos" : 1580,
             "yPos" : 695
         },
@@ -228,8 +227,7 @@
         },
         {
             "id" : 19,
-            "type" : "KINGDOM",
-            "throneCell" : -1,
+            "type" : "STAR",
             "xPos" : 760,
             "yPos" : 830
         },
@@ -326,8 +324,7 @@
         },
         {
             "id" : 34,
-            "type" : "KINGDOM",
-            "throneCell" : -1,
+            "type" : "STAR",
             "nextCellID" : 9,
             "xPos" : 1460,
             "yPos" : 350
@@ -357,8 +354,7 @@
         },
         {
             "id" : 43,
-            "type" : "KINGDOM",
-            "throneCell" : -1,
+            "type" : "STAR",
             "nextCellID" : 45,
             "xPos" : 555,
             "yPos" : 165

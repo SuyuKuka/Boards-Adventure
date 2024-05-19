@@ -70,6 +70,11 @@ public final class OverlayPanel extends JPanel {
         setVisible(true);
     }
 
+    public void playerArrived() {
+        final int playerID = gamePanel.getController().getCurrentPlayerID();
+        playersScore.get(playerID).updatePlayerScoreText();
+    }
+
     //#region turns + playersAction
 
     private JPanel createTurnsActionsPanel(final int x, final int y, final int width, final int height) {

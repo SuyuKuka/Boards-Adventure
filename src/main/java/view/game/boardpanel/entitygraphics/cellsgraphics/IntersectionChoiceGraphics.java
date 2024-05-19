@@ -23,7 +23,7 @@ public final class IntersectionChoiceGraphics extends CellGraphics {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     boardPanel.removeComp(BoardPanel.getInteraction());
                     boardPanel.cleanIntersectionEntities();
-                    controller.getCurrentPlayer().setPosition(cellID);
+                    controller.getCurrentPlayer().setNextCellID(cellID);
                     controller.getCurrentPlayerGraphics().updateCoordinates(xPos, yPos);
                     controller.gameUpdate();
                 }

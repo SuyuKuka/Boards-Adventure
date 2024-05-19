@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
-import controller.resources.Resources;
 import view.game.boardpanel.BoardPanel;
 
 public final class DefaultCellGraphics extends CellGraphics {
@@ -45,10 +44,6 @@ public final class DefaultCellGraphics extends CellGraphics {
         final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
         g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
             iconRangeDim.width, iconRangeDim.height, this);
-        // id cellule
-        g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici = 12)
-        g2d.drawString(String.valueOf(getCellID()), getWidth() / 4, getHeight() / 2);
     }
 
 }

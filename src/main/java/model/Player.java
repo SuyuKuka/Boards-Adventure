@@ -32,7 +32,7 @@ public final class Player {
     private int mapLap = 0;
     private int position;
     private int previousPosition = 0;
-    private boolean inIntersection;
+    private int nextCellID = -1;
 
     private int startItemCooldown = 0;
 
@@ -49,14 +49,13 @@ public final class Player {
         this.hexTeamColor = hexTeamColor;
         this.startItem = startItem;
         this.position = startPos;
-        this.inIntersection = false;
     }
 
     // region model methods
 
     public void rollDice() {
         diceRollValue = RAND.nextInt(6) + 1;
-        diceRollValue = 1;
+        diceRollValue = 4;
     }
 
     public void addProperty(final Property property) {
@@ -245,12 +244,12 @@ public final class Player {
         return startItemCooldown;
     }
 
-    public void setInIntersection(final boolean inIntersection) {
-        this.inIntersection = inIntersection;
+    public int getNextCellID() {
+        return nextCellID;
     }
 
-    public boolean isInIntersection() {
-        return inIntersection;
+    public void setNextCellID(final int nextCellID) {
+        this.nextCellID = nextCellID;
     }
 
     // endregion

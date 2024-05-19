@@ -46,10 +46,6 @@ public final class CoinsGraphics extends CellGraphics {
         final Rectangle iconRangeDim = CellGraphics.getIconRangeDim();
         g2d.drawImage(getCellImage(), iconRangeDim.x, iconRangeDim.y,
             iconRangeDim.width, iconRangeDim.height, this);
-        // id cellule
-        g2d.setColor(new Color(663399));
-        g2d.setFont(Resources.getFont("RifficFree", 12)); //TODO <- size dynamique (ici = 12)
-        g2d.drawString(String.valueOf(getCellID()), getWidth() / 4, getHeight() / 2);
     }
 
 }

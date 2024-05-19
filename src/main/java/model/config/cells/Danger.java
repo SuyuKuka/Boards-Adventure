@@ -11,7 +11,7 @@ public final class Danger extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        System.out.println(getCellType());
+        return; // TODO DANGER
     }
 
 
