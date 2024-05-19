@@ -104,21 +104,21 @@ public final class Game {
         player1.put("itemName", "FARMER_HOE");
         playersConfig.add(player1);
         // player2
-        // final HashMap<String, String> player2 = new HashMap<>();
-        // player2.put("type", "human");
-        // player2.put("name", "human2");
-        // player2.put("className", "boardClass");
-        // player2.put("teamColor", "#d16264");
-        // player2.put("itemName", "LITTLE_DICE");
-        // playersConfig.add(player2);
-        // // computer1
-        // final HashMap<String, String> computer1 = new HashMap<>();
-        // computer1.put("type", "computer");
-        // computer1.put("name", "computer1");
-        // computer1.put("className", "boardClass");
-        // computer1.put("teamColor", "#7ebbed");
-        // computer1.put("itemName", "FARMER_HOE");
-        // playersConfig.add(computer1);
+        final HashMap<String, String> player2 = new HashMap<>();
+        player2.put("type", "human");
+        player2.put("name", "human2");
+        player2.put("className", "boardClass");
+        player2.put("teamColor", "#d16264");
+        player2.put("itemName", "LITTLE_DICE");
+        playersConfig.add(player2);
+        // computer1
+        final HashMap<String, String> computer1 = new HashMap<>();
+        computer1.put("type", "computer");
+        computer1.put("name", "computer1");
+        computer1.put("className", "boardClass");
+        computer1.put("teamColor", "#7ebbed");
+        computer1.put("itemName", "FARMER_HOE");
+        playersConfig.add(computer1);
         // // computer2
         // final HashMap<String, String> computer2 = new HashMap<>();
         // computer2.put("type", "computer");

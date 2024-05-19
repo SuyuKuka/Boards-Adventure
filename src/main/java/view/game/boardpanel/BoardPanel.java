@@ -679,6 +679,8 @@ public final class BoardPanel extends JLayeredManager {
                 } else if (controller.playerIsAtHome() && controller.propertyHasOwner()) {
                     controller.playerUpgradeProperty();
                 }
+                final int playerID = gamePanel.getController().getCurrentPlayerID();
+                gamePanel.getOverlayPanel().getPlayersScore().get(playerID).updatePlayerScoreText();
                 controller.gameUpdate();
                 revalidate();
             }

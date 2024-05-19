@@ -134,6 +134,10 @@ public final class GamePanel extends JLayeredManager {
         return controller;
     }
 
+    public OverlayPanel getOverlayPanel() {
+        return overlayPanel;
+    }
+
     //#region cellsGraphics
 
 

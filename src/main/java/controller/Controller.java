@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import controller.resources.Resources;
 import view.game.GamePanel;
 import view.game.boardpanel.entitygraphics.PlayerGraphics;
 import view.game.boardpanel.entitygraphics.cellsgraphics.CellGraphics;
@@ -143,6 +144,9 @@ public final class Controller {
         prevGameState = GameState.END_TURN;
         model.endTurn();
         gamePanel.endTurn();
+        for (Player player : model.getPlayers()) {
+            gamePanel.getOverlayPanel().updatePlayerScore(String.valueOf(player.getRank()));
+        }
     }
 
     private void gameEnd() {

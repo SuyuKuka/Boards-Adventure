@@ -252,6 +252,22 @@ public final class Player {
         this.nextCellID = nextCellID;
     }
 
+    public void increaseRank(int maxPlayer) {
+        if (rank != maxPlayer) {
+            rank++;
+        }
+    }
+
+    public void decreaseRank() {
+        if (rank != 1) {
+            rank--;
+        }
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
     // endregion
 
 }

@@ -21,6 +21,7 @@ public final class Model {
     private final HashMap<String, Team> teams;
     private int playerPlayIterator = 0;
 
+    private final int nbPlayers;;
     private final int totalTurns;
     private int currentTurn = 1;
 
@@ -38,6 +39,7 @@ public final class Model {
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
+        this.nbPlayers = players.size();
         currentPlayer = players.get(playerPlayIterator);
     }
 
@@ -88,10 +90,38 @@ public final class Model {
     }
 
     public void endTurn() {
+        for (Player player : players) {
+            player.setRank(1);
+            rankUpdate(player);
+        }
         currentPlayer.decrementStartItemCooldown();
         playerPlayIterator = (playerPlayIterator + 1) % players.size();
         if (playerPlayIterator == 0) {
             currentTurn++;
+        }
+    }
+
+    public void rankUpdate(Player player) {
+        for (Player otherPlayer : players) {
+            if (otherPlayer != player) {
+                if (player.getGamePoint() > otherPlayer.getGamePoint()) {
+                    otherPlayer.increaseRank(nbPlayers);
+                } else if (player.getGamePoint() < otherPlayer.getGamePoint()) {
+                    player.increaseRank(nbPlayers);
+                } else {
+                    if (player.getProperties().size() > otherPlayer.getProperties().size()) {
+                        otherPlayer.increaseRank(nbPlayers);
+                    } else if (player.getProperties().size() < otherPlayer.getProperties().size()) {
+                        player.increaseRank(nbPlayers);
+                    } else {
+                        if (player.getCoins() > otherPlayer.getCoins()) {
+                            otherPlayer.increaseRank(nbPlayers);
+                        } else if (player.getCoins() < otherPlayer.getCoins()) {
+                            player.increaseRank(nbPlayers);
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -27,6 +27,7 @@ public final class OverlayPanel extends JPanel {
     private final JLabel playerActionLabel;
 
     private final JPanel scoreboardPanel;
+    private PlayerScore playerScorePanel;
     private final ArrayList<PlayerScore> playersScore = new ArrayList<>();
 
     private static final Image SETTINGS_IMAGE = Resources.getImage("settings");
@@ -143,10 +144,10 @@ public final class OverlayPanel extends JPanel {
         panel.setLayout(new GridLayout(scoreboardLines, 1));
 
         gamePanel.getPlayersGraphics().forEach((playerGraphics) -> {
-            final PlayerScore playerScore =
+            playerScorePanel =
                 new PlayerScore(gamePanel, width, height / scoreboardLines, playerGraphics.getPlayerID());
-            playersScore.add(playerScore);
-            panel.add(playerScore);
+            playersScore.add(playerScorePanel);
+            panel.add(playerScorePanel);
         });
         panel.setVisible(true);
         return panel;
@@ -167,6 +168,18 @@ public final class OverlayPanel extends JPanel {
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         return button;
+    }
+
+    public PlayerScore getplayerScorePanel() {
+        return playerScorePanel;
+    }
+
+    public void updatePlayerScore(String rank) {
+        playerScorePanel.updateRankImage(Resources.getImage(rank));
+    }
+
+    public ArrayList<PlayerScore> getPlayersScore() {
+        return playersScore;
     }
 
 }

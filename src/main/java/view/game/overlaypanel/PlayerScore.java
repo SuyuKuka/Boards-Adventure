@@ -55,7 +55,7 @@ public final class PlayerScore extends JPanel {
         this.playerId = playerId;
         setSize(width, height);
         setBackground(Color.decode(gamePanel.getController().getPlayer(playerId).getHexTeamColor()));
-        this.rankImage = Resources.getImage("1st");
+        this.rankImage = Resources.getImage("1");
         this.classImage = Resources.getImage(controller.getCurrentPlayer().getClassName());
 
         setLayout(new GridBagLayout());
@@ -105,6 +105,8 @@ public final class PlayerScore extends JPanel {
             final Dimension dim = getSize();
             rankLabel.setIcon(new ImageIcon(rankImage.getScaledInstance(
                 (int) (dim.width * 0.15), dim.height, Image.SCALE_SMOOTH)));
+            rankLabel.revalidate();
+            rankLabel.repaint();
         }
     }
 
