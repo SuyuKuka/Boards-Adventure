@@ -18,8 +18,8 @@ Si vous souhaitez accéder aux menus, il suffit juste de modifier dans le fichie
 Pour être dans une partie déjà lancé, faire de meme et mettre "private mode=Mode.MENU"
 
 ## Installation et Lancement
-<IMPORTANT> L'installation des librairies json est requise pour pouvoir lancer le jeu.
-Il suffit d'éxécuter le fichier BoardsAdventure.jar à la racine de l'arborescence.
+L'installation des librairies json est requise pour pouvoir lancer le jeu.
+Une fois fait,il suffit d'éxécuter le fichier BoardsAdventure.jar à la racine de l'arborescence.
 
 ## Crédits
 
