@@ -389,6 +389,26 @@ public class SwingFactory {
             return button;
     }
 
+    public static JButton createTextButtonManual(final Component parent, final String text,
+        final int widthPer, final int heightPer, final int sizeFont, final boolean resize) {
+            final JButton button = new JButton(text);
+            button.setBackground(new Color(230, 205, 175));
+            button.setOpaque(true);
+            button.setBorderPainted(false);
+            button.setContentAreaFilled(false);
+            button.setFocusPainted(false);
+            button.setForeground(Color.BLACK);
+            button.setFont(Resources.getFont(sizeFont));
+            button.setHorizontalTextPosition(JButton.LEFT);
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    Audio.playSound("button.wav");
+                }
+            });
+            return button;
+    }
+
     public static JPanel createBoxLayoutPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
