@@ -174,7 +174,7 @@ public final class PlayerConfigPanel extends JPanel {
     private void initCharacterValue(final int playerID, final boolean player) {
         HashMap<String, String> newPlayer = new HashMap<>();
         newPlayer.put("teamColor", "none");
-        newPlayer.put("name", player ? "Player "
+        newPlayer.put("name", player ? "Joueur "
         + (playersConfig.size() + 1) : "Ordinateur " + (playersConfig.size() + 1));
         newPlayer.put("selectSkin", "1");
         newPlayer.put("className", "Board");

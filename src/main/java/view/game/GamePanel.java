@@ -49,11 +49,13 @@ public final class GamePanel extends JLayeredManager {
     private static final int MAIN_PANEL = 0;
     private static final int OVERLAY_PANEL = 1;
     private static final int PAUSE_PANEL = 2;
+    private static final int GAME_END_PANEL = 3;
 
     // COUCHES
     private final MainPanel mainPanel;
     private final OverlayPanel overlayPanel;
     private JPanel pausePanel;
+    private JPanel gameEndPanel;
 
     public GamePanel(final View frame, final Controller controller, final JSONObject mapConfig) {
         super(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
@@ -63,11 +65,14 @@ public final class GamePanel extends JLayeredManager {
         mainPanel = new MainPanel(this, controller, mapConfig);
         overlayPanel = new OverlayPanel(this);
         pausePanel = createPausePanel();
+        gameEndPanel = createEndGamePanel();
 
         addComp(mainPanel, MAIN_PANEL);
         addComp(overlayPanel, OVERLAY_PANEL);
         addComp(pausePanel, PAUSE_PANEL);
+        addComp(gameEndPanel, GAME_END_PANEL);
         pausePanel.setVisible(false);
+        gameEndPanel.setVisible(false);
 
         addResizeListener();
 
@@ -109,7 +114,6 @@ public final class GamePanel extends JLayeredManager {
     }
 
     public void playerAction() {
-        // gérer le cas ou c'est un ordi
         mainPanel.playerAction();
     }
 
@@ -133,6 +137,7 @@ public final class GamePanel extends JLayeredManager {
 
     public void gameEnd() {
         mainPanel.gameEnd();
+        getLayerComp(GAME_END_PANEL).setVisible(true);
     }
 
     //#endregion
@@ -183,6 +188,52 @@ public final class GamePanel extends JLayeredManager {
     public PlayerGraphics getPlayerGraphics(final int playerID) {
         return controller.getPlayerGraphics(playerID);
     }
+    //#endregion
+
+    //#region GameEnd
+    private JPanel createEndGamePanel() {
+        JPanel container = SwingFactory.createContainerPanel(this, 10, 10, 10, 10);
+
+        JPanel background = SwingFactory.createGamePanelCells(this, 100, 100);
+        background.add(SwingFactory.createTransparentPanel(background, 50, 40));
+        background.setBackground(new Color(255, 240, 200));
+        background.setBorder(BorderFactory.createLineBorder(new Color(230, 205, 175), 2));
+
+        final JLabel label = SwingFactory.createTextLabel("", Color.BLACK, 32);
+        final ArrayList<String> winners = controller.getWinnersStringList();
+        if (winners.size() == 1) {
+            label.setText("Le vainqueur est " + winners.get(0) + " !");
+        } else {
+            String str = "";
+            for (int i = 0; i < winners.size(); i++) {
+                if (i == winners.size() - 2) {
+                    str += winners.get(i) + " et ";
+                } else if (i == winners.size() - 1) {
+                    str += winners.get(i);
+                } else {
+                    str += winners.get(i) + ", ";
+                }
+            }
+            label.setText("Egalité ! Les vainqueurs sont " + str.substring(0, str.length() - 2) + " !");
+        }
+        background.add(label);
+
+        final JButton quitGame = new JButton("Retourner au menu");
+        quitGame.setFont(Resources.getFont(32));
+        quitGame.setHorizontalAlignment(JLabel.CENTER);
+        // final JButton quitGame = SwingFactory.createTextButton(background, "Retourner au menu", 20, 20, 32, false);
+        quitGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                controller.getGame().startMenu();
+            }
+        });
+        background.add(quitGame);
+
+        container.add(background);
+        return container;
+    }
+
     //#endregion
 
     //#region Pause

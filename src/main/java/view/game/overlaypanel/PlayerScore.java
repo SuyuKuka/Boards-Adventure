@@ -206,6 +206,7 @@ public final class PlayerScore extends JPanel {
         panel.setLayout(new GridLayout(2, gridWidth));
         for (int i = 0; i < playerItemShopNb; i++) {
             final Color color = i == 0 ? START_ITEM_COLOR_ICON : Color.BLACK;
+            final int index = i;
             final JLabel label = new JLabel() {
                 @Override
                 protected void paintComponent(final Graphics g) {
@@ -216,10 +217,20 @@ public final class PlayerScore extends JPanel {
                     final int paint = size.width > size.height ? (int) (size.height * 0.9) : (int) (size.width * 0.9);
                     final int x1 = (size.width - paint) / 2;
                     final int y1 = (size.height - paint) / 2;
-                    final int x2 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
-                    final int y2 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
+                    final int width1 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
+                    final int height1 = (paint - 1) % 2 == 0 ? paint - 1 : paint;
                     g2d.setColor(color);
-                    g2d.fillOval(x1, y1, x2, y2);
+                    g2d.fillOval(x1, y1, width1, height1);
+                    final String itemName = controller.getPlayerItemName(playerId, index);
+                    if (!itemName.equals("")) {
+                        final int item = size.width > size.height
+                            ? (int) (size.height * 0.7) : (int) (size.width * 0.7);
+                        final int x2 = (size.width - item) / 2;
+                        final int y2 = (size.height - item) / 2;
+                        final int width2 = (item - 1) % 2 == 0 ? item - 1 : item;
+                        final int height2 = (item - 1) % 2 == 0 ? item - 1 : item;
+                        g2d.drawImage(Resources.getImage(itemName), x2, y2, width2, height2, this);
+                    }
                 }
             };
             label.setPreferredSize(new Dimension(0, 0));

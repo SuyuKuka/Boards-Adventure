@@ -49,7 +49,7 @@ public final class Model {
         this.teams = createTeams();
         this.doubleDice = Boolean.valueOf(gameConfig.get("doubleDice"));
         currentPlayer = players.get(playerPlayIterator);
-        this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 400));
+        this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 600));
         final int maxStarCellNb = gameMap.getMaxStarCellsPoss();
         final int mapConfigStarCellsNb = Integer.valueOf(mapConfig.optInt("starCellsNb", 2));
         this.starCellsNb = mapConfigStarCellsNb > maxStarCellNb ? maxStarCellNb : mapConfigStarCellsNb;
@@ -106,7 +106,7 @@ public final class Model {
             nextCell = getCell(getCell(currentPlayer.getPosition()).getNextCellID());
         }
         currentPlayer.setPosition(nextCell.getId());
-        if (!(nextCell instanceof None || nextCell.getShouldPlayerStopByValue() == 0 || nextCell.isStarCell())) {
+        if (!(nextCell instanceof None || nextCell.getShouldPlayerStopByValue() == 0)) {
             currentPlayer.incrementDiceRollValue(-1);
         }
     }
@@ -195,9 +195,9 @@ public final class Model {
         return new Comparator<Player>() {
             @Override
             public int compare(final Player p1, final Player p2) {
-                if (p1.getStars() != p2.getStars()) {
+                if (p2.getStars() != p1.getStars()) {
                     return Integer.compare(p2.getStars(), p1.getStars());
-                } else if (p1.getProperties().size() != p2.getProperties().size()) {
+                } else if (p2.getProperties().size() != p1.getProperties().size()) {
                     return Integer.compare(p2.getProperties().size(), p1.getProperties().size());
                 } else {
                     return Integer.compare(p2.getCoins(), p1.getCoins());

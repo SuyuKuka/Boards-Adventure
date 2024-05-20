@@ -116,9 +116,12 @@ public final class ActionPanel extends JPanel {
     public void newTurn() {
         chatPanel.newTurn();
         removeActionList();
-        buttonsPanel = createButtonsPanel();
-        buttonsInventoryPanel.add(buttonsPanel, BorderLayout.WEST);
-        buttonsInventoryPanel.revalidate();
+        if (controller.getCurrentPlayer().isHuman()) {
+            buttonsPanel = createButtonsPanel();
+            buttonsInventoryPanel.add(buttonsPanel, BorderLayout.WEST);
+            buttonsInventoryPanel.revalidate();
+        }
+
     }
 
     public void inJail() {
@@ -269,7 +272,6 @@ public final class ActionPanel extends JPanel {
     private JPanel createButtonsInventoryPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        panel.add(buttonsPanel, BorderLayout.WEST);
         panel.add(inventoryPanel, BorderLayout.CENTER);
         panel.setVisible(true);
         return panel;

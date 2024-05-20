@@ -26,7 +26,10 @@ public final class Intersection extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
-        return;
+        if (!player.isHuman()) {
+            final int randomID = nextCellIDs.get(new Random().nextInt(nextCellIDs.size()));
+            player.setNextCellID(randomID);
+        }
     }
 
 }

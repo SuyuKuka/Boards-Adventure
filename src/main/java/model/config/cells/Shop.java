@@ -16,6 +16,9 @@ public final class Shop extends Cell {
 
     @Override
     public void playCellEffect(final Player player, final Model model) {
+        if (!player.isHuman()) {
+            return;
+        }
         for (int i = 0; i < 3; i++) {
             Random rand = new Random();
             switch (rand.nextInt(7)) {

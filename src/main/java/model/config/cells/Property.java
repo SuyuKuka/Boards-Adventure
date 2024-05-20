@@ -24,8 +24,9 @@ public final class Property extends Cell {
         if (isStarCell()) {
             computerBuyStar(player, model);
             return;
-        }
-        if (owner != null && !isAtHome(player) && !owner.getHexTeamColor().equals(player.getHexTeamColor())) {
+        } else if (owner == null && !player.isHuman() && player.hasEnoughCoins(buyPrices.get(0))) {
+            buy(player);
+        } else if (owner != null && !isAtHome(player) && !owner.getHexTeamColor().equals(player.getHexTeamColor())) {
             final int price = (int) (buyPrices.get(propertyState - 1) * 0.70);
             final int leftCoins = player.getCoins();
             if (leftCoins < price) {

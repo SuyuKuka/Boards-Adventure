@@ -43,6 +43,9 @@ public final class Player {
         this.id = playerIDIterator;
         playerIDIterator++;
         shopItem = new Item[maxShopItem];
+        for (int i = 0; i < maxShopItem; i++) {
+            shopItem[i] = null;
+        }
         this.className = className;
         this.name = name;
         this.isHuman = isHuman;
@@ -56,10 +59,8 @@ public final class Player {
     public void rollDice(boolean doubleDice) {
         if (doubleDice) {
             diceRollValue += RAND.nextInt(6) + 1;
-            diceRollValue += RAND.nextInt(6) + 1;
-        } else {
-            diceRollValue += RAND.nextInt(6) + 1;
         }
+        diceRollValue += RAND.nextInt(6) + 1;
     }
 
     public void addProperty(final Property property) {
@@ -70,7 +71,7 @@ public final class Player {
         properties.remove(property);
     }
 
-    public void usedItem(int i) {
+    public void usedItem(final int i) {
         shopItem[i] = null;
     }
 

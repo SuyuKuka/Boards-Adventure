@@ -92,12 +92,12 @@ public final class ChatPanel extends JPanel {
         final boolean isComputer = !controller.getCurrentPlayer().isHuman();
         addLogText(playerName + " tombe sur une case Etoile !!!!!\n", true);
         SwingFactory.startSingleActionTimer(500, action -> {
-            if (controller.getCurrentPlayer().getCoins() < controller.getStarPrice()) {
-                addNotEnoughCoinsForStarLogText();
-            } else if (!controller.getCurrentPlayerCellIsStar() && isComputer) {
+            if (!controller.getCurrentPlayerCellIsStar() && isComputer) {
                 addBuyStarLogText();
             } else if (isComputer) {
                 addNotBuyStarLogText();
+            } else if (controller.getCurrentPlayer().getCoins() < controller.getStarPrice()) {
+                addNotEnoughCoinsForStarLogText();
             }
         });
 

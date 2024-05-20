@@ -88,10 +88,9 @@ public final class MainPanel extends JPanel {
     }
 
     public void playerArrived(final boolean isStarCell) {
-        boardPanel.playerArrived();
+        boardPanel.playerArrived(isStarCell);
         actionPanel.playerArrived(isStarCell);
     }
-
 
     public void endTurn() {
         boardPanel.endTurn();
@@ -99,7 +98,6 @@ public final class MainPanel extends JPanel {
     }
 
     public void gameEnd() {
-        boardPanel.gameEnd();
         actionPanel.gameEnd();
     }
 

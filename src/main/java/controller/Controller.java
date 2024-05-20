@@ -118,9 +118,10 @@ public final class Controller {
         prevGameState = GameState.PLAYER_ACTION;
         final Player player = getCurrentPlayer();
         if (!player.isHuman()) {
-            player.rollDice(model.getDoubleDice());
+            rollDice();
+        } else {
+            gamePanel.playerAction();
         }
-        gamePanel.playerAction();
     }
 
     public void rollDice() {
@@ -372,6 +373,25 @@ public final class Controller {
 
     public void getCurrentPlayerRollDice() {
         getCurrentPlayer().rollDice(model.getDoubleDice());
+    }
+
+    public String getPlayerStartItemName(final int playerID) {
+        return getPlayer(playerID).getStartItem().getItemName().name().toLowerCase();
+    }
+
+    public String getPlayerItemName(final int playerID, final int itemOrder) {
+        if (itemOrder == 0) {
+            return getPlayerStartItemName(playerID);
+        }
+        return getPlayerShopItemName(playerID, itemOrder - 1);
+    }
+
+    public String getPlayerShopItemName(final int playerID, final int itemOrder) {
+        final Item item = getPlayer(playerID).getShopItem()[itemOrder];
+        if (item == null) {
+            return "";
+        }
+        return item.getItemName().name().toLowerCase();
     }
 
     public int getCurrentPlayerRollDiceValue() {
