@@ -85,8 +85,6 @@ public final class OverlayPanel extends JPanel {
         for (int i = 0; i < rankList.size(); i++) {
             playersScore.get(i).updateRankImage(Resources.getImage("rank" + rankList.get(i)));
         }
-        revalidate();
-        repaint();
     }
 
 

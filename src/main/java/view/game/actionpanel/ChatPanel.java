@@ -116,7 +116,7 @@ public final class ChatPanel extends JPanel {
 
     public void addNotBuyStarLogText() {
         final String playerName = controller.getCurrentPlayerName();
-        addLogText(playerName + " n'achète pas cette étoile pour une quelconque raison :(", false);
+        addLogText(playerName + " n'achète pas cette étoile pour une quelconque raison :(\n", false);
     }
 
     private void addGameLogText() {
@@ -149,7 +149,7 @@ public final class ChatPanel extends JPanel {
                     addLogText("Rien ne se passe...\n", false);
                     break;
                 case DANGER:
-                    addLogText("Quelque chose de mystérieux s'est passé...", false);
+                    addLogText("Quelque chose de mystérieux s'est passé...\n", false);
                     break;
                 default:
                     break;
@@ -165,7 +165,7 @@ public final class ChatPanel extends JPanel {
     }
 
     public void gameEnd() {
-        addLogText("Fin du jeu, merci d'avoir joué !", true);
+        addLogText("Fin du jeu, merci d'avoir joué !\n", true);
     }
 
     //#endregion

@@ -148,7 +148,7 @@ public final class Controller {
     }
 
     public void updatePlayersScore() {
-        model.updatePlayersRank();
+        model.updatePlayersRank(getPlayers());
         gamePanel.updatePlayersScoreGraphics();
     }
 

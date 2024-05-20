@@ -18,11 +18,11 @@ import model.config.cells.None;
  */
 public final class Model {
 
-    private static final Comparator<Player> RANK_COMPARATOR = createRankComparator();
+    private final Comparator<Team> rankComparator;
     private final GameMap gameMap;
 
     private final ArrayList<Player> players;
-    private final HashMap<String, Team> teams;
+    private final ArrayList<Team> teams;
     private int playerPlayIterator = 0;
 
     private final int totalTurns;
@@ -47,6 +47,7 @@ public final class Model {
         this.totalTurns = Integer.valueOf(gameConfig.get("totalTurns"));
         this.players = players;
         this.teams = createTeams();
+        this.rankComparator = createRankComparator(players);
         this.doubleDice = Boolean.valueOf(gameConfig.get("doubleDice"));
         currentPlayer = players.get(playerPlayIterator);
         this.starPrice = Integer.valueOf(mapConfig.optInt("starPrice", 600));
@@ -71,8 +72,8 @@ public final class Model {
         }
     }
 
-    private HashMap<String, Team> createTeams() {
-        final HashMap<String, Team> teamsMap = new HashMap<>();
+    private ArrayList<Team> createTeams() {
+        final ArrayList<Team> teamsList = new ArrayList<>();
         final HashMap<String, ArrayList<Integer>> teamIDs = new HashMap<>();
         players.forEach(player -> {
             final String hexTeamColor = player.getHexTeamColor();
@@ -82,9 +83,9 @@ public final class Model {
             teamIDs.get(hexTeamColor).add(player.getID());
         });
         for (String hexTeamColor : teamIDs.keySet()) {
-            teamsMap.put(hexTeamColor, new Team(hexTeamColor, teamIDs.get(hexTeamColor)));
+            teamsList.add(new Team(hexTeamColor, teamIDs.get(hexTeamColor)));
         }
-        return teamsMap;
+        return teamsList;
     }
 
     public void newTurn() {
@@ -126,25 +127,28 @@ public final class Model {
         }
     }
 
-    public void updatePlayersRank() {
-        final ArrayList<Player> playersRankList = new ArrayList<>(players);
-        playersRankList.sort(RANK_COMPARATOR);
+    public void updatePlayersRank(final ArrayList<Player> playerList) {
+        final ArrayList<Team> playersRankList = new ArrayList<>(teams);
+        playersRankList.sort(rankComparator);
         int currentRank = 1;
-        players.get(0).setRank(currentRank);
+        final ArrayList<Integer> teamRank1 = playersRankList.get(0).getPlayerIDs();
+        teamRank1.forEach(value -> {
+            players.get(value).setRank(1);
+        });
         for (int i = 1; i < playersRankList.size(); i++) {
-            if (RANK_COMPARATOR.compare(playersRankList.get(i), playersRankList.get(i - 1)) != 0) {
+            if (rankComparator.compare(playersRankList.get(i), playersRankList.get(i - 1)) != 0) {
                 currentRank++;
             }
-            playersRankList.get(i).setRank(currentRank);
+            final ArrayList<Integer> nextTeamRank = playersRankList.get(i).getPlayerIDs();
+            final int rank = currentRank;
+            nextTeamRank.forEach(value -> {
+                players.get(value).setRank(rank);
+            });
         }
     }
 
     public void changeLeader(final Player player) {
         currentLeader = player;
-    }
-
-    public void skipTurn() {
-
     }
 
     public void playCellEffect(final Player player) {
@@ -191,16 +195,16 @@ public final class Model {
         return starPrice;
     }
 
-    private static Comparator<Player> createRankComparator() {
-        return new Comparator<Player>() {
+    private static Comparator<Team> createRankComparator(final ArrayList<Player> players) {
+        return new Comparator<Team>() {
             @Override
-            public int compare(final Player p1, final Player p2) {
-                if (p2.getStars() != p1.getStars()) {
-                    return Integer.compare(p2.getStars(), p1.getStars());
-                } else if (p2.getProperties().size() != p1.getProperties().size()) {
-                    return Integer.compare(p2.getProperties().size(), p1.getProperties().size());
+            public int compare(final Team t1, final Team t2) {
+                if (t2.getPlayersStars(players) != t1.getPlayersStars(players)) {
+                    return Integer.compare(t2.getPlayersStars(players), t1.getPlayersStars(players));
+                } else if (t2.getPlayersPropertiesNb(players) != t1.getPlayersPropertiesNb(players)) {
+                    return Integer.compare(t2.getPlayersPropertiesNb(players), t1.getPlayersPropertiesNb(players));
                 } else {
-                    return Integer.compare(p2.getCoins(), p1.getCoins());
+                    return Integer.compare(t2.getPlayersCoins(players), t1.getPlayersCoins(players));
                 }
             }
         };
@@ -208,10 +212,6 @@ public final class Model {
 
     public boolean getDoubleDice() {
         return doubleDice;
-    }
-
-    public HashMap<String, Team> getTeams() {
-        return teams;
     }
 
 }
