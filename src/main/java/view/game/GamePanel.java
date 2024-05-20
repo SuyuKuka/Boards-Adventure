@@ -214,7 +214,7 @@ public final class GamePanel extends JLayeredManager {
                     str += winners.get(i) + ", ";
                 }
             }
-            label.setText("Egalité ! Les vainqueurs sont " + str.substring(0, str.length() - 2) + " !");
+            label.setText("Egalité ! Les vainqueurs sont " + str.substring(0, str.length() - 1) + " !");
         }
         background.add(label);
 
@@ -311,6 +311,8 @@ public final class GamePanel extends JLayeredManager {
     public void updatePlayersScoreGraphics() {
         overlayPanel.updatePlayersRanksGraphics(controller.getPlayersRankList());
         overlayPanel.updatePlayersScoreText();
+        revalidate();
+        repaint();
     }
 
     public MainPanel getMainPanel() {

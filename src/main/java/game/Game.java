@@ -29,7 +29,9 @@ public final class Game {
     public static final int NANO_S = (int) 10E8;
     public static final Random RAND = new Random();
     private static final String[] FFA_COLORS = {"#d7191c", "#fdae61", "#abdda4", "#2b83ba"};
+
     private static final String START_TEMP_MAP = "kingdom"; // kingdom, spaceship, villanova, frostharbor
+    private static final boolean TEMP_FFA = false;
 
     private Mode mode = Mode.MENU;
 
@@ -101,39 +103,43 @@ public final class Game {
         // gameconfig
         gameConfig.put("mapName", START_TEMP_MAP);
         gameConfig.put("totalTurns", "45");
-        gameConfig.put("mode", "FFA");
+        if (TEMP_FFA) {
+            gameConfig.put("mode", "FFA");
+        } else {
+            gameConfig.put("mode", "2v2");
+        }
         gameConfig.put("doubleDice", "false");
         // playersconfig
         // player1
         final HashMap<String, String> player1 = new HashMap<>();
-        player1.put("type", "human");
+        player1.put("type", "computer");
         player1.put("name", "Joueur 1");
         player1.put("className", "Board");
-        player1.put("teamColor", "#7ebbed");
+        player1.put("teamColor", "red");
         player1.put("itemName", "FARMER_HOE");
         playersConfig.add(player1);
         // computer1
         final HashMap<String, String> computer1 = new HashMap<>();
         computer1.put("type", "computer");
-        computer1.put("name", "Ordinateur 1");
+        computer1.put("name", "Ordi  1");
         computer1.put("className", "Gloria");
-        computer1.put("teamColor", "#7ebbed");
+        computer1.put("teamColor", "blue");
         computer1.put("itemName", "FARMER_HOE");
         playersConfig.add(computer1);
         // player2
         final HashMap<String, String> player2 = new HashMap<>();
-        player2.put("type", "human");
+        player2.put("type", "computer");
         player2.put("name", "Joueur 2");
         player2.put("className", "Bacchus");
-        player2.put("teamColor", "#d16264");
+        player2.put("teamColor", "blue");
         player2.put("itemName", "SACRED_BOOK");
         playersConfig.add(player2);
         // computer2
         final HashMap<String, String> computer2 = new HashMap<>();
         computer2.put("type", "computer");
-        computer2.put("name", "Ordinateur 2");
+        computer2.put("name", "Ordi  2");
         computer2.put("className", "May");
-        computer2.put("teamColor", "#d16264");
+        computer2.put("teamColor", "red");
         computer2.put("itemName", "MAGIC_WAND");
         playersConfig.add(computer2);
     }
@@ -149,7 +155,7 @@ public final class Game {
             String teamColor = "";
             if (isFFA) {
                 teamColor = FFA_COLORS[index];
-            } else if (teamColor.equals("red")) {
+            } else if (playerConfig.get("teamColor").equals("red")) {
                 teamColor = "#d16264";
             } else {
                 teamColor = "#7ebbed";
