@@ -18,7 +18,7 @@ public class LuckyPotion extends Item {
         if (i < 50) {
             Random mult = new Random();
             model.getPlayers().get(
-                rand.nextInt(model.getPlayers().size())).incrementCoins((int) (-50 * mult.nextDouble(50)));
+                rand.nextInt(model.getPlayers().size())).incrementCoins((int) (-50 * mult.nextDouble() * 50.0));
         } else if (i > 50 && i < 80) {
             player.incrementCoins(player.getCoins() / 10);
         }
